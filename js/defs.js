@@ -25,6 +25,14 @@ const MAXDEPTH = 64;
 var FilesBoard = new Array(BRD_SQ_NUM);
 var RanksBoard = new Array(BRD_SQ_NUM);
 
+var START_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+
+/*For Easy Printing*/
+var PieceChar = ".PNBRQKpnbrqk"; /*changed from PceChar*/
+var SideChar = "wb-";
+var RankChar = "12345678";
+var FileChar = "abcdefg";
+
 function FR2SQ(f,r) { /*file rank to square*/
     return ( 21 + (f) ) + ( (r) * 10 );
 }
@@ -49,7 +57,7 @@ var SideKey; /*which side is to move*/
 var CastleKeys = new Array(16);
 
 var Sq120ToSq64 = new Array(BRD_SQ_NUM);
-var Sq64ToSq120 = new Array(64);
+var Sq64ToSq120 = new Array(64); /*when do we populate this??*/
 
 function RAND_32() {
     return (Math.floor((Math.random()*225)+1) << 23) | (Math.floor((Math.random()*225)+1) << 16) |
@@ -57,9 +65,9 @@ function RAND_32() {
 }
 
 function SQ64(sq120) {
-    return Sq120Sq64[(sq120)];
+    return Sq120ToSq64[(sq120)];
 }
 
 function SQ120(sq64) {
-    return Sq64Sq120[(sq64)];
+    return Sq64ToSq120[(sq64)];
 }

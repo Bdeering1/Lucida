@@ -12,13 +12,45 @@ GameBoard.ply = 0; /*ply for engine cslculation*/
 GameBoard.enPas = 0; /* stores one square where en passent can happen (only one total is possible at a time)*/
 GameBoard.castlePerm = 0; /* one of 16 numbers representing the different castle permissions for each side*/
 GameBoard.material = new Array(2); /*white, black material total*/
-GameBoard.numPieces = new Array(13); /*number of each type of pice for each side, indexed by PIECES, previously pieceNum*/
+GameBoard.numPieces = new Array(13); /*number of each type of piece for each side, indexed by PIECES, previously pieceNum*/
 GameBoard.pList = new Array(14 * 120); /*return for a certain piece index the square that piece is on*/
 GameBoard.posKey = 0; /*unique key for each board position, used for repetition detection*/
 
 GameBoard.moveList = new Array(MAXDEPTH * MAXPOSITIONMOVES);
 GameBoard.moveScores = new Array(MAXDEPTH * MAXPOSITIONMOVES);
 GameBoard.moveListStart = new Array(MAXDEPTH);
+
+function PrintBoard() {
+    var sq, file, rank, piece;
+
+    console.log("\nGameBoard:\n");
+    for (rank = RANKS.RANK_8; ranks >= RANKS.RANK_1; rank--) {
+        var line = (RankChar[rank] + " ");
+        for (file = FILE.FILE_A; file <= FILE.FILE_H; file++) {
+            sq = FR2SQ(file,rank);
+            piece = GameBoard.pieces[sq];
+            line += (" " + PieceChar[piece] + " ");
+        }
+        console.log(line);
+    }
+    console.log("");
+    var line = "   ";
+    for (file = FILES.FILE_A; file <= FILES.FILE_H; file++) {
+        line += (" " + FileChar(file) + " ");
+    }
+    console.log(line);
+    
+    console.log("Side: " + SideChar[GambeBoard.side]);
+    console.log("En Pas: " + GameBoard.enPas);
+    
+    line = "";
+    if (GameBoard.castlePerm & CASTLEBIT.WKCA) line += 'K'; /*AND mask to retrieve each bit in castlePerm*/
+    if (GameBoard.castlePerm & CASTLEBIT.WQCA) line += 'Q'; 
+    if (GameBoard.castlePerm & CASTLEBIT.BKCA) line += 'k'; 
+    if (GameBoard.castlePerm & CASTLEBIT.BQCA) line += 'q';
+    console.log("Castle: " + line);
+    console.log("Key: " + GameBoard.posKey + " or " + GameBoard.posKey.toString(16));
+}
 
 function GeneratePosKey() {
     var sq = 0;
@@ -51,11 +83,11 @@ function ResetBoard() {
     }
     
     for (i = 0; i < 64; i++) {
-        GameBoard.pieces[S120(i)] = PIECES.EMPTY;
+        GameBoard.pieces[SQ120(i)] = PIECES.EMPTY;
     }
     
     for (i = 0; i < 14 * 120; i++) {
-        GameBoard.plist[i] = PIECES.EMPTY;   
+        GameBoard.pList[i] = PIECES.EMPTY;
     }
     
     for (i = 0; i < 2; i++) {
@@ -135,12 +167,33 @@ function ParseFen(fen) {
         }
         fenCnt++;
     } /*while loop end*/
+    
+    GameBoard.side = (fen[fenCnt] == 'w') ? COULOURS.WHITE : COLOURS.BLACK; /*if a 1 is found, set side to white, else set to black*/
+    fenCnt += 2;
+    
+    while (fen[fenCnt] != ' ')  { /*changed from orignial code, ensure this works****/
+        switch (fen[fenCnt]) { /*assumes the FEN string is correct*/
+            case 'K': GameBoard.castPerm |= CASTLEBIT.WKCA; break; /*setting each castling permission using bitwise or '|='*/
+            case 'Q': GameBoard.castPerm |= CASTLEBIT.WQCA; break;
+            case 'k': GameBoard.castPerm |= CASTLEBIT.BKCA; break;
+            case 'q': GameBoard.castPerm |= CASTLEBIT.BQCA; break;
+            default: break;
+        }
+        fenCnt++;
+    }
+    fenCnt++;
+    
+    if (fen[fenCnt] != '-') { /*assuming FEN is correct (if there is no dash the en pas square is valid)*/
+        file = fen[fenCnt].charCodeAt() - 'a'.charCodeAt(); /*make into a function?*/
+        rank = fen[fenCnt+1].charCodeAt() - '1'.charCodeAt();
+        console.log("fen[fenCnt]:" + fen[fenCnt] + " File:" + file + " Rank:" + rank);
+        GameBoard.enPas = FR2SQ(file,rank);
+    }
+    
+    GameBoard.posKey = GeneratePosKey();
+    
+    
 }
-
-
-
-
-
 
 
 
