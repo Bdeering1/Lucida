@@ -29,6 +29,28 @@ function InitFilesRanksBrd() {
     
 }
 
+function InitHashKeys() {
+    var index = 0;
+    
+    for (i = 0; i < 14 * 120; i++) {
+        PieceKeys[i] = RAND_32();
+    }
+    
+    SideKey = RAND_32(); /* hashed in if white is to move*/
+    
+    for (i = 0; i < 16; i++) {
+        CasteKeys[i] = RAND_32();
+    }
+}
+
+function InitSq120ToSq64() {
+    var index = 0;
+    var file = FILES.FILE_A;
+    var rank = RANKS.RANK_1;
+    var sq = SQUARES.A1;
+    var sq64 = 0;
+}
+
 function init() {
     console.log("init() called");
     InitFilesRanksBrd();
