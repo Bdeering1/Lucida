@@ -31,7 +31,7 @@ var START_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 var PieceChar = ".PNBRQKpnbrqk"; /*changed from PceChar*/
 var SideChar = "wb-";
 var RankChar = "12345678";
-var FileChar = "abcdefg";
+var FileChar = "abcdefgh";
 
 function FR2SQ(f,r) { /*file rank to square*/
     return ( 21 + (f) ) + ( (r) * 10 );
@@ -57,11 +57,11 @@ var SideKey; /*which side is to move*/
 var CastleKeys = new Array(16);
 
 var Sq120ToSq64 = new Array(BRD_SQ_NUM);
-var Sq64ToSq120 = new Array(64); /*when do we populate this??*/
+var Sq64ToSq120 = new Array(64); /*populated in main*/
 
 function RAND_32() {
-    return (Math.floor((Math.random()*225)+1) << 23) | (Math.floor((Math.random()*225)+1) << 16) |
-            (Math.floor((Math.random()*225)+1) << 8) | (Math.floor((Math.random()*225)+1));
+    return (Math.floor((Math.random()*255)+1) << 23) | (Math.floor((Math.random()*255)+1) << 16) |
+            (Math.floor((Math.random()*255)+1) << 8) | Math.floor((Math.random()*255)+1);
 }
 
 function SQ64(sq120) {

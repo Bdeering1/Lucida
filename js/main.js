@@ -41,11 +41,11 @@ function InitHashKeys() {
     SideKey = RAND_32(); /* hashed in if white is to move*/
     
     for (i = 0; i < 16; i++) {
-        CasteKeys[i] = RAND_32();
+        CastleKeys[i] = RAND_32();
     }
 }
 
-function InitSq120ToSq64() { /*this could probably be done better*/
+function InitSq120ToSq64() { /*this could probably be done better*/ 
     var index = 0;
     var file = FILES.FILE_A;
     var rank = RANKS.RANK_1;
@@ -57,11 +57,11 @@ function InitSq120ToSq64() { /*this could probably be done better*/
     }
     
     for (i = 0; i < 64; i++) {
-        Sq64ToSq120[i] = 64; /*changed from 65 in original*/
+        Sq64ToSq120[i] = 65; /*changed from 65 in original*/
     }
     
-    for (rank = RANKS.RANK_1; rank < RANKS.RANK_8; rank ++) {
-        for (file = FILES.FILE_A; file < FILES.FILE_H; file++) {
+    for (rank = RANKS.RANK_1; rank <= RANKS.RANK_8; rank ++) {
+        for (file = FILES.FILE_A; file <= FILES.FILE_H; file++) {
             sq = FR2SQ(file,rank);
             Sq120ToSq64[sq] = sq64;
             Sq64ToSq120[sq64] = sq;
@@ -72,5 +72,7 @@ function InitSq120ToSq64() { /*this could probably be done better*/
 
 function init() {
     console.log("init() called");
+    InitFilesRanksBrd();
+    InitHashKeys();
     InitFilesRanksBrd();
 }
