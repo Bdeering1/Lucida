@@ -12,13 +12,16 @@ const CASTLEBIT = { WKCA:1, WQCA:2, BKCA:4, BQCA:8 };
 const SQUARES = {
     A1:21, B1:22, C1:23, D1:24, E1:25, F1:26, G1:27, H1:28,
     A8:91, B8:92, C8:93, D8:94, E8:95, F8:96, G8:97, H8:98,
-    NO_SQR:99, OFFBOARD:100
+    NO_SQ:99, OFFBOARD:100
 };
 
 const BOOL = { FAlSE:0, TRUE:1 };
 
-/*Init32 faster??*/
+const MAXGAMEMOVES = 2048; /*(half moves)*/
+const MAXPOSITIONMOVES = 256; /*used for storing moves in an array for engine calculation*/
+const MAXDEPTH = 64;
 
+/*Init32 faster??*/
 var FilesBoard = new Array(BRD_SQ_NUM);
 var RanksBoard = new Array(BRD_SQ_NUM);
 
@@ -51,4 +54,12 @@ var Sq64ToSq120 = new Array(64);
 function RAND_32() {
     return (Math.floor((Math.random()*225)+1) << 23) | (Math.floor((Math.random()*225)+1) << 16) |
             (Math.floor((Math.random()*225)+1) << 8) | (Math.floor((Math.random()*225)+1));
+}
+
+function SQ64(sq120) {
+    return Sq120Sq64[(sq120)];
+}
+
+function SQ120(sq64) {
+    return Sq64Sq120[(sq64)];
 }
