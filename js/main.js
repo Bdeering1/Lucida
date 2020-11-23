@@ -23,12 +23,7 @@ function InitFilesRanksBrd() {
             FilesBoard[sq] = file;
             RanksBoard[sq] = rank;
         }
-    }
-    
-    console.log("FilesBoard[0]: " + FilesBoard[0] + " RanksBoard[0]: " + RanksBoard[0]);
-    console.log("FilesBoard[SQUARES.A1]: " + FilesBoard[SQUARES.A1] + " RanksBoard[SQUARES.A1]: " + RanksBoard[SQUARES.A1]);
-    console.log("FilesBoard[SQUARES.E8]: " + FilesBoard[SQUARES.E8] + " RanksBoard[SQUARES.E8]: " + RanksBoard[SQUARES.E8]);
-    
+    }  
 }
 
 function InitHashKeys() {

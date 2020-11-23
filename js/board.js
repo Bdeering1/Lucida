@@ -48,7 +48,7 @@ function PrintBoard() {
     if (GameBoard.castlePerm & CASTLEBIT.BKCA) line += 'k'; 
     if (GameBoard.castlePerm & CASTLEBIT.BQCA) line += 'q';
     console.log("Castle: " + line);
-    console.log("Key: " + GameBoard.posKey + " or " + GameBoard.posKey.toString(16));
+    console.log("Key: " + GameBoard.posKey.toString(16));
 }
 
 function GeneratePosKey() {
@@ -56,12 +56,10 @@ function GeneratePosKey() {
     var finalKey = 0;
     var piece = PIECES.EMPTY;
     
-    console.log("PIECE KEYS: ");
     for (sq = 0; sq < BRD_SQ_NUM; sq++) {
         piece = GameBoard.pieces[sq];
         if (piece != PIECES.EMPTY && piece != SQUARES.OFFBOARD) {
             finalKey ^= PieceKeys[(piece * 120) + sq]; /* XORing one of the 14 * 120 random generated hashes into the final key */
-            console.log(PieceKeys[(piece * 120) + sq]); /*these are undefined????*/
         }
     }
     
@@ -74,8 +72,6 @@ function GeneratePosKey() {
     }
     
     finalKey ^= CastleKeys[GameBoard.castlePerm];
-    
-    console.log("posKey generated: " + finalKey);
     
     return finalKey;
 }
