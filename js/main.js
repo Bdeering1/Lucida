@@ -70,4 +70,5 @@ function init() {
     InitFilesRanksBrd();
     InitHashKeys();
     InitFilesRanksBrd();
+    InitSq120ToSq64();
 }

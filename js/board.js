@@ -1,5 +1,5 @@
 function PIECEINDEX(piece, pieceNum) {
-    return (piece * 10 + pieceNUm);
+    return (piece * 10 + pieceNum);
 }
 
 var GameBoard = {};
@@ -13,7 +13,7 @@ GameBoard.enPas = 0; /* stores one square where en passent can happen (only one 
 GameBoard.castlePerm = 0; /* one of 16 numbers representing the different castle permissions for each side*/
 GameBoard.material = new Array(2); /*white, black material total*/
 GameBoard.numPieces = new Array(13); /*number of each type of piece for each side, indexed by PIECES, previously pieceNum*/
-GameBoard.pList = new Array(14 * 10); /* this might be wrong????????*/
+GameBoard.pList = new Array(14 * 10); /*list of pieces (10 max of each piece type), stores the square each piece is on, indexed by PIECEINDEX*/
 GameBoard.posKey = 0; /*unique key for each board position, used for repetition detection*/
 
 GameBoard.moveList = new Array(MAXDEPTH * MAXPOSITIONMOVES);
@@ -76,16 +76,10 @@ function GeneratePosKey() {
     return finalKey;
 }
 
-function ResetBoard() {
-    for (i = 0; i < BRD_SQ_NUM; i++) {
-        GameBoard.pieces[i] = SQUARES.OFFBOARD;
-    }
+function UpdateListsMaterial() {
+    var piece, sq, colour;
     
-    for (i = 0; i < 64; i++) {
-        GameBoard.pieces[SQ120(i)] = PIECES.EMPTY;
-    }
-    
-    for (i = 0; i < 14 * 120; i++) { /*120?? 10??*/
+    for (i = 0; i < 14 * 10; i++) { /*120?? 10?? just changed this value*/
         GameBoard.pList[i] = PIECES.EMPTY;
     }
     
@@ -95,6 +89,29 @@ function ResetBoard() {
     
     for (i = 0; i < 13; i++) {
         GameBoard.numPieces[i] = 0;
+    }
+    
+    for (i = 0; i < 64; i++) {
+        sq = SQ120(i);
+        piece = GameBoard.pieces[sq];
+        if (piece != PIECES.EMPTY) {
+            colour = PieceCol[piece];
+            
+            GameBoard.material[colour] += PieceVal[piece];
+            
+            GameBoard.pList[PIECEINDEX(piece, GameBoard.numPieces[piece])] = sq;
+            GameBoard.numPieces[piece]++;
+        }
+    }
+}
+
+function ResetBoard() {
+    for (i = 0; i < BRD_SQ_NUM; i++) {
+        GameBoard.pieces[i] = SQUARES.OFFBOARD;
+    }
+    
+    for (i = 0; i < 64; i++) {
+        GameBoard.pieces[SQ120(i)] = PIECES.EMPTY;
     }
     
     GameBoard.side = COLOURS.BOTH;
@@ -190,6 +207,8 @@ function ParseFen(fen) {
     }
     
     GameBoard.posKey = GeneratePosKey();
+    
+    UpdateListsMaterial();
 }
 
 
