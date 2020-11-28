@@ -1,9 +1,62 @@
+h3 {
+    position: absolute;
+    margin: auto;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    
+    font-family: "Rouge Script";
+    font-size: 96px;
+    color: BLUE;
+}
+
+body {
+    background-color: BLACK;
+}
+
+#ParentDiv {
+    width: 440px;
+    height: 60px;
+    left: 50%;
+    top: 100%;
+    position: absolute;
+    transform: translateX(-50%);
+    
+    /*background-color: PURPLE;*/
+}
+
 #FenInDiv {
-    position: relative;
-    left: 60px;
+    width: 440px;
+    height: 50%;
+    display: inline-block;
+    
+    color: BLUE;
+    /*background-color: RED;*/
+}
+#SetFenDiv {
+    width: 440px;
+    height: 50%;
+    display: inline-block;
+    
+    /*background-color: YELLOW;*/
 }
 
 #fenIn {
-    width: 480px;
-    left: 60px;
+    width: 100%;
+    top: 50%;
+    left: 50%;
+    margin: auto;
+    position: relative;
+    transform: translateX(-50%) translateY(-50%);
+}
+#SetFen {
+    top: 50%;
+    left: 50%;
+    margin: auto;
+    position: relative;
+    transform: translateX(-50%) translateY(-50%);
+    
+    color: WHITE;
+    background-color: BLUE;
+    border-color: BLUE;
 }

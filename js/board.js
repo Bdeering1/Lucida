@@ -9,7 +9,7 @@ GameBoard.side = COLOURS.WHITE;
 GameBoard.fiftyMove = 0;
 GameBoard.plyNum = 0; /*actual ply*/
 GameBoard.ply = 0; /*ply for engine calculation*/
-GameBoard.enPas = 0; /* stores one square where en passent can happen (only one total is possible at a time)*/
+GameBoard.enPas = 0; /* stores one square where en passant can happen (only one total is possible at a time)*/
 GameBoard.castlePerm = 0; /* one of 16 numbers representing the different castle permissions for each side*/
 GameBoard.material = new Array(2); /*white, black material total*/
 GameBoard.numPieces = new Array(13); /*number of each type of piece for each side, indexed by PIECES, previously pieceNum*/
@@ -76,6 +76,18 @@ function GeneratePosKey() {
     return finalKey;
 }
 
+function PrintPieceLists() {
+    
+    var piece, pieceNum;
+    
+    for (piece = PIECES.wP; piece <= PIECES.bK; piece++) {
+        for (numPieces = 0; numPieces < GameBoard.numPieces[piece]; numPieces++) {
+            console.log(PieceChar[piece] + " on " + PrSq(GameBoard.pList[PIECEINDEX(piece, numPieces)]));
+        }
+    }
+    
+}
+
 function UpdateListsMaterial() {
     var piece, sq, colour;
     
@@ -103,6 +115,8 @@ function UpdateListsMaterial() {
             GameBoard.numPieces[piece]++;
         }
     }
+    
+    PrintPieceLists();
 }
 
 function ResetBoard() {
