@@ -229,13 +229,21 @@ function ParseFen(fen) {
 }
 
 /*Looking for threats on the board*/
-function isAttacked(sq, side) {
+function SqAttacked(sq, side) {
     var pce;
     var t_sq;
     var index;
     
     /*Pawn attacks*/
-    
+    if (side = COLOURS.WHITE) {
+        if (GameBoard.pieces[sq - 11] == PIECES.wP || GameBoard.pieces[sq - 9] == PIECES.wP) {
+            return true;
+        }
+    } else {
+        if (GameBoard.pieces[sq + 11] == PIECES.bP || GameBoard.pieces[sq + 9] == PIECES.bP) {
+            return true;
+        }
+    }
     /*Knight attacks*/
     
     /*Bishop(like) attacks*/

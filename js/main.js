@@ -1,6 +1,6 @@
-$(function() {
+$(document).ready(function() {
     init();
-    console.log("Init() returned to main");
+    console.log("Init() returned to main");    
     
     ParseFen(START_FEN);
     PrintBoard();
