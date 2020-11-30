@@ -15,8 +15,6 @@ const SQUARES = {
     NO_SQ:99, OFFBOARD:100
 };
 
-const BOOL = { FAlSE:0, TRUE:1 };
-
 const MAXGAMEMOVES = 2048; /*(half moves)*/
 const MAXPOSITIONMOVES = 256; /*used for storing moves in an array for engine calculation*/
 const MAXDEPTH = 64;
@@ -37,19 +35,19 @@ function FR2SQ(f,r) { /*file rank to square*/
     return ( 21 + (f) ) + ( (r) * 10 );
 }
 
-var PieceBig = [ BOOL.FALSE, BOOL.FALSE, BOOL.TRUE, BOOL.TRUE, BOOL.TRUE, BOOL.TRUE, BOOL.TRUE, BOOL.FALSE, BOOL.TRUE, BOOL.TRUE, BOOL.TRUE, BOOL.TRUE, BOOL.TRUE ];
-var PieceMaj = [ BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.TRUE, BOOL.TRUE, BOOL.TRUE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.TRUE, BOOL.TRUE, BOOL.TRUE ];
-var PieceMin = [ BOOL.FALSE, BOOL.FALSE, BOOL.TRUE, BOOL.TRUE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.TRUE, BOOL.TRUE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE ];
+var PieceBig = [ false, false, true, true, true, true, true, false, true, true, true, true, true ];
+var PieceMaj = [ false, false, false, false, true, true, true, false, false, false, true, true, true ];
+var PieceMin = [ false, false, true, true, false, false, false, false, true, true, false, false, false ];
 var PieceVal= [ 0, 100, 325, 325, 550, 1000, 50000, 100, 325, 325, 550, 1000, 50000  ];
 var PieceCol = [ COLOURS.BOTH, COLOURS.WHITE, COLOURS.WHITE, COLOURS.WHITE, COLOURS.WHITE, COLOURS.WHITE, COLOURS.WHITE,
 	COLOURS.BLACK, COLOURS.BLACK, COLOURS.BLACK, COLOURS.BLACK, COLOURS.BLACK, COLOURS.BLACK ];
 	
-var PiecePawn = [ BOOL.FALSE, BOOL.TRUE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.TRUE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE ];	
-var PieceKnight = [ BOOL.FALSE, BOOL.FALSE, BOOL.TRUE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.TRUE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE ];
-var PieceKing = [ BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.TRUE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.TRUE ];
-var PieceRookQueen = [ BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.TRUE, BOOL.TRUE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.TRUE, BOOL.TRUE, BOOL.FALSE ];
-var PieceBishopQueen = [ BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.TRUE, BOOL.FALSE, BOOL.TRUE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.TRUE, BOOL.FALSE, BOOL.TRUE, BOOL.FALSE ];
-var PieceSlides = [ BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.TRUE, BOOL.TRUE, BOOL.TRUE, BOOL.FALSE, BOOL.FALSE, BOOL.FALSE, BOOL.TRUE, BOOL.TRUE, BOOL.TRUE, BOOL.FALSE ];
+var PiecePawn = [ false, true, false, false, false, false, false, true, false, false, false, false, false ];	
+var PieceKnight = [ false, false, true, false, false, false, false, false, true, false, false, false, false ];
+var PieceKing = [ false, false, false, false, false, false, true, false, false, false, false, false, true ];
+var PieceRookQueen = [ false, false, false, false, true, true, false, false, false, false, true, true, false ];
+var PieceBishopQueen = [ false, false, false, true, false, true, false, false, false, true, false, true, false ];
+var PieceSlides = [ false, false, false, true, true, true, false, false, false, true, true, true, false ];
 
 /* Piece * 120 + square (gives 120 space for each piece type and with the square number added on top ensures the key is unique) */
 var PieceKeys = new Array(14 * 120); /*why is there 14??*/
@@ -71,3 +69,23 @@ function SQ64(sq120) {
 function SQ120(sq64) {
     return Sq64ToSq120[(sq64)];
 }
+
+/*Adding padEnd() to js if not found*/
+if (!String.prototype.padEnd) {
+    String.prototype.padEnd = function padEnd(targetLength,padString) {
+        targetLength = targetLength>>0; //truncate if number or convert non-number to 0;
+        padString = String((typeof padString !== 'undefined' ? padString : ' '));
+        if (this.length > targetLength) {
+            return String(this);
+        }
+        else {
+            targetLength = targetLength-this.length;
+            if (targetLength > padString.length) {
+                padString += padString.repeat(targetLength/padString.length); //append to original to ensure we are longer than needed
+            }
+            return String(this) + padString.slice(0,targetLength);
+        }
+    };
+}
+
+console.log("defs.js success");

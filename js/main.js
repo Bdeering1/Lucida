@@ -1,13 +1,13 @@
 $(function() {
     init();
-    console.log("Main Init Called");
+    console.log("Init() returned to main");
     
     ParseFen(START_FEN);
     PrintBoard();
 });
 
 function InitFilesRanksBrd() {
-    
+    console.log("InitFilesRanksBrd() called");
     var file = FILES.FILE_A;
     var rank = RANKS.RANK_1;
     var sq = SQUARES.A1;
@@ -23,11 +23,20 @@ function InitFilesRanksBrd() {
             FilesBoard[sq] = file;
             RanksBoard[sq] = rank;
         }
-    }  
+    }
+    
+    var line = "   ";
+    for (i = 0; i < BRD_SQ_NUM; i++) {
+        line += RanksBoard[i].toString().padEnd(4);
+        if ((i + 1) % 10 === 0) {
+            console.log(line);
+            line = "   ";
+        }
+    }
 }
 
 function InitHashKeys() {
-    var index = 0;
+    console.log("InitHashKeys() called");
     
     for (i = 0; i < 14 * 120; i++) {
         PieceKeys[i] = RAND_32();
@@ -41,7 +50,6 @@ function InitHashKeys() {
 }
 
 function InitSq120ToSq64() { /*this could probably be done better*/ 
-    var index = 0;
     var file = FILES.FILE_A;
     var rank = RANKS.RANK_1;
     var sq = SQUARES.A1;
@@ -68,7 +76,8 @@ function InitSq120ToSq64() { /*this could probably be done better*/
 function init() {
     console.log("init() called");
     InitFilesRanksBrd();
+    console.log("InitFilesRanksBrd() finished");
     InitHashKeys();
-    InitFilesRanksBrd();
+    console.log("InitHashKeys() finished");
     InitSq120ToSq64();
 }

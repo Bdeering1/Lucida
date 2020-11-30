@@ -20,7 +20,8 @@ GameBoard.moveList = new Array(MAXDEPTH * MAXPOSITIONMOVES);
 GameBoard.moveScores = new Array(MAXDEPTH * MAXPOSITIONMOVES);
 GameBoard.moveListStart = new Array(MAXDEPTH);
 
-function PrintBoard() {
+/*Called from main*/
+function PrintBoard() { /*Gameboard: pieces, side, enPas, castlePerm, posKey*/
     var sq, file, rank, piece;
 
     console.log("\nGameBoard:\n");
@@ -88,6 +89,7 @@ function PrintPieceLists() {
     
 }
 
+/*Calls PrintPieceLists*/
 function UpdateListsMaterial() {
     var piece, sq, colour;
     
@@ -116,7 +118,7 @@ function UpdateListsMaterial() {
         }
     }
     
-    PrintPieceLists();
+    /*PrintPieceLists();*/
 }
 
 function ResetBoard() {
@@ -138,6 +140,7 @@ function ResetBoard() {
     GameBoard.moveListStart[GameBoard.ply] = 0;
 }
 
+/*Calls ResetBoard, UpdateListsMaterial, and GeneratePosKey*/
 function ParseFen(fen) {
     ResetBoard();
     
@@ -225,8 +228,24 @@ function ParseFen(fen) {
     UpdateListsMaterial();
 }
 
-
-
+/*Looking for threats on the board*/
+function isAttacked(sq, side) {
+    var pce;
+    var t_sq;
+    var index;
+    
+    /*Pawn attacks*/
+    
+    /*Knight attacks*/
+    
+    /*Bishop(like) attacks*/
+    
+    /*Rook(like) attacks*/
+    
+    /*King attacks*/
+    
+    return false;
+}
 
 
 
