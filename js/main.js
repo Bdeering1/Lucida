@@ -3,6 +3,7 @@ $(document).ready(function() {
     console.log("Init() returned to main");    
     
     ParseFen(START_FEN);
+    console.log("ParseFen() returned to main")
     PrintBoard();
 });
 

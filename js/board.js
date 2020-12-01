@@ -142,6 +142,7 @@ function ResetBoard() {
 
 /*Calls ResetBoard, UpdateListsMaterial, and GeneratePosKey*/
 function ParseFen(fen) {
+    console.log("ParseFen() called");
     ResetBoard();
     
     var rank = RANKS.RANK_8;
@@ -226,13 +227,31 @@ function ParseFen(fen) {
     GameBoard.posKey = GeneratePosKey();
     
     UpdateListsMaterial();
+    PrintSqAttacked();
+}
+
+/*For debugging SqAttacked, called by ParseFen()*/
+function PrintSqAttacked() {
+    var sq, file, rank, piece;
+    
+    console.log("\nSquares attacked (by current side to move) \n");
+    
+    for (rank = RANKS.RANK_8; rank >= RANKS.RANK_1; rank--) { /*going from the backrank so that it prints nicely*/
+        var line = (RankChar[rank] + "  ");
+        for (file = FILES.FILE_A; file <= FILES.FILE_H; file++) {
+            sq = FR2SQ(file, rank);
+            if (SqAttacked(sq, GameBoard.side) == true) piece = "X";
+            else piece = "-";
+            line += (" " + piece + " ");
+        }
+        console.log(line);
+    }
+    console.log("");
 }
 
 /*Looking for threats on the board*/
 function SqAttacked(sq, side) { /*(is this square attacked by this side?)*/
-    var pce;
-    var t_sq;
-    var index;
+    var pce, t_sq, dir;
     
 /*Non sliding attacks (pawn, knight, and king)*/
     if (side == COLOURS.WHITE) {
@@ -244,7 +263,7 @@ function SqAttacked(sq, side) { /*(is this square attacked by this side?)*/
                 return true;
             }
         }
-        for (i = 0; i < 4; i++) {
+        for (i = 0; i < 8; i++) {
             if (GameBoard.pieces[sq + KDir[i]] == PIECES.wK) {
                 return true;
             }
@@ -259,7 +278,7 @@ function SqAttacked(sq, side) { /*(is this square attacked by this side?)*/
                 return true;
             }
         }
-        for (i = 0; i < 4; i++) {
+        for (i = 0; i < 8; i++) {
             if (GameBoard.pieces[sq + KDir[i]] == PIECES.bK) {
                 return true;
             }
@@ -279,6 +298,7 @@ function SqAttacked(sq, side) { /*(is this square attacked by this side?)*/
                 break;
             }
             t_sq += dir;
+            pce = GameBoard.pieces[t_sq];
         }
     }
     /*Rook + Queen attacks*/
@@ -294,6 +314,7 @@ function SqAttacked(sq, side) { /*(is this square attacked by this side?)*/
                 break;
             }
             t_sq += dir;
+            pce = GameBoard.pieces[t_sq];
         }
     }
     
