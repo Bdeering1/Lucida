@@ -229,28 +229,73 @@ function ParseFen(fen) {
 }
 
 /*Looking for threats on the board*/
-function SqAttacked(sq, side) {
+function SqAttacked(sq, side) { /*(is this square attacked by this side?)*/
     var pce;
     var t_sq;
     var index;
     
-    /*Pawn attacks*/
-    if (side = COLOURS.WHITE) {
+/*Non sliding attacks (pawn, knight, and king)*/
+    if (side == COLOURS.WHITE) {
         if (GameBoard.pieces[sq - 11] == PIECES.wP || GameBoard.pieces[sq - 9] == PIECES.wP) {
             return true;
         }
+        for (i = 0; i < 8; i++) {
+            if (GameBoard.pieces[sq + NDir[i]] == PIECES.wN) {
+                return true;
+            }
+        }
+        for (i = 0; i < 4; i++) {
+            if (GameBoard.pieces[sq + KDir[i]] == PIECES.wK) {
+                return true;
+            }
+        }
+        
     } else {
         if (GameBoard.pieces[sq + 11] == PIECES.bP || GameBoard.pieces[sq + 9] == PIECES.bP) {
             return true;
         }
+        for (i = 0; i < 8; i++) {
+            if (GameBoard.pieces[sq + NDir[i]] == PIECES.bN) {
+                return true;
+            }
+        }
+        for (i = 0; i < 4; i++) {
+            if (GameBoard.pieces[sq + KDir[i]] == PIECES.bK) {
+                return true;
+            }
+        }
     }
-    /*Knight attacks*/
     
-    /*Bishop(like) attacks*/
-    
-    /*Rook(like) attacks*/
-    
-    /*King attacks*/
+    /*Bishop + Queen attacks*/
+        for (i = 0; i < 4; i++) {
+        dir = BDir[i];
+        t_sq = sq + dir;
+        pce = GameBoard.pieces[t_sq];
+        while (pce != SQUARES.OFFBOARD) {
+            if (pce != PIECES.EMPTY) {
+                if (PieceBishopQueen[pce] == true && PieceCol[pce] == side) {
+                    return true;
+                }
+                break;
+            }
+            t_sq += dir;
+        }
+    }
+    /*Rook + Queen attacks*/
+    for (i = 0; i < 4; i++) {
+        dir = RDir[i];
+        t_sq = sq + dir;
+        pce = GameBoard.pieces[t_sq];
+        while (pce != SQUARES.OFFBOARD) {
+            if (pce != PIECES.EMPTY) {
+                if (PieceRookQueen[pce] == true && PieceCol[pce] == side) {
+                    return true;
+                }
+                break;
+            }
+            t_sq += dir;
+        }
+    }
     
     return false;
 }

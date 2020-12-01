@@ -42,12 +42,17 @@ var PieceVal= [ 0, 100, 325, 325, 550, 1000, 50000, 100, 325, 325, 550, 1000, 50
 var PieceCol = [ COLOURS.BOTH, COLOURS.WHITE, COLOURS.WHITE, COLOURS.WHITE, COLOURS.WHITE, COLOURS.WHITE, COLOURS.WHITE,
 	COLOURS.BLACK, COLOURS.BLACK, COLOURS.BLACK, COLOURS.BLACK, COLOURS.BLACK, COLOURS.BLACK ];
 	
-var PiecePawn = [ false, true, false, false, false, false, false, true, false, false, false, false, false ];	
-var PieceKnight = [ false, false, true, false, false, false, false, false, true, false, false, false, false ];
-var PieceKing = [ false, false, false, false, false, false, true, false, false, false, false, false, true ];
+var PiecePawn = [ false, true, false, false, false, false, false, true, false, false, false, false, false ]; /*not used so far, needed?*/
+var PieceKnight = [ false, false, true, false, false, false, false, false, true, false, false, false, false ]; /*not used either*/
+var PieceKing = [ false, false, false, false, false, false, true, false, false, false, false, false, true ]; /*not used either*/
 var PieceRookQueen = [ false, false, false, false, true, true, false, false, false, false, true, true, false ];
 var PieceBishopQueen = [ false, false, false, true, false, true, false, false, false, true, false, true, false ];
 var PieceSlides = [ false, false, false, true, true, true, false, false, false, true, true, true, false ];
+
+var NDir = [ -8, -19, -21, -12, 8, 19, 21, 12 ];
+var RDir = [ -1, -10, 1, 10 ];
+var BDir = [ -9, -11, 11, 9 ];
+var KDir = [ -1, -10, 1, 10, -9, -11, 11, 9 ];
 
 /* Piece * 120 + square (gives 120 space for each piece type and with the square number added on top ensures the key is unique) */
 var PieceKeys = new Array(14 * 120); /*why is there 14??*/
