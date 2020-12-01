@@ -14,6 +14,29 @@ body {
     background-color: BLACK;
 }
 
+#BoardDiv {
+    width: 800px;
+    height: 800px;
+    display: none;
+    
+    position: absolute;
+    margin: auto;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+
+    background-color: WHITE;
+}
+
+#boardText {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    
+    color: BLACK;
+}
+
 #ParentDiv {
     width: 440px;
     height: 60px;
@@ -49,7 +72,7 @@ body {
     position: relative;
     transform: translateX(-50%) translateY(-50%);
 }
-#SetFen {
+#setFen {
     top: 50%;
     left: 50%;
     margin: auto;
