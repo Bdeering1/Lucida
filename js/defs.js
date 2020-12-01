@@ -75,6 +75,21 @@ function SQ120(sq64) {
     return Sq64ToSq120[(sq64)];
 }
 
+function FROMSQ(m) { return  (m & 0x7F); } /*m = move*/
+function TOSQ(m) { return  ( (m >> 7) & 0x7F); }
+function CAPTURED(m) { return  ( (m >> 14) & 0xF); }
+function PROMOTED(m) { return  ( (m >> 20) & 0xF); }
+
+/*Flags to bitwise and with*/
+var MFLAGEP = 0x40000;
+var MFLAGPS = 0x80000;
+var MFLAGCA = 0x1000000;
+
+var MFLAGCAP = 0x7C; /*returns a non zero number if there was a capture (inlcudes en passant)*/
+var MFLAGPROM = 0xF00000; /*why aren't these just used instead of doing the whole shift??*/
+
+var NOMOVE = 0;
+
 /*Adding padEnd() to js if not found*/
 if (!String.prototype.padEnd) {
     String.prototype.padEnd = function padEnd(targetLength,padString) {
