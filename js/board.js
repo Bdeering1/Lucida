@@ -268,7 +268,7 @@ function SqAttacked(sq, side) { /*(is this square attacked by this side?)*/
     
 /*Non sliding attacks (pawn, knight, and king)*/
     if (side == COLOURS.WHITE) {
-        if (GameBoard.pieces[sq - 11] == PIECES.wP || GameBoard.pieces[sq - 9] == PIECES.wP) {
+        if (GameBoard.pieces[sq + 11] == PIECES.wP || GameBoard.pieces[sq + 9] == PIECES.wP) {
             return true;
         }
         for (i = 0; i < 8; i++) {
@@ -283,7 +283,7 @@ function SqAttacked(sq, side) { /*(is this square attacked by this side?)*/
         }
         
     } else {
-        if (GameBoard.pieces[sq + 11] == PIECES.bP || GameBoard.pieces[sq + 9] == PIECES.bP) {
+        if (GameBoard.pieces[sq - 11] == PIECES.bP || GameBoard.pieces[sq - 9] == PIECES.bP) {
             return true;
         }
         for (i = 0; i < 8; i++) {
