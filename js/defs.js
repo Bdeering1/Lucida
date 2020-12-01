@@ -32,7 +32,7 @@ var RankChar = "12345678";
 var FileChar = "abcdefgh";
 
 function FR2SQ(f,r) { /*file rank to square*/
-    return ( 21 + (f) ) + ( (r) * 10 );
+    return ( 21 + (f) ) + ( 60 - ((r) * 10) ); /*********JUST CHANGED, MAY NOT BE CORRECT************* (yep it breaks SqAttacked somehow)*/
 }
 
 var PieceBig = [ false, false, true, true, true, true, true, false, true, true, true, true, true ];

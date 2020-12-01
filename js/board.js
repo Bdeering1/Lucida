@@ -234,13 +234,26 @@ function ParseFen(fen) {
 function PrintSqAttacked() {
     var sq, file, rank, piece;
     
-    console.log("\nSquares attacked (by current side to move) \n");
+    console.log("\nSquares attacked by white: \n");
     
     for (rank = RANKS.RANK_8; rank >= RANKS.RANK_1; rank--) { /*going from the backrank so that it prints nicely*/
         var line = (RankChar[rank] + "  ");
         for (file = FILES.FILE_A; file <= FILES.FILE_H; file++) {
             sq = FR2SQ(file, rank);
-            if (SqAttacked(sq, GameBoard.side) == true) piece = "X";
+            if (SqAttacked(sq, COLOURS.WHITE) == true) piece = "X";
+            else piece = "-";
+            line += (" " + piece + " ");
+        }
+        console.log(line);
+    }
+    console.log("");
+    
+    console.log("\nSquares attacked by black: \n");
+    for (rank = RANKS.RANK_8; rank >= RANKS.RANK_1; rank--) { /*going from the backrank so that it prints nicely*/
+        var line = (RankChar[rank] + "  ");
+        for (file = FILES.FILE_A; file <= FILES.FILE_H; file++) {
+            sq = FR2SQ(file, rank);
+            if (SqAttacked(sq, COLOURS.BLACK) == true) piece = "X";
             else piece = "-";
             line += (" " + piece + " ");
         }
