@@ -12,8 +12,8 @@ GameBoard.ply = 0; /*ply for engine calculation*/
 GameBoard.enPas = 0; /* stores one square where en passant can happen (only one total is possible at a time)*/
 GameBoard.castlePerm = 0; /* one of 16 numbers representing the different castle permissions for each side*/
 GameBoard.material = new Array(2); /*white, black material total*/
-GameBoard.numPieces = new Array(13); /*number of each type of piece for each side, indexed by PIECES, previously pieceNum*/
-GameBoard.pList = new Array(14 * 10); /*list of pieces (10 max of each piece type), stores the square each piece is on, indexed by PIECEINDEX*/
+GameBoard.numPieces = new Array(13); /*number of each type of piece for each side, indexed by PIECES, previously pceNum*/
+GameBoard.pList = new Array(13 * 10); /*list of pieces (10 max of each piece type), stores the square each piece is on, indexed by PIECEINDEX*/
 GameBoard.posKey = 0; /*unique key for each board position, used for repetition detection*/
 
 GameBoard.moveList = new Array(MAXDEPTH * MAXPOSITIONMOVES);
@@ -60,7 +60,7 @@ function GeneratePosKey() {
     for (sq = 0; sq < BRD_SQ_NUM; sq++) {
         piece = GameBoard.pieces[sq];
         if (piece != PIECES.EMPTY && piece != SQUARES.OFFBOARD) {
-            finalKey ^= PieceKeys[(piece * 120) + sq]; /* XORing one of the 14 * 120 random generated hashes into the final key */
+            finalKey ^= PieceKeys[(piece * 120) + sq]; /* XORing one of the 13 * 120 random generated hashes into the final key */
         }
     }
     
@@ -93,7 +93,7 @@ function PrintPieceLists() {
 function UpdateListsMaterial() {
     var piece, sq, colour;
     
-    for (i = 0; i < 14 * 10; i++) { /*120?? 10?? just changed this value*/
+    for (i = 0; i < 13 * 10; i++) { /*120?? 10?? just changed this value*/
         GameBoard.pList[i] = PIECES.EMPTY;
     }
     

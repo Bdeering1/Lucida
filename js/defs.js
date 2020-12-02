@@ -54,8 +54,13 @@ var RDir = [ -1, -10, 1, 10 ];
 var BDir = [ -9, -11, 11, 9 ];
 var KDir = [ -1, -10, 1, 10, -9, -11, 11, 9 ];
 
+var DirNum = [ 0, 0, 8, 4, 4, 8, 8, 0, 8, 4, 4, 8, 8 ];
+var PceDir = [ 0, 0, NDir, BDir, RDir, KDir, KDir, 0, NDir, BDir, RDir, KDir, KDir ];
+var LoopNonSlidePce = [ PIECES.wN, PIECES.wK, 0, PIECES.bN, PIECES.bK, 0 ];
+var LoopNonSlideIndex = [ 0, 3 ];
+
 /* Piece * 120 + square (gives 120 space for each piece type and with the square number added on top ensures the key is unique) */
-var PieceKeys = new Array(14 * 120); /*why is there 14??*/
+var PieceKeys = new Array(13 * 120); /*used to be 14 for some reason*/
 var SideKey; /*which side is to move*/
 var CastleKeys = new Array(16);
 
@@ -89,6 +94,11 @@ var MFLAGCAP = 0x7C; /*returns a non zero number if there was a capture (inlcude
 var MFLAGPROM = 0xF00000; /*why aren't these just used instead of doing the whole shift??*/
 
 var NOMOVE = 0;
+
+function SQOFFBOARD(sq) {
+    if (FilesBoard[sq] == SQUARES.OFFBOARD) return true;
+    return false;
+}
 
 /*Adding padEnd() to js if not found*/
 if (!String.prototype.padEnd) {

@@ -3,8 +3,9 @@ $(document).ready(function() {
     console.log("Init() returned to main");    
     
     ParseFen(START_FEN);
-    console.log("ParseFen() returned to main")
+    console.log("ParseFen() returned to main");
     PrintBoard();
+    GenerateMoves();
 });
 
 function InitFilesRanksBrd() {
@@ -39,7 +40,7 @@ function InitFilesRanksBrd() {
 function InitHashKeys() {
     console.log("InitHashKeys() called");
     
-    for (i = 0; i < 14 * 120; i++) {
+    for (i = 0; i < 13 * 120; i++) {
         PieceKeys[i] = RAND_32();
     }
 
