@@ -115,6 +115,7 @@ function GenerateMoves() {
             for (i = 0; i < DirNum[pceType]; i++) {
                 dir = PceDir[pceType][i];
                 t_sq = sq + dir;
+                
                 if (SQOFFBOARD(t_sq)) {
                     continue;
                 } else if (GameBoard.pieces[t_sq] == PIECES.EMPTY) {
@@ -129,7 +130,32 @@ function GenerateMoves() {
     }
     
     /* Sliding Pieces */
+
+    pceIndex = LoopSlideIndex[GameBoard.side];
+    pceType = LoopSlidePce[pceIndex++];
     
-    
+    while (pceType != 0) {
+        for (pceNum = 0; pceNum < GameBoard.numPieces[pceType]; pceNum++) {
+            sq = GameBoard.pList[PIECEINDEX(pceType, pceNum)];
+            
+            for (i = 0; i < DirNum[pceType]; i++) {
+                dir = PceDir[pceType][i];
+                t_sq = sq + dir;
+                
+                while (SQOFFBOARD(t_sq) == false) {
+                    if (GameBoard.pieces[t_sq] != PIECES.EMPTY) {
+                        if (PieceCol[GameBoard.pieces[t_sq]] != GameBoard.side) {
+                            /*Add capture move*/
+                        }
+                        break;
+                    }
+                    /*Add quiet move*/
+                    t_sq += dir;
+                }
+            }
+        }
+        
+        pceType = LoopSlidePce[pceIndex++];
+    }
     
 }

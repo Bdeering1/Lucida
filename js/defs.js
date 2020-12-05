@@ -59,6 +59,9 @@ var PceDir = [ 0, 0, NDir, BDir, RDir, KDir, KDir, 0, NDir, BDir, RDir, KDir, KD
 var LoopNonSlidePce = [ PIECES.wN, PIECES.wK, 0, PIECES.bN, PIECES.bK, 0 ];
 var LoopNonSlideIndex = [ 0, 3 ];
 
+var LoopSlidePce = [ PIECES.wB, PIECES.wR, PIECES.wQ, 0, PIECES.bB, PIECES.bR, PIECES.bQ, 0];
+var LoopSlideIndex = [ 0, 4];
+
 /* Piece * 120 + square (gives 120 space for each piece type and with the square number added on top ensures the key is unique) */
 var PieceKeys = new Array(13 * 120); /*used to be 14 for some reason*/
 var SideKey; /*which side is to move*/
