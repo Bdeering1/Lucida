@@ -149,7 +149,6 @@ function ParseFen(fen) {
     var file = FILES.FILE_A;
     var piece = 0;
     var count = 0; /*dictates how many times the loop is run through for empty squares in fen string (number values)*/
-    var i = 0;
     var sq120 = 0;
     var fenCnt = 0; /*index for fen*/
     
@@ -205,7 +204,7 @@ function ParseFen(fen) {
     GameBoard.side = (fen[fenCnt] == 'w') ? COLOURS.WHITE : COLOURS.BLACK; /*if a 1 is found, set side to white, else set to black*/
     fenCnt += 2;
     
-    while (fen[fenCnt] != ' ')  { /*changed from orignial code, ensure this works****/
+    while (fen[fenCnt] != ' ')  {
         switch (fen[fenCnt]) { /*assumes the FEN string is correct*/
             case 'K': GameBoard.castlePerm |= CASTLEBIT.WKCA; break; /*setting each castling permission using bitwise or '|='*/
             case 'Q': GameBoard.castlePerm |= CASTLEBIT.WQCA; break;

@@ -2,19 +2,19 @@ function MOVE(from, to, captured, promoted, flag) {
     return (from | (to << 7) | (captured << 14) | (promoted << 20) | flag);
 }
 
-function addCaptureMove(move) {
+function AddCaptureMove(move) {
     GameBoard.moveList[GameBoard.moveListStart[GameBoard.ply+1]] = move; /*adding at ply 1 the first time*/
-    GameBoard.moveScore[GameBoard.moveListStart[GameBoard.ply+1]++] = 0; /*moveListStart incremented by one right after setting the score*/
+    GameBoard.moveScores[GameBoard.moveListStart[GameBoard.ply+1]++] = 0; /*moveListStart incremented by one right after setting the score*/
 }
 
-function addQuieteMove(move) {
+function AddQuieteMove(move) {
     GameBoard.moveList[GameBoard.moveListStart[GameBoard.ply+1]] = move; /*there are three of these functions because the scoring will be different for each*/
-    GameBoard.moveScore[GameBoard.moveListStart[GameBoard.ply+1]++] = 0;
+    GameBoard.moveScores[GameBoard.moveListStart[GameBoard.ply+1]++] = 0;
 }
 
-function addEnPassantMove(move) {
+function AddEnPassantMove(move) {
     GameBoard.moveList[GameBoard.moveListStart[GameBoard.ply+1]] = move;
-    GameBoard.moveScore[GameBoard.moveListStart[GameBoard.ply+1]++] = 0;
+    GameBoard.moveScores[GameBoard.moveListStart[GameBoard.ply+1]++] = 0;
 }
 
 function GenerateMoves() {
