@@ -2,14 +2,29 @@ function MOVE(from, to, captured, promoted, flag) {
     return (from | (to << 7) | (captured << 14) | (promoted << 20) | flag);
 }
 
+function addCaptureMove(move) {
+    GameBoard.moveList[GameBoard.moveListStart[GameBoard.ply+1]] = move; /*adding at ply 1 the first time*/
+    GameBoard.moveScore[GameBoard.moveListStart[GameBoard.ply+1]++] = 0; /*moveListStart incremented by one right after setting the score*/
+}
+
+function addQuieteMove(move) {
+    GameBoard.moveList[GameBoard.moveListStart[GameBoard.ply+1]] = move; /*there are three of these functions because the scoring will be different for each*/
+    GameBoard.moveScore[GameBoard.moveListStart[GameBoard.ply+1]++] = 0;
+}
+
+function addEnPassantMove(move) {
+    GameBoard.moveList[GameBoard.moveListStart[GameBoard.ply+1]] = move;
+    GameBoard.moveScore[GameBoard.moveListStart[GameBoard.ply+1]++] = 0;
+}
+
 function GenerateMoves() {
-    GameBoard.moveListStart[GameBoard.ply+1] = GameBoard.moveListStart[GameBoard.ply]; /*incremented by one each time a move is generated*/
+    GameBoard.moveListStart[GameBoard.ply+1] = GameBoard.moveListStart[GameBoard.ply]; /*ply + 1 is used to add moves and incremented each time a move is added, ply always catches up*/
     
     var pceType;
     var pceNum;
-    var sq;
+    var sq; /*from square*/
     var pceIndex;
-    var t_sq;
+    var t_sq; /*to square*/
     var dir;
     
     /* Side Specific Moves */
@@ -119,9 +134,9 @@ function GenerateMoves() {
                 if (SQOFFBOARD(t_sq)) {
                     continue;
                 } else if (GameBoard.pieces[t_sq] == PIECES.EMPTY) {
-                    /*Add quiet move*/
+                    AddCaptureMove( MOVE(sq, t_sq, PIECES.EMPTY, PIECES.EMPTY, 0 ));
                 } else if (PieceCol[GameBoard.pieces[t_sq]] != GameBoard.side) {
-                    /*Add capture move*/
+                    AddCaptureMove( MOVE(sq, t_sq, GameBoard.pieces[t_sq], PIECES.EMPTY, 0 ));
                 }
             }
         }
@@ -145,11 +160,11 @@ function GenerateMoves() {
                 while (SQOFFBOARD(t_sq) == false) {
                     if (GameBoard.pieces[t_sq] != PIECES.EMPTY) {
                         if (PieceCol[GameBoard.pieces[t_sq]] != GameBoard.side) {
-                            /*Add capture move*/
+                            AddCaptureMove( MOVE(sq, t_sq, GameBoard.pieces[t_sq], PIECES.EMPTY, 0 ));
                         }
                         break;
                     }
-                    /*Add quiet move*/
+                    AddCaptureMove( MOVE(sq, t_sq, PIECES.EMPTY, PIECES.EMPTY, 0 ));
                     t_sq += dir;
                 }
             }
