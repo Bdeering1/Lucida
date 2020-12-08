@@ -247,7 +247,7 @@ function PrintSqAttacked() {
     }
     console.log("");
     
-    console.log("\nSquares attacked by black: \n");
+    console.log("Squares attacked by black: \n");
     for (rank = RANKS.RANK_8; rank >= RANKS.RANK_1; rank--) { /*going from the backrank so that it prints nicely*/
         var line = (RankChar[rank] + "  ");
         for (file = FILES.FILE_A; file <= FILES.FILE_H; file++) {

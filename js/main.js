@@ -6,6 +6,7 @@ $(document).ready(function() {
     console.log("ParseFen() returned to main");
     PrintBoard();
     GenerateMoves();
+    PrintMoveList();
 });
 
 function InitFilesRanksBrd() {

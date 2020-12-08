@@ -61,10 +61,13 @@ Moves (stored in one int each)
 First 7 bits = from square (& 0x7F)
 Bits 8-14 = to square (>> 7, & 0x7F)
 Bits 15-18 = captured piece (>> 14, & 0xF)
-Bit 19 = en passant bool (& 0x40000)
-Bit 20 = pawn start bool (& 0x80000)
+Bit 19 = en passant flag (& 0x40000)
+Bit 20 = pawn start flag (& 0x80000)
 Bit 21-24 = promoted piece (>> 20, & 0xF)
-Bit 25 = castle bool (& 0x1000000)
+Bit 25 = castle flag (& 0x1000000)
+
+*flags are stored in MFLAGEP, MFLAGPS, and MFLAGCA
+^ add info about other flags somewhere here
 
 
 Move Generation Variables
@@ -85,4 +88,8 @@ Sliding piece moves are generated last
 
 _____Main_____
 
-init() - **to do
+init()
+- calls all init functions from main
+    - InitFilesRanksBrd() populates the FilesBoard and RanksBoard arrays
+    - InitHashKeys() generates keys used by GeneratePosKey function
+    - InitSq120toSq64() populates Sq120ToSq64 and Sq64ToSq120 arrays
