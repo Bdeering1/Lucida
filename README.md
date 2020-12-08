@@ -1,4 +1,4 @@
-Lucida Chess Engine  
+Lucida   
 Original Javasciprt Chess Engine using Jquery  
 Bryn Deering  
 bdeering@uoguelph.ca  
