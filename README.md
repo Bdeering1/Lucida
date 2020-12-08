@@ -1,7 +1,7 @@
-Lucida Chess Engine
-Original Javasciprt Chess Engine using Jquery
-Bryn Deering
-bdeering@uoguelph.ca
+Lucida Chess Engine  
+Original Javasciprt Chess Engine using Jquery  
+Bryn Deering  
+bdeering@uoguelph.ca  
 
 Development resources:
 Chess Programming Wiki - https://www.chessprogramming.org/  
