@@ -14,7 +14,7 @@ enPas = square where an en passant move can occur on the next move (int)
 castlePerm = castling permissions for both sides (stored using 4 bits or up to number 16)
 material = array of 2 integers representing the total material for each side
 numPieces = array of 13 integers which hold the number of each type of piece, indexed by PIECEINDEX (index 0 = EMPTY)
-pList = array of 13 * 10 integers, stores the location of each piece (up to 10 of each kind), allows the location of a specific piece to be determined using PIECEINDEX 
+pList = array of 13 * 10 integers, stores the location of each piece (up to 10 of each kind), allows the location of a specific piece to be determined using PIECEINDEX
 posKey = unique key hashed for each position, for repetition checking
 
 *it doesn't make sense that the offfboard squares in the pieces array are stored as SQUARES.OFFBOARD, maybe they should be PIECES.EMPTY

@@ -103,6 +103,11 @@ function SQOFFBOARD(sq) {
     return false;
 }
 
+function HASH_PIECE(pceType, sq) { GameBoard.posKey ^= PieceKeys[(pce * 120) + sq] };
+function HASH_CA() { GameBoard.posKey ^= CastleKeys[GameBoard.castlePerm]; } /*we should either hash out the existing key first or just get the CASTLEBIT*/
+function HASH_SIDE() { GameBoard.posKey ^= SideKey; }
+function HASH_EP() { GameBoard.posKey ^= PieceKeys[GameBoard.enPas]; }
+
 /*Adding padEnd() to js if not found*/
 if (!String.prototype.padEnd) {
     String.prototype.padEnd = function padEnd(targetLength,padString) {
