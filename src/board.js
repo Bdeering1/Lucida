@@ -24,7 +24,6 @@ GameBoard.moveListStart = new Array(MAXDEPTH);
 function PrintBoard() { /*Gameboard: pieces, side, enPas, castlePerm, posKey*/
     var sq, file, rank, piece;
 
-    console.log("\nGameBoard:\n");
     for (rank = RANKS.RANK_8; rank >= RANKS.RANK_1; rank--) {
         var line = (RankChar[rank] + " ");
         for (file = FILES.FILE_A; file <= FILES.FILE_H; file++) {
@@ -49,7 +48,7 @@ function PrintBoard() { /*Gameboard: pieces, side, enPas, castlePerm, posKey*/
     if (GameBoard.castlePerm & CASTLEBIT.BKCA) line += 'k'; 
     if (GameBoard.castlePerm & CASTLEBIT.BQCA) line += 'q';
     console.log("Castle: " + line);
-    console.log("Key: " + GameBoard.posKey.toString(16));
+    console.log("Key: " + GameBoard.posKey.toString(16) + "\n\n");
 }
 
 function GeneratePosKey() {
@@ -78,22 +77,21 @@ function GeneratePosKey() {
 }
 
 function PrintPieceLists() {
-    
     var piece, pieceNum;
     
+    console.log("PIECES: ");
     for (piece = PIECES.wP; piece <= PIECES.bK; piece++) {
         for (numPieces = 0; numPieces < GameBoard.numPieces[piece]; numPieces++) {
             console.log(PieceChar[piece] + " on " + PrSq(GameBoard.pList[PIECEINDEX(piece, numPieces)]));
         }
     }
-    
 }
 
 /*Calls PrintPieceLists*/
 function UpdateListsMaterial() {
     var piece, sq, colour;
     
-    for (i = 0; i < 13 * 10; i++) { /*120?? 10?? just changed this value*/
+    for (i = 0; i < 13 * 10; i++) {
         GameBoard.pList[i] = PIECES.EMPTY;
     }
     
@@ -117,8 +115,6 @@ function UpdateListsMaterial() {
             GameBoard.numPieces[piece]++;
         }
     }
-    
-    /*PrintPieceLists();*/
 }
 
 function ResetBoard() {
@@ -142,7 +138,7 @@ function ResetBoard() {
 
 /*Calls ResetBoard, UpdateListsMaterial, and GeneratePosKey*/
 function ParseFen(fen) {
-    console.log("ParseFen() called");
+    /*console.log("ParseFen() called");*/
     ResetBoard();
     
     var rank = RANKS.RANK_8;
@@ -219,14 +215,12 @@ function ParseFen(fen) {
     if (fen[fenCnt] != '-') { /*assuming FEN is correct (if there is no dash the en pas square is valid)*/
         file = fen[fenCnt].charCodeAt() - 'a'.charCodeAt(); /*make into a function?*/
         rank = fen[fenCnt+1].charCodeAt() - '1'.charCodeAt();
-        console.log("fen[fenCnt]:" + fen[fenCnt] + " File:" + file + " Rank:" + rank);
         GameBoard.enPas = FR2SQ(file,rank);
     }
     
     GameBoard.posKey = GeneratePosKey();
     
     UpdateListsMaterial();
-    PrintSqAttacked();
 }
 
 /*For debugging SqAttacked, called by ParseFen()*/
@@ -234,7 +228,6 @@ function PrintSqAttacked() {
     var sq, file, rank, piece;
     
     console.log("\nSquares attacked by white: \n");
-    
     for (rank = RANKS.RANK_8; rank >= RANKS.RANK_1; rank--) { /*going from the backrank so that it prints nicely*/
         var line = (RankChar[rank] + "  ");
         for (file = FILES.FILE_A; file <= FILES.FILE_H; file++) {

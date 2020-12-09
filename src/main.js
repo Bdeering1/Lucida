@@ -1,16 +1,10 @@
 $(document).ready(function() {
     init();
-    console.log("Init() returned to main");    
-    
     ParseFen(START_FEN);
-    console.log("ParseFen() returned to main");
-    PrintBoard();
-    GenerateMoves();
-    PrintMoveList();
 });
 
 function InitFilesRanksBrd() {
-    console.log("InitFilesRanksBrd() called");
+    /*console.log("InitFilesRanksBrd() called");*/
     var file = FILES.FILE_A;
     var rank = RANKS.RANK_1;
     var sq = SQUARES.A1;
@@ -27,19 +21,10 @@ function InitFilesRanksBrd() {
             RanksBoard[sq] = rank;
         }
     }
-    
-    var line = "   ";
-    for (i = 0; i < BRD_SQ_NUM; i++) {
-        line += RanksBoard[i].toString().padEnd(4);
-        if ((i + 1) % 10 === 0) {
-            console.log(line);
-            line = "   ";
-        }
-    }
 }
 
 function InitHashKeys() {
-    console.log("InitHashKeys() called");
+    /*console.log("InitHashKeys() called");*/
     
     for (i = 0; i < 13 * 120; i++) {
         PieceKeys[i] = RAND_32();
@@ -66,7 +51,7 @@ function InitSq120ToSq64() { /*this could probably be done better*/
         Sq64ToSq120[i] = 65; /*changed from 65 in original*/
     }
     
-    for (rank = RANKS.RANK_1; rank <= RANKS.RANK_8; rank ++) {
+    for (rank = RANKS.RANK_8; rank >= RANKS.RANK_1; rank--) {
         for (file = FILES.FILE_A; file <= FILES.FILE_H; file++) {
             sq = FR2SQ(file,rank);
             Sq120ToSq64[sq] = sq64;
@@ -77,10 +62,7 @@ function InitSq120ToSq64() { /*this could probably be done better*/
 }
 
 function init() {
-    console.log("init() called");
     InitFilesRanksBrd();
-    console.log("InitFilesRanksBrd() finished");
     InitHashKeys();
-    console.log("InitHashKeys() finished");
     InitSq120ToSq64();
 }

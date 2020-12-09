@@ -22,9 +22,7 @@ function PrMove(move) {
     return MoveStr;
 }
 
-function PrintMoveList() {
-    console.log("\nMoves in this position:\n");
-    
+function PrintMoveList() {    
     for (i = GameBoard.moveListStart[GameBoard.ply]; i < GameBoard.moveListStart[GameBoard.ply+1]; i++) {
         console.log(PrMove(GameBoard.moveList[i]));
     }

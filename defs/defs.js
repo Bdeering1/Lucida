@@ -10,8 +10,8 @@ const COLOURS = { WHITE:0, BLACK:1, BOTH:2 };
 const CASTLEBIT = { WKCA:1, WQCA:2, BKCA:4, BQCA:8 };
 
 const SQUARES = {
-    A1:21, B1:22, C1:23, D1:24, E1:25, F1:26, G1:27, H1:28,
-    A8:91, B8:92, C8:93, D8:94, E8:95, F8:96, G8:97, H8:98,
+    A1:91, B1:92, C1:93, D1:94, E1:95, F1:96, G1:97, H1:98,
+    A8:21, B8:22, C8:23, D8:24, E8:25, F8:26, G8:27, H8:28,
     NO_SQ:99, OFFBOARD:100
 };
 
@@ -32,7 +32,7 @@ var RankChar = "12345678";
 var FileChar = "abcdefgh";
 
 function FR2SQ(f,r) { /*file rank to square*/
-    return ( 21 + (f) ) + ( 70 - ((r) * 10) ); /*********JUST CHANGED, MAY NOT BE CORRECT************* (yep it breaks SqAttacked somehow)*/
+    return ( 21 + (f) ) + ( 70 - ((r) * 10) );
 }
 
 var PieceBig = [ false, false, true, true, true, true, true, false, true, true, true, true, true ];
@@ -126,4 +126,4 @@ if (!String.prototype.padEnd) {
     };
 }
 
-console.log("defs.js success");
+var def_success = 1;
