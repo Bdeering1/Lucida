@@ -3,6 +3,10 @@ Original Javasciprt Chess Engine using Jquery
 Bryn Deering  
 bdeering@uoguelph.ca  
 
+Unit Testing
+- run debugging-framework.html
+- change VERBOSE and VISUAL bools in debug-defs.js for more or less output
+
 Development resources:  
 Chess Programming Wiki - https://www.chessprogramming.org/  
 Free Code Camp - https://www.freecodecamp.org/news/simple-chess-ai-step-by-step-1d55a9266977/  
