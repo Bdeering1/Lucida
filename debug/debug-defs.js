@@ -1,5 +1,5 @@
 const VERBOSE = true;
-const VISUAL = true;
+const VISUAL = false;
 
 var isPass = false;
 

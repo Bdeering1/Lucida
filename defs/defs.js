@@ -16,10 +16,9 @@ const SQUARES = {
 };
 
 const MAXGAMEMOVES = 2048; /*(half moves)*/
-const MAXPOSITIONMOVES = 256; /*used for storing moves in an array for engine calculation*/
+const MAXPOSITIONMOVES = 256; /*used for storing moves in GameBoard.moveList for engine calculation*/
 const MAXDEPTH = 64;
 
-/*Init32 faster??*/
 var FilesBoard = new Array(BRD_SQ_NUM);
 var RanksBoard = new Array(BRD_SQ_NUM);
 
@@ -63,8 +62,8 @@ var LoopSlidePce = [ PIECES.wB, PIECES.wR, PIECES.wQ, 0, PIECES.bB, PIECES.bR, P
 var LoopSlideIndex = [ 0, 4];
 
 /* Piece * 120 + square (gives 120 space for each piece type and with the square number added on top ensures the key is unique) */
-var PieceKeys = new Array(13 * 120); /*used to be 14 for some reason*/
-var SideKey; /*which side is to move*/
+var PieceKeys = new Array(13 * 120);
+var SideKey;
 var CastleKeys = new Array(16);
 
 var Sq120ToSq64 = new Array(BRD_SQ_NUM);
@@ -88,7 +87,7 @@ function TOSQ(m) { return  ( (m >> 7) & 0x7F); }
 function CAPTURED(m) { return  ( (m >> 14) & 0xF); }
 function PROMOTED(m) { return  ( (m >> 20) & 0xF); }
 
-/*Flags to bitwise and with*/
+/*Flags to bitwise AND with*/
 var MFLAGEP = 0x40000;
 var MFLAGPS = 0x80000;
 var MFLAGCA = 0x1000000;
@@ -108,22 +107,5 @@ function HASH_CA() { GameBoard.posKey ^= CastleKeys[GameBoard.castlePerm]; } /*w
 function HASH_SIDE() { GameBoard.posKey ^= SideKey; }
 function HASH_EP() { GameBoard.posKey ^= PieceKeys[GameBoard.enPas]; }
 
-/*Adding padEnd() to js if not found*/
-if (!String.prototype.padEnd) {
-    String.prototype.padEnd = function padEnd(targetLength,padString) {
-        targetLength = targetLength>>0; //truncate if number or convert non-number to 0;
-        padString = String((typeof padString !== 'undefined' ? padString : ' '));
-        if (this.length > targetLength) {
-            return String(this);
-        }
-        else {
-            targetLength = targetLength-this.length;
-            if (targetLength > padString.length) {
-                padString += padString.repeat(targetLength/padString.length); //append to original to ensure we are longer than needed
-            }
-            return String(this) + padString.slice(0,targetLength);
-        }
-    };
-}
 
 var def_success = 1;

@@ -1,5 +1,5 @@
 function MOVE(from, to, captured, promoted, flag) {
-    return (from | (to << 7) | (captured << 14) | (promoted << 20) | flag);
+    return (from | (to << 7) | (captured << 14) | (promoted << 20) | flag); /*should these be bitwise ANDs?, does it matter?*/
 }
 
 function AddCaptureMove(move) {
@@ -90,8 +90,7 @@ function GenerateMoves() { /*doesn't check if moves are illegal yet*/
             if (GameBoard.enPas != SQUARES.NOSQ) {
                 if (sq - 9 == GameBoard.enPas) {
                     AddEnPassantMove( MOVE(sq, sq - 9, PIECES.EMPTY, PIECES.EMPTY, MFLAGEP )); /*make move function will handle the en passant capture*/
-                }
-                if (sq - 11 == GameBoard.enPas) { /*make these both into one or??*/
+                } else if (sq - 11 == GameBoard.enPas) {
                     AddEnPassantMove( MOVE(sq, sq - 11, PIECES.EMPTY, PIECES.EMPTY, MFLAGEP ));
                 }
             }

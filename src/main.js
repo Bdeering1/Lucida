@@ -4,7 +4,6 @@ $(document).ready(function() {
 });
 
 function InitFilesRanksBrd() {
-    /*console.log("InitFilesRanksBrd() called");*/
     var file = FILES.FILE_A;
     var rank = RANKS.RANK_1;
     var sq = SQUARES.A1;
@@ -24,8 +23,6 @@ function InitFilesRanksBrd() {
 }
 
 function InitHashKeys() {
-    /*console.log("InitHashKeys() called");*/
-    
     for (i = 0; i < 13 * 120; i++) {
         PieceKeys[i] = RAND_32();
     }
@@ -48,7 +45,7 @@ function InitSq120ToSq64() { /*this could probably be done better*/
     }
     
     for (i = 0; i < 64; i++) {
-        Sq64ToSq120[i] = 65; /*changed from 65 in original*/
+        Sq64ToSq120[i] = 65;
     }
     
     for (rank = RANKS.RANK_8; rank >= RANKS.RANK_1; rank--) {
