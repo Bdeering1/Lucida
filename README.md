@@ -1,10 +1,10 @@
 Lucida   
-Original Javasciprt Chess Engine using Jquery  
+Original Javascript Chess Engine using Jquery  
 Bryn Deering  
 bdeering@uoguelph.ca  
 
 
-Unit Testing
+For unit testing:
 - run debugging-framework.html
 - change VERBOSE and VISUAL bools in debug-defs.js for more or less output
 
