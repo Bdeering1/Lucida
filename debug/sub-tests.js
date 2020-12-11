@@ -69,7 +69,7 @@ function InitSq120ToSq64Test() {
     }
 }
 
-/*BOARD INTELLIGENCE TESTS*/
+/*BOARD INTELLIGENCE TESTS (*/
 
 function SqAttackedTest() {
     ParseFen(START_FEN);
@@ -109,4 +109,50 @@ function SqAttackedTest() {
             SUBRESULT(true);
         }
     }
+}
+
+/*UTILITY TESTS*/
+
+function CheckBoard() {
+    var t_numPieces = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    var t_material = [0, 0];
+    var sq64, sq120, pceType, pceNum, col, pcount;
+
+    /*checking pList against pieces*/
+    for (pceType = PIECES.wP; pceType < PIECES.bK; pceType++) {
+        for (pceNum = 0; pceNum < GameBoard.numPieces[pceType]; pceNum++) {
+            sq120 = GameBoard.pList[PIECEINDEX(pceType, pceNum)];
+            if (GameBoard.pieces[sq120] != pceType) {
+                console.log("Error: GameBoard.pList");
+                return false;
+            }
+        }
+    }
+    /*checking numPieces and material against pieces*/
+    for (sq64 = 0; sq64 < 64; sq64++) {
+        sq120 = SQ120(sq64);
+        pceType = GameBoard.pieces[sq120];
+        t_numPieces[pceType]++;
+        t_material[PieceCol[pceType]] += PieceVal[pceType];
+    }
+    for (pceType = PIECES.wP; pceType < PIECES.bK; pceType++) {
+        if (t_numPieces[pceType] != GameBoard.numPieces[pceType]) {
+            console.log("Error: GameBoard.numPieces");
+            return false;
+        }
+    }
+    if (t_material[COLOURS.WHITE] != GameBoard.material[COLOURS.WHITE] || t_material[COLOURS.BLACK] != GameBoard.material[COLOURS.BLACK]) {
+        console.log("Error: GameBoard.material");
+        return false;
+    }
+    if (GameBoard.side != COLOURS.WHITE && GameBoard.side != COLOURS.BLACK) {
+        console.log("Error: GameBoard.side");
+        return false;
+    }
+    if (GeneratePosKey() != GameBoard.posKey) {
+        console.log("Error: GameBoard.posKey");
+        return false;
+    }
+
+    return true;
 }

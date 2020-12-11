@@ -20,38 +20,6 @@ GameBoard.moveList = new Array(MAXDEPTH * MAXPOSITIONMOVES);
 GameBoard.moveScores = new Array(MAXDEPTH * MAXPOSITIONMOVES);
 GameBoard.moveListStart = new Array(MAXDEPTH);
 
-function CheckBoard() {
-    var t_numPieces = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    var t_material = [0, 0];
-    var sq64, sq120, pceType, pceNum, col, pcount;
-
-    /*checking pList against pieces*/
-    for (pceType = PIECES.wP; pceType < PIECES.bK; pceType++) {
-        for (pceNum = 0; pceNum < GameBoard.numPieces[pceType]; pceNum++) {
-            sq120 = GameBoard.pList[PIECEINDEX(pceType, pceNum)];
-            if (GameBoard.pieces[sq120] != pceType) {
-                console.log("Error: piece lists");
-                return false;
-            }
-        }
-    }
-    /*checking numPieces and material against pieces*/
-    for (sq64 = 0; sq64 < 64; sq64++) {
-        sq120 = SQ120(sq64);
-        pceType = GameBoard.pieces[sq120];
-        t_numPieces[pceType]++;
-        t_material[PieceCol[pceType]] += PieceVal[pceType];
-    }
-    for (pceType = PIECES.wP; pceType < PIECES.bK; pceType++) {
-        if (t_numPieces[pceType] != GameBoard.numPieces[pceType]) {
-            console.log("Error: number of pieces");
-            return false;
-        }
-    }
-    /*FINISH*/
-
-}
-
 function GeneratePosKey() {
     var sq = 0;
     var finalKey = 0;

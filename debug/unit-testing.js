@@ -34,7 +34,7 @@ function ParseFenTest() {
     isPass = true;
 
     ParseFen(START_FEN);
-    if (GameBoard.pieces[SQUARES.E8] != PIECES.bK) {
+    if (GameBoard.pieces[SQUARES.E8] != PIECES.bK || !CheckBoard()) {
         isPass = false;
         PrintFenResults(1);
     } else if (VERBOSE) {
@@ -42,7 +42,7 @@ function ParseFenTest() {
         SUBRESULT(true);
     }
     ParseFen("8/7p/5k2/5p2/p1p2P2/Pr1pPK2/1P1R3P/8 b - -");
-    if (GameBoard.castlePerm != 0) {
+    if (GameBoard.castlePerm != 0 || !CheckBoard()) {
         isPass = false;
         PrintFenResults(2);
     } else if (VERBOSE) {
@@ -50,7 +50,7 @@ function ParseFenTest() {
         SUBRESULT(true);
     }
     ParseFen("6k1/8/8/8/3Pp3/8/8/6K1 b - d3 0 1");
-    if (GameBoard.enPas != FR2SQ(FILES.FILE_D, RANKS.RANK_3)) {
+    if (GameBoard.enPas != FR2SQ(FILES.FILE_D, RANKS.RANK_3) || !CheckBoard()) {
         isPass = false;
     } else {
         if (VISUAL) {
