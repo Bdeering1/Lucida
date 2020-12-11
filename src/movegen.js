@@ -133,8 +133,7 @@ function GenerateMoves() { /*doesn't check if moves are illegal yet*/
             if (GameBoard.enPas != SQUARES.NOSQ) {
                 if (sq + 9 == GameBoard.enPas) {
                     AddEnPassantMove( MOVE(sq, sq + 9, PIECES.EMPTY, PIECES.EMPTY, MFLAGEP ));
-                }
-                if (sq + 11 == GameBoard.enPas) { /*make these both into one or??*/
+                } else if (sq + 11 == GameBoard.enPas) { /*make these both into one or??*/
                     AddEnPassantMove( MOVE(sq, sq + 11, PIECES.EMPTY, PIECES.EMPTY, MFLAGEP ));
                 }
             }

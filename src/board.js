@@ -20,54 +20,86 @@ GameBoard.moveList = new Array(MAXDEPTH * MAXPOSITIONMOVES);
 GameBoard.moveScores = new Array(MAXDEPTH * MAXPOSITIONMOVES);
 GameBoard.moveListStart = new Array(MAXDEPTH);
 
+function CheckBoard() {
+    var t_numPieces = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    var t_material = [0, 0];
+    var sq64, sq120, pceType, pceNum, col, pcount;
+
+    /*checking pList against pieces*/
+    for (pceType = PIECES.wP; pceType < PIECES.bK; pceType++) {
+        for (pceNum = 0; pceNum < GameBoard.numPieces[pceType]; pceNum++) {
+            sq120 = GameBoard.pList[PIECEINDEX(pceType, pceNum)];
+            if (GameBoard.pieces[sq120] != pceType) {
+                console.log("Error: piece lists");
+                return false;
+            }
+        }
+    }
+    /*checking numPieces and material against pieces*/
+    for (sq64 = 0; sq64 < 64; sq64++) {
+        sq120 = SQ120(sq64);
+        pceType = GameBoard.pieces[sq120];
+        t_numPieces[pceType]++;
+        t_material[PieceCol[pceType]] += PieceVal[pceType];
+    }
+    for (pceType = PIECES.wP; pceType < PIECES.bK; pceType++) {
+        if (t_numPieces[pceType] != GameBoard.numPieces[pceType]) {
+            console.log("Error: number of pieces");
+            return false;
+        }
+    }
+    /*FINISH*/
+
+}
+
 function GeneratePosKey() {
     var sq = 0;
     var finalKey = 0;
     var piece = PIECES.EMPTY;
-    
+
     for (sq = 0; sq < BRD_SQ_NUM; sq++) {
         piece = GameBoard.pieces[sq];
         if (piece != PIECES.EMPTY && piece != SQUARES.OFFBOARD) {
             finalKey ^= PieceKeys[(piece * 120) + sq]; /* XORing one of the 13 * 120 random generated hashes into the final key */
         }
     }
-    
+
     if (GameBoard.side == COLOURS.WHITE) {
         finalKey ^= SideKey;
     }
-    
+
     if (GameBoard.enPas != SQUARES.NO_SQ) {
         finalKey ^= PieceKeys[GameBoard.enPas];
     }
-    
+
     finalKey ^= CastleKeys[GameBoard.castlePerm];
-    
+
     return finalKey;
 }
 
 function UpdateListsMaterial() {
     var piece, sq, colour;
-    
+
     for (i = 0; i < 13 * 10; i++) {
         GameBoard.pList[i] = PIECES.EMPTY;
     }
-    
+
     for (i = 0; i < 2; i++) {
         GameBoard.material[i] = 0;
     }
-    
+
     for (i = 0; i < 13; i++) {
         GameBoard.numPieces[i] = 0;
     }
-    
+
     for (i = 0; i < 64; i++) {
         sq = SQ120(i);
         piece = GameBoard.pieces[sq];
         if (piece != PIECES.EMPTY) {
             colour = PieceCol[piece];
-            
+
             GameBoard.material[colour] += PieceVal[piece];
-            
+
             GameBoard.pList[PIECEINDEX(piece, GameBoard.numPieces[piece])] = sq;
             GameBoard.numPieces[piece]++;
         }
@@ -78,11 +110,11 @@ function ResetBoard() {
     for (i = 0; i < BRD_SQ_NUM; i++) {
         GameBoard.pieces[i] = SQUARES.OFFBOARD;
     }
-    
+
     for (i = 0; i < 64; i++) {
         GameBoard.pieces[SQ120(i)] = PIECES.EMPTY;
     }
-    
+
     GameBoard.side = COLOURS.BOTH;
     GameBoard.enPas = SQUARES.NO_SQ;
     GameBoard.fiftyMove = 0;
@@ -94,33 +126,58 @@ function ResetBoard() {
 }
 
 /*Calls ResetBoard, UpdateListsMaterial, and GeneratePosKey*/
+
 function ParseFen(fen) {
     ResetBoard();
-    
+
     var rank = RANKS.RANK_8;
     var file = FILES.FILE_A;
     var piece = 0;
     var count = 0; /*dictates how many times the loop is run through for empty squares in fen string (number values)*/
     var sq120 = 0;
     var fenIndex = 0;
-    
+
     while ((rank >= RANKS.RANK_1) && fenIndex < fen.length) {
         count = 1;
-        
+
         switch (fen[fenIndex]) {
-            case 'p': piece = PIECES.bP; break;
-            case 'n': piece = PIECES.bN; break;
-            case 'b': piece = PIECES.bB; break;
-            case 'r': piece = PIECES.bR; break;
-            case 'q': piece = PIECES.bQ; break;
-            case 'k': piece = PIECES.bK; break;
-            case 'P': piece = PIECES.wP; break;
-            case 'N': piece = PIECES.wN; break;
-            case 'B': piece = PIECES.wB; break;
-            case 'R': piece = PIECES.wR; break;
-            case 'Q': piece = PIECES.wQ; break;
-            case 'K': piece = PIECES.wK; break;
-            
+            case 'p':
+                piece = PIECES.bP;
+                break;
+            case 'n':
+                piece = PIECES.bN;
+                break;
+            case 'b':
+                piece = PIECES.bB;
+                break;
+            case 'r':
+                piece = PIECES.bR;
+                break;
+            case 'q':
+                piece = PIECES.bQ;
+                break;
+            case 'k':
+                piece = PIECES.bK;
+                break;
+            case 'P':
+                piece = PIECES.wP;
+                break;
+            case 'N':
+                piece = PIECES.wN;
+                break;
+            case 'B':
+                piece = PIECES.wB;
+                break;
+            case 'R':
+                piece = PIECES.wR;
+                break;
+            case 'Q':
+                piece = PIECES.wQ;
+                break;
+            case 'K':
+                piece = PIECES.wK;
+                break;
+
             case '1':
             case '2':
             case '3':
@@ -132,57 +189,66 @@ function ParseFen(fen) {
                 piece = PIECES.EMPTY;
                 count = fen[fenIndex].charCodeAt() - '0'.charCodeAt(); /*converting the char to an int*/
                 break;
-            
+
             case '/':
             case ' ':
                 rank--;
                 file = FILES.FILE_A;
                 fenIndex++;
                 continue;
-            
+
             default:
                 console.log("FEN error");
                 return;
         }
-        
+
         for (i = 0; i < count; i++) {
-            sq120 = FR2SQ(file,rank);
+            sq120 = FR2SQ(file, rank);
             GameBoard.pieces[sq120] = piece;
             file++;
         }
         fenIndex++;
     }
-    
+
     GameBoard.side = (fen[fenIndex] == 'w') ? COLOURS.WHITE : COLOURS.BLACK; /*if a 1 is found, set side to white, else set to black*/
     fenIndex += 2;
-    
-    while (fen[fenIndex] != ' ')  {
+
+    while (fen[fenIndex] != ' ') {
         switch (fen[fenIndex]) { /*assumes the FEN string is correct*/
-            case 'K': GameBoard.castlePerm |= CASTLEBIT.WKCA; break; /*setting each castling permission using bitwise or '|='*/
-            case 'Q': GameBoard.castlePerm |= CASTLEBIT.WQCA; break;
-            case 'k': GameBoard.castlePerm |= CASTLEBIT.BKCA; break;
-            case 'q': GameBoard.castlePerm |= CASTLEBIT.BQCA; break;
-            default: break;
+            case 'K':
+                GameBoard.castlePerm |= CASTLEBIT.WKCA;
+                break; /*setting each castling permission using bitwise or '|='*/
+            case 'Q':
+                GameBoard.castlePerm |= CASTLEBIT.WQCA;
+                break;
+            case 'k':
+                GameBoard.castlePerm |= CASTLEBIT.BKCA;
+                break;
+            case 'q':
+                GameBoard.castlePerm |= CASTLEBIT.BQCA;
+                break;
+            default:
+                break;
         }
         fenIndex++;
     }
     fenIndex++;
-    
+
     if (fen[fenIndex] != '-') { /*assuming FEN is correct (if there is no dash the en pas square is valid)*/
         file = fen[fenIndex].charCodeAt() - 'a'.charCodeAt(); /*make into a function?*/
-        rank = fen[fenIndex+1].charCodeAt() - '1'.charCodeAt();
-        GameBoard.enPas = FR2SQ(file,rank);
+        rank = fen[fenIndex + 1].charCodeAt() - '1'.charCodeAt();
+        GameBoard.enPas = FR2SQ(file, rank);
     }
-    
+
     GameBoard.posKey = GeneratePosKey();
-    
+
     UpdateListsMaterial();
 }
 
 function SqAttacked(sq, side) { /*(is this square attacked by this side?)*/
     var pce, t_sq, dir;
-    
-/*Non sliding attacks (pawn, knight, and king)*/
+
+    /*Non sliding attacks (pawn, knight, and king)*/
     if (side == COLOURS.WHITE) {
         if (GameBoard.pieces[sq + 11] == PIECES.wP || GameBoard.pieces[sq + 9] == PIECES.wP) {
             return true;
@@ -197,7 +263,7 @@ function SqAttacked(sq, side) { /*(is this square attacked by this side?)*/
                 return true;
             }
         }
-        
+
     } else {
         if (GameBoard.pieces[sq - 11] == PIECES.bP || GameBoard.pieces[sq - 9] == PIECES.bP) {
             return true;
@@ -213,9 +279,9 @@ function SqAttacked(sq, side) { /*(is this square attacked by this side?)*/
             }
         }
     }
-    
+
     /*Bishop + Queen attacks*/
-        for (i = 0; i < 4; i++) {
+    for (i = 0; i < 4; i++) {
         dir = BDir[i];
         t_sq = sq + dir;
         pce = GameBoard.pieces[t_sq];
@@ -246,20 +312,6 @@ function SqAttacked(sq, side) { /*(is this square attacked by this side?)*/
             pce = GameBoard.pieces[t_sq];
         }
     }
-    
+
     return false;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

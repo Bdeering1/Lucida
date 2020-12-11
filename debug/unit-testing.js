@@ -7,10 +7,12 @@ $(document).ready(function() {
     UnitTest(InitTest);
     console.log("TEST 3: FEN parsing");
     UnitTest(ParseFenTest);
+    /*Test board to see if everything is lining up (including pList)*/
     console.log("TEST 4: board intelligence");
     UnitTest(BoardIntelTest);
     console.log("TEST 5: move generation");
     UnitTest(GenerateMovesTest);
+    /*Test make move functions*/
 });
 
 function DefsTest() {
@@ -35,16 +37,30 @@ function ParseFenTest() {
     if (GameBoard.pieces[SQUARES.E8] != PIECES.bK) {
         isPass = false;
         PrintFenResults(1);
+    } else if (VERBOSE) {
+        console.log("FEN 1/3");
+        SUBRESULT(true);
     }
     ParseFen("8/7p/5k2/5p2/p1p2P2/Pr1pPK2/1P1R3P/8 b - -");
     if (GameBoard.castlePerm != 0) {
         isPass = false;
         PrintFenResults(2);
+    } else if (VERBOSE) {
+        console.log("FEN 2/3");
+        SUBRESULT(true);
     }
     ParseFen("6k1/8/8/8/3Pp3/8/8/6K1 b - d3 0 1");
     if (GameBoard.enPas != FR2SQ(FILES.FILE_D, RANKS.RANK_3)) {
         isPass = false;
-    }!isPass || VISUAL ? PrintFenResults(3) : true;
+    } else {
+        if (VISUAL) {
+            PrintFenResults(3);
+            SUBRESULT(true);
+        } else if (VERBOSE) {
+            console.log("FEN 3/3");
+            SUBRESULT(true);
+        }
+    }
 }
 
 function BoardIntelTest() {
@@ -53,7 +69,7 @@ function BoardIntelTest() {
     SqAttackedTest();
 }
 
-function GenerateMovesTest() {
+function GenerateMovesTest() { /*this is very simple right now (should test illegal moves etc later)*/
     isPass = true;
 
     ParseFen(START_FEN);

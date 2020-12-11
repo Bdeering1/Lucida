@@ -6,9 +6,9 @@ function ClearPiece(sq) {
     HASH_PIECE(pceType, sq);
     
     GameBoard.pieces[sq] = PIECES.EMPTY;
-    GameBoard.material[col] -= PieceVal[pceType]; /*faster than using UpdateListsMaterial()*/
+    GameBoard.material[col] -= PieceVal[pceType];
     
-    for (i = 0; i < 10; i++) { /*maybe if each piece had a unique ID or something this wouldn't be necessary*/
+    for (i = 0; i < GameBoard.numPieces[pceType]; i++) { /*maybe if each piece had a unique ID or something this wouldn't be necessary*/
         if (GameBoard.pList[PIECEINDEX(pceType, i)] == sq) {
             pceNum = i;
             break;
@@ -18,7 +18,7 @@ function ClearPiece(sq) {
         console.log("PIECE INDEXING ERROR"); 
     }
     GameBoard.numPieces[pceType]--;
-    GameBoard.pList[PIECEINDEX(pceType, pceNum)] = GameBoard.pList[PIECEINDEX(pceType, GameBoard.numPieces[pceType])]; /*swap with end of list*/
+    GameBoard.pList[PIECEINDEX(pceType, pceNum)] = GameBoard.pList[PIECEINDEX(pceType, GameBoard.numPieces[pceType])]; /*swap with end of list (after decrementing numPieces)*/
 }
 
 
@@ -28,12 +28,12 @@ function AddPiece(pceType, sq) {
     HASH_PIECE(pceType, sq);
     
     GameBoard.pieces[sq] = pceType;
-    GameBoard.material[col] += PieceVal[pceType]; /*faster than using UpdateListsMaterial()*/
+    GameBoard.material[col] += PieceVal[pceType];
     GameBoard.pList[PIECEINDEX(pceType, GameBoard.numPieces[pceType]++)] = sq; /*add to end of list*/
 }
 
-function MovePiece(pceType, from, to) {
-    /*var pceType = GameBoard.pieces[from];*/
+function MovePiece(from, to) { /*make sure this is right*/
+    var pceType = GameBoard.pieces[from];
     HASH_PIECE(pceType, from);
     HASH_PIECE(pceType, to);
     
@@ -41,7 +41,7 @@ function MovePiece(pceType, from, to) {
     GameBoard.pieces[to] = pceType;
     
     for (i = 0; i < GameBoard.numPieces[pceType]; i++) {
-        if (GameBoard.pList[PIECEINDEX(pceType, i)] == from) {
+        if (GameBoard.pList[PIECEINDEX(pceType, i)] == from) { /*trying to find the 'ID' of the piece*/
             GameBoard.pList[PIECEINDEX(pceType, i)] = to;
             break;
         }
