@@ -11,7 +11,8 @@ $(document).ready(function() {
     UnitTest(BoardIntelTest);
     console.log("TEST 5: move generation");
     UnitTest(GenerateMovesTest);
-    /*Test make move functions*/
+    console.log("TEST 6: making moves");
+    UnitTest(MakeMoveTest);
 });
 
 function DefsTest() {
@@ -69,7 +70,7 @@ function BoardIntelTest() {
     SqAttackedTest();
 }
 
-function GenerateMovesTest() { /*this is very simple right now (should test illegal moves etc later)*/
+function GenerateMovesTest() {
     isPass = true;
 
     ParseFen(START_FEN);
@@ -78,6 +79,7 @@ function GenerateMovesTest() { /*this is very simple right now (should test ille
         console.log("Position 1/3");
         PrintMoveList();
         SUBRESULT(false);
+        isPass = false;
     } else if (VERBOSE) {
         console.log("Position 1/3");
         SUBRESULT(true);
@@ -88,6 +90,7 @@ function GenerateMovesTest() { /*this is very simple right now (should test ille
         console.log("Position 2/3");
         PrintMoveList();
         SUBRESULT(false);
+        isPass = false;
     } else if (VERBOSE) {
         console.log("Position 2/3");
         SUBRESULT(true);
@@ -98,8 +101,42 @@ function GenerateMovesTest() { /*this is very simple right now (should test ille
         console.log("Position 3/3");
         PrintMoveList();
         SUBRESULT(false);
+        isPass = false;
     } else if (VERBOSE) {
         console.log("Position 3/3");
         SUBRESULT(true);
+    }
+}
+
+function MakeMoveTest() { /*make sure this tests if it catches illegal moves*/
+    isPass = true;
+
+    ParseFen(START_FEN);
+    GenerateMoves();
+    if (!MakeMove(GameBoard.moveList[GameBoard.moveListStart[GameBoard.ply + 1] - 1]) || !CheckBoard()) {
+        console.log("Test 1/2");
+        PrintBoard();
+        SUBRESULT(false);
+        isPass = false;
+    } else if (VERBOSE) {
+        console.log("Test 1/2");
+        SUBRESULT(true);
+    }
+
+    ParseFen("6k1/8/8/8/3Pp3/8/8/6K1 b - d3 0 1");
+    GenerateMoves();
+    if (!MakeMove(GameBoard.moveList[GameBoard.moveListStart[GameBoard.ply] + 1]) || !CheckBoard()) {
+        PrintBoard();
+        console.log("Test 2/2");
+        SUBRESULT(false);
+        isPass = false;
+    } else {
+        if (VISUAL) {
+            PrintBoard();
+        }
+        if (VERBOSE) {
+            console.log("Test 2/2");
+            SUBRESULT(true);
+        }
     }
 }

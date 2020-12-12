@@ -3,7 +3,7 @@ function MOVE(from, to, captured, promoted, flag) {
 }
 
 function AddCaptureMove(move) {
-    GameBoard.moveList[GameBoard.moveListStart[GameBoard.ply+1]] = move; /*adding at ply 1 the first time*/
+    GameBoard.moveList[GameBoard.moveListStart[GameBoard.ply+1]] = move;
     GameBoard.moveScores[GameBoard.moveListStart[GameBoard.ply+1]++] = 0; /*moveListStart incremented by one right after setting the score*/
 }
 function AddQuietMove(move) {

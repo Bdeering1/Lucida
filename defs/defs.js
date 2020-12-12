@@ -82,6 +82,27 @@ function SQ120(sq64) {
     return Sq64ToSq120[(sq64)];
 }
 
+function PIECEINDEX(piece, pieceNum) {
+    return (piece * 10 + pieceNum);
+}
+
+var Kings = [PIECES.wK, PIECES.bK];
+
+var CastlePerm = [
+    15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+    15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+    15,  7, 15, 15, 15,  3, 15, 15, 11, 15,
+    15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+    15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+    15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+    15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+    15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+    15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+    15, 13, 15, 15, 15, 12, 15, 15, 14, 15,
+    15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+    15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+];
+
 function FROMSQ(m) { return  (m & 0x7F); } /*m = move*/
 function TOSQ(m) { return  ( (m >> 7) & 0x7F); }
 function CAPTURED(m) { return  ( (m >> 14) & 0xF); }
@@ -102,7 +123,7 @@ function SQOFFBOARD(sq) {
     return false;
 }
 
-function HASH_PIECE(pceType, sq) { GameBoard.posKey ^= PieceKeys[(pce * 120) + sq] };
+function HASH_PIECE(pceType, sq) { GameBoard.posKey ^= PieceKeys[(pceType * 120) + sq]; }
 function HASH_CA() { GameBoard.posKey ^= CastleKeys[GameBoard.castlePerm]; } /*we should either hash out the existing key first or just get the CASTLEBIT*/
 function HASH_SIDE() { GameBoard.posKey ^= SideKey; }
 function HASH_EP() { GameBoard.posKey ^= PieceKeys[GameBoard.enPas]; }

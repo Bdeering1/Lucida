@@ -113,7 +113,7 @@ function SqAttackedTest() {
 
 /*UTILITY TESTS*/
 
-function CheckBoard() {
+function CheckBoard() { /*check what col and pcount were supposed to be for*/
     var t_numPieces = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     var t_material = [0, 0];
     var sq64, sq120, pceType, pceNum, col, pcount;
@@ -123,7 +123,7 @@ function CheckBoard() {
         for (pceNum = 0; pceNum < GameBoard.numPieces[pceType]; pceNum++) {
             sq120 = GameBoard.pList[PIECEINDEX(pceType, pceNum)];
             if (GameBoard.pieces[sq120] != pceType) {
-                console.log("Error: GameBoard.pList");
+                console.log("Error: GameBoard.pList - piece: " + PieceChar[pceType]);
                 return false;
             }
         }
@@ -137,7 +137,7 @@ function CheckBoard() {
     }
     for (pceType = PIECES.wP; pceType < PIECES.bK; pceType++) {
         if (t_numPieces[pceType] != GameBoard.numPieces[pceType]) {
-            console.log("Error: GameBoard.numPieces");
+            console.log("Error: GameBoard.numPieces - piece: " + PieceChar[pceType]);
             return false;
         }
     }

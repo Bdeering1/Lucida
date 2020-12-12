@@ -1,5 +1,5 @@
 const VERBOSE = true;
-const VISUAL = false;
+const VISUAL = true;
 
 var isPass = false;
 
@@ -27,4 +27,15 @@ function PrintFenResults(fenNum) {
 function PrintSqAttackedResults() {
     PrintBoard();
     PrintSqAttacked();
+}
+
+function PrintAllMoves(fen) {
+    ParseFen(fen);
+    GenerateMoves();
+    for (moveNum = 0; moveNum < GameBoard.moveListStart[GameBoard.ply + 1]; moveNum++) {
+        console.log("Move " + (moveNum + 1));
+        MakeMove(GameBoard.moveList[GameBoard.moveListStart[GameBoard.ply] + moveNum]);
+        PrintBoard();
+        ParseFen(fen); /*undo move eventually*/
+    }
 }

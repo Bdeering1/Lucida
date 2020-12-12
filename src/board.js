@@ -1,13 +1,9 @@
-function PIECEINDEX(piece, pieceNum) {
-    return (piece * 10 + pieceNum);
-}
-
 var GameBoard = {};
 
 GameBoard.pieces = new Array(BRD_SQ_NUM); /*gives the piece id for each 120 squares on the board (0 if empty)*/
 GameBoard.side = COLOURS.WHITE;
 GameBoard.fiftyMove = 0;
-GameBoard.plyNum = 0; /*actual ply*/
+GameBoard.hisPly = 0; /*actual ply*/
 GameBoard.history = [];
 GameBoard.ply = 0; /*ply for engine calculation*/
 GameBoard.enPas = 0; /* stores one square where en passant can happen (only one total is possible at a time)*/
@@ -87,16 +83,14 @@ function ResetBoard() {
     GameBoard.side = COLOURS.BOTH;
     GameBoard.enPas = SQUARES.NO_SQ;
     GameBoard.fiftyMove = 0;
-    GameBoard.plyNum = 0;
+    GameBoard.hisPly = 0;
     GameBoard.ply = 0;
     GameBoard.castlePerm = 0;
     GameBoard.posKey = 0;
     GameBoard.moveListStart[GameBoard.ply] = 0;
 }
 
-/*Calls ResetBoard, UpdateListsMaterial, and GeneratePosKey*/
-
-function ParseFen(fen) {
+function ParseFen(fen) { /*Calls ResetBoard, UpdateListsMaterial, and GeneratePosKey*/
     ResetBoard();
 
     var rank = RANKS.RANK_8;
