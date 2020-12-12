@@ -50,3 +50,61 @@ function MovePiece(from, to) { /*make sure this is right*/
         console.log("PIECE INDEXING ERROR"); 
     }
 }
+
+function MakeMove(move) {
+    var from = FROMSQ(move);
+    var to = TOSQ(move);
+    var side = GameBoard.side;
+    
+    Gameboard.history[GameBoard.plyNum].posKey = GameBoard.posKey;
+    
+    if ((move & MFLAGEP) != 0) {
+        if (side == COLOURS.WHITE) {
+            ClearPiece(to + 10);
+        } else {
+            ClearPiece(to - 10);
+        }
+    } else if ((move & MFLAGCA) != 0) {
+        switch (to) {
+            case SQUARES.C1:
+                MovePiece(SQUARES.A1, SQUARES.D1);
+                break;
+            case SQUARES.G1:
+                MovePiece(SQUARES.H1, SQUARES.F1);
+                break;
+            case SQUARES.C8:
+                MovePiece(SQUARES.A8, SQUARES.D8);
+                break;
+            case SQUARES.G8:
+                MovePiece(SQUARES.H8, SQUARES.F8);
+                break;
+            default:
+                console.log("Error: invalid castle move");
+                break;
+        }
+    }
+    
+    if (GameBoard.enPas != SQUARES.NO_SQ) HASH_EP();
+    
+    GameBoard.history[GameBoard.plyNum].move = move;
+    GameBoard.history[GameBoard.plyNum].fiftyMove = GameBoard.fiftyMove;
+    GameBoard.history[GameBoard.plyNum].enPas = GameBoard.enPas;
+    GameBoard.history[GameBoard.plyNum].castlePerm = GameBoard.castlePerm;
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

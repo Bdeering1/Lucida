@@ -8,6 +8,7 @@ GameBoard.pieces = new Array(BRD_SQ_NUM); /*gives the piece id for each 120 squa
 GameBoard.side = COLOURS.WHITE;
 GameBoard.fiftyMove = 0;
 GameBoard.plyNum = 0; /*actual ply*/
+GameBoard.history = [];
 GameBoard.ply = 0; /*ply for engine calculation*/
 GameBoard.enPas = 0; /* stores one square where en passant can happen (only one total is possible at a time)*/
 GameBoard.castlePerm = 0; /* one of 16 numbers representing the different castle permissions for each side*/

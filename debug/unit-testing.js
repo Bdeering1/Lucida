@@ -3,11 +3,10 @@ $(document).ready(function() {
 
     console.log("TEST 1: definitions");
     UnitTest(DefsTest);
-    console.log("TEST 2: init");
+    console.log("TEST 2: init"); /*add InitBoardVars() to this*/
     UnitTest(InitTest);
     console.log("TEST 3: FEN parsing");
     UnitTest(ParseFenTest);
-    /*Test board to see if everything is lining up (including pList)*/
     console.log("TEST 4: board intelligence");
     UnitTest(BoardIntelTest);
     console.log("TEST 5: move generation");
@@ -28,6 +27,7 @@ function InitTest() {
     InitHashKeysTest();
     VERBOSE ? console.log("InitSq120ToSq64Test()") : true;
     InitSq120ToSq64Test();
+    /*Test InitBoardVars() here*/
 }
 
 function ParseFenTest() {

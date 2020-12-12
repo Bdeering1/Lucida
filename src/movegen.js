@@ -1,5 +1,5 @@
 function MOVE(from, to, captured, promoted, flag) {
-    return (from | (to << 7) | (captured << 14) | (promoted << 20) | flag); /*should these be bitwise ANDs?, does it matter?*/
+    return (from | (to << 7) | (captured << 14) | (promoted << 20) | flag);
 }
 
 function AddCaptureMove(move) {

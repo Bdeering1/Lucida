@@ -58,8 +58,21 @@ function InitSq120ToSq64() { /*this could probably be done better*/
     }
 }
 
+function InitBoardVars() {
+    for (i = 0; i < MAXGAMEMOVES; i++) {
+        GameBoard.history.push( {
+            move : NOMOVE,
+            castlePerm : 0,
+            enPas : 0,
+            fiftyMove : 0,
+            posKey : 0
+        });
+    }
+}
+
 function init() {
     InitFilesRanksBrd();
     InitHashKeys();
     InitSq120ToSq64();
+    InitBoardVars();
 }

@@ -93,7 +93,7 @@ var MFLAGPS = 0x80000;
 var MFLAGCA = 0x1000000;
 
 var MFLAGCAP = 0x7C; /*returns a non zero number if there was a capture (inlcudes en passant)*/
-var MFLAGPROM = 0xF00000; /*why aren't these just used instead of doing the whole shift??*/
+var MFLAGPROM = 0xF00000; /*these could be used instead of doing the whole shift*/
 
 var NOMOVE = 0;
 
