@@ -69,7 +69,7 @@ function InitSq120ToSq64Test() {
     }
 }
 
-/*BOARD INTELLIGENCE TESTS (*/
+/*BOARD TESTS (*/
 
 function SqAttackedTest() {
     ParseFen(START_FEN);
@@ -111,8 +111,6 @@ function SqAttackedTest() {
     }
 }
 
-/*UTILITY TESTS*/
-
 function CheckBoard() { /*check what col and pcount were supposed to be for*/
     var t_numPieces = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     var t_material = [0, 0];
@@ -151,6 +149,29 @@ function CheckBoard() { /*check what col and pcount were supposed to be for*/
     }
     if (GeneratePosKey() != GameBoard.posKey) {
         console.log("Error: GameBoard.posKey");
+        return false;
+    }
+
+    return true;
+}
+
+function MoveUndoMoveTest(ply, castlePerm, enPas, listStart, nextStart) {
+    if (!CheckBoard()) {
+        return false;
+    } else if (ply != GameBoard.ply) {
+        console.log("Error: GameBoard.ply");
+        return false;
+    } else if (castlePerm != GameBoard.castlePerm) {
+        console.log("Error: GameBoard.castlePerm");
+        return false;
+    } else if (enPas != GameBoard.enPas) {
+        console.log("Error: GameBoard.enPas");
+        return false;
+    } else if (listStart != GameBoard.moveListStart[GameBoard.ply]) {
+        console.log("Error: GameBoard.moveListStart[GameBoard.ply]");
+        return false;
+    } else if (nextStart != GameBoard.moveListStart[GameBoard.ply + 1]) {
+        console.log("Error: GameBoard.moveListStart[GameBoard.ply + 1]");
         return false;
     }
 

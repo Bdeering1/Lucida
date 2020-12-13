@@ -29,14 +29,16 @@ function PrintSqAttackedResults() {
     PrintSqAttacked();
 }
 
-function PrintAllMoves(fen) {
-    ParseFen(fen);
+function PrintAllMoves() {
     GenerateMoves();
-    for (moveNum = 0; moveNum < GameBoard.moveListStart[GameBoard.ply + 1]; moveNum++) {
-        console.log("Move " + (moveNum + 1));
-        MakeMove(GameBoard.moveList[GameBoard.moveListStart[GameBoard.ply] + moveNum]);
+    for (moveNum = GameBoard.moveListStart[GameBoard.ply]; moveNum < GameBoard.moveListStart[GameBoard.ply + 1]; moveNum++) {
+        console.log("Move " + (moveNum + 1 - GameBoard.moveListStart[GameBoard.ply]));
+        move = GameBoard.moveList[moveNum];
+        console.log(PrMove(move));
+        MakeMove(move);
         PrintBoard();
-        /*UndoMove();*/
-        ParseFen(fen); /*undo move eventually*/
+        UndoMove();
     }
+    PrintMoveList();
+    console.log("Current ply: " + GameBoard.ply);
 }

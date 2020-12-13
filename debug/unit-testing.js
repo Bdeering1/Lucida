@@ -13,6 +13,8 @@ $(document).ready(function() {
     UnitTest(GenerateMovesTest);
     console.log("TEST 6: making moves");
     UnitTest(MakeMoveTest);
+
+    //ParseFen(START_FEN);
 });
 
 function DefsTest() {
@@ -113,42 +115,47 @@ function MakeMoveTest() { /*make sure this tests if it catches illegal moves*/
 
     ParseFen(START_FEN);
     GenerateMoves();
-    if (!MakeMove(GameBoard.moveList[GameBoard.moveListStart[GameBoard.ply + 1] - 1]) || !CheckBoard()) {
-        console.log("Test 1/2");
-        PrintBoard();
+    MakeMove(GameBoard.moveList[GameBoard.moveListStart[GameBoard.ply]]);
+    GenerateMoves();
+    if (!MoveUndoMoveTest(1, 15, SQUARES.NO_SQ, 20, 40)) {
+        console.log("Test 1/3");
         SUBRESULT(false);
         isPass = false;
     } else if (VERBOSE) {
-        console.log("Test 1/2");
+        console.log("Test 1/3");
         SUBRESULT(true);
     }
     UndoMove();
-    if (!CheckBoard()) {
-        console.log("Undo move 1/2");
+    if (!MoveUndoMoveTest(0, 15, SQUARES.NO_SQ, 0, 20)) {
+        console.log("Test 2/3");
         SUBRESULT(false);
         isPass = false;
+    } else if (VERBOSE) {
+        console.log("Test 2/3");
+        SUBRESULT(true);
     }
 
-    ParseFen("6k1/8/8/8/3Pp3/8/8/6K1 b - d3 0 1");
-    GenerateMoves();
-    if (!MakeMove(GameBoard.moveList[GameBoard.moveListStart[GameBoard.ply] + 1]) || !CheckBoard()) {
-        PrintBoard();
-        console.log("Test 2/2");
+    ParseFen(START_FEN);
+    var numMoves = 400;
+    for (testMove = 0; testMove < numMoves; testMove++) {
+        GenerateMoves();
+        move = GameBoard.moveList[GameBoard.moveListStart[GameBoard.ply] + Math.floor(Math.random() * 4)];
+        MakeMove(move);
+        if (!CheckBoard()) break;
+        UndoMove();
+        if (!CheckBoard()) break;
+        MakeMove(move);
+        if (!CheckBoard()) break;
+    }
+    if (testMove != numMoves) {
+        console.log("Test 3/3");
+        console.log("iteration " + testMove);
         SUBRESULT(false);
         isPass = false;
-    } else {
-        if (VISUAL) {
-            PrintBoard();
-        }
-        if (VERBOSE) {
-            console.log("Test 2/2");
-            SUBRESULT(true);
-        }
+    } else if (VERBOSE) {
+        console.log("Test 3/3");
+        SUBRESULT(true);
     }
-    UndoMove();
-    if (!CheckBoard()) {
-        console.log("Undo move 1/2");
-        SUBRESULT(false);
-        isPass = false;
-    }
+
+
 }

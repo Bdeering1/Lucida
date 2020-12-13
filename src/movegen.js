@@ -46,7 +46,7 @@ function AddWhitePawnCaptureMove(from, to, cap) {
     }
 }
 function AddBlackPawnCaptureMove(from, to, cap) {
-    if (RanksBoard[frotom] == RANKS.RANK_1) {
+    if (RanksBoard[to] == RANKS.RANK_1) {
         AddCaptureMove( MOVE(from, to, cap, PIECES.bQ, 0 ));
         AddCaptureMove( MOVE(from, to, cap, PIECES.bR, 0 ));
         AddCaptureMove( MOVE(from, to, cap, PIECES.bB, 0 ));
@@ -80,10 +80,10 @@ function GenerateMoves() { /*doesn't check if moves are illegal yet*/
                 }
             }
             
-            if (PieceCol[GameBoard.pieces[sq - 9]] == COLOURS.BLACK) {
+            if (!SQOFFBOARD(sq - 9) && PieceCol[GameBoard.pieces[sq - 9]] == COLOURS.BLACK) {
                 AddWhitePawnCaptureMove( MOVE(sq, sq - 9, GameBoard.pieces[sq - 9] ));
             }
-            if (PieceCol[GameBoard.pieces[sq - 11]] == COLOURS.BLACK) {
+            if (!SQOFFBOARD(sq - 11) && PieceCol[GameBoard.pieces[sq - 11]] == COLOURS.BLACK) {
                 AddWhitePawnCaptureMove( MOVE(sq, sq - 11, GameBoard.pieces[sq - 11] ));
             }
             
@@ -123,10 +123,10 @@ function GenerateMoves() { /*doesn't check if moves are illegal yet*/
                 }
             }
             
-            if (PieceCol[GameBoard.pieces[sq + 9]] == COLOURS.WHITE) {
+            if (!SQOFFBOARD(sq + 9) && PieceCol[GameBoard.pieces[sq + 9]] == COLOURS.WHITE) {
                 AddBlackPawnCaptureMove( MOVE(sq, sq + 9, GameBoard.pieces[sq + 9] ));
             }
-            if (PieceCol[GameBoard.pieces[sq + 11]] == COLOURS.WHITE) {
+            if (!SQOFFBOARD(sq + 11) && PieceCol[GameBoard.pieces[sq + 11]] == COLOURS.WHITE) {
                 AddBlackPawnCaptureMove( MOVE(sq, sq + 11, GameBoard.pieces[sq + 11] ));
             }
             

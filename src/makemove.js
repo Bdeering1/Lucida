@@ -1,5 +1,10 @@
 function ClearPiece(sq) {
     var pceType = GameBoard.pieces[sq];
+    if (pceType == PIECES.EMPTY) {
+        console.log("Error: trying to clear empty piece");
+        return;
+    }
+
     var col = PieceCol[pceType];
     var pceNum = -1;
 
@@ -15,7 +20,7 @@ function ClearPiece(sq) {
         }
     }
     if (pceNum == -1) {
-        console.log("PIECE INDEXING ERROR");
+        console.log("Error: could not find piece to clear");
     }
     GameBoard.numPieces[pceType]--;
     GameBoard.pList[PIECEINDEX(pceType, pceNum)] = GameBoard.pList[PIECEINDEX(pceType, GameBoard.numPieces[pceType])]; /*swap with end of list (after decrementing numPieces)*/
@@ -23,6 +28,10 @@ function ClearPiece(sq) {
 
 
 function AddPiece(pceType, sq) {
+    if (pceType > 13) {
+        console.log("Error: pceType = " + pceType);
+    }
+
     var col = PieceCol[pceType];
 
     HASH_PIECE(pceType, sq);
@@ -47,7 +56,7 @@ function MovePiece(from, to) { /*make sure this is right*/
         }
     }
     if (i == -1) {
-        console.log("PIECE INDEXING ERROR");
+        console.log("Error: could not find piece");
     }
 }
 
@@ -106,7 +115,7 @@ function MakeMove(move) {
         GameBoard.castlePerm &= CastlePerm[from];
         GameBoard.castlePerm &= CastlePerm[to]; /*just in case a rook is captured*/
         HASH_CA();
-    } /*if there are no possible castlePerm changes castlePerm is not touched and not hashed 8n or out*/
+    } /*if there are no possible castlePerm changes castlePerm is not touched and not hashed in or out*/
 
     GameBoard.fiftyMove++;
     if (CAPTURED(move) != PIECES.EMPTY) {
@@ -128,7 +137,8 @@ function MakeMove(move) {
     GameBoard.ply++;
 
     MovePiece(from, to);
-    if (PROMOTED(move) != PIECES.EMPTY) {
+    promoted = PROMOTED(move);
+    if (promoted != PIECES.EMPTY) {
         ClearPiece(to);
         AddPiece(promoted, to);
     }
@@ -154,7 +164,7 @@ function UndoMove() {
     if (GameBoard.enPas != SQUARES.NO_SQ) HASH_EP();
     HASH_CA();
 
-    GameBoard.castlePerm = GameBoard.history[GameBoard.hisPly].castleperm;
+    GameBoard.castlePerm = GameBoard.history[GameBoard.hisPly].castlePerm;
     GameBoard.fiftyMove = GameBoard.history[GameBoard.hisPly].fiftyMove;
     GameBoard.enPas = GameBoard.history[GameBoard.hisPly].enPas;
 
@@ -192,10 +202,11 @@ function UndoMove() {
 
     MovePiece(to, from);
 
-    if (CAPTURED(move) != PIECES.EMPTY) {
-        AddPiece(to, captured);
+    captured = CAPTURED(move);
+    if (captured != PIECES.EMPTY) {
+        AddPiece(captured, to);
     }
-    if (PROMOTED(move) == PIECES.EMPTY) {
+    if (PROMOTED(move) != PIECES.EMPTY) {
         ClearPiece(from);
         AddPiece((GameBoard.side == COLOURS.WHITE ? PIECES.wP : PIECES.bP), from);
     }

@@ -93,12 +93,14 @@ function PrintPieceLists() {
     }
 }
 
-function PrintMoveList() {    
+function PrintMoveList() {
+    var moveCnt = 0;
     for (i = GameBoard.moveListStart[GameBoard.ply]; i < GameBoard.moveListStart[GameBoard.ply+1]; i++) {
         console.log(PrMove(GameBoard.moveList[i]));
+        moveCnt++;
     }
     
-    console.log("\n" + i + " total moves.");
+    console.log("\n" + moveCnt + " total moves.");
 }
 
 /*Adding padEnd() to js if not found*/
