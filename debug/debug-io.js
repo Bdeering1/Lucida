@@ -36,6 +36,7 @@ function PrintAllMoves(fen) {
         console.log("Move " + (moveNum + 1));
         MakeMove(GameBoard.moveList[GameBoard.moveListStart[GameBoard.ply] + moveNum]);
         PrintBoard();
+        /*UndoMove();*/
         ParseFen(fen); /*undo move eventually*/
     }
 }

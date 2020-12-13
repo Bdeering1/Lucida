@@ -122,6 +122,12 @@ function MakeMoveTest() { /*make sure this tests if it catches illegal moves*/
         console.log("Test 1/2");
         SUBRESULT(true);
     }
+    UndoMove();
+    if (!CheckBoard()) {
+        console.log("Undo move 1/2");
+        SUBRESULT(false);
+        isPass = false;
+    }
 
     ParseFen("6k1/8/8/8/3Pp3/8/8/6K1 b - d3 0 1");
     GenerateMoves();
@@ -138,5 +144,11 @@ function MakeMoveTest() { /*make sure this tests if it catches illegal moves*/
             console.log("Test 2/2");
             SUBRESULT(true);
         }
+    }
+    UndoMove();
+    if (!CheckBoard()) {
+        console.log("Undo move 1/2");
+        SUBRESULT(false);
+        isPass = false;
     }
 }
