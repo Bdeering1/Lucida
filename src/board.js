@@ -45,19 +45,19 @@ function GeneratePosKey() {
 function UpdateListsMaterial() {
     var piece, sq, colour;
 
-    for (i = 0; i < 13 * 10; i++) {
+    for (var i = 0; i < 13 * 10; i++) {
         GameBoard.pList[i] = PIECES.EMPTY;
     }
 
-    for (i = 0; i < 2; i++) {
+    for (var i = 0; i < 2; i++) {
         GameBoard.material[i] = 0;
     }
 
-    for (i = 0; i < 13; i++) {
+    for (var i = 0; i < 13; i++) {
         GameBoard.numPieces[i] = 0;
     }
 
-    for (i = 0; i < 64; i++) {
+    for (var i = 0; i < 64; i++) {
         sq = SQ120(i);
         piece = GameBoard.pieces[sq];
         if (piece != PIECES.EMPTY) {
@@ -72,11 +72,11 @@ function UpdateListsMaterial() {
 }
 
 function ResetBoard() {
-    for (i = 0; i < BRD_SQ_NUM; i++) {
+    for (var i = 0; i < BRD_SQ_NUM; i++) {
         GameBoard.pieces[i] = SQUARES.OFFBOARD;
     }
 
-    for (i = 0; i < 64; i++) {
+    for (var i = 0; i < 64; i++) {
         GameBoard.pieces[SQ120(i)] = PIECES.EMPTY;
     }
 
@@ -165,7 +165,7 @@ function ParseFen(fen) { /*Calls ResetBoard, UpdateListsMaterial, and GeneratePo
                 return;
         }
 
-        for (i = 0; i < count; i++) {
+        for (var i = 0; i < count; i++) {
             sq120 = FR2SQ(file, rank);
             GameBoard.pieces[sq120] = piece;
             file++;
@@ -216,12 +216,12 @@ function SqAttacked(sq, side) { /*(is this square attacked by this side?)*/
         if (GameBoard.pieces[sq + 11] == PIECES.wP || GameBoard.pieces[sq + 9] == PIECES.wP) {
             return true;
         }
-        for (i = 0; i < 8; i++) {
+        for (var i = 0; i < 8; i++) {
             if (GameBoard.pieces[sq + NDir[i]] == PIECES.wN) {
                 return true;
             }
         }
-        for (i = 0; i < 8; i++) {
+        for (var i = 0; i < 8; i++) {
             if (GameBoard.pieces[sq + KDir[i]] == PIECES.wK) {
                 return true;
             }
@@ -231,12 +231,12 @@ function SqAttacked(sq, side) { /*(is this square attacked by this side?)*/
         if (GameBoard.pieces[sq - 11] == PIECES.bP || GameBoard.pieces[sq - 9] == PIECES.bP) {
             return true;
         }
-        for (i = 0; i < 8; i++) {
+        for (var i = 0; i < 8; i++) {
             if (GameBoard.pieces[sq + NDir[i]] == PIECES.bN) {
                 return true;
             }
         }
-        for (i = 0; i < 8; i++) {
+        for (var i = 0; i < 8; i++) {
             if (GameBoard.pieces[sq + KDir[i]] == PIECES.bK) {
                 return true;
             }
@@ -244,7 +244,7 @@ function SqAttacked(sq, side) { /*(is this square attacked by this side?)*/
     }
 
     /*Bishop + Queen attacks*/
-    for (i = 0; i < 4; i++) {
+    for (var i = 0; i < 4; i++) {
         dir = BDir[i];
         t_sq = sq + dir;
         pce = GameBoard.pieces[t_sq];
@@ -260,7 +260,7 @@ function SqAttacked(sq, side) { /*(is this square attacked by this side?)*/
         }
     }
     /*Rook + Queen attacks*/
-    for (i = 0; i < 4; i++) {
+    for (var i = 0; i < 4; i++) {
         dir = RDir[i];
         t_sq = sq + dir;
         pce = GameBoard.pieces[t_sq];

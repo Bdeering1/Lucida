@@ -23,13 +23,13 @@ function InitFilesRanksBrd() {
 }
 
 function InitHashKeys() {
-    for (i = 0; i < 13 * 120; i++) {
+    for (var i = 0; i < 13 * 120; i++) {
         PieceKeys[i] = RAND_32();
     }
 
     SideKey = RAND_32(); /* hashed in if white is to move*/
     
-    for (i = 0; i < 16; i++) {
+    for (var i = 0; i < 16; i++) {
         CastleKeys[i] = RAND_32();
     }
 }
@@ -40,11 +40,11 @@ function InitSq120ToSq64() { /*this could probably be done better*/
     var sq = SQUARES.A1;
     var sq64 = 0;
     
-    for (i = 0; i < BRD_SQ_NUM; i++) {
+    for (var i = 0; i < BRD_SQ_NUM; i++) {
         Sq120ToSq64[i] = 120;
     }
     
-    for (i = 0; i < 64; i++) {
+    for (var i = 0; i < 64; i++) {
         Sq64ToSq120[i] = 65;
     }
     
@@ -59,7 +59,7 @@ function InitSq120ToSq64() { /*this could probably be done better*/
 }
 
 function InitBoardVars() {
-    for (i = 0; i < MAXGAMEMOVES; i++) {
+    for (var i = 0; i < MAXGAMEMOVES; i++) {
         GameBoard.history.push( {
             move : NOMOVE,
             castlePerm : 0,

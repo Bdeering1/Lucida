@@ -164,7 +164,7 @@ function GenerateMoves() { /*doesn't check if moves are illegal yet*/
         for (pceNum = 0; pceNum < GameBoard.numPieces[pceType]; pceNum++) {
             sq = GameBoard.pList[PIECEINDEX(pceType, pceNum)];
             
-            for (i = 0; i < DirNum[pceType]; i++) {
+            for (var i = 0; i < DirNum[pceType]; i++) {
                 dir = PceDir[pceType][i];
                 t_sq = sq + dir;
                 
@@ -190,7 +190,7 @@ function GenerateMoves() { /*doesn't check if moves are illegal yet*/
         for (pceNum = 0; pceNum < GameBoard.numPieces[pceType]; pceNum++) {
             sq = GameBoard.pList[PIECEINDEX(pceType, pceNum)];
             
-            for (i = 0; i < DirNum[pceType]; i++) {
+            for (var i = 0; i < DirNum[pceType]; i++) {
                 dir = PceDir[pceType][i];
                 t_sq = sq + dir;
                 

@@ -5,7 +5,7 @@ function InitFilesRanksBrdTest() {
     if (RanksBoard[SQUARES.A8] != RANKS.RANK_8 || FilesBoard[SQUARES.H1] != FILES.FILE_H) {
         var line = "   ";
         console.log("FilesBoard");
-        for (i = 0; i < BRD_SQ_NUM; i++) {
+        for (var i = 0; i < BRD_SQ_NUM; i++) {
             line += FilesBoard[i].toString().padEnd(4);
             if ((i + 1) % 10 === 0) {
                 console.log(line);
@@ -13,7 +13,7 @@ function InitFilesRanksBrdTest() {
             }
         }
         console.log("RanksBoard");
-        for (i = 0; i < BRD_SQ_NUM; i++) {
+        for (var i = 0; i < BRD_SQ_NUM; i++) {
             line += RanksBoard[i].toString().padEnd(4);
             if ((i + 1) % 10 === 0) {
                 console.log(line);

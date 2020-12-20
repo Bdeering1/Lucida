@@ -31,9 +31,9 @@ function PrintSqAttackedResults() {
 
 function PrintAllMoves() {
     GenerateMoves();
-    for (moveNum = GameBoard.moveListStart[GameBoard.ply]; moveNum < GameBoard.moveListStart[GameBoard.ply + 1]; moveNum++) {
-        console.log("Move " + (moveNum + 1 - GameBoard.moveListStart[GameBoard.ply]));
-        move = GameBoard.moveList[moveNum];
+    for (var i = GameBoard.moveListStart[GameBoard.ply]; i < GameBoard.moveListStart[GameBoard.ply + 1]; i++) {
+        console.log("Move " + (i + 1 - GameBoard.moveListStart[GameBoard.ply]));
+        move = GameBoard.moveList[i];
         console.log(PrMove(move));
         MakeMove(move);
         PrintBoard();

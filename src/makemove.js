@@ -13,7 +13,7 @@ function ClearPiece(sq) {
     GameBoard.pieces[sq] = PIECES.EMPTY;
     GameBoard.material[col] -= PieceVal[pceType];
 
-    for (i = 0; i < GameBoard.numPieces[pceType]; i++) { /*maybe if each piece had a unique ID or something this wouldn't be necessary*/
+    for (var i = 0; i < GameBoard.numPieces[pceType]; i++) { /*maybe if each piece had a unique ID or something this wouldn't be necessary*/
         if (GameBoard.pList[PIECEINDEX(pceType, i)] == sq) {
             pceNum = i;
             break;
@@ -49,7 +49,7 @@ function MovePiece(from, to) { /*make sure this is right*/
     GameBoard.pieces[from] = PIECES.EMPTY;
     GameBoard.pieces[to] = pceType;
 
-    for (i = 0; i < GameBoard.numPieces[pceType]; i++) {
+    for (var i = 0; i < GameBoard.numPieces[pceType]; i++) {
         if (GameBoard.pList[PIECEINDEX(pceType, i)] == from) { /*trying to find the 'ID' of the piece*/
             GameBoard.pList[PIECEINDEX(pceType, i)] = to;
             break;
