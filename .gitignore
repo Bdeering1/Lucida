@@ -1,3 +1,7 @@
-Lucida.komodoproject
+.vscode/*
+*.code-workspace
+
 .DS_Store
-dev_notes/general.txt
+
+dev_notes/*
+!dev_notes/documentation.*
