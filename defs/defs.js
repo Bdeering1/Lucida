@@ -119,8 +119,7 @@ var MFLAGPROM = 0xF00000; /*these could be used instead of doing the whole shift
 var NOMOVE = 0;
 
 function SQOFFBOARD(sq) {
-    if (FilesBoard[sq] == SQUARES.OFFBOARD) return true;
-    return false;
+    return FilesBoard[sq] == SQUARES.OFFBOARD;
 }
 
 function HASH_PIECE(pceType, sq) { GameBoard.posKey ^= PieceKeys[(pceType * 120) + sq]; }

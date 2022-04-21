@@ -1,7 +1,14 @@
+# VS Code
 .vscode/*
-*.code-workspace
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
 
+# MacOS
 .DS_Store
 
+# Misc
 dev_notes/*
 !dev_notes/documentation.*
