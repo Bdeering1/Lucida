@@ -1,62 +1,61 @@
-Variable and Function Documentation
+## Game Board
 
+#### Variables
 
-_____Game Board_____
-
-Variables
-
-pieces = array of 120 integers representing the pieces that are on each square (anything off the 8x8 board is marked with SQUARES.OFFBOARD)
-side = side to move (usually treated as bool but there is also a BOTH option)
-fiftyMove = fifty move counter (int)
-plyNum = ply counter (half moves)
-ply = ply counter for calculation purposes
-enPas = square where an en passant move can occur on the next move (int)
-castlePerm = castling permissions for both sides (stored using 4 bits or up to number 16)
-material = array of 2 integers representing the total material for each side
-numPieces = array of 13 integers which hold the number of each type of piece, indexed by PIECEINDEX (index 0 = EMPTY)
-pList = array of 13 * 10 integers, stores the location of each piece (up to 10 of each kind), allows the location of a specific piece to be determined using PIECEINDEX
-posKey = unique key hashed for each position, for repetition checking
-
+pieces = array of 120 integers representing the pieces that are on each square (anything off the 8x8 board is marked with SQUARES.OFFBOARD) \
+side = side to move (usually treated as bool but there is also a BOTH option) \
+fiftyMove = fifty move counter (int) \
+plyNum = ply counter (half moves) \
+ply = ply counter for calculation purposes \
+enPas = square where an en passant move can occur on the next move (int) \
+castlePerm = castling permissions for both sides (stored using 4 bits or up to number 16) \
+material = array of 2 integers representing the total material for each side \
+numPieces = array of 13 integers which hold the number of each type of piece, indexed by PIECEINDEX (index 0 = EMPTY) \
+pList = array of 13 * 10 integers, stores the location of each piece (up to 10 of each kind), allows the location of a specific piece to be determined using PIECEINDEX \
+posKey = unique key hashed for each position, for repetition checking \
+\
 *it doesn't make sense that the offfboard squares in the pieces array are stored as SQUARES.OFFBOARD, maybe they should be PIECES.EMPTY
-- this actually helps with movegen even though it doesn't entirely make sense
-**some of these arrays including pieces don't need integer values (find out how js works with this)
+- this actually helps with movegen even though it doesn't entirely make sense \
+**some of these arrays including pieces don't need integer values (find out how js works with this) \
 ***why isn't side a bool, is BOTH really necessary?
 
-vvv move generation variables are described in move gen
+move generation variables are described in move gen
 
 
-Board.js Functions
+#### Board.js Functions
 
 PrintBoard(), PrintPieceLists(), and PrintSqAttacked() are used for debugging
 
-GeneratePosKey()
+_GeneratePosKey()_
 - generates a key for each unique position by XORing in a number of keys randomly generated keys in InitHashKeys(), stored in GameBoard.posKey
     - for each piece on a certain square (13 * 120 keys)
     - for the current en passant square (if any), this is hashed in using a PieceKey for the empty square
     - for the side to move (2 keys)
     - for the current castling permissions (16 keys)
     
-UpdateListsMaterial() - updates material (using PieceVal[piece] to determine the value of each piece), pList, and numPieces by looking at the pieces array
+_UpdateListsMaterial()_
+- updates material (using PieceVal[piece] to determine the value of each piece), pList, and numPieces by looking at the pieces array
 
-ResetBoard()
+_ResetBoard()_
 - resets a number of variables in GameBoard
     - pieces (64 on board to PIECES.EMPTY)
     - side (set to BOTH in case side is not set correctly from FEN)
     - enPas (set to SQUARES.NO_SQ)
     - fiftyMove, plyNum, ply, castlePerm (by default no castling, may be set ParseFen), posKey, and moveListStart (set to zero)
 
-ParseFen(fen)
+_ParseFen(fen)_
 - loading in the position from a given FEN string (starting position FEN is default)
     - calls ResetBoard() to ensure no GameBoard variables are carried over from previous games
     - sets pieces, side to move, castling permissions, en passant square, and posKey (using GeneratePosKey())
     - calls UpdateListsMaterial()
     
-SqAttacked(sq, side) - *to do 
+_SqAttacked(sq, side)_
+- *to do 
     
 
-_____Move Gen_____
+## Move Gen
 
-Moves (stored in one int each)
+#### Moves (stored in one int each)
 
 First 7 bits = from square (& 0x7F)
 Bits 8-14 = to square (>> 7, & 0x7F)
@@ -70,7 +69,7 @@ Bit 25 = castle flag (& 0x1000000)
 ^ add info about other flags somewhere here
 
 
-Move Generation Variables
+#### Move Generation Variables
 
 moveList = ALL moves generated (array allows for more moves than the longest recorded chess game), indexed by moveListStart for each ply
 moveScores = scores (??) for each move
@@ -78,7 +77,7 @@ moveListStart = index for the first move at a given ply
 -always using ply+1 for move generation and incrementing moveListStart for ply+1 for each new move (GameBoard.ply will always catch up when ply is incremented)
 
 
-GenerateMoves function
+_GenerateMoves()_
 
 Side specific moves are generated first (pawn + castle moves)
 -pawns move in a direction according to the side and castling needs CASTLEBIT permissions and use of SqAttacked
@@ -86,9 +85,9 @@ Non sliding piece moves are generated second (using LoopNonSlidePiece, DirNum, a
 Sliding piece moves are generated last
 
 
-_____Main_____
+## Main
 
-init()
+_init()_
 - calls all init functions from main
     - InitFilesRanksBrd() populates the FilesBoard and RanksBoard arrays
     - InitHashKeys() generates keys used by GeneratePosKey function
