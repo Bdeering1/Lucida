@@ -14,7 +14,7 @@ numPieces = array of 13 integers which hold the number of each type of piece, in
 pList = array of 13 * 10 integers, stores the location of each piece (up to 10 of each kind), allows the location of a specific piece to be determined using PIECEINDEX \
 posKey = unique key hashed for each position, for repetition checking \
 \
-*it doesn't make sense that the offfboard squares in the pieces array are stored as SQUARES.OFFBOARD, maybe they should be PIECES.EMPTY
+*it doesn't make sense that the offboard squares in the pieces array are stored as SQUARES.OFFBOARD, maybe they should be PIECES.EMPTY
 - this actually helps with movegen even though it doesn't entirely make sense \
 **some of these arrays including pieces don't need integer values (find out how js works with this) \
 ***why isn't side a bool, is BOTH really necessary?
