@@ -49,7 +49,7 @@ function MovePiece(from, to) { /*make sure this is right*/
     GameBoard.pieces[from] = PIECES.EMPTY;
     GameBoard.pieces[to] = pceType;
 
-    for (var i = 0; i < GameBoard.numPieces[pceType]; i++) {
+    for (let i = 0; i < GameBoard.numPieces[pceType]; i++) {
         if (GameBoard.pList[PIECEINDEX(pceType, i)] == from) { /*trying to find the 'ID' of the piece*/
             GameBoard.pList[PIECEINDEX(pceType, i)] = to;
             break;
@@ -137,7 +137,7 @@ function MakeMove(move) {
     GameBoard.ply++;
 
     MovePiece(from, to);
-    promoted = PROMOTED(move);
+    let promoted = PROMOTED(move);
     if (promoted != PIECES.EMPTY) {
         ClearPiece(to);
         AddPiece(promoted, to);
@@ -202,7 +202,7 @@ function UndoMove() {
 
     MovePiece(to, from);
 
-    captured = CAPTURED(move);
+    let captured = CAPTURED(move);
     if (captured != PIECES.EMPTY) {
         AddPiece(captured, to);
     }

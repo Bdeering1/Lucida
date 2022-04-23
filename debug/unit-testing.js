@@ -18,17 +18,17 @@ $(document).ready(function() {
 });
 
 function DefsTest() {
-    def_success == 1 ? isPass = true : isPass = false; /*add for multiple def files later*/
+	isPass = def_success == 1; /*add for multiple def files later*/
 }
 
 function InitTest() {
     isPass = true;
 
-    VERBOSE ? console.log("InitFilesRanksBrdTest()") : true;
+    if (VERBOSE) console.log('InitFilesRanksBrdTest()');
     InitFilesRanksBrdTest();
-    VERBOSE ? console.log("InitHashKeysTest()") : true;
+    if (VERBOSE) console.log('InitHashKeysTest()');
     InitHashKeysTest();
-    VERBOSE ? console.log("InitSq120ToSq64Test()") : true;
+    if (VERBOSE) console.log('InitSq120ToSq64Test()');
     InitSq120ToSq64Test();
     /*Test InitBoardVars() here*/
 }
@@ -137,9 +137,10 @@ function MakeMoveTest() { /*make sure this tests if it catches illegal moves*/
 
     ParseFen(START_FEN);
     var numMoves = 400;
+    let testMove = 0;
     for (testMove = 0; testMove < numMoves; testMove++) {
         GenerateMoves();
-        move = GameBoard.moveList[GameBoard.moveListStart[GameBoard.ply] + Math.floor(Math.random() * 4)];
+        let move = GameBoard.moveList[GameBoard.moveListStart[GameBoard.ply] + Math.floor(Math.random() * 4)];
         MakeMove(move);
         if (!CheckBoard()) break;
         UndoMove();

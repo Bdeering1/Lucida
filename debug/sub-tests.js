@@ -5,7 +5,7 @@ function InitFilesRanksBrdTest() {
     if (RanksBoard[SQUARES.A8] != RANKS.RANK_8 || FilesBoard[SQUARES.H1] != FILES.FILE_H) {
         var line = "   ";
         console.log("FilesBoard");
-        for (var i = 0; i < BRD_SQ_NUM; i++) {
+        for (let i = 0; i < BRD_SQ_NUM; i++) {
             line += FilesBoard[i].toString().padEnd(4);
             if ((i + 1) % 10 === 0) {
                 console.log(line);
@@ -13,7 +13,7 @@ function InitFilesRanksBrdTest() {
             }
         }
         console.log("RanksBoard");
-        for (var i = 0; i < BRD_SQ_NUM; i++) {
+        for (let i = 0; i < BRD_SQ_NUM; i++) {
             line += RanksBoard[i].toString().padEnd(4);
             if ((i + 1) % 10 === 0) {
                 console.log(line);
@@ -45,7 +45,7 @@ function InitSq120ToSq64Test() {
         var sq64 = 0;
         var line = "   ";
         console.log("Sq120ToSq64");
-        for (sq = 0; sq < BRD_SQ_NUM; sq++) {
+        for (let sq = 0; sq < BRD_SQ_NUM; sq++) {
             line += Sq120ToSq64[sq].toString().padEnd(4);
             if ((sq + 1) % 10 == 0) {
                 console.log(line);
@@ -53,8 +53,8 @@ function InitSq120ToSq64Test() {
             }
         }
         console.log("Sq64ToSq120");
-        for (rank = RANKS.RANK_8; rank >= RANKS.RANK_1; rank--) {
-            for (file = FILES.FILE_A; file <= FILES.FILE_H; file++) {
+        for (let rank = RANKS.RANK_8; rank >= RANKS.RANK_1; rank--) {
+            for (let file = FILES.FILE_A; file <= FILES.FILE_H; file++) {
                 line += Sq64ToSq120[sq64].toString().padEnd(4);
                 sq64++;
             }

@@ -98,14 +98,14 @@ function GenerateMoves() { /*doesn't check if moves are illegal yet*/
         
         if (GameBoard.castlePerm & CASTLEBIT.WKCA) {
             if (GameBoard.pieces[SQUARES.F1] == PIECES.EMPTY && GameBoard.pieces[SQUARES.G1] == PIECES.EMPTY) {
-                if (SqAttacked(SQUARES.E1, COLOURS.BLACK) == false && SqAttacked(SQUARES.F1, COLOURS.BLACK)) {
+                if (!SqAttacked(SQUARES.E1, COLOURS.BLACK) && SqAttacked(SQUARES.F1, COLOURS.BLACK)) {
                     AddQuietMove( MOVE(SQUARES.E1, SQUARES.G1, PIECES.EMPTY, PIECES.EMPTY, MFLAGCA ));
                 }
             }
         }
         if (GameBoard.castlePerm & CASTLEBIT.WQCA) {
             if (GameBoard.pieces[SQUARES.B1] == PIECES.EMPTY && GameBoard.pieces[SQUARES.C1] == PIECES.EMPTY && GameBoard.pieces[SQUARES.D1] == PIECES.EMPTY) {
-                if (SqAttacked(SQUARES.E1, COLOURS.BLACK) == false && SqAttacked(SQUARES.D1, COLOURS.BLACK)) {
+                if (!SqAttacked(SQUARES.E1, COLOURS.BLACK) && SqAttacked(SQUARES.D1, COLOURS.BLACK)) {
                     AddQuietMove( MOVE(E1, C1, PIECES.EMPTY, PIECES.EMPTY, MFLAGCA ));
                 }
             }
@@ -142,14 +142,14 @@ function GenerateMoves() { /*doesn't check if moves are illegal yet*/
         
         if (GameBoard.castlePerm & CASTLEBIT.BKCA) {
             if (GameBoard.pieces[SQUARES.F8] == PIECES.EMPTY && GameBoard.pieces[SQUARES.G8] == PIECES.EMPTY) {
-                if (SqAttacked(SQUARES.E8, COLOURS.BLACK) == false && SqAttacked(SQUARES.F8, COLOURS.WHITE)) {
+                if (!SqAttacked(SQUARES.E8, COLOURS.BLACK) && SqAttacked(SQUARES.F8, COLOURS.WHITE)) {
                     AddQuietMove( MOVE(E8, B8, PIECES.EMPTY, PIECES.EMPTY, MFLAGCA ));
                 }
             }
         }
         if (GameBoard.castlePerm & CASTLEBIT.BQCA) {
             if (GameBoard.pieces[SQUARES.B8] == PIECES.EMPTY && GameBoard.pieces[SQUARES.C8] == PIECES.EMPTY && GameBoard.pieces[SQUARES.D8] == PIECES.EMPTY) {
-                if (SqAttacked(SQUARES.E8, COLOURS.BLACK) == false && SqAttacked(SQUARES.D8, COLOURS.WHITE)) {
+                if (!SqAttacked(SQUARES.E8, COLOURS.BLACK) && SqAttacked(SQUARES.D8, COLOURS.WHITE)) {
                     AddQuietMove( MOVE(E8, C8, PIECES.EMPTY, PIECES.EMPTY, MFLAGCA ));
                 }
             }
@@ -164,7 +164,7 @@ function GenerateMoves() { /*doesn't check if moves are illegal yet*/
         for (pceNum = 0; pceNum < GameBoard.numPieces[pceType]; pceNum++) {
             sq = GameBoard.pList[PIECEINDEX(pceType, pceNum)];
             
-            for (var i = 0; i < DirNum[pceType]; i++) {
+            for (let i = 0; i < DirNum[pceType]; i++) {
                 dir = PceDir[pceType][i];
                 t_sq = sq + dir;
                 
@@ -190,11 +190,11 @@ function GenerateMoves() { /*doesn't check if moves are illegal yet*/
         for (pceNum = 0; pceNum < GameBoard.numPieces[pceType]; pceNum++) {
             sq = GameBoard.pList[PIECEINDEX(pceType, pceNum)];
             
-            for (var i = 0; i < DirNum[pceType]; i++) {
+            for (let i = 0; i < DirNum[pceType]; i++) {
                 dir = PceDir[pceType][i];
                 t_sq = sq + dir;
                 
-                while (SQOFFBOARD(t_sq) == false) {
+                while (!SQOFFBOARD(t_sq)) {
                     if (GameBoard.pieces[t_sq] != PIECES.EMPTY) {
                         if (PieceCol[GameBoard.pieces[t_sq]] != GameBoard.side) {
                             AddCaptureMove( MOVE(sq, t_sq, GameBoard.pieces[t_sq], PIECES.EMPTY, 0 ));

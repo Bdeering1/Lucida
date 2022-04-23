@@ -37,7 +37,7 @@ function FR2SQ(f,r) { /*file rank to square*/
 var PieceBig = [ false, false, true, true, true, true, true, false, true, true, true, true, true ];
 var PieceMaj = [ false, false, false, false, true, true, true, false, false, false, true, true, true ];
 var PieceMin = [ false, false, true, true, false, false, false, false, true, true, false, false, false ];
-var PieceVal= [ 0, 100, 325, 325, 550, 1000, 50000, 100, 325, 325, 550, 1000, 50000  ];
+var PieceVal = [ 0, 100, 325, 325, 550, 1000, 50000, 100, 325, 325, 550, 1000, 50000 ];
 var PieceCol = [ COLOURS.BOTH, COLOURS.WHITE, COLOURS.WHITE, COLOURS.WHITE, COLOURS.WHITE, COLOURS.WHITE, COLOURS.WHITE,
 	COLOURS.BLACK, COLOURS.BLACK, COLOURS.BLACK, COLOURS.BLACK, COLOURS.BLACK, COLOURS.BLACK ];
 	

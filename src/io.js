@@ -7,10 +7,10 @@ function PrSq(sq) {
 function PrMove(move) {
     var MoveStr;
     
-    ff = FilesBoard[FROMSQ(move)]; /*file from, rank from, etc*/
-    rf = RanksBoard[FROMSQ(move)];
-    ft = FilesBoard[TOSQ(move)];
-    rt = RanksBoard[TOSQ(move)];
+    let ff = FilesBoard[FROMSQ(move)]; /*file from, rank from, etc*/
+    let rf = RanksBoard[FROMSQ(move)];
+    let ft = FilesBoard[TOSQ(move)];
+    let rt = RanksBoard[TOSQ(move)];
    
     MoveStr = FileChar[ff] + RankChar[rf] + FileChar[ft] + RankChar[rt];
     
@@ -23,10 +23,10 @@ function PrMove(move) {
 }
 
 function PrintBoard() { /*Gameboard: pieces, side, enPas, castlePerm, posKey*/
-    var sq, file, rank, piece;
+    var sq, file, rank, piece, line;
 
     for (rank = RANKS.RANK_8; rank >= RANKS.RANK_1; rank--) {
-        var line = (RankChar[rank] + " ");
+        line = (RankChar[rank] + " ");
         for (file = FILES.FILE_A; file <= FILES.FILE_H; file++) {
             sq = FR2SQ(file,rank);
             piece = GameBoard.pieces[sq];
@@ -34,7 +34,7 @@ function PrintBoard() { /*Gameboard: pieces, side, enPas, castlePerm, posKey*/
         }
         console.log(line);
     }
-    var line = "  ";
+    line = "  ";
     for (file = FILES.FILE_A; file <= FILES.FILE_H; file++) {
         line += (" " + FileChar[file] + " ");
     }
@@ -56,11 +56,11 @@ function PrintSqAttacked() {
     var sq, file, rank, piece;
     
     console.log("\nSquares attacked by white: \n");
-    for (rank = RANKS.RANK_8; rank >= RANKS.RANK_1; rank--) { /*going from the backrank so that it prints nicely*/
-        var line = (RankChar[rank] + "  ");
+    for (rank = RANKS.RANK_8; rank >= RANKS.RANK_1; rank--) { /*going from the backrank so that it pxrints nicely*/
+        let line = (RankChar[rank] + "  ");
         for (file = FILES.FILE_A; file <= FILES.FILE_H; file++) {
             sq = FR2SQ(file, rank);
-            if (SqAttacked(sq, COLOURS.WHITE) == true) piece = "X";
+            if (SqAttacked(sq, COLOURS.WHITE)) piece = "X";
             else piece = "-";
             line += (" " + piece + " ");
         }
@@ -70,10 +70,10 @@ function PrintSqAttacked() {
     
     console.log("Squares attacked by black: \n");
     for (rank = RANKS.RANK_8; rank >= RANKS.RANK_1; rank--) { /*going from the backrank so that it prints nicely*/
-        var line = (RankChar[rank] + "  ");
+        let line = (RankChar[rank] + "  ");
         for (file = FILES.FILE_A; file <= FILES.FILE_H; file++) {
             sq = FR2SQ(file, rank);
-            if (SqAttacked(sq, COLOURS.BLACK) == true) piece = "X";
+            if (SqAttacked(sq, COLOURS.BLACK)) piece = "X";
             else piece = "-";
             line += (" " + piece + " ");
         }
@@ -83,11 +83,11 @@ function PrintSqAttacked() {
 }
 
 function PrintPieceLists() {
-    var piece, pieceNum;
+    var pieceNum;
     
     console.log("PIECES: ");
-    for (piece = PIECES.wP; piece <= PIECES.bK; piece++) {
-        for (numPieces = 0; numPieces < GameBoard.numPieces[piece]; numPieces++) {
+    for (let piece = PIECES.wP; piece <= PIECES.bK; piece++) {
+        for (let numPieces = 0; numPieces < GameBoard.numPieces[piece]; numPieces++) {
             console.log(PieceChar[piece] + " on " + PrSq(GameBoard.pList[PIECEINDEX(piece, numPieces)]));
         }
     }
@@ -95,7 +95,7 @@ function PrintPieceLists() {
 
 function PrintMoveList() {
     var moveCnt = 0;
-    for (i = GameBoard.moveListStart[GameBoard.ply]; i < GameBoard.moveListStart[GameBoard.ply+1]; i++) {
+    for (let i = GameBoard.moveListStart[GameBoard.ply]; i < GameBoard.moveListStart[GameBoard.ply+1]; i++) {
         console.log(PrMove(GameBoard.moveList[i]));
         moveCnt++;
     }

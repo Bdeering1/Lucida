@@ -18,11 +18,10 @@ GameBoard.moveScores = new Array(MAXDEPTH * MAXPOSITIONMOVES);
 GameBoard.moveListStart = new Array(MAXDEPTH);
 
 function GeneratePosKey() {
-    var sq = 0;
     var finalKey = 0;
     var piece = PIECES.EMPTY;
 
-    for (sq = 0; sq < BRD_SQ_NUM; sq++) {
+    for (let sq = 0; sq < BRD_SQ_NUM; sq++) {
         piece = GameBoard.pieces[sq];
         if (piece != PIECES.EMPTY && piece != SQUARES.OFFBOARD) {
             finalKey ^= PieceKeys[(piece * 120) + sq]; /* XORing one of the 13 * 120 random generated hashes into the final key */
@@ -45,19 +44,19 @@ function GeneratePosKey() {
 function UpdateListsMaterial() {
     var piece, sq, colour;
 
-    for (var i = 0; i < 13 * 10; i++) {
+    for (let i = 0; i < 13 * 10; i++) {
         GameBoard.pList[i] = PIECES.EMPTY;
     }
 
-    for (var i = 0; i < 2; i++) {
+    for (let i = 0; i < 2; i++) {
         GameBoard.material[i] = 0;
     }
 
-    for (var i = 0; i < 13; i++) {
+    for (let i = 0; i < 13; i++) {
         GameBoard.numPieces[i] = 0;
     }
 
-    for (var i = 0; i < 64; i++) {
+    for (let i = 0; i < 64; i++) {
         sq = SQ120(i);
         piece = GameBoard.pieces[sq];
         if (piece != PIECES.EMPTY) {
@@ -72,11 +71,11 @@ function UpdateListsMaterial() {
 }
 
 function ResetBoard() {
-    for (var i = 0; i < BRD_SQ_NUM; i++) {
+    for (let i = 0; i < BRD_SQ_NUM; i++) {
         GameBoard.pieces[i] = SQUARES.OFFBOARD;
     }
 
-    for (var i = 0; i < 64; i++) {
+    for (let i = 0; i < 64; i++) {
         GameBoard.pieces[SQ120(i)] = PIECES.EMPTY;
     }
 
@@ -165,7 +164,7 @@ function ParseFen(fen) { /*Calls ResetBoard, UpdateListsMaterial, and GeneratePo
                 return;
         }
 
-        for (var i = 0; i < count; i++) {
+        for (let i = 0; i < count; i++) {
             sq120 = FR2SQ(file, rank);
             GameBoard.pieces[sq120] = piece;
             file++;
@@ -216,12 +215,12 @@ function SqAttacked(sq, side) { /*(is this square attacked by this side?)*/
         if (GameBoard.pieces[sq + 11] == PIECES.wP || GameBoard.pieces[sq + 9] == PIECES.wP) {
             return true;
         }
-        for (var i = 0; i < 8; i++) {
+        for (let i = 0; i < 8; i++) {
             if (GameBoard.pieces[sq + NDir[i]] == PIECES.wN) {
                 return true;
             }
         }
-        for (var i = 0; i < 8; i++) {
+        for (let i = 0; i < 8; i++) {
             if (GameBoard.pieces[sq + KDir[i]] == PIECES.wK) {
                 return true;
             }
@@ -231,12 +230,12 @@ function SqAttacked(sq, side) { /*(is this square attacked by this side?)*/
         if (GameBoard.pieces[sq - 11] == PIECES.bP || GameBoard.pieces[sq - 9] == PIECES.bP) {
             return true;
         }
-        for (var i = 0; i < 8; i++) {
+        for (let i = 0; i < 8; i++) {
             if (GameBoard.pieces[sq + NDir[i]] == PIECES.bN) {
                 return true;
             }
         }
-        for (var i = 0; i < 8; i++) {
+        for (let i = 0; i < 8; i++) {
             if (GameBoard.pieces[sq + KDir[i]] == PIECES.bK) {
                 return true;
             }
@@ -244,13 +243,13 @@ function SqAttacked(sq, side) { /*(is this square attacked by this side?)*/
     }
 
     /*Bishop + Queen attacks*/
-    for (var i = 0; i < 4; i++) {
+    for (let i = 0; i < 4; i++) {
         dir = BDir[i];
         t_sq = sq + dir;
         pce = GameBoard.pieces[t_sq];
         while (pce != SQUARES.OFFBOARD) {
             if (pce != PIECES.EMPTY) {
-                if (PieceBishopQueen[pce] == true && PieceCol[pce] == side) {
+                if (PieceBishopQueen[pce] && PieceCol[pce] == side) {
                     return true;
                 }
                 break;
@@ -260,13 +259,13 @@ function SqAttacked(sq, side) { /*(is this square attacked by this side?)*/
         }
     }
     /*Rook + Queen attacks*/
-    for (var i = 0; i < 4; i++) {
+    for (let i = 0; i < 4; i++) {
         dir = RDir[i];
         t_sq = sq + dir;
         pce = GameBoard.pieces[t_sq];
         while (pce != SQUARES.OFFBOARD) {
             if (pce != PIECES.EMPTY) {
-                if (PieceRookQueen[pce] == true && PieceCol[pce] == side) {
+                if (PieceRookQueen[pce] && PieceCol[pce] == side) {
                     return true;
                 }
                 break;
