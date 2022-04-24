@@ -2,22 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Lucida DEBUG</title>
+    <title>Lucida Debug</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rouge Script">
     <link href="../styles.css" rel="stylesheet" type="text/css">
     <script type="text/javascript"> if (!window.console) console = {log: function() {}}; </script>
 </head>
 <body>
     <header>
-        <h3> Debug Mode </h3>
+        <h3 class="main-title">Lucida</h3>
     </header>
     
-    <div id="BoardDiv"> <p id=boardText>(board goes here)</p> </div>
-    
-    <div id="ParentDiv">
-        <div id="FenInDiv"> <input type="text" id="fenIn"/> </div>
-        <div id=SetFenDiv> <button type="button" id="setFen">Set Position</button> </div>
-    </div>
+    <main>
+        <div id="board">
+            <p class="board-text">(board goes here)</p>
+        </div>
+        
+        <div class="fen-wrapper">
+            <input type="text" class="fen-input"/>
+            <button type="button" class="set-fen">Set Position</button>
+        </div>
+    </main>
     
     <script src="../framework/jquery-3.5.1.min.js"></script>
     <script src="../include/defs.js"></script>

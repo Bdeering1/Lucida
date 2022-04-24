@@ -1,4 +1,22 @@
-h3 {
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+:root {
+  --inner-height: calc(100vh - calc(100vh - 100%));
+}
+html {
+  height: var(--inner-height);
+}
+body {
+  height: 100%;
+  margin: 0;
+  padding: 16px;
+  background: whitesmoke;
+}
+
+.main-title {
     position: absolute;
     margin: auto;
     top: 50%;
@@ -7,79 +25,41 @@ h3 {
     
     font-family: "Rouge Script";
     font-size: 96px;
-    color: BLUE;
+    color: dodgerblue;
 }
 
-body {
-    background-color: BLACK;
-}
-
-#BoardDiv {
+#board {
     width: 800px;
     height: 800px;
     display: none;
-    
+    /* display: flex;
+    justify-content: center;
+    align-items: center; */
+
     position: absolute;
     margin: auto;
     top: 50%;
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
-
-    background-color: WHITE;
+    background: white;
 }
 
-#boardText {
+.fen-wrapper {
+    width: calc(100% - 32px);
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translateX(-50%) translateY(-50%);
-    
-    color: BLACK;
+    bottom: 16px;
+    display: flex;
+    justify-content: end;
 }
-
-#ParentDiv {
-    width: 440px;
-    height: 60px;
-    left: 50%;
-    top: 100%;
-    position: absolute;
-    transform: translateX(-50%);
-    
-    /*background-color: PURPLE;*/
+.fen-input {
+    width: 480px;
+    padding: 0 8px;
+    margin-right: 8px;
 }
-
-#FenInDiv {
-    width: 440px;
-    height: 50%;
-    display: inline-block;
-    
-    color: BLUE;
-    /*background-color: RED;*/
-}
-#SetFenDiv {
-    width: 440px;
-    height: 50%;
-    display: inline-block;
-    
-    /*background-color: YELLOW;*/
-}
-
-#fenIn {
-    width: 100%;
-    top: 50%;
-    left: 50%;
-    margin: auto;
-    position: relative;
-    transform: translateX(-50%) translateY(-50%);
-}
-#setFen {
-    top: 50%;
-    left: 50%;
-    margin: auto;
-    position: relative;
-    transform: translateX(-50%) translateY(-50%);
-    
-    color: WHITE;
-    background-color: BLUE;
-    border-color: BLUE;
+.set-fen {
+    padding: 6px;
+    background: dodgerblue;
+    color: whitesmoke;
+    border: none;
+    border-radius: 2px;
 }
