@@ -9,6 +9,8 @@
 # MacOS
 .DS_Store
 
-# Misc
-dev_notes/*
-!dev_notes/documentation.*
+# Docs
+docs/*
+!docs/documentation.*
+!docs/testing.*
+!docs/workitems.*
