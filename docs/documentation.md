@@ -2,21 +2,21 @@
 
 #### Variables
 
-pieces = array of 120 integers representing the pieces that are on each square (anything off the 8x8 board is marked with SQUARES.OFFBOARD) \
-side = side to move (usually treated as bool but there is also a BOTH option) \
-fiftyMove = fifty move counter (int) \
-plyNum = ply counter (half moves) \
-ply = ply counter for calculation purposes \
-enPas = square where an en passant move can occur on the next move (int) \
-castlePerm = castling permissions for both sides (stored using 4 bits or up to number 16) \
-material = array of 2 integers representing the total material for each side \
-numPieces = array of 13 integers which hold the number of each type of piece, indexed by PIECEINDEX (index 0 = EMPTY) \
-pList = array of 13 * 10 integers, stores the location of each piece (up to 10 of each kind), allows the location of a specific piece to be determined using PIECEINDEX \
-posKey = unique key hashed for each position, for repetition checking \
+- pieces = array of 120 integers representing the pieces that are on each square (anything off the 8x8 board is marked with SQUARES.OFFBOARD)  
+- side = side to move (usually treated as bool but there is also a BOTH option)  
+- fiftyMove = fifty move counter (int)  
+- plyNum = ply counter (half moves)  
+- ply = ply counter for calculation purposes  
+- enPas = square where an en passant move can occur on the next move (int)  
+- castlePerm = castling permissions for both sides (stored using 4 bits or up to number 16)  
+- material = array of 2 integers representing the total material for each side  
+- numPieces = array of 13 integers which hold the number of each type of piece, indexed by PIECEINDEX (index 0 = EMPTY)  
+- pList = array of 13 * 10 integers, stores the location of each piece (up to 10 of each kind), allows the location of a specific piece to be determined using PIECEINDEX  
+- posKey = unique key hashed for each position, for repetition checking  
 \
 *it doesn't make sense that the offboard squares in the pieces array are stored as SQUARES.OFFBOARD, maybe they should be PIECES.EMPTY
-- this actually helps with movegen even though it doesn't entirely make sense \
-**some of these arrays including pieces don't need integer values (find out how js works with this) \
+\- this actually helps with movegen even though it doesn't entirely make sense  
+**some of these arrays including pieces don't need integer values (find out how js works with this)  
 ***why isn't side a bool, is BOTH really necessary?
 
 move generation variables are described in move gen
