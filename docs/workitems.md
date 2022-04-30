@@ -2,7 +2,8 @@
 
 ### Next Steps
 - test documentation
-  - document existing test cases in testing.md
+  - add more detail to existing test case documentation
+    - fill in unfinished details, add description of FEN positions etc.
   - make a testing plan which includes missing test cases and revisions
 - test refactoring
   - make nevessary changes to unit tests according to testing plan
