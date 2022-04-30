@@ -1,5 +1,5 @@
 ## Lucida  
-Original Javascript Chess Engine using Jquery  
+Original Javascript Chess Engine (in progress)
   
 Development resources:  
 - Chess Programming Wiki - https://www.chessprogramming.org/  
