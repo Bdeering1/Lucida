@@ -13,3 +13,8 @@
 - markup and module structure
   - combine debug.html and index.html into one file
   - implement a better module system (ESM modules?)
+- front end
+  - replace Jquery with something lighter weight (eg. Svelte)
+  - maybe integrate css framework / component library
+- typing
+  - implement Typescript (enums will be particularily helpful)
