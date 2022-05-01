@@ -15,6 +15,7 @@
   - implement a better module system (ESM modules?)
 - front end
   - replace Jquery with something lighter weight (eg. Svelte)
+  - better separation of UI and business logic
   - maybe integrate css framework / component library
 - typing
   - implement Typescript (enums will be particularily helpful)

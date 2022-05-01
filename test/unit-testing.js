@@ -13,8 +13,6 @@ $(document).ready(function() {
     UnitTest(GenerateMovesTest);
     console.log("TEST 6: making moves");
     UnitTest(MakeMoveTest);
-
-    //ParseFen(START_FEN);
 });
 
 function DefsTest() {
