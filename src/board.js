@@ -24,7 +24,7 @@ function GeneratePosKey() {
     for (let sq = 0; sq < BRD_SQ_NUM; sq++) {
         piece = GameBoard.pieces[sq];
         if (piece != PIECES.EMPTY && piece != SQUARES.OFFBOARD) {
-            finalKey ^= PieceKeys[(piece * 120) + sq]; /* XORing one of the 13 * 120 random generated hashes into the final key */
+            finalKey ^= PieceKeys[(piece * 120) + sq]; /* XORing one of the 13 * 120 hashes into the final key */
         }
     }
 

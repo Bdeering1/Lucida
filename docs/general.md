@@ -33,7 +33,7 @@ Changes from Original
 
 
 Questions
-
+- why does GeneratePosKey() need to use the 120 representation of the board, wouldn't any pieces off board just be PIECES.EMPTY every time?
 
 Issues
 

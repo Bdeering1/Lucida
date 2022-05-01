@@ -16,7 +16,7 @@ $(document).ready(function() {
 });
 
 function DefsTest() {
-	isPass = def_success == 1;
+	isPass = def_success;
 }
 
 function InitTest() {

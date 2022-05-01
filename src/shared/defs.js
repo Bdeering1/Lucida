@@ -128,4 +128,4 @@ function HASH_SIDE() { GameBoard.posKey ^= SideKey; }
 function HASH_EP() { GameBoard.posKey ^= PieceKeys[GameBoard.enPas]; }
 
 
-var def_success = 1;
+var def_success = true;

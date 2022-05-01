@@ -19,3 +19,6 @@
   - maybe integrate css framework / component library
 - typing
   - implement Typescript (enums will be particularily helpful)
+- other
+  - reproducable position key hashing (remove randomness)
+  - flip board back around, and just change how it is printed to get white on the bottom
