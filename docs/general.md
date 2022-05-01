@@ -8,7 +8,7 @@ SqAttacked
 
 FR2Q Issue
 -ranks were originally stored upside down in RanksBoard (going top to bottom), so GameBoard.pieces stored white first (on top), then black
--when printing rank 8 was printed first so it always dispolayed nicely (white on bottom)
+-when printing rank 8 was printed first so it always displayed nicely (white on bottom)
 -this was changed for consistency, white is now stored on the bottom in GameBoard.pieces
 
 

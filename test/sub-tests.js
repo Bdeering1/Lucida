@@ -69,7 +69,7 @@ function InitSq120ToSq64Test() {
     }
 }
 
-/*BOARD TESTS (*/
+/* BOARD TESTS */
 
 function SqAttackedTest() {
     ParseFen(START_FEN);

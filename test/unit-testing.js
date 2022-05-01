@@ -3,7 +3,7 @@ $(document).ready(function() {
 
     console.log("TEST 1: definitions");
     UnitTest(DefsTest);
-    console.log("TEST 2: init"); /*add InitBoardVars() to this*/
+    console.log("TEST 2: init");
     UnitTest(InitTest);
     console.log("TEST 3: FEN parsing");
     UnitTest(ParseFenTest);
@@ -16,7 +16,7 @@ $(document).ready(function() {
 });
 
 function DefsTest() {
-	isPass = def_success == 1; /*add for multiple def files later*/
+	isPass = def_success == 1;
 }
 
 function InitTest() {
@@ -28,7 +28,6 @@ function InitTest() {
     InitHashKeysTest();
     if (VERBOSE) console.log('InitSq120ToSq64Test()');
     InitSq120ToSq64Test();
-    /*Test InitBoardVars() here*/
 }
 
 function ParseFenTest() {
