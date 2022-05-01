@@ -18,15 +18,14 @@
 - `ParseFen()`
   - start position - the black king is on E8, `CheckBoard()` returns true
   - "8/7p/5k2/5p2/p1p2P2/Pr1pPK2/1P1R3P/8 b - -" - there are no castle permissions, `CheckBoard()` returns true
-  - correctly parses "6k1/8/8/8/3Pp3/8/8/6K1 b - d3 0 1" - there is an enpassent square on D3, `CheckBoard()` returns true
+  - "6k1/8/8/8/3Pp3/8/8/6K1 b - d3 0 1" - there is an enpassent square on D3, `CheckBoard()` returns true
 
 `CheckBoard()`
-  - for each piece in GameBoard.pList:
-    - `GameBoard.pList[]` - for each element (loops through all piece types and uses GameBoard.numPieces) the piece in the corresponding position on the board is of the same type
-    - `GameBoard.numPieces[]` - for each element (piece type) there are the same number of each piece type on the board
-    - `GameBoard.material[]` - the material count for each side is equal to the actual material count on the board
-    - `GameBoard.side` - value is either `COLOURS.WHITE` or `COLOURS.BLACK`
-    - `GameBoard.posKey` - same as the value returned from `GeneratePosKey()`
+  - `GameBoard.pList[]` - for each element (loops through all piece types and uses GameBoard.numPieces) the piece in the corresponding position on the board is of the same type
+  - `GameBoard.numPieces[]` - for each element (piece type) there are the same number of each piece type on the board
+  - `GameBoard.material[]` - the material count for each side is equal to the actual material count on the board
+  - `GameBoard.side` - value is either `COLOURS.WHITE` or `COLOURS.BLACK`
+  - `GameBoard.posKey` - same as the value returned from `GeneratePosKey()`
 4. **Board Intelligence**
 - `SqAttacked()` - checks one arbitrary square and logs a board representation showing squares attacked
   - starting position test
@@ -49,10 +48,22 @@
 
 ### Test Improvements
 1. **Definitions**
+- `def_success`
+  - this test is probably unnecessary
 2. **Initialization**
+- `InitFilesRanksBrd()`
+  - this test should check every square on the file/rank boards, or at least one square from each file/rank
+- `InitHashKeys()`
+  - should check every element of the `PieceKey` array or at least the first _and_ last elements
+  - should check `SideKey`
+  - should check `CastleKeys[]`
 3. **FEN Parsing**
-`CheckBoard()`
-This is one of the better (more comprehensive) tests but it has one flaw: the `GameBoard.pList` test is reliant on the `GameBoard.numPieces[]` test being accurate and passing.
+- `ParseFen()`
+  - any special test cases should not be testable using `CheckBoard`
+    - currently the starting position has a redundant test case that is also tested in `CheckBoard()`
+  - there should be clear reasoning behind each FEN used to test this function
+- `CheckBoard()`
+  - this is one of the better (more comprehensive) tests but it has one flaw: the `GameBoard.pList` test is reliant on the `GameBoard.numPieces[]` test being accurate and passing.
 4. **Board Intelligence**
 5. **Move Generation**
 6. **Making Moves**
