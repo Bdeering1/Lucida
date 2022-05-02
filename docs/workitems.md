@@ -14,7 +14,6 @@
   - combine debug.html and index.html into one file
   - implement a better module system (ESM modules?)
 - front end
-  - replace Jquery with something lighter weight (eg. Svelte)
   - better separation of UI and business logic
   - maybe integrate css framework / component library
 - typing
@@ -22,3 +21,11 @@
 - other
   - reproducable position key hashing (remove randomness)
   - flip board back around, and just change how it is printed to get white on the bottom
+
+### Future Ideas
+- interfacing with the engine
+  - focus on creating a robust engine CLI
+    - posssibly turn primary code base into nodeJS app / backend
+    - containerize application and interface through API (REST?)
+- find chess board module / library for front end
+- replace Jquery with something lighter weight (eg. Svelte)
