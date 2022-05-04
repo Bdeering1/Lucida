@@ -6,7 +6,7 @@
     - fill in unfinished details, add description of FEN positions etc. (done for sections 1-3)
   - make a testing plan which includes missing test cases and revisions
 - test refactoring
-  - make nevessary changes to unit tests according to testing plan
+  - make necessary changes to unit tests according to testing plan
   - consider implementing a testing framework (eg. Jest)
 
 ### Technical Debt
@@ -25,7 +25,7 @@
 ### Future Ideas
 - interfacing with the engine
   - focus on creating a robust engine CLI
-    - posssibly turn primary code base into nodeJS app / backend
+    - posssibly turn primary code base into nodeJS backend
     - containerize application and interface through API (REST?)
 - find chess board module / library for front end
 - replace Jquery with something lighter weight (eg. Svelte)
