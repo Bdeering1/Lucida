@@ -1,5 +1,10 @@
-init();
-ParseFen(START_FEN);
+function InitializeBoard() {
+    InitFilesRanksBrd();
+    InitHashKeys();
+    InitSq120ToSq64();
+    InitBoardVars();
+    ParseFen(START_FEN);
+}
 
 function InitFilesRanksBrd() {
     var sq = SQUARES.A1;
@@ -62,11 +67,4 @@ function InitBoardVars() {
             posKey : 0
         });
     }
-}
-
-function init() {
-    InitFilesRanksBrd();
-    InitHashKeys();
-    InitSq120ToSq64();
-    InitBoardVars();
 }
