@@ -49,13 +49,14 @@ function MovePiece(from, to) { /*make sure this is right*/
     GameBoard.pieces[from] = PIECES.EMPTY;
     GameBoard.pieces[to] = pceType;
 
-    for (let i = 0; i < GameBoard.numPieces[pceType]; i++) {
+    let i = 0;
+    for (i; i < GameBoard.numPieces[pceType]; i++) {
         if (GameBoard.pList[PIECEINDEX(pceType, i)] == from) { /*trying to find the 'ID' of the piece*/
             GameBoard.pList[PIECEINDEX(pceType, i)] = to;
             break;
         }
     }
-    if (i == -1) {
+    if (i == GameBoard.numPieces[pceType]) {
         console.log("Error: could not find piece");
     }
 }

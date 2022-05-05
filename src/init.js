@@ -1,7 +1,5 @@
-$(document).ready(function() {
-    init();
-    ParseFen(START_FEN);
-});
+init();
+ParseFen(START_FEN);
 
 function InitFilesRanksBrd() {
     var sq = SQUARES.A1;

@@ -1,19 +1,17 @@
-$(document).ready(function() {
-    console.log("UNIT TESTING\n\n");
+console.log("UNIT TESTING\n\n");
 
-    console.log("TEST 1: definitions");
-    UnitTest(DefsTest);
-    console.log("TEST 2: init");
-    UnitTest(InitTest);
-    console.log("TEST 3: FEN parsing");
-    UnitTest(ParseFenTest);
-    console.log("TEST 4: board intelligence");
-    UnitTest(BoardIntelTest);
-    console.log("TEST 5: move generation");
-    UnitTest(GenerateMovesTest);
-    console.log("TEST 6: making moves");
-    UnitTest(MakeMoveTest);
-});
+console.log("TEST 1: definitions");
+UnitTest(DefsTest);
+console.log("TEST 2: init");
+UnitTest(InitTest);
+console.log("TEST 3: FEN parsing");
+UnitTest(ParseFenTest);
+console.log("TEST 4: board intelligence");
+UnitTest(BoardIntelTest);
+console.log("TEST 5: move generation");
+UnitTest(GenerateMovesTest);
+console.log("TEST 6: making moves");
+UnitTest(MakeMoveTest);
 
 function DefsTest() {
 	isPass = def_success;
