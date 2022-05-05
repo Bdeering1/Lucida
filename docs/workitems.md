@@ -8,6 +8,11 @@
 - test refactoring
   - make necessary changes to unit tests according to testing plan
   - consider implementing a testing framework (eg. Jest)
+- look into JS runtimes
+  - nodeJS
+    - consider pnpm
+  - deno
+    - see if deno packages exist for chess UI + other helpful libraries for chess engines
 
 ### Technical Debt
 - markup and module structure
@@ -24,8 +29,9 @@
 
 ### Future Ideas
 - interfacing with the engine
-  - focus on creating a robust engine CLI
-    - posssibly turn primary code base into nodeJS backend
-    - containerize application and interface through API (REST?)
+  - remove necessity of a browser by moving to nodeJS or deno
+    - focus on creating a robust engine CLI
+  - containerize application and interface through API (REST?)
+  - there should be an object representing the engine configuration/settings, this could also be represented as JSON 
 - find chess board module / library for front end
 - replace Jquery with something lighter weight (eg. Svelte)
