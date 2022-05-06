@@ -1,7 +1,9 @@
 import {
+    PieceKeys, SideKey, CastleKeys,
+    PieceCol, PieceVal,
     BRD_SQ_NUM, MAXDEPTH, MAXPOSITIONMOVES,
-    FILES, RANKS, PIECES, CASTLEBIT, COLOURS,
-    FR2SQ, PIECEINDEX
+    SQUARES, FILES, RANKS, PIECES, CASTLEBIT, COLOURS,
+    FR2SQ, SQ120, PIECEINDEX
 } from './shared/defs.mjs';
 
 export var GameBoard = {

@@ -1,3 +1,0 @@
-//(import initialize here)
-
-InitializeBoard();

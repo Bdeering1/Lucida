@@ -1,4 +1,14 @@
-function InitializeBoard() {
+import { GameBoard, ParseFen } from './board.mjs';
+import {
+    PieceKeys, CastleKeys,
+    FilesBoard, RanksBoard,
+    Sq64ToSq120, Sq120ToSq64,
+    BRD_SQ_NUM, MAXGAMEMOVES, NOMOVE,
+    FILES, RANKS, SQUARES, START_FEN,
+    FR2SQ, RAND_32
+} from './shared/defs.mjs';
+
+export default function Initialize() {
     InitFilesRanksBrd();
     InitHashKeys();
     InitSq120ToSq64();
@@ -27,8 +37,6 @@ function InitHashKeys() {
     for (let i = 0; i < 13 * 120; i++) {
         PieceKeys[i] = RAND_32();
     }
-
-    SideKey = RAND_32(); /* hashed in if white is to move*/
     
     for (let i = 0; i < 16; i++) {
         CastleKeys[i] = RAND_32();

@@ -63,7 +63,7 @@ export var LoopSlideIndex = [ 0, 4];
 
 /* Piece * 120 + square (gives 120 space for each piece type and with the square number added on top ensures the key is unique) */
 export var PieceKeys = new Array(13 * 120);
-export var SideKey;
+export var SideKey = RAND_32(); /* hashed in if white is to move*/
 export var CastleKeys = new Array(16);
 
 export var Sq120ToSq64 = new Array(BRD_SQ_NUM);
