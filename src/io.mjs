@@ -1,7 +1,13 @@
-function PrSq(sq) {
-    
-    return (FileChar[FilesBoard[sq]] + RankChar[RanksBoard[sq]]);
+import { GameBoard, SqAttacked } from './board.mjs';
+import {
+    FileChar, RankChar, SideChar,
+    FilesBoard, RanksBoard,
+    FILES, RANKS, PIECES, CASTLEBIT,
+    FROMSQ, TOSQ, FR2SQ, PIECEINDEX, PROMOTED
+} from './shared/defs.mjs';
 
+function PrSq(sq) {
+    return (FileChar[FilesBoard[sq]] + RankChar[RanksBoard[sq]]);
 }
 
 function PrMove(move) {
@@ -82,9 +88,7 @@ function PrintSqAttacked() {
     console.log("");
 }
 
-function PrintPieceLists() {
-    var pieceNum;
-    
+function PrintPieceLists() {    
     console.log("PIECES: ");
     for (let piece = PIECES.wP; piece <= PIECES.bK; piece++) {
         for (let numPieces = 0; numPieces < GameBoard.numPieces[piece]; numPieces++) {

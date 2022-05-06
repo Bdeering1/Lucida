@@ -1,23 +1,28 @@
-var GameBoard = {};
+import {
+    BRD_SQ_NUM, MAXDEPTH, MAXPOSITIONMOVES,
+    FILES, RANKS, PIECES, CASTLEBIT, COLOURS,
+    FR2SQ, PIECEINDEX
+} from './shared/defs.mjs';
 
-GameBoard.pieces = new Array(BRD_SQ_NUM); /*gives the piece id for each 120 squares on the board (0 if empty)*/
-GameBoard.side = COLOURS.WHITE;
-GameBoard.fiftyMove = 0;
-GameBoard.hisPly = 0; /*actual ply*/
-GameBoard.history = [];
-GameBoard.ply = 0; /*ply for engine calculation*/
-GameBoard.enPas = 0; /* stores one square where en passant can happen (only one total is possible at a time)*/
-GameBoard.castlePerm = 0; /* one of 16 numbers representing the different castle permissions for each side*/
-GameBoard.material = new Array(2); /*material total for both sides*/
-GameBoard.numPieces = new Array(13); /*number of each type of piece for each side, indexed by PIECES, previously pceNum*/
-GameBoard.pList = new Array(13 * 10); /*list of pieces (10 max of each piece type), stores the square each piece is on, indexed by PIECEINDEX*/
-GameBoard.posKey = 0; /*unique key for each board position, used for repetition detection*/
+export var GameBoard = {
+    pieces: new Array(BRD_SQ_NUM), /*gives the piece id for each 120 squares on the board (0 if empty)*/
+    side: COLOURS.WHITE,
+    fiftyMove: 0,
+    hisPly: 0, /*actual ply*/
+    history: [],
+    ply: 0, /*ply for engine calculation*/
+    enPas: 0, /* stores one square where en passant can happen (only one total is possible at a time)*/
+    castlePerm: 0, /* one of 16 numbers representing the different castle permissions for each side*/
+    material: new Array(2), /*material total for both sides*/
+    numPieces: new Array(13), /*number of each type of piece for each side, indexed by PIECES, previously pceNum*/
+    pList: new Array(13 * 10), /*list of pieces (10 max of each piece type), stores the square each piece is on, indexed by PIECEINDEX*/
+    posKey: 0, /*unique key for each board position, used for repetition detection*/
+    moveList: new Array(MAXDEPTH * MAXPOSITIONMOVES),
+    moveScores: new Array(MAXDEPTH * MAXPOSITIONMOVES),
+    moveListStart: new Array(MAXDEPTH),
+}
 
-GameBoard.moveList = new Array(MAXDEPTH * MAXPOSITIONMOVES);
-GameBoard.moveScores = new Array(MAXDEPTH * MAXPOSITIONMOVES);
-GameBoard.moveListStart = new Array(MAXDEPTH);
-
-function GeneratePosKey() {
+export function GeneratePosKey() {
     var finalKey = 0;
     var piece = PIECES.EMPTY;
 
@@ -41,7 +46,7 @@ function GeneratePosKey() {
     return finalKey;
 }
 
-function UpdateListsMaterial() {
+export function UpdateListsMaterial() {
     var piece, sq, colour;
 
     for (let i = 0; i < 13 * 10; i++) {
@@ -70,7 +75,7 @@ function UpdateListsMaterial() {
     }
 }
 
-function ResetBoard() {
+export function ResetBoard() {
     for (let i = 0; i < BRD_SQ_NUM; i++) {
         GameBoard.pieces[i] = SQUARES.OFFBOARD;
     }
@@ -89,7 +94,7 @@ function ResetBoard() {
     GameBoard.moveListStart[GameBoard.ply] = 0;
 }
 
-function ParseFen(fen) { /*Calls ResetBoard, UpdateListsMaterial, and GeneratePosKey*/
+export function ParseFen(fen) { /*Calls ResetBoard, UpdateListsMaterial, and GeneratePosKey*/
     ResetBoard();
 
     var rank = RANKS.RANK_8;
@@ -207,7 +212,7 @@ function ParseFen(fen) { /*Calls ResetBoard, UpdateListsMaterial, and GeneratePo
     UpdateListsMaterial();
 }
 
-function SqAttacked(sq, side) { /*(is this square attacked by this side?)*/
+export function SqAttacked(sq, side) { /*(is this square attacked by this side?)*/
     var pce, t_sq, dir;
 
     /*Non sliding attacks (pawn, knight, and king)*/
