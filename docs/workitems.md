@@ -8,11 +8,9 @@
 - test refactoring
   - make necessary changes to unit tests according to testing plan
   - consider implementing a testing framework (eg. Jest)
-- look into JS runtimes
-  - nodeJS
-    - consider pnpm
-  - deno
-    - see if deno packages exist for chess UI + other helpful libraries for chess engines
+- move project to node
+  - add all necessary imports / exports
+  - look into pnpm
 
 ### Technical Debt
 - markup and module structure
@@ -26,6 +24,8 @@
 - other
   - reproducable position key hashing (remove randomness)
   - flip board back around, and just change how it is printed to get white on the bottom
+  - add unit tests to build pipeline
+  - implement eslint
 
 ### Future Ideas
 - interfacing with the engine
