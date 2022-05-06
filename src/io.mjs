@@ -1,16 +1,16 @@
 import { GameBoard, SqAttacked } from './board.mjs';
 import {
-    FileChar, RankChar, SideChar,
+    FileChar, RankChar, PieceChar, SideChar,
     FilesBoard, RanksBoard,
     FILES, RANKS, PIECES, CASTLEBIT,
     FROMSQ, TOSQ, FR2SQ, PIECEINDEX, PROMOTED
 } from './shared/defs.mjs';
 
-function PrSq(sq) {
+export function PrSq(sq) {
     return (FileChar[FilesBoard[sq]] + RankChar[RanksBoard[sq]]);
 }
 
-function PrMove(move) {
+export function PrMove(move) {
     var MoveStr;
     
     let ff = FilesBoard[FROMSQ(move)]; /*file from, rank from, etc*/
@@ -28,7 +28,7 @@ function PrMove(move) {
     return MoveStr;
 }
 
-function PrintBoard() { /*Gameboard: pieces, side, enPas, castlePerm, posKey*/
+export function PrintBoard() { /*Gameboard: pieces, side, enPas, castlePerm, posKey*/
     var sq, file, rank, piece, line;
 
     for (rank = RANKS.RANK_8; rank >= RANKS.RANK_1; rank--) {
@@ -58,7 +58,7 @@ function PrintBoard() { /*Gameboard: pieces, side, enPas, castlePerm, posKey*/
     console.log("Key: " + GameBoard.posKey.toString(16) + "\n\n");
 }
 
-function PrintSqAttacked() {
+export function PrintSqAttacked() {
     var sq, file, rank, piece;
     
     console.log("\nSquares attacked by white: \n");
@@ -88,7 +88,7 @@ function PrintSqAttacked() {
     console.log("");
 }
 
-function PrintPieceLists() {    
+export function PrintPieceLists() {    
     console.log("PIECES: ");
     for (let piece = PIECES.wP; piece <= PIECES.bK; piece++) {
         for (let numPieces = 0; numPieces < GameBoard.numPieces[piece]; numPieces++) {
@@ -97,7 +97,7 @@ function PrintPieceLists() {
     }
 }
 
-function PrintMoveList() {
+export function PrintMoveList() {
     var moveCnt = 0;
     for (let i = GameBoard.moveListStart[GameBoard.ply]; i < GameBoard.moveListStart[GameBoard.ply+1]; i++) {
         console.log(PrMove(GameBoard.moveList[i]));

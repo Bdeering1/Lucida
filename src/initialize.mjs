@@ -14,6 +14,8 @@ export default function Initialize() {
     InitSq120ToSq64();
     InitBoardVars();
     ParseFen(START_FEN);
+
+    console.log("Successfully initialized board.");
 }
 
 function InitFilesRanksBrd() {
