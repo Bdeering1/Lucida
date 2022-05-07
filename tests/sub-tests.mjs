@@ -7,7 +7,7 @@ import {
 } from '../src/shared/defs.mjs';
 import { GameBoard, GeneratePosKey, ParseFen, SqAttacked } from '../src/board.mjs'; 
 import { InitFilesRanksBrd, InitHashKeys, InitSq120ToSq64 } from '../src/initialize.mjs';
-import { VERBOSE, VISUAL, isPass, PrintSubResult, PrintSqAttackedResults } from './debug-io.mjs';
+import { VERBOSE, VISUAL, PrintSubResult, PrintSqAttackedResults } from './debug-io.mjs';
 
 /*INIT TESTS*/
 
@@ -34,9 +34,10 @@ export function InitFilesRanksBrdTest() {
         console.log("\nRanksBoard[SQUARES.A8] = " + RanksBoard[SQUARES.A8]);
         console.log("FilesBoard[SQUARES.H1] = " + FilesBoard[SQUARES.H1]);
         PrintSubResult(false);
-        isPass = false;
-    } else if (VERBOSE) {
-        PrintSubResult(true);
+        return false;
+    } else {
+        if (VERBOSE) PrintSubResult(true);
+        return true;
     }
 }
 
@@ -44,9 +45,10 @@ export function InitHashKeysTest() {
     InitHashKeys();
     if (PieceKeys[13 * 120 - 1] == null) {
         PrintSubResult(false);
-        isPass = false;
-    } else if (VERBOSE) {
-        PrintSubResult(true);
+        return false;
+    } else {
+        if (VERBOSE) PrintSubResult(true);
+        return true;
     }
 }
 
@@ -74,15 +76,18 @@ export function InitSq120ToSq64Test() {
         }
         console.log("\nSq120ToSq64[SQUARES.A8] = " + Sq120ToSq64[SQUARES.A8] + ", " + "Sq64ToSq120[63] = " + Sq64ToSq120[63]);
         PrintSubResult(false);
-        isPass = false;
-    } else if (VERBOSE) {
-        PrintSubResult(true);
+        return false;
+    } else {
+        if (VERBOSE) PrintSubResult(true);
+        return true
     }
 }
 
 /* BOARD TESTS */
 
 export function SqAttackedTest() {
+    let isPass = true;
+
     ParseFen(START_FEN);
     if (SqAttacked(SQUARES.A1, COLOURS.WHITE)) {
         PrintSqAttackedResults();
@@ -120,6 +125,7 @@ export function SqAttackedTest() {
             PrintSubResult(true);
         }
     }
+    return isPass;
 }
 
 export function CheckBoard() { /*check what col and pcount were supposed to be for*/

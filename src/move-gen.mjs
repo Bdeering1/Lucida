@@ -1,4 +1,4 @@
-import { GameBoard } from './board.mjs';
+import { GameBoard, SqAttacked } from './board.mjs';
 import {
     PieceCol, PceDir, DirNum,
     FilesBoard, RanksBoard, LoopSlideIndex, LoopSlidePce, LoopNonSlideIndex, LoopNonSlidePce,
@@ -64,7 +64,7 @@ export function AddBlackPawnCaptureMove(from, to, cap) {
     }
 }
 
-export function GenerateMoves() { /*doesn't check if moves are illegal yet*/
+export function GenerateMoves() { /* doesn't check if moves are illegal yet (specifically for moving into check I think) */
     GameBoard.moveListStart[GameBoard.ply+1] = GameBoard.moveListStart[GameBoard.ply]; /*ply + 1 is used to add moves and incremented each time a move is added, ply always catches up*/
     
     var pceType;

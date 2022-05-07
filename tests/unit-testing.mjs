@@ -1,4 +1,4 @@
-import { VERBOSE, VISUAL, isPass, PrintSubResult, PrintFenResults, UnitTest } from './debug-io.mjs';
+import { VERBOSE, VISUAL, PrintSubResult, PrintFenResults, UnitTest } from './debug-io.mjs';
 import { GameBoard, ParseFen } from '../src/board.mjs';
 import { MakeMove, UndoMove } from '../src/make-move.mjs';
 import { GenerateMoves } from '../src/move-gen.mjs';
@@ -29,22 +29,24 @@ console.log("TEST 6: making moves");
 UnitTest(MakeMoveTest);
 
 function DefsTest() {
-	//isPass = def_success;
+	return def_success;
 }
 
 function InitTest() {
-    //isPass = true;
+    let isPass = true;
 
     if (VERBOSE) console.log('InitFilesRanksBrdTest()');
-    InitFilesRanksBrdTest();
+    isPass = InitFilesRanksBrdTest();
     if (VERBOSE) console.log('InitHashKeysTest()');
-    InitHashKeysTest();
+    isPass = InitHashKeysTest();
     if (VERBOSE) console.log('InitSq120ToSq64Test()');
-    InitSq120ToSq64Test();
+    isPass = InitSq120ToSq64Test();
+
+    return isPass;
 }
 
 function ParseFenTest() {
-    //isPass = true;
+    let isPass = true;
 
     ParseFen(START_FEN);
     if (GameBoard.pieces[SQUARES.E8] != PIECES.bK || !CheckBoard()) {
@@ -64,7 +66,7 @@ function ParseFenTest() {
     }
     ParseFen("6k1/8/8/8/3Pp3/8/8/6K1 b - d3 0 1");
     if (GameBoard.enPas != FR2SQ(FILES.FILE_D, RANKS.RANK_3) || !CheckBoard()) {
-        //isPass = false;
+        isPass = false;
     } else {
         if (VISUAL) {
             PrintFenResults(3);
@@ -74,16 +76,15 @@ function ParseFenTest() {
             PrintSubResult(true);
         }
     }
+    return isPass;
 }
 
 function BoardIntelTest() {
-    //isPass = true;
-
-    SqAttackedTest();
+    return SqAttackedTest();
 }
 
 function GenerateMovesTest() {
-    //isPass = true;
+    let isPass = true;
 
     ParseFen(START_FEN);
     GenerateMoves();
@@ -91,7 +92,7 @@ function GenerateMovesTest() {
         console.log("Position 1/3");
         PrintMoveList();
         PrintSubResult(false);
-        //isPass = false;
+        isPass = false;
     } else if (VERBOSE) {
         console.log("Position 1/3");
         PrintSubResult(true);
@@ -102,7 +103,7 @@ function GenerateMovesTest() {
         console.log("Position 2/3");
         PrintMoveList();
         PrintSubResult(false);
-        //isPass = false;
+        isPass = false;
     } else if (VERBOSE) {
         console.log("Position 2/3");
         PrintSubResult(true);
@@ -118,10 +119,11 @@ function GenerateMovesTest() {
         console.log("Position 3/3");
         PrintSubResult(true);
     }
+    return isPass;
 }
 
 function MakeMoveTest() { /*make sure this tests if it catches illegal moves*/
-    //isPass = true;
+    let isPass = true;
 
     InitBoardVars();
     ParseFen(START_FEN);
@@ -140,7 +142,7 @@ function MakeMoveTest() { /*make sure this tests if it catches illegal moves*/
     if (!MoveUndoMoveTest(0, 15, SQUARES.NO_SQ, 0, 20)) {
         console.log("Test 2/3");
         PrintSubResult(false);
-        //isPass = false;
+        isPass = false;
     } else if (VERBOSE) {
         console.log("Test 2/3");
         PrintSubResult(true);
@@ -163,11 +165,10 @@ function MakeMoveTest() { /*make sure this tests if it catches illegal moves*/
         console.log("Test 3/3");
         console.log("iteration " + testMove);
         PrintSubResult(false);
-        //isPass = false;
+        isPass = false;
     } else if (VERBOSE) {
         console.log("Test 3/3");
         PrintSubResult(true);
     }
-
-
+    return isPass;
 }
