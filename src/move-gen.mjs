@@ -2,20 +2,20 @@ function MOVE(from, to, captured, promoted, flag) {
     return (from | (to << 7) | (captured << 14) | (promoted << 20) | flag);
 }
 
-function AddCaptureMove(move) {
+export function AddCaptureMove(move) {
     GameBoard.moveList[GameBoard.moveListStart[GameBoard.ply+1]] = move;
     GameBoard.moveScores[GameBoard.moveListStart[GameBoard.ply+1]++] = 0; /*moveListStart incremented by one right after setting the score*/
 }
-function AddQuietMove(move) {
+export function AddQuietMove(move) {
     GameBoard.moveList[GameBoard.moveListStart[GameBoard.ply+1]] = move; /*there are three of these functions because the scoring will be different for each*/
     GameBoard.moveScores[GameBoard.moveListStart[GameBoard.ply+1]++] = 0;
 }
-function AddEnPassantMove(move) {
+export function AddEnPassantMove(move) {
     GameBoard.moveList[GameBoard.moveListStart[GameBoard.ply+1]] = move;
     GameBoard.moveScores[GameBoard.moveListStart[GameBoard.ply+1]++] = 0;
 }
 
-function AddWhitePawnQuietMove(from, to) {
+export function AddWhitePawnQuietMove(from, to) {
     if (RanksBoard[to] == RANKS.RANK_8) {
         AddQuietMove( MOVE(from, to, PIECES.EMPTY, PIECES.wQ, 0 ));
         AddQuietMove( MOVE(from, to, PIECES.EMPTY, PIECES.wR, 0 ));
@@ -25,7 +25,7 @@ function AddWhitePawnQuietMove(from, to) {
         AddQuietMove( MOVE(from, to, PIECES.EMPTY, PIECES.EMPTY, 0 ));
     }
 }
-function AddBlackPawnQuietMove(from, to) {
+export function AddBlackPawnQuietMove(from, to) {
     if (RanksBoard[to] == RANKS.RANK_1) {
         AddQuietMove( MOVE(from, to, PIECES.EMPTY, PIECES.bQ, 0 ));
         AddQuietMove( MOVE(from, to, PIECES.EMPTY, PIECES.bR, 0 ));
@@ -35,7 +35,7 @@ function AddBlackPawnQuietMove(from, to) {
         AddQuietMove( MOVE(from, to, PIECES.EMPTY, PIECES.EMPTY, 0 ));
     }
 }
-function AddWhitePawnCaptureMove(from, to, cap) {
+export function AddWhitePawnCaptureMove(from, to, cap) {
     if (RanksBoard[to] == RANKS.RANK_8) {
         AddCaptureMove( MOVE(from, to, cap, PIECES.wQ, 0 ));
         AddCaptureMove( MOVE(from, to, cap, PIECES.wR, 0 ));
@@ -45,7 +45,7 @@ function AddWhitePawnCaptureMove(from, to, cap) {
         AddCaptureMove( MOVE(from, to, cap, PIECES.EMPTY, 0 ));
     }
 }
-function AddBlackPawnCaptureMove(from, to, cap) {
+export function AddBlackPawnCaptureMove(from, to, cap) {
     if (RanksBoard[to] == RANKS.RANK_1) {
         AddCaptureMove( MOVE(from, to, cap, PIECES.bQ, 0 ));
         AddCaptureMove( MOVE(from, to, cap, PIECES.bR, 0 ));
@@ -56,7 +56,7 @@ function AddBlackPawnCaptureMove(from, to, cap) {
     }
 }
 
-function GenerateMoves() { /*doesn't check if moves are illegal yet*/
+export function GenerateMoves() { /*doesn't check if moves are illegal yet*/
     GameBoard.moveListStart[GameBoard.ply+1] = GameBoard.moveListStart[GameBoard.ply]; /*ply + 1 is used to add moves and incremented each time a move is added, ply always catches up*/
     
     var pceType;

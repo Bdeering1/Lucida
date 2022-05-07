@@ -1,35 +1,37 @@
-const VERBOSE = true;
-const VISUAL = true;
+import { PrintBoard, PrintSqAttacked } from '../src/io.mjs';
 
-var isPass = false;
+export const VERBOSE = true;
+export const VISUAL = true;
 
-function RESULT(pass) {
+export var isPass = false;
+
+export function PrintResult(pass) {
     pass ? console.log("PASSED\n\n") : console.log("FAILED\n\n");
 }
 
-function SUBRESULT(pass) {
+export function PrintSubResult(pass) {
     pass ? console.log(" - passed") : console.log(" - failed");
 }
 
-function UnitTest(test) {
+export function UnitTest(test) {
     isPass = false;
     test();
-    RESULT(isPass);
+    PrintResult(isPass);
 }
 
 
-function PrintFenResults(fenNum) {
+export function PrintFenResults(fenNum) {
     console.log("FEN " + fenNum + "/3");
     PrintBoard();
     PrintPieceLists();
 }
 
-function PrintSqAttackedResults() {
+export function PrintSqAttackedResults() {
     PrintBoard();
     PrintSqAttacked();
 }
 
-function PrintAllMoves() {
+export function PrintAllMoves() {
     GenerateMoves();
     for (var i = GameBoard.moveListStart[GameBoard.ply]; i < GameBoard.moveListStart[GameBoard.ply + 1]; i++) {
         console.log("Move " + (i + 1 - GameBoard.moveListStart[GameBoard.ply]));

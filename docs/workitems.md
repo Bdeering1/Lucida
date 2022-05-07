@@ -8,6 +8,7 @@
 - test refactoring
   - make necessary changes to unit tests according to testing plan
   - consider implementing a testing framework (eg. Jest)
+  - figure out what to do about the isPass variable for now
 - move project to node
   - add all necessary imports / exports using ESM
   - look into pnpm

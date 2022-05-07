@@ -1,6 +1,6 @@
 import {
-    PieceKeys, SideKey, CastleKeys,
-    PieceCol, PieceVal,
+    PieceKeys, SideKey, CastleKeys, PieceBishopQueen, PieceRookQueen,
+    PieceCol, PieceVal, NDir, RDir, BDir, KDir,
     BRD_SQ_NUM, MAXDEPTH, MAXPOSITIONMOVES,
     SQUARES, FILES, RANKS, PIECES, CASTLEBIT, COLOURS,
     FR2SQ, SQ120, PIECEINDEX

@@ -18,7 +18,7 @@ export default function Initialize() {
     console.log("Successfully initialized board.");
 }
 
-function InitFilesRanksBrd() {
+export function InitFilesRanksBrd() {
     var sq = SQUARES.A1;
     
     for (let i = 0; i < BRD_SQ_NUM; i++) {
@@ -35,7 +35,7 @@ function InitFilesRanksBrd() {
     }
 }
 
-function InitHashKeys() {
+export function InitHashKeys() {
     for (let i = 0; i < 13 * 120; i++) {
         PieceKeys[i] = RAND_32();
     }
@@ -45,7 +45,7 @@ function InitHashKeys() {
     }
 }
 
-function InitSq120ToSq64() { /*this could probably be done better*/ 
+export function InitSq120ToSq64() { /*this could probably be done better*/ 
     var sq = SQUARES.A1;
     var sq64 = 0;
     
@@ -67,7 +67,7 @@ function InitSq120ToSq64() { /*this could probably be done better*/
     }
 }
 
-function InitBoardVars() {
+export function InitBoardVars() {
     for (var i = 0; i < MAXGAMEMOVES; i++) {
         GameBoard.history.push( {
             move : NOMOVE,

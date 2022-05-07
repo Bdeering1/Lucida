@@ -2,7 +2,7 @@ import { GameBoard, SqAttacked } from './board.mjs';
 import {
     FileChar, RankChar, PieceChar, SideChar,
     FilesBoard, RanksBoard,
-    FILES, RANKS, PIECES, CASTLEBIT,
+    FILES, RANKS, PIECES, CASTLEBIT, COLOURS,
     FROMSQ, TOSQ, FR2SQ, PIECEINDEX, PROMOTED
 } from './shared/defs.mjs';
 

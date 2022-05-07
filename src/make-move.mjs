@@ -1,4 +1,4 @@
-function ClearPiece(sq) {
+export function ClearPiece(sq) {
     var pceType = GameBoard.pieces[sq];
     if (pceType == PIECES.EMPTY) {
         console.log("Error: trying to clear empty piece");
@@ -27,7 +27,7 @@ function ClearPiece(sq) {
 }
 
 
-function AddPiece(pceType, sq) {
+export function AddPiece(pceType, sq) {
     if (pceType > 13) {
         console.log("Error: pceType = " + pceType);
     }
@@ -41,7 +41,7 @@ function AddPiece(pceType, sq) {
     GameBoard.pList[PIECEINDEX(pceType, GameBoard.numPieces[pceType]++)] = sq; /*add to end of list*/
 }
 
-function MovePiece(from, to) { /*make sure this is right*/
+export function MovePiece(from, to) { /*make sure this is right*/
     var pceType = GameBoard.pieces[from];
     HASH_PIECE(pceType, from);
     HASH_PIECE(pceType, to);
@@ -61,7 +61,7 @@ function MovePiece(from, to) { /*make sure this is right*/
     }
 }
 
-function MakeMove(move) {
+export function MakeMove(move) {
     if (move == null) {
         console.log("Error: empty move");
         return false;
@@ -154,7 +154,7 @@ function MakeMove(move) {
     return true;
 }
 
-function UndoMove() {
+export function UndoMove() {
     GameBoard.hisPly--;
     GameBoard.ply--;
 

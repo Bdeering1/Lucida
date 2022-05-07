@@ -1,6 +1,17 @@
+import {
+    PieceChar, PieceKeys, PieceCol, PieceVal,
+    FilesBoard, RanksBoard,
+    SQUARES, FILES, RANKS, PIECES, COLOURS, START_FEN,
+    FR2SQ, PIECEINDEX, SQ120,
+    Sq120ToSq64, Sq64ToSq120
+} from '../src/shared/defs.mjs';
+import { GameBoard, GeneratePosKey, ParseFen, SqAttacked } from '../src/board.mjs'; 
+import { InitFilesRanksBrd, InitHashKeys, InitSq120ToSq64 } from '../src/initialize.mjs';
+import { VERBOSE, VISUAL, isPass, PrintSubResult, PrintSqAttackedResults } from './debug-io.mjs';
+
 /*INIT TESTS*/
 
-function InitFilesRanksBrdTest() {
+export function InitFilesRanksBrdTest() {
     InitFilesRanksBrd();
     if (RanksBoard[SQUARES.A8] != RANKS.RANK_8 || FilesBoard[SQUARES.H1] != FILES.FILE_H) {
         var line = "   ";
@@ -22,24 +33,24 @@ function InitFilesRanksBrdTest() {
         }
         console.log("\nRanksBoard[SQUARES.A8] = " + RanksBoard[SQUARES.A8]);
         console.log("FilesBoard[SQUARES.H1] = " + FilesBoard[SQUARES.H1]);
-        SUBRESULT(false);
+        PrintSubResult(false);
         isPass = false;
     } else if (VERBOSE) {
-        SUBRESULT(true);
+        PrintSubResult(true);
     }
 }
 
-function InitHashKeysTest() {
+export function InitHashKeysTest() {
     InitHashKeys();
     if (PieceKeys[13 * 120 - 1] == null) {
-        SUBRESULT(false);
+        PrintSubResult(false);
         isPass = false;
     } else if (VERBOSE) {
-        SUBRESULT(true);
+        PrintSubResult(true);
     }
 }
 
-function InitSq120ToSq64Test() {
+export function InitSq120ToSq64Test() {
     InitSq120ToSq64();
     if (Sq120ToSq64[SQUARES.A8] != 0 || Sq64ToSq120[63] != SQUARES.H1) {
         var sq64 = 0;
@@ -62,43 +73,43 @@ function InitSq120ToSq64Test() {
             line = "   ";
         }
         console.log("\nSq120ToSq64[SQUARES.A8] = " + Sq120ToSq64[SQUARES.A8] + ", " + "Sq64ToSq120[63] = " + Sq64ToSq120[63]);
-        SUBRESULT(false);
+        PrintSubResult(false);
         isPass = false;
     } else if (VERBOSE) {
-        SUBRESULT(true);
+        PrintSubResult(true);
     }
 }
 
 /* BOARD TESTS */
 
-function SqAttackedTest() {
+export function SqAttackedTest() {
     ParseFen(START_FEN);
     if (SqAttacked(SQUARES.A1, COLOURS.WHITE)) {
         PrintSqAttackedResults();
         console.log("Position 1/3");
-        SUBRESULT(false);
+        PrintSubResult(false);
         isPass = false;
     } else if (VERBOSE) {
         console.log("Position 1/3");
-        SUBRESULT(true);
+        PrintSubResult(true);
     }
 
     ParseFen("r3k2r/8/8/3N4/8/8/8/R3K2R w KQkq - 0 1");
     if (!SqAttacked(FR2SQ(FILES.FILE_C, RANKS.RANK_7), COLOURS.WHITE)) {
         PrintSqAttackedResults();
         console.log("Position 2/3");
-        SUBRESULT(false);
+        PrintSubResult(false);
         isPass = false;
     } else if (VERBOSE) {
         console.log("Position 2/3");
-        SUBRESULT(true);
+        PrintSubResult(true);
     }
 
     ParseFen("4k3/8/8/3q4/8/8/2B5/4K3 w - - 0 1");
     if (!SqAttacked(FR2SQ(FILES.FILE_H, RANKS.RANK_1), COLOURS.BLACK)) {
         PrintSqAttackedResults();
         console.log("Position 3/3");
-        SUBRESULT(false);
+        PrintSubResult(false);
         isPass = false;
     } else {
         if (VISUAL) {
@@ -106,12 +117,12 @@ function SqAttackedTest() {
         }
         if (VERBOSE) {
             console.log("Position 3/3");
-            SUBRESULT(true);
+            PrintSubResult(true);
         }
     }
 }
 
-function CheckBoard() { /*check what col and pcount were supposed to be for*/
+export function CheckBoard() { /*check what col and pcount were supposed to be for*/
     var t_numPieces = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     var t_material = [0, 0];
     var sq64, sq120, pceType, pceNum, col, pcount;
@@ -155,7 +166,7 @@ function CheckBoard() { /*check what col and pcount were supposed to be for*/
     return true;
 }
 
-function MoveUndoMoveTest(ply, castlePerm, enPas, listStart, nextStart) {
+export function MoveUndoMoveTest(ply, castlePerm, enPas, listStart, nextStart) {
     if (!CheckBoard()) {
         return false;
     } else if (ply != GameBoard.ply) {
@@ -177,3 +188,10 @@ function MoveUndoMoveTest(ply, castlePerm, enPas, listStart, nextStart) {
 
     return true;
 }
+
+InitFilesRanksBrdTest();
+InitHashKeysTest();
+InitSq120ToSq64Test();
+SqAttackedTest();
+CheckBoard();
+MoveUndoMoveTest();
