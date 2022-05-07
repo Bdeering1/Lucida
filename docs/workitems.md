@@ -9,13 +9,13 @@
   - make necessary changes to unit tests according to testing plan
   - consider implementing a testing framework (eg. Jest)
 - move project to node
-  - add all necessary imports / exports
+  - add all necessary imports / exports using ESM
   - look into pnpm
 
 ### Technical Debt
 - markup and module structure
   - combine debug.html and index.html into one file
-  - implement a better module system (ESM modules?)
+  - implement a better module system
 - front end
   - better separation of UI and business logic
   - maybe integrate css framework / component library
@@ -35,3 +35,4 @@
   - there should be an object representing the engine configuration/settings, this could also be represented as JSON 
 - find chess board module / library for front end
 - replace Jquery with something lighter weight (eg. Svelte)
+- create desktop/native app? (electron, flutter, )
