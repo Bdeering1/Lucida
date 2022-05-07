@@ -284,3 +284,8 @@ export function SqAttacked(sq, side) { /*(is this square attacked by this side?)
 
     return false;
 }
+
+export function HASH_PIECE(pceType, sq) { GameBoard.posKey ^= PieceKeys[(pceType * 120) + sq]; }
+export function HASH_CA() { GameBoard.posKey ^= CastleKeys[GameBoard.castlePerm]; } /*we should either hash out the existing key first or just get the CASTLEBIT*/
+export function HASH_SIDE() { GameBoard.posKey ^= SideKey; }
+export function HASH_EP() { GameBoard.posKey ^= PieceKeys[GameBoard.enPas]; }

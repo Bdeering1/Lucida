@@ -188,10 +188,3 @@ export function MoveUndoMoveTest(ply, castlePerm, enPas, listStart, nextStart) {
 
     return true;
 }
-
-InitFilesRanksBrdTest();
-InitHashKeysTest();
-InitSq120ToSq64Test();
-SqAttackedTest();
-CheckBoard();
-MoveUndoMoveTest();

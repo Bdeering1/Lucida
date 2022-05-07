@@ -1,3 +1,11 @@
+import { GameBoard } from './board.mjs';
+import {
+    PieceCol, PceDir, DirNum,
+    FilesBoard, RanksBoard, LoopSlideIndex, LoopSlidePce, LoopNonSlideIndex, LoopNonSlidePce,
+    FILES, RANKS, SQUARES, PIECES, COLOURS, MFLAGPS, MFLAGEP, CASTLEBIT,
+    PIECEINDEX, SQOFFBOARD
+} from './shared/defs.mjs';
+
 function MOVE(from, to, captured, promoted, flag) {
     return (from | (to << 7) | (captured << 14) | (promoted << 20) | flag);
 }

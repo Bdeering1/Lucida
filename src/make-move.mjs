@@ -1,3 +1,10 @@
+import { GameBoard, SqAttacked, HASH_CA, HASH_EP, HASH_PIECE, HASH_SIDE } from './board.mjs';
+import {
+    PieceCol, PiecePawn, PieceVal, CastlePerm, Kings,
+    SQUARES, PIECES, COLOURS, MFLAGPS, MFLAGEP, MFLAGCA, CAPTURED, PROMOTED,
+    PIECEINDEX, FROMSQ, TOSQ
+} from './shared/defs.mjs';
+
 export function ClearPiece(sq) {
     var pceType = GameBoard.pieces[sq];
     if (pceType == PIECES.EMPTY) {
