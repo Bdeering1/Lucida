@@ -12,6 +12,9 @@
   - ResetBoard - should probably reset board history
   - InitBoardVars - might need a better name, could be combined with ResetBoard
   - GenerateMoves - "doesn't check if moves are illegal yet"
+- defs that need review
+  - FR2SQ - mainly used for looping through the board, might not be necessary
+  - LoopSlideIndex / LoopNonSlideIndex - these should maybe be renamed (they act as maps: side -> list of pieces)
 - typing
   - implement Typescript (enums will be particularily helpful)
 - other

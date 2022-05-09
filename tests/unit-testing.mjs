@@ -7,7 +7,6 @@ import {
     SqAttackedTest, CheckBoard, MoveUndoMoveTest
 } from './sub-tests.mjs';
 import {
-    def_success,
     SQUARES, FILES, RANKS, PIECES, START_FEN,
     FR2SQ
 } from '../src/shared/defs.mjs';
@@ -15,8 +14,8 @@ import { InitBoardVars } from '../src/initialize.mjs';
 
 console.log("UNIT TESTING\n\n");
 
-console.log("TEST 1: definitions");
-UnitTest(DefsTest);
+// console.log("TEST 1: definitions");
+// UnitTest(DefsTest);
 console.log("TEST 2: init");
 UnitTest(InitTest);
 console.log("TEST 3: FEN parsing");
@@ -28,9 +27,9 @@ UnitTest(GenerateMovesTest);
 console.log("TEST 6: making moves");
 UnitTest(MakeMoveTest);
 
-function DefsTest() {
-	return def_success;
-}
+// function DefsTest() {
+// 	return def_success;
+// }
 
 function InitTest() {
     let isPass = true;

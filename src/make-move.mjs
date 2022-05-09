@@ -118,10 +118,10 @@ export function MakeMove(move) {
         HASH_CA();
         GameBoard.castlePerm &= CastlePerm[from];
         HASH_CA();
-    } else if ((GameBoard.castlePerm & 15) != 0) { /*if castlePerm is still non zero (there are possible castlePerm changes)*/
+    } else if ((GameBoard.castlePerm & 15) != 0) { /*if there are still possible castlePerm changes*/
         HASH_CA();
         GameBoard.castlePerm &= CastlePerm[from];
-        GameBoard.castlePerm &= CastlePerm[to]; /*just in case a rook is captured*/
+        GameBoard.castlePerm &= CastlePerm[to]; /*in case a rook is captured*/
         HASH_CA();
     } /*if there are no possible castlePerm changes castlePerm is not touched and not hashed in or out*/
 
