@@ -1,19 +1,17 @@
 ## Work Items
 
 ### Next Steps
-- test documentation
-  - add more detail to existing test case documentation
-    - fill in unfinished details, add description of FEN positions etc. (done for sections 1-3)
-  - make a testing plan which includes missing test cases and revisions
 - test refactoring
-  - make necessary changes to unit tests according to testing plan
-  - consider implementing a testing framework (eg. Jest)
-- implement npm or pnpm
+  - research testing frameworks
+  - implement new tests according to testing plan
+- more dependency manager research
+  - try using pnpm and yarn berry on a test project
 
 ### Technical Debt
 - functions that need review
   - ResetBoard - should probably reset board history
   - InitBoardVars - might need a better name, could be combined with ResetBoard
+  - GenerateMoves - "doesn't check if moves are illegal yet"
 - typing
   - implement Typescript (enums will be particularily helpful)
 - other
@@ -22,6 +20,7 @@
   - add unit tests to build pipeline
   - implement eslint
   - there's a whole bunch of nomenclature that should be reviewed
+  - padend polyfill in io file can probably be removed
 
 ### Future Ideas
 - backend

@@ -99,9 +99,18 @@
 5. **Move Generation**
 - `GenerateMoves()`
   - ensure moves generated match a list of expected values for at least one position
+  - there should be some specific testing for the following
+    - en passent moves
+    - promotion moves
+    - pawn moves from starting squares
+    - castling moves
+    - captures for each piece type
+    - sliding pieces can't move past blocking pieces
+    - no offboard moves are generated
 6. **Making Moves**
 - `MakeUndoMoveTest()`
   - the naming of this test isn't super accurate - all it does it check GameBoard values against expected values
   - this test should check the GameBoard history to ensure it is correct
 - each test case should probably call both `MakeUndoMoveTest()` and `CheckBoard()` (or these methods could be combined somhow?)
 - the random move making seems fundamentally flawed, if there are less that 4 moves available in a given position the test will fail (and possible cause a runtime error)
+- there should maybe be tests for `AddPiece()`, `ClearPiece()`, and `MovePiece()`
