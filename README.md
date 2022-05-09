@@ -1,5 +1,5 @@
 ## Lucida  
-Javascript Chess Engine (in progress)
+NodeJS chess engine built from the ground up - currently under development
   
 Development resources:  
 - Chess Programming Wiki - https://www.chessprogramming.org/  
