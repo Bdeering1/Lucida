@@ -77,7 +77,7 @@ export function UpdateListsMaterial() {
     }
 }
 
-export function ResetBoard() {
+export function ResetBoard() { /* doesn't reset history (should it?)*/
     for (let i = 0; i < BRD_SQ_NUM; i++) {
         GameBoard.pieces[i] = SQUARES.OFFBOARD;
     }

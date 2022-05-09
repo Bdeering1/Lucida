@@ -8,10 +8,12 @@
 - test refactoring
   - make necessary changes to unit tests according to testing plan
   - consider implementing a testing framework (eg. Jest)
-  - figure out what to do about the isPass variable for now
 - implement npm or pnpm
 
 ### Technical Debt
+- functions that need review
+  - ResetBoard - should probably reset board history
+  - InitBoardVars - might need a better name, could be combined with ResetBoard
 - typing
   - implement Typescript (enums will be particularily helpful)
 - other
@@ -19,6 +21,7 @@
   - flip board back around, and just change how it is printed to get white on the bottom
   - add unit tests to build pipeline
   - implement eslint
+  - there's a whole bunch of nomenclature that should be reviewed
 
 ### Future Ideas
 - backend

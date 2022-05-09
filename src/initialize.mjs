@@ -67,7 +67,7 @@ export function InitSq120ToSq64() { /*this could probably be done better*/
     }
 }
 
-export function InitBoardVars() {
+export function InitBoardVars() { /* 'ResetBoardHistory' woudl probably be more accurate */
     for (var i = 0; i < MAXGAMEMOVES; i++) {
         GameBoard.history.push( {
             move : NOMOVE,

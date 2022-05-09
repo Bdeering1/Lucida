@@ -16,7 +16,7 @@
   - _test currently missing_
 3. **FEN Parsing**
 - `ParseFen()`
-  - start position - the black king is on E8, `CheckBoard()` returns true
+  - starting position - the black king is on E8, `CheckBoard()` returns true
   - "8/7p/5k2/5p2/p1p2P2/Pr1pPK2/1P1R3P/8 b - -" - there are no castle permissions, `CheckBoard()` returns true
   - "6k1/8/8/8/3Pp3/8/8/6K1 b - d3 0 1" - there is an enpassent square on D3, `CheckBoard()` returns true
 
@@ -27,23 +27,45 @@
   - `GameBoard.side` - value is either `COLOURS.WHITE` or `COLOURS.BLACK`
   - `GameBoard.posKey` - same as the value returned from `GeneratePosKey()`
 4. **Board Intelligence**
-- `SqAttacked()` - checks one arbitrary square and logs a board representation showing squares attacked
-  - starting position test
-  - position "r3k2r/8/8/3N4/8/8/8/R3K2R w KQkq - 0 1"
-  - position "4k3/8/8/3q4/8/8/2B5/4K3 w - - 0 1"
+- `SqAttacked()`
+  - starting position - A1 is not attacked by white
+  - "r3k2r/8/8/3N4/8/8/8/R3K2R w KQkq - 0 1" - C7 is attacked by white
+  - "4k3/8/8/3q4/8/8/2B5/4K3 w - - 0 1" - H1 is attacked by black
 5. **Move Generation**
 - `GenerateMoves()`
-  - starting position
-    - checks that 20 moves are generated
-  - position "8/7p/5k2/5p2/p1p2P2/Pr1pPK2/1P1R3P/8 b - -"
-    - checks that 7 moves are generated
-  - position "4k3/1q6/8/8/8/8/8/4K3 b - - 0 1"
-    - checks that 28 moves are generated
+  - starting position - checks that 20 moves are generated
+  - "8/7p/5k2/5p2/p1p2P2/Pr1pPK2/1P1R3P/8 b - -" - checks that 7 moves are generated
+  - "4k3/1q6/8/8/8/8/8/4K3 b - - 0 1" - checks that 28 moves are generated
 6. **Making Moves**
-- `MakeMove()`
-  - ...
-- `UndoMove()`
-  - ...
+- starting position
+  - calls `MakeMove()` for the first generated move and checks the following using `MakeUndoMoveTest()`:
+    - ply = 1
+    - castleperm = 15
+    - enPas = SQUARES.NO_SQ
+    - moveListStart = 20
+    - nextMoveListStart = 40
+  - calls `UndoMove()` and checks the following using `MakeUndoMoveTest()`:
+    - ply = 0
+    - castleperm = 15
+    - enPas = SQUARES.NO_SQ
+    - moveListStart = 0
+    - nextMoveListStart = 20
+- starting position (repetition test)
+  - for a certain large number of repetitions performs the following
+    - selects a random move of the first four moves
+    - calls `MakeMove()` then `CheckBoard()`
+    - calls `UndoMove()` then `CheckBoard()`
+    - calls `MakeMove()` then `CheckBoard()` again
+  - checks that the loop ran for the expected number of iterations
+
+`MakeUndoMoveTest()`
+- `Checkboard()` test passes
+- checks that the following variables have the expected values
+  - `GameBoard.ply`
+  - `GameBoard.castlePerm`
+  - `GameBoard.enPas`
+  - `GameBoard.movelistStart[GameBoard.ply]` (where the move list starts for the current ply)
+  - `GameBoard.moveListStart[GameBoard.ply + 1]` (where the move list starts for the next ply)
 
 
 ### Test Improvements
@@ -65,5 +87,21 @@
 - `CheckBoard()`
   - this is one of the better (more comprehensive) tests but it has one flaw: the `GameBoard.pList` test is reliant on the `GameBoard.numPieces[]` test being accurate and passing.
 4. **Board Intelligence**
+- `SqAttacked()`
+  - there should be clearly thought out reasoning behind each FEN tested, it may only be necessary to have one FEN
+  - each FEN should be more thoroughly tested
+    - ensure offboard squares can't be attacked for each piece type
+    - ensure knights attack the correct sqares
+    - ensure horizontally sliding pieces can't attack through blocking pieces
+    - ensure diagonally sliding pieces can't attack through blocking pieces
+    - ensure pawns on the promotion rank won't attack offboard?
+  - other board intelligence tests?
 5. **Move Generation**
+- `GenerateMoves()`
+  - ensure moves generated match a list of expected values for at least one position
 6. **Making Moves**
+- `MakeUndoMoveTest()`
+  - the naming of this test isn't super accurate - all it does it check GameBoard values against expected values
+  - this test should check the GameBoard history to ensure it is correct
+- each test case should probably call both `MakeUndoMoveTest()` and `CheckBoard()` (or these methods could be combined somhow?)
+- the random move making seems fundamentally flawed, if there are less that 4 moves available in a given position the test will fail (and possible cause a runtime error)
