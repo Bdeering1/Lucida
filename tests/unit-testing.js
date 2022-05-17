@@ -1,16 +1,16 @@
-import { VERBOSE, VISUAL, PrintSubResult, PrintFenResults, UnitTest } from './debug-io.mjs';
-import { GameBoard, ParseFen } from '../src/board.mjs';
-import { MakeMove, UndoMove } from '../src/make-move.mjs';
-import { GenerateMoves } from '../src/move-gen.mjs';
+import { VERBOSE, VISUAL, PrintSubResult, PrintFenResults, UnitTest } from './debug-io.js';
+import { GameBoard, ParseFen } from '../src/board.js';
+import { MakeMove, UndoMove } from '../src/make-move.js';
+import { GenerateMoves } from '../src/move-gen.js';
 import {
     InitFilesRanksBrdTest, InitHashKeysTest, InitSq120ToSq64Test,
     SqAttackedTest, CheckBoard, MoveUndoMoveTest
-} from './sub-tests.mjs';
+} from './sub-tests.js';
 import {
     SQUARES, FILES, RANKS, PIECES, START_FEN,
     FR2SQ
-} from '../src/shared/defs.mjs';
-import { InitBoardVars } from '../src/initialize.mjs';
+} from '../src/shared/defs.js';
+import { InitBoardVars } from '../src/initialize.js';
 
 console.log("UNIT TESTING\n\n");
 

@@ -1,0 +1,25 @@
+{
+  "name": "lucida",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "NodeJS chess engine built from the ground up - currently under development",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bdeering1/Lucida.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Bdeering1/Lucida/issues"
+  },
+  "homepage": "https://github.com/Bdeering1/Lucida#readme"
+}

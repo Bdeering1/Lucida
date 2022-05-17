@@ -1,10 +1,10 @@
-import { GameBoard, SqAttacked } from './board.mjs';
+import { GameBoard, SqAttacked } from './board.js';
 import {
     FileChar, RankChar, PieceChar, SideChar,
     FilesBoard, RanksBoard,
     FILES, RANKS, PIECES, CASTLEBIT, COLOURS,
     FROMSQ, TOSQ, FR2SQ, PIECEINDEX, PROMOTED
-} from './shared/defs.mjs';
+} from './shared/defs.js';
 
 export function PrSq(sq) {
     return (FileChar[FilesBoard[sq]] + RankChar[RanksBoard[sq]]);

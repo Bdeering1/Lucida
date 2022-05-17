@@ -1,4 +1,4 @@
-import { PrintBoard, PrintSqAttacked, PrintPieceLists } from '../src/io.mjs';
+import { PrintBoard, PrintSqAttacked, PrintPieceLists } from '../src/io.js';
 
 export const VERBOSE = true;
 export const VISUAL = false;

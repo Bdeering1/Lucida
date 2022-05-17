@@ -1,9 +1,9 @@
-import { GameBoard, SqAttacked, HASH_CA, HASH_EP, HASH_PIECE, HASH_SIDE } from './board.mjs';
+import { GameBoard, SqAttacked, HASH_CA, HASH_EP, HASH_PIECE, HASH_SIDE } from './board.js';
 import {
     PieceCol, PiecePawn, PieceVal, CastlePerm, Kings,
     SQUARES, PIECES, COLOURS, MFLAGPS, MFLAGEP, MFLAGCA, CAPTURED, PROMOTED,
     PIECEINDEX, FROMSQ, TOSQ
-} from './shared/defs.mjs';
+} from './shared/defs.js';
 
 export function ClearPiece(sq) {
     var pceType = GameBoard.pieces[sq];

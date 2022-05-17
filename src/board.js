@@ -4,7 +4,7 @@ import {
     BRD_SQ_NUM, MAXDEPTH, MAXPOSITIONMOVES,
     SQUARES, FILES, RANKS, PIECES, CASTLEBIT, COLOURS,
     FR2SQ, SQ120, PIECEINDEX
-} from './shared/defs.mjs';
+} from './shared/defs.js';
 
 export var GameBoard = {
     pieces: new Array(BRD_SQ_NUM), /*gives the piece id for each 120 squares on the board (0 if empty)*/

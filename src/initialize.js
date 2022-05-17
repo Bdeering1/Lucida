@@ -1,4 +1,4 @@
-import { GameBoard, ParseFen } from './board.mjs';
+import { GameBoard, ParseFen } from './board.js';
 import {
     PieceKeys, CastleKeys,
     FilesBoard, RanksBoard,
@@ -6,7 +6,7 @@ import {
     BRD_SQ_NUM, MAXGAMEMOVES, NOMOVE,
     FILES, RANKS, SQUARES, START_FEN,
     FR2SQ, RAND_32
-} from './shared/defs.mjs';
+} from './shared/defs.js';
 
 export default function Initialize() {
     InitFilesRanksBrd();

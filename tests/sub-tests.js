@@ -4,10 +4,10 @@ import {
     SQUARES, FILES, RANKS, PIECES, COLOURS, START_FEN,
     FR2SQ, PIECEINDEX, SQ120,
     Sq120ToSq64, Sq64ToSq120
-} from '../src/shared/defs.mjs';
-import { GameBoard, GeneratePosKey, ParseFen, SqAttacked } from '../src/board.mjs'; 
-import { InitFilesRanksBrd, InitHashKeys, InitSq120ToSq64 } from '../src/initialize.mjs';
-import { VERBOSE, VISUAL, PrintSubResult, PrintSqAttackedResults } from './debug-io.mjs';
+} from '../src/shared/defs.js';
+import { GameBoard, GeneratePosKey, ParseFen, SqAttacked } from '../src/board.js'; 
+import { InitFilesRanksBrd, InitHashKeys, InitSq120ToSq64 } from '../src/initialize.js';
+import { VERBOSE, VISUAL, PrintSubResult, PrintSqAttackedResults } from './debug-io.js';
 
 /*INIT TESTS*/
 

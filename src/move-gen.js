@@ -1,10 +1,10 @@
-import { GameBoard, SqAttacked } from './board.mjs';
+import { GameBoard, SqAttacked } from './board.js';
 import {
     PieceCol, PceDir, DirNum,
     FilesBoard, RanksBoard, LoopSlideIndex, LoopSlidePce, LoopNonSlideIndex, LoopNonSlidePce,
     FILES, RANKS, SQUARES, PIECES, COLOURS, MFLAGPS, MFLAGEP, CASTLEBIT,
     PIECEINDEX, SQOFFBOARD
-} from './shared/defs.mjs';
+} from './shared/defs.js';
 
 function MOVE(from, to, captured, promoted, flag) {
     return (from | (to << 7) | (captured << 14) | (promoted << 20) | flag);
