@@ -30,6 +30,7 @@
   - make use of events?
   - take advantage of node's global object?
   - multi-threading
+  - take advantage of C++ packages for intensive tasks
   - containerize application and interface through API (REST?)
   - there should be an object representing the engine configuration/settings, this could also be represented as JSON 
 - front end
