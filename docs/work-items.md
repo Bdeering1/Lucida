@@ -27,7 +27,9 @@
 
 ### Future Ideas
 - backend
-  - focus on creating a robust engine CLI
+  - make use of events?
+  - take advantage of node's global object?
+  - multi-threading
   - containerize application and interface through API (REST?)
   - there should be an object representing the engine configuration/settings, this could also be represented as JSON 
 - front end
