@@ -2,7 +2,7 @@ import { GameBoard, SqAttacked } from './board.js';
 import {
     PieceCol, PceDir, DirNum,
     FilesBoard, RanksBoard, LoopSlideIndex, LoopSlidePce, LoopNonSlideIndex, LoopNonSlidePce,
-    FILES, RANKS, SQUARES, PIECES, COLOURS, MFLAGPS, MFLAGEP, CASTLEBIT,
+    FILES, RANKS, SQUARES, PIECES, COLOURS, MFLAGPS, MFLAGEP, MFLAGCA, CASTLEBIT,
     PIECEINDEX, SQOFFBOARD
 } from './shared/defs.js';
 
@@ -114,7 +114,7 @@ export function GenerateMoves() { /* doesn't check if moves are illegal yet (spe
         if (GameBoard.castlePerm & CASTLEBIT.WQCA) {
             if (GameBoard.pieces[SQUARES.B1] == PIECES.EMPTY && GameBoard.pieces[SQUARES.C1] == PIECES.EMPTY && GameBoard.pieces[SQUARES.D1] == PIECES.EMPTY) {
                 if (!SqAttacked(SQUARES.E1, COLOURS.BLACK) && SqAttacked(SQUARES.D1, COLOURS.BLACK)) {
-                    AddQuietMove( MOVE(E1, C1, PIECES.EMPTY, PIECES.EMPTY, MFLAGCA ));
+                    AddQuietMove( MOVE(SQUARES.E1, SQUARES.C1, PIECES.EMPTY, PIECES.EMPTY, MFLAGCA ));
                 }
             }
         }

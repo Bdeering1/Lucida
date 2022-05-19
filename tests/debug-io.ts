@@ -1,4 +1,7 @@
-import { PrintBoard, PrintSqAttacked, PrintPieceLists } from '../src/io.js';
+import { PrintBoard, PrintSqAttacked, PrintPieceLists, PrMove, PrintMoveList } from '../src/io.js';
+import { GameBoard } from '../src/board.js';
+import { MakeMove, UndoMove } from '../src/make-move.js';
+import { GenerateMoves } from '../src/move-gen.js';
 
 export const VERBOSE = true;
 export const VISUAL = false;

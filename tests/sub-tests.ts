@@ -1,7 +1,7 @@
 import {
     PieceChar, PieceKeys, PieceCol, PieceVal,
     FilesBoard, RanksBoard,
-    SQUARES, FILES, RANKS, PIECES, COLOURS, START_FEN,
+    SQUARES, FILES, RANKS, PIECES, COLOURS, START_FEN, BRD_SQ_NUM,
     FR2SQ, PIECEINDEX, SQ120,
     Sq120ToSq64, Sq64ToSq120
 } from '../src/shared/defs.js';

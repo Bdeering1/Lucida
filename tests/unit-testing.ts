@@ -11,6 +11,7 @@ import {
     FR2SQ
 } from '../src/shared/defs.js';
 import { InitBoardVars } from '../src/initialize.js';
+import { PrintMoveList } from '../src/io.js';
 
 console.log("UNIT TESTING\n\n");
 
@@ -149,7 +150,8 @@ function MakeMoveTest() { /*make sure this tests if it catches illegal moves*/
 
     ParseFen(START_FEN);
     var numMoves = 400;
-    for (let testMove = 0; testMove < numMoves; testMove++) {
+    let testMove = 0;
+    for (testMove; testMove < numMoves; testMove++) {
         GenerateMoves();
         let move = GameBoard.moveList[GameBoard.moveListStart[GameBoard.ply] + Math.floor(Math.random() * 4)];
         MakeMove(move);

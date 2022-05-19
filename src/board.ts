@@ -156,7 +156,7 @@ export function ParseFen(fen) { /*Calls ResetBoard, UpdateListsMaterial, and Gen
             case '7':
             case '8':
                 piece = PIECES.EMPTY;
-                count = fen[fenIndex].charCodeAt() - '0'.charCodeAt(); /*converting the char to an int*/
+                count = fen[fenIndex].charCodeAt(0) - '0'.charCodeAt(0); /*converting the char to an int*/
                 break;
 
             case '/':
@@ -204,8 +204,8 @@ export function ParseFen(fen) { /*Calls ResetBoard, UpdateListsMaterial, and Gen
     fenIndex++;
 
     if (fen[fenIndex] != '-') { /*assuming FEN is correct (if there is no dash the en pas square is valid)*/
-        file = fen[fenIndex].charCodeAt() - 'a'.charCodeAt(); /*make into a function?*/
-        rank = fen[fenIndex + 1].charCodeAt() - '1'.charCodeAt();
+        file = fen[fenIndex].charCodeAt() - 'a'.charCodeAt(0); /*make into a function?*/
+        rank = fen[fenIndex + 1].charCodeAt() - '1'.charCodeAt(0);
         GameBoard.enPas = FR2SQ(file, rank);
     }
 
