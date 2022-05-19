@@ -89,13 +89,13 @@ export function GenerateMoves() { /* doesn't check if moves are illegal yet (spe
             }
             
             if (!SQOFFBOARD(sq - 9) && PieceCol[GameBoard.pieces[sq - 9]] == COLOURS.BLACK) {
-                AddWhitePawnCaptureMove( MOVE(sq, sq - 9, GameBoard.pieces[sq - 9] ));
+                AddWhitePawnCaptureMove( sq, sq - 9, GameBoard.pieces[sq - 9] );
             }
             if (!SQOFFBOARD(sq - 11) && PieceCol[GameBoard.pieces[sq - 11]] == COLOURS.BLACK) {
-                AddWhitePawnCaptureMove( MOVE(sq, sq - 11, GameBoard.pieces[sq - 11] ));
+                AddWhitePawnCaptureMove( sq, sq - 11, GameBoard.pieces[sq - 11] );
             }
             
-            if (GameBoard.enPas != SQUARES.NOSQ) {
+            if (GameBoard.enPas != SQUARES.NO_SQ) {
                 if (sq - 9 == GameBoard.enPas) {
                     AddEnPassantMove( MOVE(sq, sq - 9, PIECES.EMPTY, PIECES.EMPTY, MFLAGEP )); /*make move function will handle the en passant capture*/
                 } else if (sq - 11 == GameBoard.enPas) {
@@ -132,13 +132,13 @@ export function GenerateMoves() { /* doesn't check if moves are illegal yet (spe
             }
             
             if (!SQOFFBOARD(sq + 9) && PieceCol[GameBoard.pieces[sq + 9]] == COLOURS.WHITE) {
-                AddBlackPawnCaptureMove( MOVE(sq, sq + 9, GameBoard.pieces[sq + 9] ));
+                AddBlackPawnCaptureMove( sq, sq + 9, GameBoard.pieces[sq + 9] );
             }
             if (!SQOFFBOARD(sq + 11) && PieceCol[GameBoard.pieces[sq + 11]] == COLOURS.WHITE) {
-                AddBlackPawnCaptureMove( MOVE(sq, sq + 11, GameBoard.pieces[sq + 11] ));
+                AddBlackPawnCaptureMove( sq, sq + 11, GameBoard.pieces[sq + 11] );
             }
             
-            if (GameBoard.enPas != SQUARES.NOSQ) {
+            if (GameBoard.enPas != SQUARES.NO_SQ) {
                 if (sq + 9 == GameBoard.enPas) {
                     AddEnPassantMove( MOVE(sq, sq + 9, PIECES.EMPTY, PIECES.EMPTY, MFLAGEP ));
                 } else if (sq + 11 == GameBoard.enPas) { /*make these both into one or??*/
@@ -151,14 +151,14 @@ export function GenerateMoves() { /* doesn't check if moves are illegal yet (spe
         if (GameBoard.castlePerm & CASTLEBIT.BKCA) {
             if (GameBoard.pieces[SQUARES.F8] == PIECES.EMPTY && GameBoard.pieces[SQUARES.G8] == PIECES.EMPTY) {
                 if (!SqAttacked(SQUARES.E8, COLOURS.BLACK) && SqAttacked(SQUARES.F8, COLOURS.WHITE)) {
-                    AddQuietMove( MOVE(E8, B8, PIECES.EMPTY, PIECES.EMPTY, MFLAGCA ));
+                    AddQuietMove( MOVE(SQUARES.E8, SQUARES.B8, PIECES.EMPTY, PIECES.EMPTY, MFLAGCA ));
                 }
             }
         }
         if (GameBoard.castlePerm & CASTLEBIT.BQCA) {
             if (GameBoard.pieces[SQUARES.B8] == PIECES.EMPTY && GameBoard.pieces[SQUARES.C8] == PIECES.EMPTY && GameBoard.pieces[SQUARES.D8] == PIECES.EMPTY) {
                 if (!SqAttacked(SQUARES.E8, COLOURS.BLACK) && SqAttacked(SQUARES.D8, COLOURS.WHITE)) {
-                    AddQuietMove( MOVE(E8, C8, PIECES.EMPTY, PIECES.EMPTY, MFLAGCA ));
+                    AddQuietMove( MOVE(SQUARES.E8, SQUARES.C8, PIECES.EMPTY, PIECES.EMPTY, MFLAGCA ));
                 }
             }
         }
