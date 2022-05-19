@@ -6,7 +6,7 @@ export const RANKS = { RANK_1:0, RANK_2:1, RANK_3:2, RANK_4:3, RANK_5:4, RANK_6:
 
 export const COLOURS = { WHITE:0, BLACK:1, BOTH:2 };
 
-export const CASTLEBIT = { WKCA:1, WQCA:2, BKCA:4, BQCA:8 };
+export const CASTLE_BIT = { WKCA:1, WQCA:2, BKCA:4, BQCA:8 };
 
 export const SQUARES = {
     A1:91, B1:92, C1:93, D1:94, E1:95, F1:96, G1:97, H1:98,

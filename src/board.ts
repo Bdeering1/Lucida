@@ -1,6 +1,6 @@
-import { BRD_SQ_NUM, MAXDEPTH, MAXPOSITIONMOVES } from "./shared/constants";
-import { COLOURS, PIECES, SQUARES, RANKS, FILES, CASTLEBIT } from "./shared/enums";
-import { PieceKeys, SideKey, CastleKeys, SQ120, PieceCol, PieceVal, PIECEINDEX, FR2SQ, NDir, KDir, BDir, PieceBishopQueen, RDir, PieceRookQueen } from "./shared/utils";
+import { BRD_SQ_NUM, MAX_DEPTH, MAX_POSITION_MOVES } from "./shared/constants";
+import { COLOURS, PIECES, SQUARES, RANKS, FILES, CASTLE_BIT } from "./shared/enums";
+import { PieceKeys, SideKey, CastleKeys, Sq120, PieceCol, PieceVal, PieceIndex, fileRankToSq, NDir, KDir, BDir, PieceBishopQueen, RDir, PieceRookQueen } from "./shared/utils";
 
 
 export var GameBoard = {
@@ -16,9 +16,9 @@ export var GameBoard = {
     numPieces: new Array(13), /*number of each type of piece for each side, indexed by PIECES, previously pceNum*/
     pList: new Array(13 * 10), /*list of pieces (10 max of each piece type), stores the square each piece is on, indexed by PIECEINDEX*/
     posKey: 0, /*unique key for each board position, used for repetition detection*/
-    moveList: new Array(MAXDEPTH * MAXPOSITIONMOVES),
-    moveScores: new Array(MAXDEPTH * MAXPOSITIONMOVES),
-    moveListStart: new Array(MAXDEPTH),
+    moveList: new Array(MAX_DEPTH * MAX_POSITION_MOVES),
+    moveScores: new Array(MAX_DEPTH * MAX_POSITION_MOVES),
+    moveListStart: new Array(MAX_DEPTH),
 }
 
 export function GeneratePosKey() {
@@ -61,14 +61,14 @@ export function UpdateListsMaterial() {
     }
 
     for (let i = 0; i < 64; i++) {
-        sq = SQ120(i);
+        sq = Sq120(i);
         piece = GameBoard.pieces[sq];
         if (piece != PIECES.EMPTY) {
             colour = PieceCol[piece];
 
             GameBoard.material[colour] += PieceVal[piece];
 
-            GameBoard.pList[PIECEINDEX(piece, GameBoard.numPieces[piece])] = sq;
+            GameBoard.pList[PieceIndex(piece, GameBoard.numPieces[piece])] = sq;
             GameBoard.numPieces[piece]++;
         }
     }
@@ -80,7 +80,7 @@ export function ResetBoard() { /* doesn't reset history (should it?)*/
     }
 
     for (let i = 0; i < 64; i++) {
-        GameBoard.pieces[SQ120(i)] = PIECES.EMPTY;
+        GameBoard.pieces[Sq120(i)] = PIECES.EMPTY;
     }
 
     GameBoard.side = COLOURS.BOTH;
@@ -169,7 +169,7 @@ export function ParseFen(fen) { /*Calls ResetBoard, UpdateListsMaterial, and Gen
         }
 
         for (let i = 0; i < count; i++) {
-            sq120 = FR2SQ(file, rank);
+            sq120 = fileRankToSq(file, rank);
             GameBoard.pieces[sq120] = piece;
             file++;
         }
@@ -182,16 +182,16 @@ export function ParseFen(fen) { /*Calls ResetBoard, UpdateListsMaterial, and Gen
     while (fen[fenIndex] != ' ') {
         switch (fen[fenIndex]) { /*assumes the FEN string is correct*/
             case 'K':
-                GameBoard.castlePerm |= CASTLEBIT.WKCA;
+                GameBoard.castlePerm |= CASTLE_BIT.WKCA;
                 break; /*setting each castling permission using bitwise or '|='*/
             case 'Q':
-                GameBoard.castlePerm |= CASTLEBIT.WQCA;
+                GameBoard.castlePerm |= CASTLE_BIT.WQCA;
                 break;
             case 'k':
-                GameBoard.castlePerm |= CASTLEBIT.BKCA;
+                GameBoard.castlePerm |= CASTLE_BIT.BKCA;
                 break;
             case 'q':
-                GameBoard.castlePerm |= CASTLEBIT.BQCA;
+                GameBoard.castlePerm |= CASTLE_BIT.BQCA;
                 break;
             default:
                 break;
@@ -203,7 +203,7 @@ export function ParseFen(fen) { /*Calls ResetBoard, UpdateListsMaterial, and Gen
     if (fen[fenIndex] != '-') { /*assuming FEN is correct (if there is no dash the en pas square is valid)*/
         file = fen[fenIndex].charCodeAt() - 'a'.charCodeAt(0); /*make into a function?*/
         rank = fen[fenIndex + 1].charCodeAt() - '1'.charCodeAt(0);
-        GameBoard.enPas = FR2SQ(file, rank);
+        GameBoard.enPas = fileRankToSq(file, rank);
     }
 
     GameBoard.posKey = GeneratePosKey();
@@ -282,7 +282,7 @@ export function SqAttacked(sq, side) { /*(is this square attacked by this side?)
     return false;
 }
 
-export function HASH_PIECE(pceType, sq) { GameBoard.posKey ^= PieceKeys[(pceType * 120) + sq]; }
-export function HASH_CA() { GameBoard.posKey ^= CastleKeys[GameBoard.castlePerm]; } /*we should either hash out the existing key first or just get the CASTLEBIT*/
-export function HASH_SIDE() { GameBoard.posKey ^= SideKey; }
-export function HASH_EP() { GameBoard.posKey ^= PieceKeys[GameBoard.enPas]; }
+export function HashPiece(pceType, sq) { GameBoard.posKey ^= PieceKeys[(pceType * 120) + sq]; }
+export function HashCastle() { GameBoard.posKey ^= CastleKeys[GameBoard.castlePerm]; } /*we should either hash out the existing key first or just get the CASTLEBIT*/
+export function HashSide() { GameBoard.posKey ^= SideKey; }
+export function HashEnPas() { GameBoard.posKey ^= PieceKeys[GameBoard.enPas]; }

@@ -5,7 +5,7 @@ import { MakeMove, UndoMove } from "../src/make-move";
 import { GenerateMoves } from "../src/move-gen";
 import { START_FEN } from "../src/shared/constants";
 import { SQUARES, PIECES, FILES, RANKS } from "../src/shared/enums";
-import { FR2SQ } from "../src/shared/utils";
+import { fileRankToSq } from "../src/shared/utils";
 import { UnitTest, VERBOSE, PrintFenResults, PrintSubResult, VISUAL } from "./debug-io";
 import { InitFilesRanksBrdTest, InitHashKeysTest, InitSq120ToSq64Test, CheckBoard, SqAttackedTest, MoveUndoMoveTest } from "./sub-tests";
 
@@ -62,7 +62,7 @@ function ParseFenTest() {
         PrintSubResult(true);
     }
     ParseFen("6k1/8/8/8/3Pp3/8/8/6K1 b - d3 0 1");
-    if (GameBoard.enPas != FR2SQ(FILES.FILE_D, RANKS.RANK_3) || !CheckBoard()) {
+    if (GameBoard.enPas != fileRankToSq(FILES.FILE_D, RANKS.RANK_3) || !CheckBoard()) {
         isPass = false;
     } else {
         if (VISUAL) {

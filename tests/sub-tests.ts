@@ -1,8 +1,8 @@
 import { ParseFen, SqAttacked, GameBoard, GeneratePosKey } from "../src/board";
 import { InitFilesRanksBrd, InitHashKeys, InitSq120ToSq64 } from "../src/initialize";
-import { BRD_SQ_NUM, START_FEN, PieceChar } from "../src/shared/constants";
+import { BRD_SQ_NUM, START_FEN, PIECE_CHAR } from "../src/shared/constants";
 import { SQUARES, RANKS, FILES, COLOURS, PIECES } from "../src/shared/enums";
-import { RanksBoard, FilesBoard, PieceKeys, Sq120ToSq64, Sq64ToSq120, FR2SQ, PIECEINDEX, SQ120, PieceCol, PieceVal } from "../src/shared/utils";
+import { RanksBoard, FilesBoard, PieceKeys, Sq120ToSq64, Sq64ToSq120, fileRankToSq, PieceIndex, Sq120, PieceCol, PieceVal } from "../src/shared/utils";
 import { PrintSubResult, VERBOSE, PrintSqAttackedResults, VISUAL } from "./debug-io";
 
 /*INIT TESTS*/
@@ -95,7 +95,7 @@ export function SqAttackedTest() {
     }
 
     ParseFen("r3k2r/8/8/3N4/8/8/8/R3K2R w KQkq - 0 1");
-    if (!SqAttacked(FR2SQ(FILES.FILE_C, RANKS.RANK_7), COLOURS.WHITE)) {
+    if (!SqAttacked(fileRankToSq(FILES.FILE_C, RANKS.RANK_7), COLOURS.WHITE)) {
         PrintSqAttackedResults();
         console.log("Position 2/3");
         PrintSubResult(false);
@@ -106,7 +106,7 @@ export function SqAttackedTest() {
     }
 
     ParseFen("4k3/8/8/3q4/8/8/2B5/4K3 w - - 0 1");
-    if (!SqAttacked(FR2SQ(FILES.FILE_H, RANKS.RANK_1), COLOURS.BLACK)) {
+    if (!SqAttacked(fileRankToSq(FILES.FILE_H, RANKS.RANK_1), COLOURS.BLACK)) {
         PrintSqAttackedResults();
         console.log("Position 3/3");
         PrintSubResult(false);
@@ -131,23 +131,23 @@ export function CheckBoard() { /*check what col and pcount were supposed to be f
     /*checking pList against pieces*/
     for (pceType = PIECES.wP; pceType < PIECES.bK; pceType++) {
         for (pceNum = 0; pceNum < GameBoard.numPieces[pceType]; pceNum++) {
-            sq120 = GameBoard.pList[PIECEINDEX(pceType, pceNum)];
+            sq120 = GameBoard.pList[PieceIndex(pceType, pceNum)];
             if (GameBoard.pieces[sq120] != pceType) {
-                console.log("Error: GameBoard.pList - piece: " + PieceChar[pceType]);
+                console.log("Error: GameBoard.pList - piece: " + PIECE_CHAR[pceType]);
                 return false;
             }
         }
     }
     /*checking numPieces and material against pieces*/
     for (sq64 = 0; sq64 < 64; sq64++) {
-        sq120 = SQ120(sq64);
+        sq120 = sq120(sq64);
         pceType = GameBoard.pieces[sq120];
         t_numPieces[pceType]++;
         t_material[PieceCol[pceType]] += PieceVal[pceType];
     }
     for (pceType = PIECES.wP; pceType < PIECES.bK; pceType++) {
         if (t_numPieces[pceType] != GameBoard.numPieces[pceType]) {
-            console.log("Error: GameBoard.numPieces - piece: " + PieceChar[pceType]);
+            console.log("Error: GameBoard.numPieces - piece: " + PIECE_CHAR[pceType]);
             return false;
         }
     }

@@ -2,20 +2,20 @@ import { BRD_SQ_NUM } from "./constants";
 import { SQUARES, COLOURS, PIECES } from "./enums";
 
 /* --- Functions --- */
-export function FR2SQ(f,r) {
+export function fileRankToSq(f : number,r : number) {
   return ( 21 + (f) ) + ( 70 - ((r) * 10) );
 }
-export function SQ64(sq120) { return Sq120ToSq64[(sq120)]; }
-export function SQ120(sq64) { return Sq64ToSq120[(sq64)]; }
-export function SQOFFBOARD(sq) { return FilesBoard[sq] == SQUARES.OFFBOARD; }
-export function PIECEINDEX(piece, pieceNum) { return (piece * 10 + pieceNum); }
+export function Sq64(sq120 : number) { return Sq120ToSq64[(sq120)]; }
+export function Sq120(sq64 : number) { return Sq64ToSq120[(sq64)]; }
+export function SqOffboard(sq : number) { return FilesBoard[sq] == SQUARES.OFFBOARD; }
+export function PieceIndex(piece : number, pieceNum : number) { return (piece * 10 + pieceNum); }
 
-export function FROMSQ(m) { return  (m & 0x7F); }
-export function TOSQ(m) { return  ( (m >> 7) & 0x7F); }
-export function CAPTURED(m) { return  ( (m >> 14) & 0xF); }
-export function PROMOTED(m) { return  ( (m >> 20) & 0xF); }
+export function FromSq(m : number) { return  (m & 0x7F); }
+export function ToSq(m : number) { return  ( (m >> 7) & 0x7F); }
+export function Captured(m : number) { return  ( (m >> 14) & 0xF); }
+export function Promoted(m : number) { return  ( (m >> 20) & 0xF); }
 
-export function RAND_32() {
+export function Rand32() {
   return (Math.floor((Math.random()*255)+1) << 23) | (Math.floor((Math.random()*255)+1) << 16)
        | (Math.floor((Math.random()*255)+1) << 8) | Math.floor((Math.random()*255)+1);
 }
@@ -72,7 +72,7 @@ export var RanksBoard = new Array(BRD_SQ_NUM);
 
 /* Piece * 120 + square (gives 120 space for each piece type and with the square number added on top ensures the key is unique) */
 export var PieceKeys = new Array(13 * 120);
-export var SideKey = RAND_32(); /* hashed in if white is to move*/
+export var SideKey = Rand32(); /* hashed in if white is to move*/
 export var CastleKeys = new Array(16);
 
 export var Sq120ToSq64 = new Array(BRD_SQ_NUM);
