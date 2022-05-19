@@ -1,8 +1,7 @@
-import { BRD_SQ_NUM } from "./constants";
-import { SQUARES, COLOURS, PIECES } from "./enums";
+import { BRD_SQ_NUM, COLOURS, PIECES, SQUARES } from "./constants";
 
 /* --- Functions --- */
-export function fileRankToSq(f : number,r : number) {
+export function FileRankToSq(f : number,r : number) {
   return ( 21 + (f) ) + ( 70 - ((r) * 10) );
 }
 export function Sq64(sq120 : number) { return Sq120ToSq64[(sq120)]; }

@@ -1,6 +1,5 @@
 import { GameBoard, HashPiece, HashEnPas, HashCastle, HashSide, SqAttacked } from "./board";
-import { EN_PAS_FLAG, CASTLE_FLAG, PAWN_START_FLAG } from "./shared/constants";
-import { PIECES, COLOURS, SQUARES } from "./shared/enums";
+import { EN_PAS_FLAG, CASTLE_FLAG, PAWN_START_FLAG, PIECES, COLOURS, SQUARES } from "./shared/constants";
 import { PieceCol, PieceVal, PieceIndex, FromSq, ToSq, CastlePerm, Captured, PiecePawn, Promoted, Kings } from "./shared/utils";
 
 

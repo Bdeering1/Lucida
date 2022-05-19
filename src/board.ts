@@ -1,6 +1,5 @@
-import { BRD_SQ_NUM, MAX_DEPTH, MAX_POSITION_MOVES } from "./shared/constants";
-import { COLOURS, PIECES, SQUARES, RANKS, FILES, CASTLE_BIT } from "./shared/enums";
-import { PieceKeys, SideKey, CastleKeys, Sq120, PieceCol, PieceVal, PieceIndex, fileRankToSq, NDir, KDir, BDir, PieceBishopQueen, RDir, PieceRookQueen } from "./shared/utils";
+import { BRD_SQ_NUM, CASTLE_BIT, COLOURS, FILES, MAX_DEPTH, MAX_POSITION_MOVES, PIECES, RANKS, SQUARES } from "./shared/constants";
+import { PieceKeys, SideKey, CastleKeys, Sq120, PieceCol, PieceVal, PieceIndex, FileRankToSq, NDir, KDir, BDir, PieceBishopQueen, RDir, PieceRookQueen } from "./shared/utils";
 
 
 export var GameBoard = {
@@ -169,7 +168,7 @@ export function ParseFen(fen) { /*Calls ResetBoard, UpdateListsMaterial, and Gen
         }
 
         for (let i = 0; i < count; i++) {
-            sq120 = fileRankToSq(file, rank);
+            sq120 = FileRankToSq(file, rank);
             GameBoard.pieces[sq120] = piece;
             file++;
         }
@@ -203,7 +202,7 @@ export function ParseFen(fen) { /*Calls ResetBoard, UpdateListsMaterial, and Gen
     if (fen[fenIndex] != '-') { /*assuming FEN is correct (if there is no dash the en pas square is valid)*/
         file = fen[fenIndex].charCodeAt() - 'a'.charCodeAt(0); /*make into a function?*/
         rank = fen[fenIndex + 1].charCodeAt() - '1'.charCodeAt(0);
-        GameBoard.enPas = fileRankToSq(file, rank);
+        GameBoard.enPas = FileRankToSq(file, rank);
     }
 
     GameBoard.posKey = GeneratePosKey();

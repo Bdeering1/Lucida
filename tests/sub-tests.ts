@@ -2,7 +2,7 @@ import { ParseFen, SqAttacked, GameBoard, GeneratePosKey } from "../src/board";
 import { InitFilesRanksBrd, InitHashKeys, InitSq120ToSq64 } from "../src/initialize";
 import { BRD_SQ_NUM, START_FEN, PIECE_CHAR } from "../src/shared/constants";
 import { SQUARES, RANKS, FILES, COLOURS, PIECES } from "../src/shared/enums";
-import { RanksBoard, FilesBoard, PieceKeys, Sq120ToSq64, Sq64ToSq120, fileRankToSq, PieceIndex, Sq120, PieceCol, PieceVal } from "../src/shared/utils";
+import { RanksBoard, FilesBoard, PieceKeys, Sq120ToSq64, Sq64ToSq120, FileRankToSq, PieceIndex, Sq120, PieceCol, PieceVal } from "../src/shared/utils";
 import { PrintSubResult, VERBOSE, PrintSqAttackedResults, VISUAL } from "./debug-io";
 
 /*INIT TESTS*/
@@ -95,7 +95,7 @@ export function SqAttackedTest() {
     }
 
     ParseFen("r3k2r/8/8/3N4/8/8/8/R3K2R w KQkq - 0 1");
-    if (!SqAttacked(fileRankToSq(FILES.FILE_C, RANKS.RANK_7), COLOURS.WHITE)) {
+    if (!SqAttacked(FileRankToSq(FILES.FILE_C, RANKS.RANK_7), COLOURS.WHITE)) {
         PrintSqAttackedResults();
         console.log("Position 2/3");
         PrintSubResult(false);
@@ -106,7 +106,7 @@ export function SqAttackedTest() {
     }
 
     ParseFen("4k3/8/8/3q4/8/8/2B5/4K3 w - - 0 1");
-    if (!SqAttacked(fileRankToSq(FILES.FILE_H, RANKS.RANK_1), COLOURS.BLACK)) {
+    if (!SqAttacked(FileRankToSq(FILES.FILE_H, RANKS.RANK_1), COLOURS.BLACK)) {
         PrintSqAttackedResults();
         console.log("Position 3/3");
         PrintSubResult(false);

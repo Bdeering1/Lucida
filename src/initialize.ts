@@ -1,7 +1,7 @@
 import { GameBoard, ParseFen } from './board.js';
 import { START_FEN, BRD_SQ_NUM, MAX_GAME_MOVES, NO_MOVE } from './shared/constants.js';
 import { SQUARES, RANKS, FILES } from './shared/enums.js';
-import { FilesBoard, RanksBoard, fileRankToSq, PieceKeys, Rand32, CastleKeys, Sq120ToSq64, Sq64ToSq120 } from './shared/utils.js';
+import { FilesBoard, RanksBoard, FileRankToSq, PieceKeys, Rand32, CastleKeys, Sq120ToSq64, Sq64ToSq120 } from './shared/utils.js';
 
 export default function Initialize() {
     InitFilesRanksBrd();
@@ -23,7 +23,7 @@ export function InitFilesRanksBrd() {
     
     for (let rank = RANKS.RANK_1; rank <= RANKS.RANK_8; rank++) {
         for (let file = FILES.FILE_A; file <= FILES.FILE_H; file++) {
-            sq = fileRankToSq(file,rank);
+            sq = FileRankToSq(file,rank);
             FilesBoard[sq] = file;
             RanksBoard[sq] = rank;
         }
@@ -54,7 +54,7 @@ export function InitSq120ToSq64() { /*this could probably be done better*/
     
     for (let rank = RANKS.RANK_8; rank >= RANKS.RANK_1; rank--) {
         for (let file = FILES.FILE_A; file <= FILES.FILE_H; file++) {
-            sq = fileRankToSq(file,rank);
+            sq = FileRankToSq(file,rank);
             Sq64ToSq120[sq64] = sq;
             Sq120ToSq64[sq] = sq64;
             sq64++;

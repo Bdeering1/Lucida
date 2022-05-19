@@ -1,7 +1,6 @@
 import { GameBoard, SqAttacked } from "./board";
-import { FILE_CHAR, RANK_CHAR, PIECE_CHAR, SIDE_CHAR } from "./shared/constants";
-import { PIECES, RANKS, FILES, CASTLE_BIT, COLOURS } from "./shared/enums";
-import { FilesBoard, RanksBoard, FromSq, ToSq, Promoted, fileRankToSq, PieceIndex } from "./shared/utils";
+import { FILE_CHAR, RANK_CHAR, PIECE_CHAR, SIDE_CHAR, CASTLE_BIT, COLOURS, FILES, PIECES, RANKS } from "./shared/constants";
+import { FilesBoard, RanksBoard, FromSq, ToSq, Promoted, FileRankToSq, PieceIndex } from "./shared/utils";
 
 
 export function PrSq(sq) {
@@ -32,7 +31,7 @@ export function PrintBoard() { /*Gameboard: pieces, side, enPas, castlePerm, pos
     for (rank = RANKS.RANK_8; rank >= RANKS.RANK_1; rank--) {
         line = (RANK_CHAR[rank] + " ");
         for (file = FILES.FILE_A; file <= FILES.FILE_H; file++) {
-            sq = fileRankToSq(file,rank);
+            sq = FileRankToSq(file,rank);
             piece = GameBoard.pieces[sq];
             line += (" " + PIECE_CHAR[piece] + " ");
         }
@@ -63,7 +62,7 @@ export function PrintSqAttacked() {
     for (rank = RANKS.RANK_8; rank >= RANKS.RANK_1; rank--) { /*going from the backrank so that it pxrints nicely*/
         let line = (RANK_CHAR[rank] + "  ");
         for (file = FILES.FILE_A; file <= FILES.FILE_H; file++) {
-            sq = fileRankToSq(file, rank);
+            sq = FileRankToSq(file, rank);
             if (SqAttacked(sq, COLOURS.WHITE)) piece = "X";
             else piece = "-";
             line += (" " + piece + " ");
@@ -76,7 +75,7 @@ export function PrintSqAttacked() {
     for (rank = RANKS.RANK_8; rank >= RANKS.RANK_1; rank--) { /*going from the backrank so that it prints nicely*/
         let line = (RANK_CHAR[rank] + "  ");
         for (file = FILES.FILE_A; file <= FILES.FILE_H; file++) {
-            sq = fileRankToSq(file, rank);
+            sq = FileRankToSq(file, rank);
             if (SqAttacked(sq, COLOURS.BLACK)) piece = "X";
             else piece = "-";
             line += (" " + piece + " ");
