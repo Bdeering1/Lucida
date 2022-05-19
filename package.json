@@ -3,14 +3,14 @@
   "type": "module",
   "version": "1.0.0",
   "description": "NodeJS chess engine built from the ground up - currently under development",
-  "main": "./build/index.js",
+  "main": "./build/src/index.js",
   "directories": {
     "doc": "docs",
     "test": "tests"
   },
   "scripts": {
     "start": "tsc --build && node .",
-    "build": "tsc --build",
+    "build": "tsc --build --force",
     "clean": "tsc --build --clean",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
