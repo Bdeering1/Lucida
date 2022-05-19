@@ -1,10 +1,8 @@
-import { GameBoard, SqAttacked } from './board.js';
-import {
-    PieceCol, PceDir, DirNum,
-    FilesBoard, RanksBoard, LoopSlideIndex, LoopSlidePce, LoopNonSlideIndex, LoopNonSlidePce,
-    FILES, RANKS, SQUARES, PIECES, COLOURS, MFLAGPS, MFLAGEP, MFLAGCA, CASTLEBIT,
-    PIECEINDEX, SQOFFBOARD
-} from './shared/defs.js';
+import { GameBoard, SqAttacked } from "./board";
+import { MFLAGPS, MFLAGEP, MFLAGCA } from "./shared/constants";
+import { RANKS, PIECES, COLOURS, SQUARES, CASTLEBIT } from "./shared/enums";
+import { RanksBoard, PIECEINDEX, SQOFFBOARD, PieceCol, LoopNonSlideIndex, LoopNonSlidePce, DirNum, PceDir, LoopSlideIndex, LoopSlidePce } from "./shared/utils";
+
 
 function MOVE(from, to, captured, promoted, flag) {
     return (from | (to << 7) | (captured << 14) | (promoted << 20) | flag);

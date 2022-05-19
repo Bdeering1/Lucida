@@ -3,10 +3,10 @@
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
     /* Language and Environment */
-    "target": "es2021",                                  /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
+    "target": "es2022",                                  /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
 
     /* Modules */
-    "module": "ES2015",                                  /* Specify what module code is generated. */
+    "module": "ES2022",                                  /* Specify what module code is generated. */
     // "rootDir": "src",                                 /* Specify the root folder within your source files. */
     "moduleResolution": "node",                          /* Specify how TypeScript looks up a file from a given module specifier. */
     "resolveJsonModule": true,                           /* Enable importing .json files */

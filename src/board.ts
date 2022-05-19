@@ -1,10 +1,7 @@
-import {
-    PieceKeys, SideKey, CastleKeys, PieceBishopQueen, PieceRookQueen,
-    PieceCol, PieceVal, NDir, RDir, BDir, KDir,
-    BRD_SQ_NUM, MAXDEPTH, MAXPOSITIONMOVES,
-    SQUARES, FILES, RANKS, PIECES, CASTLEBIT, COLOURS,
-    FR2SQ, SQ120, PIECEINDEX
-} from './shared/defs.js';
+import { BRD_SQ_NUM, MAXDEPTH, MAXPOSITIONMOVES } from "./shared/constants";
+import { COLOURS, PIECES, SQUARES, RANKS, FILES, CASTLEBIT } from "./shared/enums";
+import { PieceKeys, SideKey, CastleKeys, SQ120, PieceCol, PieceVal, PIECEINDEX, FR2SQ, NDir, KDir, BDir, PieceBishopQueen, RDir, PieceRookQueen } from "./shared/utils";
+
 
 export var GameBoard = {
     pieces: new Array(BRD_SQ_NUM), /*gives the piece id for each 120 squares on the board (0 if empty)*/

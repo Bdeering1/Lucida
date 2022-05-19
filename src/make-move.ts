@@ -1,9 +1,8 @@
-import { GameBoard, SqAttacked, HASH_CA, HASH_EP, HASH_PIECE, HASH_SIDE } from './board.js';
-import {
-    PieceCol, PiecePawn, PieceVal, CastlePerm, Kings,
-    SQUARES, PIECES, COLOURS, MFLAGPS, MFLAGEP, MFLAGCA, CAPTURED, PROMOTED,
-    PIECEINDEX, FROMSQ, TOSQ
-} from './shared/defs.js';
+import { GameBoard, HASH_PIECE, HASH_EP, HASH_CA, HASH_SIDE, SqAttacked } from "./board";
+import { MFLAGEP, MFLAGCA, MFLAGPS } from "./shared/constants";
+import { PIECES, COLOURS, SQUARES } from "./shared/enums";
+import { PieceCol, PieceVal, PIECEINDEX, FROMSQ, TOSQ, CastlePerm, CAPTURED, PiecePawn, PROMOTED, Kings } from "./shared/utils";
+
 
 export function ClearPiece(sq) {
     var pceType = GameBoard.pieces[sq];

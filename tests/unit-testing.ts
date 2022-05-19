@@ -1,17 +1,14 @@
-import { VERBOSE, VISUAL, PrintSubResult, PrintFenResults, UnitTest } from './debug-io.js';
-import { GameBoard, ParseFen } from '../src/board.js';
-import { MakeMove, UndoMove } from '../src/make-move.js';
-import { GenerateMoves } from '../src/move-gen.js';
-import {
-    InitFilesRanksBrdTest, InitHashKeysTest, InitSq120ToSq64Test,
-    SqAttackedTest, CheckBoard, MoveUndoMoveTest
-} from './sub-tests.js';
-import {
-    SQUARES, FILES, RANKS, PIECES, START_FEN,
-    FR2SQ
-} from '../src/shared/defs.js';
-import { InitBoardVars } from '../src/initialize.js';
-import { PrintMoveList } from '../src/io.js';
+import { ParseFen, GameBoard } from "../src/board";
+import { InitBoardVars } from "../src/initialize";
+import { PrintMoveList } from "../src/io";
+import { MakeMove, UndoMove } from "../src/make-move";
+import { GenerateMoves } from "../src/move-gen";
+import { START_FEN } from "../src/shared/constants";
+import { SQUARES, PIECES, FILES, RANKS } from "../src/shared/enums";
+import { FR2SQ } from "../src/shared/utils";
+import { UnitTest, VERBOSE, PrintFenResults, PrintSubResult, VISUAL } from "./debug-io";
+import { InitFilesRanksBrdTest, InitHashKeysTest, InitSq120ToSq64Test, CheckBoard, SqAttackedTest, MoveUndoMoveTest } from "./sub-tests";
+
 
 console.log("UNIT TESTING\n\n");
 

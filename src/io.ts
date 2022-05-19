@@ -1,10 +1,8 @@
-import { GameBoard, SqAttacked } from './board.js';
-import {
-    FileChar, RankChar, PieceChar, SideChar,
-    FilesBoard, RanksBoard,
-    FILES, RANKS, PIECES, CASTLEBIT, COLOURS,
-    FROMSQ, TOSQ, FR2SQ, PIECEINDEX, PROMOTED
-} from './shared/defs.js';
+import { GameBoard, SqAttacked } from "./board";
+import { FileChar, RankChar, PieceChar, SideChar } from "./shared/constants";
+import { PIECES, RANKS, FILES, CASTLEBIT, COLOURS } from "./shared/enums";
+import { FilesBoard, RanksBoard, FROMSQ, TOSQ, PROMOTED, FR2SQ, PIECEINDEX } from "./shared/utils";
+
 
 export function PrSq(sq) {
     return (FileChar[FilesBoard[sq]] + RankChar[RanksBoard[sq]]);

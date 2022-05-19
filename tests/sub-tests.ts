@@ -1,16 +1,11 @@
-import {
-    PieceChar, PieceKeys, PieceCol, PieceVal,
-    FilesBoard, RanksBoard,
-    SQUARES, FILES, RANKS, PIECES, COLOURS, START_FEN, BRD_SQ_NUM,
-    FR2SQ, PIECEINDEX, SQ120,
-    Sq120ToSq64, Sq64ToSq120
-} from '../src/shared/defs.js';
-import { GameBoard, GeneratePosKey, ParseFen, SqAttacked } from '../src/board.js'; 
-import { InitFilesRanksBrd, InitHashKeys, InitSq120ToSq64 } from '../src/initialize.js';
-import { VERBOSE, VISUAL, PrintSubResult, PrintSqAttackedResults } from './debug-io.js';
+import { ParseFen, SqAttacked, GameBoard, GeneratePosKey } from "../src/board";
+import { InitFilesRanksBrd, InitHashKeys, InitSq120ToSq64 } from "../src/initialize";
+import { BRD_SQ_NUM, START_FEN, PieceChar } from "../src/shared/constants";
+import { SQUARES, RANKS, FILES, COLOURS, PIECES } from "../src/shared/enums";
+import { RanksBoard, FilesBoard, PieceKeys, Sq120ToSq64, Sq64ToSq120, FR2SQ, PIECEINDEX, SQ120, PieceCol, PieceVal } from "../src/shared/utils";
+import { PrintSubResult, VERBOSE, PrintSqAttackedResults, VISUAL } from "./debug-io";
 
 /*INIT TESTS*/
-
 export function InitFilesRanksBrdTest() {
     InitFilesRanksBrd();
     if (RanksBoard[SQUARES.A8] != RANKS.RANK_8 || FilesBoard[SQUARES.H1] != FILES.FILE_H) {

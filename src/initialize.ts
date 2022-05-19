@@ -1,12 +1,7 @@
 import { GameBoard, ParseFen } from './board.js';
-import {
-    PieceKeys, CastleKeys,
-    FilesBoard, RanksBoard,
-    Sq64ToSq120, Sq120ToSq64,
-    BRD_SQ_NUM, MAXGAMEMOVES, NOMOVE,
-    FILES, RANKS, SQUARES, START_FEN,
-    FR2SQ, RAND_32
-} from './shared/defs.js';
+import { START_FEN, BRD_SQ_NUM, MAXGAMEMOVES, NOMOVE } from './shared/constants.js';
+import { SQUARES, RANKS, FILES } from './shared/enums.js';
+import { FilesBoard, RanksBoard, FR2SQ, PieceKeys, RAND_32, CastleKeys, Sq120ToSq64, Sq64ToSq120 } from './shared/utils.js';
 
 export default function Initialize() {
     InitFilesRanksBrd();
