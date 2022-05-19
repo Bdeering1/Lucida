@@ -1,3 +1,6 @@
+# Buid Output
+build/
+
 # Dependencies
 node_modules/
 
