@@ -4,21 +4,21 @@ import { PieceCol, PieceVal, PieceIndex, FromSq, ToSq, CastlePerm, Captured, Pie
 
 
 export function ClearPiece(sq) {
-    var pceType = GameBoard.pieces[sq];
+    let pceType = GameBoard.pieces[sq];
     if (pceType == Pieces.EMPTY) {
         console.log("Error: trying to clear empty piece");
         return;
     }
 
-    var col = PieceCol[pceType];
-    var pceNum = -1;
+    let col = PieceCol[pceType];
+    let pceNum = -1;
 
     HashPiece(pceType, sq);
 
     GameBoard.pieces[sq] = Pieces.EMPTY;
     GameBoard.material[col] -= PieceVal[pceType];
 
-    for (var i = 0; i < GameBoard.numPieces[pceType]; i++) { /*maybe if each piece had a unique ID or something this wouldn't be necessary*/
+    for (let i = 0; i < GameBoard.numPieces[pceType]; i++) { /*maybe if each piece had a unique ID or something this wouldn't be necessary*/
         if (GameBoard.pList[PieceIndex(pceType, i)] == sq) {
             pceNum = i;
             break;
@@ -37,7 +37,7 @@ export function AddPiece(pceType, sq) {
         console.log("Error: pceType = " + pceType);
     }
 
-    var col = PieceCol[pceType];
+    let col = PieceCol[pceType];
 
     HashPiece(pceType, sq);
 
@@ -47,7 +47,7 @@ export function AddPiece(pceType, sq) {
 }
 
 export function MovePiece(from, to) { /*make sure this is right*/
-    var pceType = GameBoard.pieces[from];
+    let pceType = GameBoard.pieces[from];
     HashPiece(pceType, from);
     HashPiece(pceType, to);
 
@@ -163,9 +163,9 @@ export function UndoMove() {
     GameBoard.hisPly--;
     GameBoard.ply--;
 
-    var move = GameBoard.history[GameBoard.hisPly].move;
-    var from = FromSq(move);
-    var to = ToSq(move);
+    let move = GameBoard.history[GameBoard.hisPly].move;
+    let from = FromSq(move);
+    let to = ToSq(move);
 
     if (GameBoard.enPas != Squares.NO_SQ) HashEnPas();
     HashCastle();

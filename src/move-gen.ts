@@ -1,6 +1,5 @@
 import { GameBoard, SqAttacked } from "./board";
-import { PAWN_START_FLAG, EN_PAS_FLAG, CASTLE_FLAG } from "./shared/constants";
-import { RANKS, PIECES, COLOURS, SQUARES, CASTLE_BIT } from "./shared/enums";
+import { PAWN_START_FLAG, EN_PAS_FLAG, CASTLE_FLAG, Ranks, Pieces, Colours, Squares, CastleBit } from "./shared/constants";
 import { RanksBoard, PieceIndex, SqOffboard, PieceCol, LoopNonSlideIndex, LoopNonSlidePce, DirNum, PceDir, LoopSlideIndex, LoopSlidePce } from "./shared/utils";
 
 
@@ -22,141 +21,141 @@ export function AddEnPassantMove(move) {
 }
 
 export function AddWhitePawnQuietMove(from, to) {
-    if (RanksBoard[to] == RANKS.RANK_8) {
-        AddQuietMove( MOVE(from, to, PIECES.EMPTY, PIECES.wQ, 0 ));
-        AddQuietMove( MOVE(from, to, PIECES.EMPTY, PIECES.wR, 0 ));
-        AddQuietMove( MOVE(from, to, PIECES.EMPTY, PIECES.wB, 0 ));
-        AddQuietMove( MOVE(from, to, PIECES.EMPTY, PIECES.wN, 0 ));
+    if (RanksBoard[to] == Ranks.RANK_8) {
+        AddQuietMove( MOVE(from, to, Pieces.EMPTY, Pieces.W_QUEEN, 0 ));
+        AddQuietMove( MOVE(from, to, Pieces.EMPTY, Pieces.W_ROOK, 0 ));
+        AddQuietMove( MOVE(from, to, Pieces.EMPTY, Pieces.W_BISHOP, 0 ));
+        AddQuietMove( MOVE(from, to, Pieces.EMPTY, Pieces.W_KNIGHT, 0 ));
     } else {
-        AddQuietMove( MOVE(from, to, PIECES.EMPTY, PIECES.EMPTY, 0 ));
+        AddQuietMove( MOVE(from, to, Pieces.EMPTY, Pieces.EMPTY, 0 ));
     }
 }
 export function AddBlackPawnQuietMove(from, to) {
-    if (RanksBoard[to] == RANKS.RANK_1) {
-        AddQuietMove( MOVE(from, to, PIECES.EMPTY, PIECES.bQ, 0 ));
-        AddQuietMove( MOVE(from, to, PIECES.EMPTY, PIECES.bR, 0 ));
-        AddQuietMove( MOVE(from, to, PIECES.EMPTY, PIECES.bB, 0 ));
-        AddQuietMove( MOVE(from, to, PIECES.EMPTY, PIECES.bN, 0 ));
+    if (RanksBoard[to] == Ranks.RANK_1) {
+        AddQuietMove( MOVE(from, to, Pieces.EMPTY, Pieces.B_QUEEN, 0 ));
+        AddQuietMove( MOVE(from, to, Pieces.EMPTY, Pieces.B_ROOK, 0 ));
+        AddQuietMove( MOVE(from, to, Pieces.EMPTY, Pieces.B_BISHOP, 0 ));
+        AddQuietMove( MOVE(from, to, Pieces.EMPTY, Pieces.B_KNIGHT, 0 ));
     } else {
-        AddQuietMove( MOVE(from, to, PIECES.EMPTY, PIECES.EMPTY, 0 ));
+        AddQuietMove( MOVE(from, to, Pieces.EMPTY, Pieces.EMPTY, 0 ));
     }
 }
 export function AddWhitePawnCaptureMove(from, to, cap) {
-    if (RanksBoard[to] == RANKS.RANK_8) {
-        AddCaptureMove( MOVE(from, to, cap, PIECES.wQ, 0 ));
-        AddCaptureMove( MOVE(from, to, cap, PIECES.wR, 0 ));
-        AddCaptureMove( MOVE(from, to, cap, PIECES.wB, 0 ));
-        AddCaptureMove( MOVE(from, to, cap, PIECES.wN, 0 ));
+    if (RanksBoard[to] == Ranks.RANK_8) {
+        AddCaptureMove( MOVE(from, to, cap, Pieces.W_QUEEN, 0 ));
+        AddCaptureMove( MOVE(from, to, cap, Pieces.W_ROOK, 0 ));
+        AddCaptureMove( MOVE(from, to, cap, Pieces.W_BISHOP, 0 ));
+        AddCaptureMove( MOVE(from, to, cap, Pieces.W_KNIGHT, 0 ));
     } else {
-        AddCaptureMove( MOVE(from, to, cap, PIECES.EMPTY, 0 ));
+        AddCaptureMove( MOVE(from, to, cap, Pieces.EMPTY, 0 ));
     }
 }
 export function AddBlackPawnCaptureMove(from, to, cap) {
-    if (RanksBoard[to] == RANKS.RANK_1) {
-        AddCaptureMove( MOVE(from, to, cap, PIECES.bQ, 0 ));
-        AddCaptureMove( MOVE(from, to, cap, PIECES.bR, 0 ));
-        AddCaptureMove( MOVE(from, to, cap, PIECES.bB, 0 ));
-        AddCaptureMove( MOVE(from, to, cap, PIECES.bN, 0 ));
+    if (RanksBoard[to] == Ranks.RANK_1) {
+        AddCaptureMove( MOVE(from, to, cap, Pieces.B_QUEEN, 0 ));
+        AddCaptureMove( MOVE(from, to, cap, Pieces.B_ROOK, 0 ));
+        AddCaptureMove( MOVE(from, to, cap, Pieces.B_BISHOP, 0 ));
+        AddCaptureMove( MOVE(from, to, cap, Pieces.B_KNIGHT, 0 ));
     } else {
-        AddCaptureMove( MOVE(from, to, cap, PIECES.EMPTY, 0 ));
+        AddCaptureMove( MOVE(from, to, cap, Pieces.EMPTY, 0 ));
     }
 }
 
 export function GenerateMoves() { /* doesn't check if moves are illegal yet (specifically for moving into check I think) */
     GameBoard.moveListStart[GameBoard.ply+1] = GameBoard.moveListStart[GameBoard.ply]; /*ply + 1 is used to add moves and incremented each time a move is added, ply always catches up*/
     
-    var pceType;
-    var pceNum;
-    var sq; /*from square*/
-    var pceIndex;
-    var t_sq; /*to square*/
-    var dir;
+    let pceType;
+    let pceNum;
+    let sq; /*from square*/
+    let pceIndex;
+    let t_sq; /*to square*/
+    let dir;
     
     /* Side Specific Moves */
-    if (GameBoard.side == COLOURS.WHITE) {
-        pceType = PIECES.wP;
+    if (GameBoard.side == Colours.WHITE) {
+        pceType = Pieces.W_PAWN;
         
         for (pceNum = 0; pceNum < GameBoard.numPieces[pceType]; pceNum++) {
             sq = GameBoard.pList[PieceIndex(pceType, pceNum)];
             
-            if (GameBoard.pieces[sq-10] == PIECES.EMPTY) {
+            if (GameBoard.pieces[sq-10] == Pieces.EMPTY) {
                 AddWhitePawnQuietMove(sq, sq - 10);
-                if (RanksBoard[sq] == RANKS.RANK_2 && GameBoard.pieces[sq-20] == PIECES.EMPTY) {
-                     AddQuietMove( MOVE(sq, sq - 20, PIECES.EMPTY, PIECES.EMPTY, PAWN_START_FLAG ));
+                if (RanksBoard[sq] == Ranks.RANK_2 && GameBoard.pieces[sq-20] == Pieces.EMPTY) {
+                     AddQuietMove( MOVE(sq, sq - 20, Pieces.EMPTY, Pieces.EMPTY, PAWN_START_FLAG ));
                 }
             }
             
-            if (!SqOffboard(sq - 9) && PieceCol[GameBoard.pieces[sq - 9]] == COLOURS.BLACK) {
+            if (!SqOffboard(sq - 9) && PieceCol[GameBoard.pieces[sq - 9]] == Colours.BLACK) {
                 AddWhitePawnCaptureMove( sq, sq - 9, GameBoard.pieces[sq - 9] );
             }
-            if (!SqOffboard(sq - 11) && PieceCol[GameBoard.pieces[sq - 11]] == COLOURS.BLACK) {
+            if (!SqOffboard(sq - 11) && PieceCol[GameBoard.pieces[sq - 11]] == Colours.BLACK) {
                 AddWhitePawnCaptureMove( sq, sq - 11, GameBoard.pieces[sq - 11] );
             }
             
-            if (GameBoard.enPas != SQUARES.NO_SQ) {
+            if (GameBoard.enPas != Squares.NO_SQ) {
                 if (sq - 9 == GameBoard.enPas) {
-                    AddEnPassantMove( MOVE(sq, sq - 9, PIECES.EMPTY, PIECES.EMPTY, EN_PAS_FLAG )); /*make move function will handle the en passant capture*/
+                    AddEnPassantMove( MOVE(sq, sq - 9, Pieces.EMPTY, Pieces.EMPTY, EN_PAS_FLAG )); /*make move function will handle the en passant capture*/
                 } else if (sq - 11 == GameBoard.enPas) {
-                    AddEnPassantMove( MOVE(sq, sq - 11, PIECES.EMPTY, PIECES.EMPTY, EN_PAS_FLAG ));
+                    AddEnPassantMove( MOVE(sq, sq - 11, Pieces.EMPTY, Pieces.EMPTY, EN_PAS_FLAG ));
                 }
             }
         }
         
-        if (GameBoard.castlePerm & CASTLE_BIT.WKCA) {
-            if (GameBoard.pieces[SQUARES.F1] == PIECES.EMPTY && GameBoard.pieces[SQUARES.G1] == PIECES.EMPTY) {
-                if (!SqAttacked(SQUARES.E1, COLOURS.BLACK) && SqAttacked(SQUARES.F1, COLOURS.BLACK)) {
-                    AddQuietMove( MOVE(SQUARES.E1, SQUARES.G1, PIECES.EMPTY, PIECES.EMPTY, CASTLE_FLAG ));
+        if (GameBoard.castlePerm & CastleBit.W_KING) {
+            if (GameBoard.pieces[Squares.F1] == Pieces.EMPTY && GameBoard.pieces[Squares.G1] == Pieces.EMPTY) {
+                if (!SqAttacked(Squares.E1, Colours.BLACK) && SqAttacked(Squares.F1, Colours.BLACK)) {
+                    AddQuietMove( MOVE(Squares.E1, Squares.G1, Pieces.EMPTY, Pieces.EMPTY, CASTLE_FLAG ));
                 }
             }
         }
-        if (GameBoard.castlePerm & CASTLE_BIT.WQCA) {
-            if (GameBoard.pieces[SQUARES.B1] == PIECES.EMPTY && GameBoard.pieces[SQUARES.C1] == PIECES.EMPTY && GameBoard.pieces[SQUARES.D1] == PIECES.EMPTY) {
-                if (!SqAttacked(SQUARES.E1, COLOURS.BLACK) && SqAttacked(SQUARES.D1, COLOURS.BLACK)) {
-                    AddQuietMove( MOVE(SQUARES.E1, SQUARES.C1, PIECES.EMPTY, PIECES.EMPTY, CASTLE_FLAG ));
+        if (GameBoard.castlePerm & CastleBit.W_QUEEN) {
+            if (GameBoard.pieces[Squares.B1] == Pieces.EMPTY && GameBoard.pieces[Squares.C1] == Pieces.EMPTY && GameBoard.pieces[Squares.D1] == Pieces.EMPTY) {
+                if (!SqAttacked(Squares.E1, Colours.BLACK) && SqAttacked(Squares.D1, Colours.BLACK)) {
+                    AddQuietMove( MOVE(Squares.E1, Squares.C1, Pieces.EMPTY, Pieces.EMPTY, CASTLE_FLAG ));
                 }
             }
         }
     } else {
-        pceType = PIECES.bP;
+        pceType = Pieces.B_PAWN;
         
         for (pceNum = 0; pceNum < GameBoard.numPieces[pceType]; pceNum++) {
             sq = GameBoard.pList[PieceIndex(pceType, pceNum)];
             
-            if (GameBoard.pieces[sq + 10] == PIECES.EMPTY) {
+            if (GameBoard.pieces[sq + 10] == Pieces.EMPTY) {
                 AddBlackPawnQuietMove(sq, sq + 10);
-                if (RanksBoard[sq] == RANKS.RANK_7 && GameBoard.pieces[sq + 20] == PIECES.EMPTY) {
-                    AddQuietMove( MOVE(sq, sq + 20, PIECES.EMPTY, PIECES.EMPTY, PAWN_START_FLAG) );
+                if (RanksBoard[sq] == Ranks.RANK_7 && GameBoard.pieces[sq + 20] == Pieces.EMPTY) {
+                    AddQuietMove( MOVE(sq, sq + 20, Pieces.EMPTY, Pieces.EMPTY, PAWN_START_FLAG) );
                 }
             }
             
-            if (!SqOffboard(sq + 9) && PieceCol[GameBoard.pieces[sq + 9]] == COLOURS.WHITE) {
+            if (!SqOffboard(sq + 9) && PieceCol[GameBoard.pieces[sq + 9]] == Colours.WHITE) {
                 AddBlackPawnCaptureMove( sq, sq + 9, GameBoard.pieces[sq + 9] );
             }
-            if (!SqOffboard(sq + 11) && PieceCol[GameBoard.pieces[sq + 11]] == COLOURS.WHITE) {
+            if (!SqOffboard(sq + 11) && PieceCol[GameBoard.pieces[sq + 11]] == Colours.WHITE) {
                 AddBlackPawnCaptureMove( sq, sq + 11, GameBoard.pieces[sq + 11] );
             }
             
-            if (GameBoard.enPas != SQUARES.NO_SQ) {
+            if (GameBoard.enPas != Squares.NO_SQ) {
                 if (sq + 9 == GameBoard.enPas) {
-                    AddEnPassantMove( MOVE(sq, sq + 9, PIECES.EMPTY, PIECES.EMPTY, EN_PAS_FLAG ));
+                    AddEnPassantMove( MOVE(sq, sq + 9, Pieces.EMPTY, Pieces.EMPTY, EN_PAS_FLAG ));
                 } else if (sq + 11 == GameBoard.enPas) { /*make these both into one or??*/
-                    AddEnPassantMove( MOVE(sq, sq + 11, PIECES.EMPTY, PIECES.EMPTY, EN_PAS_FLAG ));
+                    AddEnPassantMove( MOVE(sq, sq + 11, Pieces.EMPTY, Pieces.EMPTY, EN_PAS_FLAG ));
                 }
             }
             
         }
         
-        if (GameBoard.castlePerm & CASTLE_BIT.BKCA) {
-            if (GameBoard.pieces[SQUARES.F8] == PIECES.EMPTY && GameBoard.pieces[SQUARES.G8] == PIECES.EMPTY) {
-                if (!SqAttacked(SQUARES.E8, COLOURS.BLACK) && SqAttacked(SQUARES.F8, COLOURS.WHITE)) {
-                    AddQuietMove( MOVE(SQUARES.E8, SQUARES.B8, PIECES.EMPTY, PIECES.EMPTY, CASTLE_FLAG ));
+        if (GameBoard.castlePerm & CastleBit.B_KING) {
+            if (GameBoard.pieces[Squares.F8] == Pieces.EMPTY && GameBoard.pieces[Squares.G8] == Pieces.EMPTY) {
+                if (!SqAttacked(Squares.E8, Colours.BLACK) && SqAttacked(Squares.F8, Colours.WHITE)) {
+                    AddQuietMove( MOVE(Squares.E8, Squares.B8, Pieces.EMPTY, Pieces.EMPTY, CASTLE_FLAG ));
                 }
             }
         }
-        if (GameBoard.castlePerm & CASTLE_BIT.BQCA) {
-            if (GameBoard.pieces[SQUARES.B8] == PIECES.EMPTY && GameBoard.pieces[SQUARES.C8] == PIECES.EMPTY && GameBoard.pieces[SQUARES.D8] == PIECES.EMPTY) {
-                if (!SqAttacked(SQUARES.E8, COLOURS.BLACK) && SqAttacked(SQUARES.D8, COLOURS.WHITE)) {
-                    AddQuietMove( MOVE(SQUARES.E8, SQUARES.C8, PIECES.EMPTY, PIECES.EMPTY, CASTLE_FLAG ));
+        if (GameBoard.castlePerm & CastleBit.B_QUEEN) {
+            if (GameBoard.pieces[Squares.B8] == Pieces.EMPTY && GameBoard.pieces[Squares.C8] == Pieces.EMPTY && GameBoard.pieces[Squares.D8] == Pieces.EMPTY) {
+                if (!SqAttacked(Squares.E8, Colours.BLACK) && SqAttacked(Squares.D8, Colours.WHITE)) {
+                    AddQuietMove( MOVE(Squares.E8, Squares.C8, Pieces.EMPTY, Pieces.EMPTY, CASTLE_FLAG ));
                 }
             }
         }
@@ -176,10 +175,10 @@ export function GenerateMoves() { /* doesn't check if moves are illegal yet (spe
                 
                 if (SqOffboard(t_sq)) {
                     continue;
-                } else if (GameBoard.pieces[t_sq] == PIECES.EMPTY) {
-                    AddQuietMove( MOVE(sq, t_sq, PIECES.EMPTY, PIECES.EMPTY, 0 ));
+                } else if (GameBoard.pieces[t_sq] == Pieces.EMPTY) {
+                    AddQuietMove( MOVE(sq, t_sq, Pieces.EMPTY, Pieces.EMPTY, 0 ));
                 } else if (PieceCol[GameBoard.pieces[t_sq]] != GameBoard.side) {
-                    AddCaptureMove( MOVE(sq, t_sq, GameBoard.pieces[t_sq], PIECES.EMPTY, 0 ));
+                    AddCaptureMove( MOVE(sq, t_sq, GameBoard.pieces[t_sq], Pieces.EMPTY, 0 ));
                 }
             }
         }
@@ -201,13 +200,13 @@ export function GenerateMoves() { /* doesn't check if moves are illegal yet (spe
                 t_sq = sq + dir;
                 
                 while (!SqOffboard(t_sq)) {
-                    if (GameBoard.pieces[t_sq] != PIECES.EMPTY) {
+                    if (GameBoard.pieces[t_sq] != Pieces.EMPTY) {
                         if (PieceCol[GameBoard.pieces[t_sq]] != GameBoard.side) {
-                            AddCaptureMove( MOVE(sq, t_sq, GameBoard.pieces[t_sq], PIECES.EMPTY, 0 ));
+                            AddCaptureMove( MOVE(sq, t_sq, GameBoard.pieces[t_sq], Pieces.EMPTY, 0 ));
                         }
                         break;
                     }
-                    AddQuietMove( MOVE(sq, t_sq, PIECES.EMPTY, PIECES.EMPTY, 0 ));
+                    AddQuietMove( MOVE(sq, t_sq, Pieces.EMPTY, Pieces.EMPTY, 0 ));
                     t_sq += dir;
                 }
             }

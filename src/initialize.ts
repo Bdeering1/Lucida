@@ -8,12 +8,10 @@ export default function Initialize() {
     InitSq120ToSq64();
     InitBoardVars();
     ParseFen(START_FEN);
-
-    console.log("Successfully initialized board.");
 }
 
 export function InitFilesRanksBrd() {
-    var sq = Squares.A1;
+    let sq = Squares.A1;
     
     for (let i = 0; i < BRD_SQ_NUM; i++) {
         FilesBoard[i] = Squares.OFF_BOARD;
@@ -40,8 +38,8 @@ export function InitHashKeys() {
 }
 
 export function InitSq120ToSq64() { /*this could probably be done better*/ 
-    var sq = Squares.A1;
-    var sq64 = 0;
+    let sq = Squares.A1;
+    let sq64 = 0;
     
     for (let i = 0; i < BRD_SQ_NUM; i++) {
         Sq120ToSq64[i] = 120;
@@ -62,7 +60,7 @@ export function InitSq120ToSq64() { /*this could probably be done better*/
 }
 
 export function InitBoardVars() { /* 'ResetBoardHistory' woudl probably be more accurate */
-    for (var i = 0; i < MAX_GAME_MOVES; i++) {
+    for (let i = 0; i < MAX_GAME_MOVES; i++) {
         GameBoard.history.push( {
             move : NO_MOVE,
             castlePerm : 0,
