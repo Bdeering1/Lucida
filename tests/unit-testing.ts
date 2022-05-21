@@ -1,6 +1,6 @@
 import { ParseFen, GameBoard } from "../src/board";
 import { InitBoardVars } from "../src/initialize";
-import { PrintMoveList } from "../src/io";
+import { PrintMoveList } from "../src/cli/printing";
 import { MakeMove, UndoMove } from "../src/make-move";
 import { GenerateMoves } from "../src/move-gen";
 import { Files, Pieces, Ranks, Squares, START_FEN } from "../src/shared/constants";

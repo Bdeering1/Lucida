@@ -75,4 +75,4 @@ export var SideKey = Rand32(); /* hashed in if white is to move*/
 export var CastleKeys = new Array(16);
 
 export var Sq120ToSq64 = new Array(BRD_SQ_NUM);
-export var Sq64ToSq120 = new Array(64); /*populated in main*/
+export var Sq64ToSq120 = new Array(64);

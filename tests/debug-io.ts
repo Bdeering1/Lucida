@@ -1,4 +1,4 @@
-import { PrintBoard, PrintSqAttacked, PrintPieceLists, PrMove, PrintMoveList } from '../src/io.js';
+import { PrintBoard, PrintSquaresAttacked, PrintPieceLists, PrintMove, PrintMoveList } from '../src/cli/printing.js';
 import { GameBoard } from '../src/board.js';
 import { MakeMove, UndoMove } from '../src/make-move.js';
 import { GenerateMoves } from '../src/move-gen.js';
@@ -27,7 +27,7 @@ export function PrintFenResults(fenNum) {
 
 export function PrintSqAttackedResults() {
     PrintBoard();
-    PrintSqAttacked();
+    PrintSquaresAttacked();
 }
 
 export function PrintAllMoves() {
@@ -35,7 +35,7 @@ export function PrintAllMoves() {
     for (var i = GameBoard.moveListStart[GameBoard.ply]; i < GameBoard.moveListStart[GameBoard.ply + 1]; i++) {
         console.log("Move " + (i + 1 - GameBoard.moveListStart[GameBoard.ply]));
         let move = GameBoard.moveList[i];
-        console.log(PrMove(move));
+        console.log(PrintMove(move));
         MakeMove(move);
         PrintBoard();
         UndoMove();
