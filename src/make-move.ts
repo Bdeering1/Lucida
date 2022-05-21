@@ -1,11 +1,11 @@
 import { GameBoard, HashPiece, HashEnPas, HashCastle, HashSide, SqAttacked } from "./board";
-import { EN_PAS_FLAG, CASTLE_FLAG, PAWN_START_FLAG, PIECES, COLOURS, SQUARES } from "./shared/constants";
+import { EN_PAS_FLAG, CASTLE_FLAG, PAWN_START_FLAG, Pieces, Colours, Squares } from "./shared/constants";
 import { PieceCol, PieceVal, PieceIndex, FromSq, ToSq, CastlePerm, Captured, PiecePawn, Promoted, Kings } from "./shared/utils";
 
 
 export function ClearPiece(sq) {
     var pceType = GameBoard.pieces[sq];
-    if (pceType == PIECES.EMPTY) {
+    if (pceType == Pieces.EMPTY) {
         console.log("Error: trying to clear empty piece");
         return;
     }
@@ -15,7 +15,7 @@ export function ClearPiece(sq) {
 
     HashPiece(pceType, sq);
 
-    GameBoard.pieces[sq] = PIECES.EMPTY;
+    GameBoard.pieces[sq] = Pieces.EMPTY;
     GameBoard.material[col] -= PieceVal[pceType];
 
     for (var i = 0; i < GameBoard.numPieces[pceType]; i++) { /*maybe if each piece had a unique ID or something this wouldn't be necessary*/
@@ -51,7 +51,7 @@ export function MovePiece(from, to) { /*make sure this is right*/
     HashPiece(pceType, from);
     HashPiece(pceType, to);
 
-    GameBoard.pieces[from] = PIECES.EMPTY;
+    GameBoard.pieces[from] = Pieces.EMPTY;
     GameBoard.pieces[to] = pceType;
 
     let i = 0;
@@ -75,7 +75,7 @@ export function MakeMove(move) {
     var from = FromSq(move);
     var to = ToSq(move);
     var side = GameBoard.side;
-    if (side == COLOURS.BOTH) {
+    if (side == Colours.BOTH) {
         console.log("Error: FEN parsing - side: BOTH");
         return false;
     }
@@ -86,28 +86,28 @@ export function MakeMove(move) {
     GameBoard.history[GameBoard.hisPly].enPas = GameBoard.enPas;
     GameBoard.history[GameBoard.hisPly].castlePerm = GameBoard.castlePerm;
 
-    if (GameBoard.enPas != SQUARES.NO_SQ) HashEnPas();
-    GameBoard.enPas = SQUARES.NO_SQ;
+    if (GameBoard.enPas != Squares.NO_SQ) HashEnPas();
+    GameBoard.enPas = Squares.NO_SQ;
 
     if ((move & EN_PAS_FLAG) != 0) {
-        if (side == COLOURS.WHITE) {
+        if (side == Colours.WHITE) {
             ClearPiece(to + 10);
         } else {
             ClearPiece(to - 10);
         }
     } else if ((move & CASTLE_FLAG) != 0) {
         switch (to) {
-            case SQUARES.C1:
-                MovePiece(SQUARES.A1, SQUARES.D1);
+            case Squares.C1:
+                MovePiece(Squares.A1, Squares.D1);
                 break;
-            case SQUARES.G1:
-                MovePiece(SQUARES.H1, SQUARES.F1);
+            case Squares.G1:
+                MovePiece(Squares.H1, Squares.F1);
                 break;
-            case SQUARES.C8:
-                MovePiece(SQUARES.A8, SQUARES.D8);
+            case Squares.C8:
+                MovePiece(Squares.A8, Squares.D8);
                 break;
-            case SQUARES.G8:
-                MovePiece(SQUARES.H8, SQUARES.F8);
+            case Squares.G8:
+                MovePiece(Squares.H8, Squares.F8);
                 break;
             default:
                 console.log("Error: invalid castle move");
@@ -124,14 +124,14 @@ export function MakeMove(move) {
     } /*if there are no possible castlePerm changes castlePerm is not touched and not hashed in or out*/
 
     GameBoard.fiftyMove++;
-    if (Captured(move) != PIECES.EMPTY) {
+    if (Captured(move) != Pieces.EMPTY) {
         ClearPiece(to);
         GameBoard.fiftyMove = 0;
     }
     if (PiecePawn[GameBoard.pieces[from]]) {
         GameBoard.fiftyMove = 0;
         if ((move & PAWN_START_FLAG) != 0) {
-            if (GameBoard.side == COLOURS.WHITE) {
+            if (GameBoard.side == Colours.WHITE) {
                 GameBoard.enPas = from - 10;
             } else {
                 GameBoard.enPas = from + 10;
@@ -144,7 +144,7 @@ export function MakeMove(move) {
 
     MovePiece(from, to);
     let promoted = Promoted(move);
-    if (promoted != PIECES.EMPTY) {
+    if (promoted != Pieces.EMPTY) {
         ClearPiece(to);
         AddPiece(promoted, to);
     }
@@ -167,38 +167,38 @@ export function UndoMove() {
     var from = FromSq(move);
     var to = ToSq(move);
 
-    if (GameBoard.enPas != SQUARES.NO_SQ) HashEnPas();
+    if (GameBoard.enPas != Squares.NO_SQ) HashEnPas();
     HashCastle();
 
     GameBoard.castlePerm = GameBoard.history[GameBoard.hisPly].castlePerm;
     GameBoard.fiftyMove = GameBoard.history[GameBoard.hisPly].fiftyMove;
     GameBoard.enPas = GameBoard.history[GameBoard.hisPly].enPas;
 
-    if (GameBoard.enPas != SQUARES.NO_SQ) HashEnPas();
+    if (GameBoard.enPas != Squares.NO_SQ) HashEnPas();
     HashCastle();
 
     GameBoard.side ^= 1;
     HashSide();
 
     if ((move & EN_PAS_FLAG) != 0) {
-        if (GameBoard.side == COLOURS.WHITE) {
-            AddPiece(PIECES.bP, to + 10);
+        if (GameBoard.side == Colours.WHITE) {
+            AddPiece(Pieces.B_PAWN, to + 10);
         } else {
-            AddPiece(PIECES.wP, to - 10);
+            AddPiece(Pieces.W_PAWN, to - 10);
         }
     } else if ((move & CASTLE_FLAG) != 0) {
         switch (to) {
-            case SQUARES.C1:
-                MovePiece(SQUARES.D1, SQUARES.A1);
+            case Squares.C1:
+                MovePiece(Squares.D1, Squares.A1);
                 break;
-            case SQUARES.G1:
-                MovePiece(SQUARES.F1, SQUARES.H1);
+            case Squares.G1:
+                MovePiece(Squares.F1, Squares.H1);
                 break;
-            case SQUARES.C8:
-                MovePiece(SQUARES.D8, SQUARES.A8);
+            case Squares.C8:
+                MovePiece(Squares.D8, Squares.A8);
                 break;
-            case SQUARES.G8:
-                MovePiece(SQUARES.F8, SQUARES.H8);
+            case Squares.G8:
+                MovePiece(Squares.F8, Squares.H8);
                 break;
             default:
                 console.log("Error: could not undo castle");
@@ -209,11 +209,11 @@ export function UndoMove() {
     MovePiece(to, from);
 
     let captured = Captured(move);
-    if (captured != PIECES.EMPTY) {
+    if (captured != Pieces.EMPTY) {
         AddPiece(captured, to);
     }
-    if (Promoted(move) != PIECES.EMPTY) {
+    if (Promoted(move) != Pieces.EMPTY) {
         ClearPiece(from);
-        AddPiece((GameBoard.side == COLOURS.WHITE ? PIECES.wP : PIECES.bP), from);
+        AddPiece((GameBoard.side == Colours.WHITE ? Pieces.W_PAWN : Pieces.B_PAWN), from);
     }
 }

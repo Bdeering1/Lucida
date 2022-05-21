@@ -1,7 +1,6 @@
 import { GameBoard, ParseFen } from './board.js';
-import { START_FEN, BRD_SQ_NUM, MAX_GAME_MOVES, NO_MOVE } from './shared/constants.js';
-import { SQUARES, RANKS, FILES } from './shared/enums.js';
-import { FilesBoard, RanksBoard, FileRankToSq, PieceKeys, Rand32, CastleKeys, Sq120ToSq64, Sq64ToSq120 } from './shared/utils.js';
+import { START_FEN, BRD_SQ_NUM, MAX_GAME_MOVES, NO_MOVE, Files, Ranks, Squares } from './shared/constants.js';
+import { FilesBoard, RanksBoard, GetSquare, PieceKeys, Rand32, CastleKeys, Sq120ToSq64, Sq64ToSq120 } from './shared/utils.js';
 
 export default function Initialize() {
     InitFilesRanksBrd();
@@ -14,16 +13,16 @@ export default function Initialize() {
 }
 
 export function InitFilesRanksBrd() {
-    var sq = SQUARES.A1;
+    var sq = Squares.A1;
     
     for (let i = 0; i < BRD_SQ_NUM; i++) {
-        FilesBoard[i] = SQUARES.OFFBOARD;
-        RanksBoard[i] = SQUARES.OFFBOARD;
+        FilesBoard[i] = Squares.OFF_BOARD;
+        RanksBoard[i] = Squares.OFF_BOARD;
     }
     
-    for (let rank = RANKS.RANK_1; rank <= RANKS.RANK_8; rank++) {
-        for (let file = FILES.FILE_A; file <= FILES.FILE_H; file++) {
-            sq = FileRankToSq(file,rank);
+    for (let rank = Ranks.RANK_1; rank <= Ranks.RANK_8; rank++) {
+        for (let file = Files.FILE_A; file <= Files.FILE_H; file++) {
+            sq = GetSquare(file,rank);
             FilesBoard[sq] = file;
             RanksBoard[sq] = rank;
         }
@@ -41,7 +40,7 @@ export function InitHashKeys() {
 }
 
 export function InitSq120ToSq64() { /*this could probably be done better*/ 
-    var sq = SQUARES.A1;
+    var sq = Squares.A1;
     var sq64 = 0;
     
     for (let i = 0; i < BRD_SQ_NUM; i++) {
@@ -52,9 +51,9 @@ export function InitSq120ToSq64() { /*this could probably be done better*/
         Sq64ToSq120[i] = 65;
     }
     
-    for (let rank = RANKS.RANK_8; rank >= RANKS.RANK_1; rank--) {
-        for (let file = FILES.FILE_A; file <= FILES.FILE_H; file++) {
-            sq = FileRankToSq(file,rank);
+    for (let rank = Ranks.RANK_8; rank >= Ranks.RANK_1; rank--) {
+        for (let file = Files.FILE_A; file <= Files.FILE_H; file++) {
+            sq = GetSquare(file,rank);
             Sq64ToSq120[sq64] = sq;
             Sq120ToSq64[sq] = sq64;
             sq64++;

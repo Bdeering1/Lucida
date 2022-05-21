@@ -1,14 +1,13 @@
 import { ParseFen, SqAttacked, GameBoard, GeneratePosKey } from "../src/board";
 import { InitFilesRanksBrd, InitHashKeys, InitSq120ToSq64 } from "../src/initialize";
-import { BRD_SQ_NUM, START_FEN, PIECE_CHAR } from "../src/shared/constants";
-import { SQUARES, RANKS, FILES, COLOURS, PIECES } from "../src/shared/enums";
-import { RanksBoard, FilesBoard, PieceKeys, Sq120ToSq64, Sq64ToSq120, FileRankToSq, PieceIndex, Sq120, PieceCol, PieceVal } from "../src/shared/utils";
+import { BRD_SQ_NUM, START_FEN, PIECE_CHAR, Colours, Files, Pieces, Ranks, Squares } from "../src/shared/constants";
+import { RanksBoard, FilesBoard, PieceKeys, Sq120ToSq64, Sq64ToSq120, GetSquare, PieceIndex, Sq120, PieceCol, PieceVal } from "../src/shared/utils";
 import { PrintSubResult, VERBOSE, PrintSqAttackedResults, VISUAL } from "./debug-io";
 
 /*INIT TESTS*/
 export function InitFilesRanksBrdTest() {
     InitFilesRanksBrd();
-    if (RanksBoard[SQUARES.A8] != RANKS.RANK_8 || FilesBoard[SQUARES.H1] != FILES.FILE_H) {
+    if (RanksBoard[Squares.A8] != Ranks.RANK_8 || FilesBoard[Squares.H1] != Files.FILE_H) {
         var line = "   ";
         console.log("FilesBoard");
         for (let i = 0; i < BRD_SQ_NUM; i++) {
@@ -26,8 +25,8 @@ export function InitFilesRanksBrdTest() {
                 line = "   ";
             }
         }
-        console.log("\nRanksBoard[SQUARES.A8] = " + RanksBoard[SQUARES.A8]);
-        console.log("FilesBoard[SQUARES.H1] = " + FilesBoard[SQUARES.H1]);
+        console.log("\nRanksBoard[SQUARES.A8] = " + RanksBoard[Squares.A8]);
+        console.log("FilesBoard[SQUARES.H1] = " + FilesBoard[Squares.H1]);
         PrintSubResult(false);
         return false;
     } else {
@@ -49,7 +48,7 @@ export function InitHashKeysTest() {
 
 export function InitSq120ToSq64Test() {
     InitSq120ToSq64();
-    if (Sq120ToSq64[SQUARES.A8] != 0 || Sq64ToSq120[63] != SQUARES.H1) {
+    if (Sq120ToSq64[Squares.A8] != 0 || Sq64ToSq120[63] != Squares.H1) {
         var sq64 = 0;
         var line = "   ";
         console.log("Sq120ToSq64");
@@ -61,15 +60,15 @@ export function InitSq120ToSq64Test() {
             }
         }
         console.log("Sq64ToSq120");
-        for (let rank = RANKS.RANK_8; rank >= RANKS.RANK_1; rank--) {
-            for (let file = FILES.FILE_A; file <= FILES.FILE_H; file++) {
+        for (let rank = Ranks.RANK_8; rank >= Ranks.RANK_1; rank--) {
+            for (let file = Files.FILE_A; file <= Files.FILE_H; file++) {
                 line += Sq64ToSq120[sq64].toString().padEnd(4);
                 sq64++;
             }
             console.log(line);
             line = "   ";
         }
-        console.log("\nSq120ToSq64[SQUARES.A8] = " + Sq120ToSq64[SQUARES.A8] + ", " + "Sq64ToSq120[63] = " + Sq64ToSq120[63]);
+        console.log("\nSq120ToSq64[SQUARES.A8] = " + Sq120ToSq64[Squares.A8] + ", " + "Sq64ToSq120[63] = " + Sq64ToSq120[63]);
         PrintSubResult(false);
         return false;
     } else {
@@ -84,7 +83,7 @@ export function SqAttackedTest() {
     let isPass = true;
 
     ParseFen(START_FEN);
-    if (SqAttacked(SQUARES.A1, COLOURS.WHITE)) {
+    if (SqAttacked(Squares.A1, Colours.WHITE)) {
         PrintSqAttackedResults();
         console.log("Position 1/3");
         PrintSubResult(false);
@@ -95,7 +94,7 @@ export function SqAttackedTest() {
     }
 
     ParseFen("r3k2r/8/8/3N4/8/8/8/R3K2R w KQkq - 0 1");
-    if (!SqAttacked(FileRankToSq(FILES.FILE_C, RANKS.RANK_7), COLOURS.WHITE)) {
+    if (!SqAttacked(GetSquare(Files.FILE_C, Ranks.RANK_7), Colours.WHITE)) {
         PrintSqAttackedResults();
         console.log("Position 2/3");
         PrintSubResult(false);
@@ -106,7 +105,7 @@ export function SqAttackedTest() {
     }
 
     ParseFen("4k3/8/8/3q4/8/8/2B5/4K3 w - - 0 1");
-    if (!SqAttacked(FileRankToSq(FILES.FILE_H, RANKS.RANK_1), COLOURS.BLACK)) {
+    if (!SqAttacked(GetSquare(Files.FILE_H, Ranks.RANK_1), Colours.BLACK)) {
         PrintSqAttackedResults();
         console.log("Position 3/3");
         PrintSubResult(false);
@@ -129,7 +128,7 @@ export function CheckBoard() { /*check what col and pcount were supposed to be f
     var sq64, sq120, pceType, pceNum, col, pcount;
 
     /*checking pList against pieces*/
-    for (pceType = PIECES.wP; pceType < PIECES.bK; pceType++) {
+    for (pceType = Pieces.W_PAWN; pceType < Pieces.B_KNIGHT; pceType++) {
         for (pceNum = 0; pceNum < GameBoard.numPieces[pceType]; pceNum++) {
             sq120 = GameBoard.pList[PieceIndex(pceType, pceNum)];
             if (GameBoard.pieces[sq120] != pceType) {
@@ -145,17 +144,17 @@ export function CheckBoard() { /*check what col and pcount were supposed to be f
         t_numPieces[pceType]++;
         t_material[PieceCol[pceType]] += PieceVal[pceType];
     }
-    for (pceType = PIECES.wP; pceType < PIECES.bK; pceType++) {
+    for (pceType = Pieces.W_PAWN; pceType < Pieces.B_KNIGHT; pceType++) {
         if (t_numPieces[pceType] != GameBoard.numPieces[pceType]) {
             console.log("Error: GameBoard.numPieces - piece: " + PIECE_CHAR[pceType]);
             return false;
         }
     }
-    if (t_material[COLOURS.WHITE] != GameBoard.material[COLOURS.WHITE] || t_material[COLOURS.BLACK] != GameBoard.material[COLOURS.BLACK]) {
+    if (t_material[Colours.WHITE] != GameBoard.material[Colours.WHITE] || t_material[Colours.BLACK] != GameBoard.material[Colours.BLACK]) {
         console.log("Error: GameBoard.material");
         return false;
     }
-    if (GameBoard.side != COLOURS.WHITE && GameBoard.side != COLOURS.BLACK) {
+    if (GameBoard.side != Colours.WHITE && GameBoard.side != Colours.BLACK) {
         console.log("Error: GameBoard.side");
         return false;
     }

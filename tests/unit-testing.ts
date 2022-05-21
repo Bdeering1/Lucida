@@ -3,9 +3,8 @@ import { InitBoardVars } from "../src/initialize";
 import { PrintMoveList } from "../src/io";
 import { MakeMove, UndoMove } from "../src/make-move";
 import { GenerateMoves } from "../src/move-gen";
-import { START_FEN } from "../src/shared/constants";
-import { SQUARES, PIECES, FILES, RANKS } from "../src/shared/enums";
-import { FileRankToSq } from "../src/shared/utils";
+import { Files, Pieces, Ranks, Squares, START_FEN } from "../src/shared/constants";
+import { GetSquare } from "../src/shared/utils";
 import { UnitTest, VERBOSE, PrintFenResults, PrintSubResult, VISUAL } from "./debug-io";
 import { InitFilesRanksBrdTest, InitHashKeysTest, InitSq120ToSq64Test, CheckBoard, SqAttackedTest, MoveUndoMoveTest } from "./sub-tests";
 
@@ -46,7 +45,7 @@ function ParseFenTest() {
     let isPass = true;
 
     ParseFen(START_FEN);
-    if (GameBoard.pieces[SQUARES.E8] != PIECES.bK || !CheckBoard()) {
+    if (GameBoard.pieces[Squares.E8] != Pieces.B_KNIGHT || !CheckBoard()) {
         isPass = false;
         PrintFenResults(1);
     } else if (VERBOSE) {
@@ -62,7 +61,7 @@ function ParseFenTest() {
         PrintSubResult(true);
     }
     ParseFen("6k1/8/8/8/3Pp3/8/8/6K1 b - d3 0 1");
-    if (GameBoard.enPas != FileRankToSq(FILES.FILE_D, RANKS.RANK_3) || !CheckBoard()) {
+    if (GameBoard.enPas != GetSquare(Files.FILE_D, Ranks.RANK_3) || !CheckBoard()) {
         isPass = false;
     } else {
         if (VISUAL) {
@@ -127,7 +126,7 @@ function MakeMoveTest() { /*make sure this tests if it catches illegal moves*/
     GenerateMoves();
     MakeMove(GameBoard.moveList[GameBoard.moveListStart[GameBoard.ply]]);
     GenerateMoves();
-    if (!MoveUndoMoveTest(1, 15, SQUARES.NO_SQ, 20, 40)) {
+    if (!MoveUndoMoveTest(1, 15, Squares.NO_SQ, 20, 40)) {
         console.log("Test 1/3");
         PrintSubResult(false);
         isPass = false;
@@ -136,7 +135,7 @@ function MakeMoveTest() { /*make sure this tests if it catches illegal moves*/
         PrintSubResult(true);
     }
     UndoMove();
-    if (!MoveUndoMoveTest(0, 15, SQUARES.NO_SQ, 0, 20)) {
+    if (!MoveUndoMoveTest(0, 15, Squares.NO_SQ, 0, 20)) {
         console.log("Test 2/3");
         PrintSubResult(false);
         isPass = false;

@@ -1,12 +1,12 @@
-import { BRD_SQ_NUM, COLOURS, PIECES, SQUARES } from "./constants";
+import { BRD_SQ_NUM, Colours, Pieces, Squares } from "./constants";
 
 /* --- Functions --- */
-export function FileRankToSq(f : number,r : number) {
-  return ( 21 + (f) ) + ( 70 - ((r) * 10) );
+export function GetSquare(file : number,rank : number) {
+  return ( 21 + (file) ) + ( 70 - ((rank) * 10) );
 }
 export function Sq64(sq120 : number) { return Sq120ToSq64[(sq120)]; }
 export function Sq120(sq64 : number) { return Sq64ToSq120[(sq64)]; }
-export function SqOffboard(sq : number) { return FilesBoard[sq] == SQUARES.OFFBOARD; }
+export function SqOffboard(sq : number) { return FilesBoard[sq] == Squares.OFF_BOARD; }
 export function PieceIndex(piece : number, pieceNum : number) { return (piece * 10 + pieceNum); }
 
 export function FromSq(m : number) { return  (m & 0x7F); }
@@ -24,8 +24,8 @@ export var PieceBig = [ false, false, true, true, true, true, true, false, true,
 export var PieceMaj = [ false, false, false, false, true, true, true, false, false, false, true, true, true ];
 export var PieceMin = [ false, false, true, true, false, false, false, false, true, true, false, false, false ];
 export var PieceVal = [ 0, 100, 325, 325, 550, 1000, 50000, 100, 325, 325, 550, 1000, 50000 ];
-export var PieceCol = [ COLOURS.BOTH, COLOURS.WHITE, COLOURS.WHITE, COLOURS.WHITE, COLOURS.WHITE, COLOURS.WHITE, COLOURS.WHITE,
-	COLOURS.BLACK, COLOURS.BLACK, COLOURS.BLACK, COLOURS.BLACK, COLOURS.BLACK, COLOURS.BLACK ];
+export var PieceCol = [ Colours.BOTH, Colours.WHITE, Colours.WHITE, Colours.WHITE, Colours.WHITE, Colours.WHITE, Colours.WHITE,
+	Colours.BLACK, Colours.BLACK, Colours.BLACK, Colours.BLACK, Colours.BLACK, Colours.BLACK ];
 	
 export var PiecePawn = [ false, true, false, false, false, false, false, true, false, false, false, false, false ]; /*not used so far, needed?*/
 export var PieceKnight = [ false, false, true, false, false, false, false, false, true, false, false, false, false ]; /*not used either*/
@@ -42,12 +42,12 @@ export var KDir = [ -1, -10, 1, 10, -9, -11, 11, 9 ];
 export var DirNum = [ 0, 0, 8, 4, 4, 8, 8, 0, 8, 4, 4, 8, 8 ];
 export var PceDir = [ 0, 0, NDir, BDir, RDir, KDir, KDir, 0, NDir, BDir, RDir, KDir, KDir ];
 
-export var LoopNonSlidePce = [ PIECES.wN, PIECES.wK, 0, PIECES.bN, PIECES.bK, 0 ];
+export var LoopNonSlidePce = [ Pieces.W_KNIGHT, Pieces.W_KING, 0, Pieces.B_KNIGHT, Pieces.B_KNIGHT, 0 ];
 export var LoopNonSlideIndex = [ 0, 3 ];
-export var LoopSlidePce = [ PIECES.wB, PIECES.wR, PIECES.wQ, 0, PIECES.bB, PIECES.bR, PIECES.bQ, 0];
+export var LoopSlidePce = [ Pieces.W_BISHOP, Pieces.W_ROOK, Pieces.W_QUEEN, 0, Pieces.B_BISHOP, Pieces.B_ROOK, Pieces.B_QUEEN, 0];
 export var LoopSlideIndex = [ 0, 4];
 
-export var Kings = [PIECES.wK, PIECES.bK];
+export var Kings = [Pieces.W_KING, Pieces.B_KNIGHT];
 
 export var CastlePerm = [ /* this could possibly be more efficient if it was an object map with 4 values */
     15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
