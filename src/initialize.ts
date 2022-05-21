@@ -1,5 +1,5 @@
 import { GameBoard, ParseFen } from './board/board.js';
-import { START_FEN, BRD_SQ_NUM, MAX_GAME_MOVES, NO_MOVE, Files, Ranks, Squares } from './shared/constants.js';
+import { START_FEN, BRD_SQ_NUM, MAX_GAME_MOVES, NO_MOVE, File, Rank, Square } from './shared/constants.js';
 import { FilesBoard, RanksBoard, GetSquare, PieceKeys, Rand32, CastleKeys, Sq120ToSq64, Sq64ToSq120 } from './shared/utils.js';
 
 export default function Initialize() {
@@ -11,15 +11,15 @@ export default function Initialize() {
 }
 
 export function InitFilesRanksBrd() {
-    let sq = Squares.A1;
+    let sq = Square.a1;
     
     for (let i = 0; i < BRD_SQ_NUM; i++) {
-        FilesBoard[i] = Squares.OFF_BOARD;
-        RanksBoard[i] = Squares.OFF_BOARD;
+        FilesBoard[i] = Square.offBoard;
+        RanksBoard[i] = Square.offBoard;
     }
     
-    for (let rank = Ranks.RANK_1; rank <= Ranks.RANK_8; rank++) {
-        for (let file = Files.FILE_A; file <= Files.FILE_H; file++) {
+    for (let rank = Rank.one; rank <= Rank.eight; rank++) {
+        for (let file = File.a; file <= File.h; file++) {
             sq = GetSquare(file,rank);
             FilesBoard[sq] = file;
             RanksBoard[sq] = rank;
@@ -38,7 +38,7 @@ export function InitHashKeys() {
 }
 
 export function InitSq120ToSq64() { /*this could probably be done better*/ 
-    let sq = Squares.A1;
+    let sq = Square.a1;
     let sq64 = 0;
     
     for (let i = 0; i < BRD_SQ_NUM; i++) {
@@ -49,8 +49,8 @@ export function InitSq120ToSq64() { /*this could probably be done better*/
         Sq64ToSq120[i] = 65;
     }
     
-    for (let rank = Ranks.RANK_8; rank >= Ranks.RANK_1; rank--) {
-        for (let file = Files.FILE_A; file <= Files.FILE_H; file++) {
+    for (let rank = Rank.eight; rank >= Rank.one; rank--) {
+        for (let file = File.a; file <= File.h; file++) {
             sq = GetSquare(file,rank);
             Sq64ToSq120[sq64] = sq;
             Sq120ToSq64[sq] = sq64;

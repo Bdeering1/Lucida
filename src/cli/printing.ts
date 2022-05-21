@@ -1,5 +1,5 @@
 import { GameBoard, SqAttacked } from "../board/board";
-import { FILE_CHAR, RANK_CHAR, PIECE_CHAR, SIDE_CHAR, CastleBit, Colours, Files, Pieces, Ranks } from "../shared/constants";
+import { FILE_CHAR, RANK_CHAR, PIECE_CHAR, SIDE_CHAR, CastleBit, Colour, File, Piece, Rank } from "../shared/constants";
 import { FilesBoard, RanksBoard, FromSq, ToSq, GetSquare, PieceIndex, Promoted } from "../shared/utils";
 
 
@@ -18,7 +18,7 @@ export function PrintMove(move : number) {
     moveStr = FILE_CHAR[fileFrom] + RANK_CHAR[rankFrom] + FILE_CHAR[fileTo] + RANK_CHAR[rankTo];
     
     let promoted = Promoted(move);
-    if (promoted != Pieces.EMPTY) {
+    if (promoted != Piece.empty) {
         moveStr += PIECE_CHAR[promoted].toLowerCase();
     }
     
@@ -27,12 +27,12 @@ export function PrintMove(move : number) {
 
 export function PrintBoard() { /*Gameboard: pieces, side, enPas, castlePerm, posKey*/
     let sq : number;
-    let piece : Pieces;
+    let piece : Piece;
     let line : string;
 
-    for (let rank = Ranks.RANK_8; rank >= Ranks.RANK_1; rank--) {
+    for (let rank = Rank.eight; rank >= Rank.one; rank--) {
         line = (RANK_CHAR[rank] + " ");
-        for (let file = Files.FILE_A; file <= Files.FILE_H; file++) {
+        for (let file = File.a; file <= File.h; file++) {
             sq = GetSquare(file,rank);
             piece = GameBoard.pieces[sq];
             line += (" " + PIECE_CHAR[piece] + " ");
@@ -40,7 +40,7 @@ export function PrintBoard() { /*Gameboard: pieces, side, enPas, castlePerm, pos
         console.log(line);
     }
     line = "  ";
-    for (let file = Files.FILE_A; file <= Files.FILE_H; file++) {
+    for (let file = File.a; file <= File.h; file++) {
         line += (" " + FILE_CHAR[file] + " ");
     }
     console.log(line);
@@ -49,10 +49,10 @@ export function PrintBoard() { /*Gameboard: pieces, side, enPas, castlePerm, pos
     console.log("En Pas: " + GameBoard.enPas);
     
     line = "";
-    if (GameBoard.castlePerm & CastleBit.W_KING) line += 'K'; // AND mask to retrieve each bit in castlePerm
-    if (GameBoard.castlePerm & CastleBit.W_QUEEN) line += 'Q'; 
-    if (GameBoard.castlePerm & CastleBit.B_KING) line += 'k'; 
-    if (GameBoard.castlePerm & CastleBit.B_QUEEN) line += 'q';
+    if (GameBoard.castlePerm & CastleBit.whiteKing) line += 'K'; // AND mask to retrieve each bit in castlePerm
+    if (GameBoard.castlePerm & CastleBit.whiteQueen) line += 'Q'; 
+    if (GameBoard.castlePerm & CastleBit.blackKing) line += 'k'; 
+    if (GameBoard.castlePerm & CastleBit.blackQueen) line += 'q';
     console.log("Castle: " + line);
     console.log("Key: " + GameBoard.posKey.toString(16) + "\n\n");
 }
@@ -62,11 +62,11 @@ export function PrintSquaresAttacked() {
     let piece : string;
     
     console.log("\nSquares attacked by white: \n");
-    for (let rank = Ranks.RANK_8; rank >= Ranks.RANK_1; rank--) { // going from the backrank so that it prints nicely
+    for (let rank = Rank.eight; rank >= Rank.one; rank--) { // going from the backrank so that it prints nicely
         let line = (RANK_CHAR[rank] + "  ");
-        for (let file = Files.FILE_A; file <= Files.FILE_H; file++) {
+        for (let file = File.a; file <= File.h; file++) {
             sq = GetSquare(file, rank);
-            if (SqAttacked(sq, Colours.WHITE)) piece = "X";
+            if (SqAttacked(sq, Colour.white)) piece = "X";
             else piece = "-";
             line += (" " + piece + " ");
         }
@@ -75,11 +75,11 @@ export function PrintSquaresAttacked() {
     console.log("");
     
     console.log("Squares attacked by black: \n");
-    for (let rank = Ranks.RANK_8; rank >= Ranks.RANK_1; rank--) { // going from the backrank so that it prints nicely
+    for (let rank = Rank.eight; rank >= Rank.one; rank--) { // going from the backrank so that it prints nicely
         let line = (RANK_CHAR[rank] + "  ");
-        for (let file = Files.FILE_A; file <= Files.FILE_H; file++) {
+        for (let file = File.a; file <= File.h; file++) {
             sq = GetSquare(file, rank);
-            if (SqAttacked(sq, Colours.BLACK)) piece = "X";
+            if (SqAttacked(sq, Colour.black)) piece = "X";
             else piece = "-";
             line += (" " + piece + " ");
         }
@@ -90,7 +90,7 @@ export function PrintSquaresAttacked() {
 
 export function PrintPieceLists() {    
     console.log("PIECES: ");
-    for (let piece = Pieces.W_PAWN; piece <= Pieces.B_KNIGHT; piece++) {
+    for (let piece = Piece.whitePawn; piece <= Piece.blackKnight; piece++) {
         for (let numPieces = 0; numPieces < GameBoard.numPieces[piece]; numPieces++) {
             console.log(PIECE_CHAR[piece] + " on " + PrintSquare(GameBoard.pList[PieceIndex(piece, numPieces)]));
         }

@@ -23,61 +23,46 @@ export const PROMOTION_FLAG = 0xF00000; /*these could be used instead of doing t
 
 
 /* --- Enums --- */
-export enum Pieces {
-  EMPTY,
-  W_PAWN,
-  W_KNIGHT,
-  W_BISHOP,
-  W_ROOK,
-  W_QUEEN,
-  W_KING,
-  B_PAWN,
-  B_KNIGHT,
-  B_BISHOP,
-  B_ROOK,
-  B_QUEEN,
-  B_KING
+export enum Piece {
+  empty,
+  whitePawn,
+  whiteKnight,
+  whiteBishop,
+  whiteRook,
+  whiteQueen,
+  whiteKing,
+  blackPawn,
+  blackKnight,
+  blackBishop,
+  blackRook,
+  blackQueen,
+  blackKing
 }
 
-export enum Files {
-  FILE_A,
-  FILE_B,
-  FILE_C,
-  FILE_D,
-  FILE_E,
-  FILE_F,
-  FILE_G,
-  FILE_H,
-  FILE_NONE
+export enum File {
+  a, b, c, d, e, f, g, h,
+  none
+}
+export enum Rank {
+  one, two, three, four, five, six, seven, eight,
+  none
 }
 
-export enum Ranks {
-  RANK_1,
-  RANK_2,
-  RANK_3,
-  RANK_4,
-  RANK_5,
-  RANK_6,
-  RANK_7,
-  RANK_8,
-  FILE_NONE
-}
-
-export enum Colours {
-  WHITE,
-  BLACK,
-  BOTH
+export enum Colour {
+  white,
+  black,
+  both
 }
 
 export enum CastleBit {
-  W_KING = 1,
-  W_QUEEN = 2,
-  B_KING = 4,
-  B_QUEEN = 8
+  whiteKing = 1,
+  whiteQueen = 2,
+  blackKing = 4,
+  blackQueen = 8
 }
 
-export enum Squares {
-    A1=91, B1=92, C1=93, D1=94, E1=95, F1=96, G1=97, H1=98,
-    A8=21, B8=22, C8=23, D8=24, E8=25, F8=26, G8=27, H8=28,
-    NO_SQ=99, OFF_BOARD=100
+export enum Square {
+    a1 = 91, b1 = 92, c1 = 93, d1 = 94, e1 = 95, f1 = 96, g1 = 97, h1 = 98,
+    a8 = 21, b8 = 22, c8 = 23, d8 = 24, e8 = 25, f8 = 26, g8 = 27, h8 = 28,
+    noSquare = 99, offBoard = 100
 }
