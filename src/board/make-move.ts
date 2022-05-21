@@ -1,6 +1,6 @@
 import { GameBoard, HashPiece, HashEnPas, HashCastle, HashSide, SqAttacked } from "./board";
-import { EN_PAS_FLAG, CASTLE_FLAG, PAWN_START_FLAG, Pieces, Colours, Squares } from "./shared/constants";
-import { PieceCol, PieceVal, PieceIndex, FromSq, ToSq, CastlePerm, Captured, PiecePawn, Promoted, Kings } from "./shared/utils";
+import { EN_PAS_FLAG, CASTLE_FLAG, PAWN_START_FLAG, Pieces, Colours, Squares } from "../shared/constants";
+import { PieceCol, PieceVal, PieceIndex, FromSq, ToSq, CastlePerm, Captured, PiecePawn, Promoted, Kings } from "../shared/utils";
 
 
 export function ClearPiece(sq) {

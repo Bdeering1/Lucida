@@ -1,4 +1,4 @@
-import { GameBoard, SqAttacked } from "../board";
+import { GameBoard, SqAttacked } from "../board/board";
 import { FILE_CHAR, RANK_CHAR, PIECE_CHAR, SIDE_CHAR, CastleBit, Colours, Files, Pieces, Ranks } from "../shared/constants";
 import { FilesBoard, RanksBoard, FromSq, ToSq, GetSquare, PieceIndex, Promoted } from "../shared/utils";
 

@@ -1,6 +1,6 @@
 import { GameBoard, SqAttacked } from "./board";
-import { PAWN_START_FLAG, EN_PAS_FLAG, CASTLE_FLAG, Ranks, Pieces, Colours, Squares, CastleBit } from "./shared/constants";
-import { RanksBoard, PieceIndex, SqOffboard, PieceCol, LoopNonSlideIndex, LoopNonSlidePce, DirNum, PceDir, LoopSlideIndex, LoopSlidePce } from "./shared/utils";
+import { PAWN_START_FLAG, EN_PAS_FLAG, CASTLE_FLAG, Ranks, Pieces, Colours, Squares, CastleBit } from "../shared/constants";
+import { RanksBoard, PieceIndex, SqOffboard, PieceCol, LoopNonSlideIndex, LoopNonSlidePce, DirNum, PceDir, LoopSlideIndex, LoopSlidePce } from "../shared/utils";
 
 
 function MOVE(from, to, captured, promoted, flag) {

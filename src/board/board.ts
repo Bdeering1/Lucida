@@ -1,5 +1,5 @@
-import { BRD_SQ_NUM, CastleBit, Colours, Files, MAX_DEPTH, MAX_POSITION_MOVES, Pieces, Ranks, Squares } from "./shared/constants";
-import { PieceKeys, SideKey, CastleKeys, Sq120, PieceCol, PieceVal, PieceIndex, GetSquare, NDir, KDir, BDir, PieceBishopQueen, RDir, PieceRookQueen } from "./shared/utils";
+import { BRD_SQ_NUM, CastleBit, Colours, Files, MAX_DEPTH, MAX_POSITION_MOVES, Pieces, Ranks, Squares } from "../shared/constants";
+import { PieceKeys, SideKey, CastleKeys, Sq120, PieceCol, PieceVal, PieceIndex, GetSquare, NDir, KDir, BDir, PieceBishopQueen, RDir, PieceRookQueen } from "../shared/utils";
 
 
 export var GameBoard = {

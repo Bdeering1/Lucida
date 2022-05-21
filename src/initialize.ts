@@ -1,4 +1,4 @@
-import { GameBoard, ParseFen } from './board.js';
+import { GameBoard, ParseFen } from './board/board.js';
 import { START_FEN, BRD_SQ_NUM, MAX_GAME_MOVES, NO_MOVE, Files, Ranks, Squares } from './shared/constants.js';
 import { FilesBoard, RanksBoard, GetSquare, PieceKeys, Rand32, CastleKeys, Sq120ToSq64, Sq64ToSq120 } from './shared/utils.js';
 

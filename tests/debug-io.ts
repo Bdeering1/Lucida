@@ -1,7 +1,7 @@
 import { PrintBoard, PrintSquaresAttacked, PrintPieceLists, PrintMove, PrintMoveList } from '../src/cli/printing.js';
-import { GameBoard } from '../src/board.js';
-import { MakeMove, UndoMove } from '../src/make-move.js';
-import { GenerateMoves } from '../src/move-gen.js';
+import { GameBoard } from '../src/board/board.js';
+import { MakeMove, UndoMove } from '../src/board/make-move.js';
+import { GenerateMoves } from '../src/board/move-gen.js';
 
 export const VERBOSE = true;
 export const VISUAL = false;

@@ -1,4 +1,4 @@
-import { ParseFen, SqAttacked, GameBoard, GeneratePosKey } from "../src/board";
+import { ParseFen, SqAttacked, GameBoard, GeneratePosKey } from "../src/board/board";
 import { InitFilesRanksBrd, InitHashKeys, InitSq120ToSq64 } from "../src/initialize";
 import { BRD_SQ_NUM, START_FEN, PIECE_CHAR, Colours, Files, Pieces, Ranks, Squares } from "../src/shared/constants";
 import { RanksBoard, FilesBoard, PieceKeys, Sq120ToSq64, Sq64ToSq120, GetSquare, PieceIndex, Sq120, PieceCol, PieceVal } from "../src/shared/utils";

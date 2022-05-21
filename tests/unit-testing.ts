@@ -1,8 +1,8 @@
-import { ParseFen, GameBoard } from "../src/board";
+import { ParseFen, GameBoard } from "../src/board/board";
 import { InitBoardVars } from "../src/initialize";
 import { PrintMoveList } from "../src/cli/printing";
-import { MakeMove, UndoMove } from "../src/make-move";
-import { GenerateMoves } from "../src/move-gen";
+import { MakeMove, UndoMove } from "../src/board/make-move";
+import { GenerateMoves } from "../src/board/move-gen";
 import { Files, Pieces, Ranks, Squares, START_FEN } from "../src/shared/constants";
 import { GetSquare } from "../src/shared/utils";
 import { UnitTest, VERBOSE, PrintFenResults, PrintSubResult, VISUAL } from "./debug-io";
