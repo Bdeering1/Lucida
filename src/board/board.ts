@@ -1,8 +1,8 @@
 import { BRD_SQ_NUM, CastleBit, Colour, File, MAX_DEPTH, MAX_POSITION_MOVES, Piece, Rank, Square } from "../shared/constants";
-import { PieceKeys, SideKey, CastleKeys, Sq120, PieceCol, PieceVal, PieceIndex, GetSquare, NDir, KDir, BDir, PieceBishopQueen, RDir, PieceRookQueen } from "../shared/utils";
+import { Sq120, PieceCol, PieceVal, PieceIndex, GetSquare, NDir, KDir, BDir, PieceBishopQueen, RDir, PieceRookQueen, BoardUtils } from "../shared/utils";
 
 
-export var GameBoard = {
+export const GameBoard = {
     pieces: new Array(BRD_SQ_NUM), /*gives the piece id for each 120 squares on the board (0 if empty)*/
     side: Colour.white,
     fiftyMove: 0,
@@ -18,34 +18,34 @@ export var GameBoard = {
     moveList: new Array(MAX_DEPTH * MAX_POSITION_MOVES),
     moveScores: new Array(MAX_DEPTH * MAX_POSITION_MOVES),
     moveListStart: new Array(MAX_DEPTH),
-}
+};
 
 export function GeneratePosKey() {
-    var finalKey = 0;
-    var piece = Piece.empty;
+    let finalKey = 0;
+    let piece = Piece.empty;
 
     for (let sq = 0; sq < BRD_SQ_NUM; sq++) { // should this be looping through 120 squares or only 64??
         piece = GameBoard.pieces[sq];
         if (piece != Piece.empty && sq != Square.offBoard) {
-            finalKey ^= PieceKeys[(piece * 120) + sq]; /* XORing one of the 13 * 120 hashes into the final key */
+            finalKey ^= BoardUtils.PieceKeys[(piece * 120) + sq]; /* XORing one of the 13 * 120 hashes into the final key */
         }
     }
 
     if (GameBoard.side == Colour.white) {
-        finalKey ^= SideKey;
+        finalKey ^= BoardUtils.SideKey;
     }
 
     if (GameBoard.enPas != Square.noSquare) {
-        finalKey ^= PieceKeys[GameBoard.enPas];
+        finalKey ^= BoardUtils.PieceKeys[GameBoard.enPas];
     }
 
-    finalKey ^= CastleKeys[GameBoard.castlePerm];
+    finalKey ^= BoardUtils.CastleKeys[GameBoard.castlePerm];
 
     return finalKey;
 }
 
 export function UpdateListsMaterial() {
-    var piece, sq, colour;
+    let piece, sq, colour;
 
     for (let i = 0; i < 13 * 10; i++) {
         GameBoard.pList[i] = Piece.empty;
@@ -95,12 +95,12 @@ export function ResetBoard() { /* doesn't reset history (should it?)*/
 export function ParseFen(fen) { /*Calls ResetBoard, UpdateListsMaterial, and GeneratePosKey*/
     ResetBoard();
 
-    var rank = Rank.eight;
-    var file = File.a;
-    var piece = 0;
-    var count = 0; /*dictates how many times the loop is run through for empty squares in fen string (number values)*/
-    var sq120 = 0;
-    var fenIndex = 0;
+    let rank = Rank.eight;
+    let file = File.a;
+    let piece = 0;
+    let count = 0; /*dictates how many times the loop is run through for empty squares in fen string (number values)*/
+    let sq120 = 0;
+    let fenIndex = 0;
 
     while ((rank >= Rank.one) && fenIndex < fen.length) {
         count = 1;
@@ -211,7 +211,7 @@ export function ParseFen(fen) { /*Calls ResetBoard, UpdateListsMaterial, and Gen
 }
 
 export function SqAttacked(sq, side) { /*(is this square attacked by this side?)*/
-    var pce, t_sq, dir;
+    let pce, t_sq, dir;
 
     /*Non sliding attacks (pawn, knight, and king)*/
     if (side == Colour.white) {
@@ -281,7 +281,7 @@ export function SqAttacked(sq, side) { /*(is this square attacked by this side?)
     return false;
 }
 
-export function HashPiece(pceType, sq) { GameBoard.posKey ^= PieceKeys[(pceType * 120) + sq]; }
-export function HashCastle() { GameBoard.posKey ^= CastleKeys[GameBoard.castlePerm]; } /*we should either hash out the existing key first or just get the CASTLEBIT*/
-export function HashSide() { GameBoard.posKey ^= SideKey; }
-export function HashEnPas() { GameBoard.posKey ^= PieceKeys[GameBoard.enPas]; }
+export function HashPiece(pceType, sq) { GameBoard.posKey ^= BoardUtils.PieceKeys[(pceType * 120) + sq]; }
+export function HashCastle() { GameBoard.posKey ^= BoardUtils.CastleKeys[GameBoard.castlePerm]; } /*we should either hash out the existing key first or just get the CASTLEBIT*/
+export function HashSide() { GameBoard.posKey ^= BoardUtils.SideKey; }
+export function HashEnPas() { GameBoard.posKey ^= BoardUtils.PieceKeys[GameBoard.enPas]; }

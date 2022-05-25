@@ -1,9 +1,8 @@
 ## Work Items
 
 ### Next Steps
-- implement ES Lint
 - test refactoring
-  - implement new tests according to testing plan
+  - implement new unit tests according to testing plan
 
 ### Technical Debt
 - functions that need review
@@ -17,8 +16,7 @@
   - reproducable position key hashing (remove randomness)
   - flip board back around, and just change how it is printed to get white on the bottom
   - add unit tests to build pipeline
-  - implement eslint
-  - there's a whole bunch of nomenclature that should be reviewed
+  - whole bunch of nomenclature that should be reviewed
 
 ### Future Ideas
 - backend

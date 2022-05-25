@@ -4,13 +4,13 @@ import { PieceCol, PieceVal, PieceIndex, FromSq, ToSq, CastlePerm, Captured, Pie
 
 
 export function ClearPiece(sq) {
-    let pceType = GameBoard.pieces[sq];
+    const pceType = GameBoard.pieces[sq];
     if (pceType == Piece.empty) {
         console.log("Error: trying to clear empty piece");
         return;
     }
 
-    let col = PieceCol[pceType];
+    const col = PieceCol[pceType];
     let pceNum = -1;
 
     HashPiece(pceType, sq);
@@ -37,7 +37,7 @@ export function AddPiece(pceType, sq) {
         console.log("Error: pceType = " + pceType);
     }
 
-    let col = PieceCol[pceType];
+    const col = PieceCol[pceType];
 
     HashPiece(pceType, sq);
 
@@ -47,7 +47,7 @@ export function AddPiece(pceType, sq) {
 }
 
 export function MovePiece(from, to) { /*make sure this is right*/
-    let pceType = GameBoard.pieces[from];
+    const pceType = GameBoard.pieces[from];
     HashPiece(pceType, from);
     HashPiece(pceType, to);
 
@@ -72,9 +72,9 @@ export function MakeMove(move) {
         return false;
     }
 
-    var from = FromSq(move);
-    var to = ToSq(move);
-    var side = GameBoard.side;
+    const from = FromSq(move);
+    const to = ToSq(move);
+    const side = GameBoard.side;
     if (side == Colour.both) {
         console.log("Error: FEN parsing - side: BOTH");
         return false;
@@ -143,7 +143,7 @@ export function MakeMove(move) {
     GameBoard.ply++;
 
     MovePiece(from, to);
-    let promoted = Promoted(move);
+    const promoted = Promoted(move);
     if (promoted != Piece.empty) {
         ClearPiece(to);
         AddPiece(promoted, to);
@@ -163,9 +163,9 @@ export function UndoMove() {
     GameBoard.hisPly--;
     GameBoard.ply--;
 
-    let move = GameBoard.history[GameBoard.hisPly].move;
-    let from = FromSq(move);
-    let to = ToSq(move);
+    const move = GameBoard.history[GameBoard.hisPly].move;
+    const from = FromSq(move);
+    const to = ToSq(move);
 
     if (GameBoard.enPas != Square.noSquare) HashEnPas();
     HashCastle();
@@ -208,7 +208,7 @@ export function UndoMove() {
 
     MovePiece(to, from);
 
-    let captured = Captured(move);
+    const captured = Captured(move);
     if (captured != Piece.empty) {
         AddPiece(captured, to);
     }

@@ -1,19 +1,19 @@
 import { GameBoard, SqAttacked } from "../board/board";
 import { FILE_CHAR, RANK_CHAR, PIECE_CHAR, SIDE_CHAR, CastleBit, Colour, File, Piece, Rank } from "../shared/constants";
-import { FilesBoard, RanksBoard, FromSq, ToSq, GetSquare, PieceIndex, Promoted } from "../shared/utils";
+import { FromSq, ToSq, GetSquare, PieceIndex, Promoted, BoardUtils } from "../shared/utils";
 
 
 export function PrintSquare(sq : number) {
-    return (FILE_CHAR[FilesBoard[sq]] + RANK_CHAR[RanksBoard[sq]]);
+    return (FILE_CHAR[BoardUtils.FilesBoard[sq]] + RANK_CHAR[BoardUtils.RanksBoard[sq]]);
 }
 
 export function PrintMove(move : number) {
     let moveStr : string;
     
-    const fileFrom = FilesBoard[FromSq(move)];
-    const rankFrom = RanksBoard[FromSq(move)];
-    const fileTo = FilesBoard[ToSq(move)];
-    const rankTo = RanksBoard[ToSq(move)];
+    const fileFrom = BoardUtils.FilesBoard[FromSq(move)];
+    const rankFrom = BoardUtils.RanksBoard[FromSq(move)];
+    const fileTo = BoardUtils.FilesBoard[ToSq(move)];
+    const rankTo = BoardUtils.RanksBoard[ToSq(move)];
    
     moveStr = FILE_CHAR[fileFrom] + RANK_CHAR[rankFrom] + FILE_CHAR[fileTo] + RANK_CHAR[rankTo];
     

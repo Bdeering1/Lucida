@@ -1,6 +1,6 @@
 import { GameBoard, SqAttacked } from "./board";
 import { PAWN_START_FLAG, EN_PAS_FLAG, CASTLE_FLAG, Rank, Piece, Colour, Square, CastleBit } from "../shared/constants";
-import { RanksBoard, PieceIndex, SqOffboard, PieceCol, LoopNonSlideIndex, LoopNonSlidePce, DirNum, PceDir, LoopSlideIndex, LoopSlidePce } from "../shared/utils";
+import { PieceIndex, SqOffboard, PieceCol, LoopNonSlideIndex, LoopNonSlidePce, DirNum, PceDir, LoopSlideIndex, LoopSlidePce, BoardUtils } from "../shared/utils";
 
 
 function MOVE(from, to, captured, promoted, flag) {
@@ -21,7 +21,7 @@ export function AddEnPassantMove(move) {
 }
 
 export function AddWhitePawnQuietMove(from, to) {
-    if (RanksBoard[to] == Rank.eight) {
+    if (BoardUtils.RanksBoard[to] == Rank.eight) {
         AddQuietMove( MOVE(from, to, Piece.empty, Piece.whiteQueen, 0 ));
         AddQuietMove( MOVE(from, to, Piece.empty, Piece.whiteRook, 0 ));
         AddQuietMove( MOVE(from, to, Piece.empty, Piece.whiteBishop, 0 ));
@@ -31,7 +31,7 @@ export function AddWhitePawnQuietMove(from, to) {
     }
 }
 export function AddBlackPawnQuietMove(from, to) {
-    if (RanksBoard[to] == Rank.one) {
+    if (BoardUtils.RanksBoard[to] == Rank.one) {
         AddQuietMove( MOVE(from, to, Piece.empty, Piece.blackQueen, 0 ));
         AddQuietMove( MOVE(from, to, Piece.empty, Piece.blackRook, 0 ));
         AddQuietMove( MOVE(from, to, Piece.empty, Piece.blackBishop, 0 ));
@@ -41,7 +41,7 @@ export function AddBlackPawnQuietMove(from, to) {
     }
 }
 export function AddWhitePawnCaptureMove(from, to, cap) {
-    if (RanksBoard[to] == Rank.eight) {
+    if (BoardUtils.RanksBoard[to] == Rank.eight) {
         AddCaptureMove( MOVE(from, to, cap, Piece.whiteQueen, 0 ));
         AddCaptureMove( MOVE(from, to, cap, Piece.whiteRook, 0 ));
         AddCaptureMove( MOVE(from, to, cap, Piece.whiteBishop, 0 ));
@@ -51,7 +51,7 @@ export function AddWhitePawnCaptureMove(from, to, cap) {
     }
 }
 export function AddBlackPawnCaptureMove(from, to, cap) {
-    if (RanksBoard[to] == Rank.one) {
+    if (BoardUtils.RanksBoard[to] == Rank.one) {
         AddCaptureMove( MOVE(from, to, cap, Piece.blackQueen, 0 ));
         AddCaptureMove( MOVE(from, to, cap, Piece.blackRook, 0 ));
         AddCaptureMove( MOVE(from, to, cap, Piece.blackBishop, 0 ));
@@ -80,8 +80,8 @@ export function GenerateMoves() { /* doesn't check if moves are illegal yet (spe
             
             if (GameBoard.pieces[sq-10] == Piece.empty) {
                 AddWhitePawnQuietMove(sq, sq - 10);
-                if (RanksBoard[sq] == Rank.two && GameBoard.pieces[sq-20] == Piece.empty) {
-                     AddQuietMove( MOVE(sq, sq - 20, Piece.empty, Piece.empty, PAWN_START_FLAG ));
+                if (BoardUtils.RanksBoard[sq] == Rank.two && GameBoard.pieces[sq-20] == Piece.empty) {
+                    AddQuietMove( MOVE(sq, sq - 20, Piece.empty, Piece.empty, PAWN_START_FLAG ));
                 }
             }
             
@@ -123,7 +123,7 @@ export function GenerateMoves() { /* doesn't check if moves are illegal yet (spe
             
             if (GameBoard.pieces[sq + 10] == Piece.empty) {
                 AddBlackPawnQuietMove(sq, sq + 10);
-                if (RanksBoard[sq] == Rank.seven && GameBoard.pieces[sq + 20] == Piece.empty) {
+                if (BoardUtils.RanksBoard[sq] == Rank.seven && GameBoard.pieces[sq + 20] == Piece.empty) {
                     AddQuietMove( MOVE(sq, sq + 20, Piece.empty, Piece.empty, PAWN_START_FLAG) );
                 }
             }
