@@ -1,6 +1,7 @@
 ## Work Items
 
 ### Next Steps
+- implement ES Lint
 - test refactoring
   - implement new tests according to testing plan
 
@@ -21,14 +22,14 @@
 
 ### Future Ideas
 - backend
-  - make use of events?
-  - take advantage of node's global object?
+  - JS Doc
+  - Javascript events
   - multi-threading
-  - take advantage of C++ packages for intensive tasks
-  - containerize application and interface through API (REST?)
-  - there should be an object representing the engine configuration/settings, this could also be represented as JSON 
+  - C++ packages for intensive tasks
+  - docker container
+  - engine configuration object, could also be represented as JSON 
 - front end
-  - find chess board module / library for front end
-  - implement a lightweight front end framework (eg. Svelte)
-  - possibly integrate css framework / component library
+  - chess board library / library for front end
+  - lightweight front end framework (eg. Svelte)
+  - integrate css framework / component library
   - create desktop/native app? (electron, flutter, etc.)
