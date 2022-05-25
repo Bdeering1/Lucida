@@ -10,14 +10,14 @@ export function PrintSquare(sq : number) {
 export function PrintMove(move : number) {
     let moveStr : string;
     
-    let fileFrom = FilesBoard[FromSq(move)];
-    let rankFrom = RanksBoard[FromSq(move)];
-    let fileTo = FilesBoard[ToSq(move)];
-    let rankTo = RanksBoard[ToSq(move)];
+    const fileFrom = FilesBoard[FromSq(move)];
+    const rankFrom = RanksBoard[FromSq(move)];
+    const fileTo = FilesBoard[ToSq(move)];
+    const rankTo = RanksBoard[ToSq(move)];
    
     moveStr = FILE_CHAR[fileFrom] + RANK_CHAR[rankFrom] + FILE_CHAR[fileTo] + RANK_CHAR[rankTo];
     
-    let promoted = Promoted(move);
+    const promoted = Promoted(move);
     if (promoted != Piece.empty) {
         moveStr += PIECE_CHAR[promoted].toLowerCase();
     }
