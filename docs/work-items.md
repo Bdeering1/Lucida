@@ -1,6 +1,8 @@
 ## Work Items
 
 ### Next Steps
+- add eslint config options for layout and spacing
+- cross reference eslint config with recommended
 - test refactoring
   - implement new unit tests according to testing plan
 
