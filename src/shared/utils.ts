@@ -1,22 +1,40 @@
+/* eslint-disable no-magic-numbers */
+
 import { BRD_SQ_NUM, Colour, Piece, Square } from "./constants";
 
 /* --- Functions --- */
 export function GetSquare(file : number,rank : number) {
-    return ( 21 + (file) ) + ( 70 - ((rank) * 10) );
+    return (21 + (file)) + (70 - ((rank) * 10));
 }
-export function Sq64(sq120 : number) { return BoardUtils.Sq120ToSq64[(sq120)]; }
-export function Sq120(sq64 : number) { return BoardUtils.Sq64ToSq120[(sq64)]; }
-export function SqOffboard(sq : number) { return BoardUtils.FilesBoard[sq] == Square.offBoard; }
-export function PieceIndex(piece : number, pieceNum : number) { return (piece * 10 + pieceNum); }
+export function Sq64(sq120 : number) {
+    return BoardUtils.Sq120ToSq64[(sq120)]; 
+}
+export function Sq120(sq64 : number) {
+    return BoardUtils.Sq64ToSq120[(sq64)]; 
+}
+export function SqOffboard(sq : number) {
+    return BoardUtils.FilesBoard[sq] == Square.offBoard; 
+}
+export function PieceIndex(piece : number, pieceNum : number) {
+    return (piece * 10 + pieceNum); 
+}
 
-export function FromSq(m : number) { return  (m & 0x7F); }
-export function ToSq(m : number) { return  ( (m >> 7) & 0x7F); }
-export function Captured(m : number) { return  ( (m >> 14) & 0xF); }
-export function Promoted(m : number) { return  ( (m >> 20) & 0xF); }
+export function FromSq(m : number) {
+    return  (m & 0x7F); 
+}
+export function ToSq(m : number) {
+    return  ((m >> 7) & 0x7F); 
+}
+export function Captured(m : number) {
+    return  ((m >> 14) & 0xF); 
+}
+export function Promoted(m : number) {
+    return  ((m >> 20) & 0xF); 
+}
 
 export function Rand32() {
-    return (Math.floor((Math.random()*255)+1) << 23) | (Math.floor((Math.random()*255)+1) << 16)
-       | (Math.floor((Math.random()*255)+1) << 8) | Math.floor((Math.random()*255)+1);
+    return (Math.floor((Math.random() * 255) + 1) << 23) | (Math.floor((Math.random() * 255) + 1) << 16)
+       | (Math.floor((Math.random() * 255) + 1) << 8) | Math.floor((Math.random() * 255) + 1);
 }
 
 /* --- Maps --- */

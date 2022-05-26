@@ -1,3 +1,5 @@
+/* eslint-disable no-magic-numbers, no-shadow */
+
 /* --- Constants --- */
 export const BRD_SQ_NUM = 120;
 export const MAX_GAME_MOVES = 2048; /*(half moves)*/
