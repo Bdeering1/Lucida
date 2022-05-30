@@ -16,7 +16,7 @@ export function SqOffboard(sq : number) {
     return BoardUtils.FilesBoard[sq] == Square.offBoard; 
 }
 export function PieceIndex(piece : number, pieceNum : number) {
-    return (piece * 10 + pieceNum); 
+    return (piece * 10 + pieceNum);
 }
 
 export function FromSq(m : number) {

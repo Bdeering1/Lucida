@@ -1,5 +1,5 @@
 import { GameBoard, ParseFen } from './board/board.js';
-import { START_FEN, BRD_SQ_NUM, MAX_GAME_MOVES, NO_MOVE, File, Rank, Square } from './shared/constants.js';
+import { BRD_SQ_NUM, File, MAX_GAME_MOVES, NO_MOVE, Rank, START_FEN, Square } from './shared/constants.js';
 import { BoardUtils, GetSquare, Rand32 } from './shared/utils.js';
 
 export default function Initialize() {
@@ -26,6 +26,10 @@ function InitFilesRanksBrd() {
             BoardUtils.RanksBoard[sq] = rank;
         }
     }
+
+    const myObj = { asdf: 1, zxcv: 3 };
+    
+    const neObj = {...        myObj};
 }
 
 function InitHashKeys() {
