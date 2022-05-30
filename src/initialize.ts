@@ -13,12 +13,12 @@ export default function Initialize() {
 
 function InitFilesRanksBrd() {
     let sq = Square.a1;
-    
+
     for (let i = 0; i < BRD_SQ_NUM; i++) {
         BoardUtils.FilesBoard[i] = Square.offBoard;
         BoardUtils.RanksBoard[i] = Square.offBoard;
     }
-    
+
     for (let rank = Rank.one; rank <= Rank.eight; rank++) {
         for (let file = File.a; file <= File.h; file++) {
             sq = GetSquare(file,rank);
@@ -26,17 +26,13 @@ function InitFilesRanksBrd() {
             BoardUtils.RanksBoard[sq] = rank;
         }
     }
-
-    const myObj = { asdf: 1, zxcv: 3 };
-    
-    const neObj = {...        myObj};
 }
 
 function InitHashKeys() {
     for (let i = 0; i < 13 * 120; i++) {
         BoardUtils.PieceKeys[i] = Rand32();
     }
-    
+
     for (let i = 0; i < 16; i++) {
         BoardUtils.CastleKeys[i] = Rand32();
     }
