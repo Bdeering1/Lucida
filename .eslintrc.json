@@ -18,73 +18,42 @@
     ],
     "rules": {
         "accessor-pairs": "warn",
-        "arrow-parens": [
-            "warn",
-            "as-needed"
-        ],
+        "arrow-parens": ["warn", "as-needed"],
         "block-spacing": "warn",
-        "consistent-return": "warn",
         "default-case-last": "error",
         "default-param-last": "error",
-        "dot-location": [
-            "warn",
-            "property"
-        ],
-        "function-call-argument-newline": [
-            "warn",
-            "consistent"
-        ],
+        "dot-location": ["warn", "property"],
         "func-names": ["error", "as-needed"],
-        "function-paren-newline": "warn",
-        "grouped-accessor-pairs": "warn",
-        "import/no-unresolved": 0,
+        "import/no-unresolved": "off",
         "indent": [
             "error",
             4,
             { "SwitchCase": 1 }
         ],
-        "linebreak-style": [
-            "error",
-            "unix"
-        ],
+        "linebreak-style": ["error", "unix"],
         "new-parens": "warn",
         "no-constructor-return": "error",
         "no-eq-null": "error",
-        "no-lone-blocks": "warn",
         "no-magic-numbers": "warn",
-        "no-return-assign": "error",
+        "no-return-assign": "warn",
         "no-shadow": "warn",
         "no-undefined": "error",
         "no-void": "error",
         "no-whitespace-before-property": "warn",
-        "object-shorthand": [
-            "warn",
-            "consistent-as-needed"
-        ],
+        "object-shorthand": ["warn", "consistent-as-needed"],
         "operator-assignment": "warn",
-        "prefer-exponentiation-operator": "warn",
         "prefer-object-has-own": "warn",
         "prefer-object-spread": "warn",
         "prefer-promise-reject-errors": "error",
-        "prefer-regex-literals": "error",
         "prefer-template": "warn",
         "radix": "error",
         "rest-spread-spacing": "warn",
         "require-await": "warn",
         "sort-imports": "warn",
-        "space-before-function-paren":
-        [
-            "warn",
-            "never"
-        ],
+        "space-before-function-paren": ["warn", "never"],
         "switch-colon-spacing": "warn",
-        "template-curly-spacing": "warn",
         "wrap-iife": "error",
-        "wrap-regex": "warn",
         "yoda": "warn",
-        "semi": [
-            "error",
-            "always"
-        ]
+        "semi": ["error", "always"]
     }
 }
