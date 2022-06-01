@@ -1,6 +1,7 @@
+import { BoardUtils, FromSq, GetSquare, PieceIndex, Promoted, ToSq } from "../shared/utils";
+import { CastleBit, Colour, File, Piece, Rank } from "../shared/enums";
+import { FILE_CHAR, PIECE_CHAR, RANK_CHAR, SIDE_CHAR } from "../shared/constants";
 import { GameBoard, SqAttacked } from "../board/board";
-import { FILE_CHAR, RANK_CHAR, PIECE_CHAR, SIDE_CHAR, CastleBit, Colour, File, Piece, Rank } from "../shared/constants";
-import { FromSq, ToSq, GetSquare, PieceIndex, Promoted, BoardUtils } from "../shared/utils";
 
 
 export function PrintSquare(sq : number) {
@@ -18,7 +19,7 @@ export function PrintMove(move : number) {
     moveStr = FILE_CHAR[fileFrom] + RANK_CHAR[rankFrom] + FILE_CHAR[fileTo] + RANK_CHAR[rankTo];
     
     const promoted = Promoted(move);
-    if (promoted != Piece.empty) {
+    if (promoted !== Piece.empty) {
         moveStr += PIECE_CHAR[promoted].toLowerCase();
     }
     

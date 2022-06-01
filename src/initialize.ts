@@ -1,6 +1,7 @@
-import { GameBoard, ParseFen } from './board/board.js';
-import { BRD_SQ_NUM, File, MAX_GAME_MOVES, NO_MOVE, Rank, START_FEN, Square } from './shared/constants.js';
+import { BRD_SQ_NUM, MAX_GAME_MOVES, NO_MOVE, START_FEN } from './shared/constants.js';
 import { BoardUtils, GetSquare, Rand32 } from './shared/utils.js';
+import { File, Rank, Square } from './shared/enums.js';
+import { GameBoard, ParseFen } from './board/board.js';
 
 export default function Initialize() {
     InitFilesRanksBrd();

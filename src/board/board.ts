@@ -1,5 +1,6 @@
-import { BRD_SQ_NUM, CastleBit, Colour, File, MAX_DEPTH, MAX_POSITION_MOVES, Piece, Rank, Square } from "../shared/constants";
-import { Sq120, PieceCol, PieceVal, PieceIndex, GetSquare, NDir, KDir, BDir, PieceBishopQueen, RDir, PieceRookQueen, BoardUtils } from "../shared/utils";
+import { BDir, BoardUtils, GetSquare, KDir, NDir, PieceBishopQueen, PieceCol, PieceIndex, PieceRookQueen, PieceVal, RDir, Sq120 } from "../shared/utils";
+import { BRD_SQ_NUM, MAX_DEPTH, MAX_POSITION_MOVES } from "../shared/constants.js";
+import { CastleBit, Colour, File, Piece, Rank, Square } from "../shared/enums.js";
 
 
 export const GameBoard = {
@@ -26,16 +27,16 @@ export function GeneratePosKey() {
 
     for (let sq = 0; sq < BRD_SQ_NUM; sq++) { // should this be looping through 120 squares or only 64??
         piece = GameBoard.pieces[sq];
-        if (piece != Piece.empty && sq != Square.offBoard) {
+        if (piece !== Piece.empty && sq !== Square.offBoard) {
             finalKey ^= BoardUtils.PieceKeys[(piece * 120) + sq]; /* XORing one of the 13 * 120 hashes into the final key */
         }
     }
 
-    if (GameBoard.side == Colour.white) {
+    if (GameBoard.side === Colour.white) {
         finalKey ^= BoardUtils.SideKey;
     }
 
-    if (GameBoard.enPas != Square.noSquare) {
+    if (GameBoard.enPas !== Square.noSquare) {
         finalKey ^= BoardUtils.PieceKeys[GameBoard.enPas];
     }
 
@@ -62,7 +63,7 @@ export function UpdateListsMaterial() {
     for (let i = 0; i < 64; i++) {
         sq = Sq120(i);
         piece = GameBoard.pieces[sq];
-        if (piece != Piece.empty) {
+        if (piece !== Piece.empty) {
             colour = PieceCol[piece];
 
             GameBoard.material[colour] += PieceVal[piece];
@@ -175,10 +176,10 @@ export function ParseFen(fen) { /*Calls ResetBoard, UpdateListsMaterial, and Gen
         fenIndex++;
     }
 
-    GameBoard.side = (fen[fenIndex] == 'w') ? Colour.white : Colour.black; /*if a 1 is found, set side to white, else set to black*/
+    GameBoard.side = (fen[fenIndex] === 'w') ? Colour.white : Colour.black; /*if a 1 is found, set side to white, else set to black*/
     fenIndex += 2;
 
-    while (fen[fenIndex] != ' ') {
+    while (fen[fenIndex] !== ' ') {
         switch (fen[fenIndex]) { /*assumes the FEN string is correct*/
             case 'K':
                 GameBoard.castlePerm |= CastleBit.whiteKing;
@@ -199,7 +200,7 @@ export function ParseFen(fen) { /*Calls ResetBoard, UpdateListsMaterial, and Gen
     }
     fenIndex++;
 
-    if (fen[fenIndex] != '-') { /*assuming FEN is correct (if there is no dash the en pas square is valid)*/
+    if (fen[fenIndex] !== '-') { /*assuming FEN is correct (if there is no dash the en pas square is valid)*/
         file = fen[fenIndex].charCodeAt() - 'a'.charCodeAt(0); /*make into a function?*/
         rank = fen[fenIndex + 1].charCodeAt() - '1'.charCodeAt(0);
         GameBoard.enPas = GetSquare(file, rank);
@@ -214,32 +215,32 @@ export function SqAttacked(sq, side) { /*(is this square attacked by this side?)
     let pce, t_sq, dir;
 
     /*Non sliding attacks (pawn, knight, and king)*/
-    if (side == Colour.white) {
-        if (GameBoard.pieces[sq + 11] == Piece.whitePawn || GameBoard.pieces[sq + 9] == Piece.whitePawn) {
+    if (side === Colour.white) {
+        if (GameBoard.pieces[sq + 11] === Piece.whitePawn || GameBoard.pieces[sq + 9] === Piece.whitePawn) {
             return true;
         }
         for (let i = 0; i < 8; i++) {
-            if (GameBoard.pieces[sq + NDir[i]] == Piece.whiteKnight) {
+            if (GameBoard.pieces[sq + NDir[i]] === Piece.whiteKnight) {
                 return true;
             }
         }
         for (let i = 0; i < 8; i++) {
-            if (GameBoard.pieces[sq + KDir[i]] == Piece.whiteKing) {
+            if (GameBoard.pieces[sq + KDir[i]] === Piece.whiteKing) {
                 return true;
             }
         }
 
     } else {
-        if (GameBoard.pieces[sq - 11] == Piece.blackPawn || GameBoard.pieces[sq - 9] == Piece.blackPawn) {
+        if (GameBoard.pieces[sq - 11] === Piece.blackPawn || GameBoard.pieces[sq - 9] === Piece.blackPawn) {
             return true;
         }
         for (let i = 0; i < 8; i++) {
-            if (GameBoard.pieces[sq + NDir[i]] == Piece.blackKnight) {
+            if (GameBoard.pieces[sq + NDir[i]] === Piece.blackKnight) {
                 return true;
             }
         }
         for (let i = 0; i < 8; i++) {
-            if (GameBoard.pieces[sq + KDir[i]] == Piece.blackKnight) {
+            if (GameBoard.pieces[sq + KDir[i]] === Piece.blackKnight) {
                 return true;
             }
         }
@@ -250,9 +251,9 @@ export function SqAttacked(sq, side) { /*(is this square attacked by this side?)
         dir = BDir[i];
         t_sq = sq + dir;
         pce = GameBoard.pieces[t_sq];
-        while (pce != Square.offBoard) {
-            if (pce != Piece.empty) {
-                if (PieceBishopQueen[pce] && PieceCol[pce] == side) {
+        while (pce !== Square.offBoard) {
+            if (pce !== Piece.empty) {
+                if (PieceBishopQueen[pce] && PieceCol[pce] === side) {
                     return true;
                 }
                 break;
@@ -266,9 +267,9 @@ export function SqAttacked(sq, side) { /*(is this square attacked by this side?)
         dir = RDir[i];
         t_sq = sq + dir;
         pce = GameBoard.pieces[t_sq];
-        while (pce != Square.offBoard) {
-            if (pce != Piece.empty) {
-                if (PieceRookQueen[pce] && PieceCol[pce] == side) {
+        while (pce !== Square.offBoard) {
+            if (pce !== Piece.empty) {
+                if (PieceRookQueen[pce] && PieceCol[pce] === side) {
                     return true;
                 }
                 break;

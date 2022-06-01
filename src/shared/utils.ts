@@ -1,6 +1,19 @@
 /* eslint-disable no-magic-numbers */
 
-import { BRD_SQ_NUM, Colour, Piece, Square } from './constants.js';
+import { Colour, Piece, Square } from './enums';
+import { BRD_SQ_NUM } from './constants.js';
+
+export class BoardUtils {
+    /* --- Empty Maps --- */
+    static FilesBoard = new Array(BRD_SQ_NUM);
+    static RanksBoard = new Array(BRD_SQ_NUM);
+    /* Piece * 120 + square (gives 120 space for each piece type and with the square number added on top ensures the key is unique) */
+    static PieceKeys = new Array(13 * 120);
+    static SideKey = Rand32(); /* hashed in if white is to move*/
+    static CastleKeys = new Array(16);
+    static Sq120ToSq64 = new Array(BRD_SQ_NUM);
+    static Sq64ToSq120 = new Array(64);
+}
 
 /* --- Functions --- */
 export function GetSquare(file : number, rank : number) {
@@ -81,15 +94,3 @@ export const CastlePerm = [ /* this could possibly be more efficient if it was a
     15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
     15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
 ];
-
-export class BoardUtils {
-    /* --- Empty Maps --- */
-    static FilesBoard = new Array(BRD_SQ_NUM);
-    static RanksBoard = new Array(BRD_SQ_NUM);
-    /* Piece * 120 + square (gives 120 space for each piece type and with the square number added on top ensures the key is unique) */
-    static PieceKeys = new Array(13 * 120);
-    static SideKey = Rand32(); /* hashed in if white is to move*/
-    static CastleKeys = new Array(16);
-    static Sq120ToSq64 = new Array(BRD_SQ_NUM);
-    static Sq64ToSq120 = new Array(64);
-}
