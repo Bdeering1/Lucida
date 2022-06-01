@@ -35,7 +35,7 @@ export function ClearPiece(sq) {
 
 export function AddPiece(pceType, sq) {
     if (pceType > 13) {
-        console.log("Error: pceType = " + pceType);
+        console.log(`Error: pceType = ${  pceType}`);
     }
 
     const col = PieceCol[pceType];
