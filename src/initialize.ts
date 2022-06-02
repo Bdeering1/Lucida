@@ -1,4 +1,4 @@
-import { BRD_SQ_NUM, MAX_GAME_MOVES, NO_MOVE, START_FEN } from './shared/constants.js';
+import { BOARD_SQ_NUM, INNER_BOARD_SQ_NUM, MAX_GAME_MOVES, NO_MOVE, NUM_PIECE_TYPES, START_FEN } from './shared/constants.js';
 import { BoardUtils, GetSquare, Rand32 } from './shared/utils.js';
 import { File, Rank, Square } from './shared/enums.js';
 import { GameBoard, ParseFen } from './board/board.js';
@@ -15,7 +15,7 @@ export default function Initialize() {
 function InitFilesRanksBrd() {
     let sq = Square.a1;
 
-    for (let i = 0; i < BRD_SQ_NUM; i++) {
+    for (let i = 0; i < BOARD_SQ_NUM; i++) {
         BoardUtils.FilesBoard[i] = Square.offBoard;
         BoardUtils.RanksBoard[i] = Square.offBoard;
     }
@@ -30,7 +30,7 @@ function InitFilesRanksBrd() {
 }
 
 function InitHashKeys() {
-    for (let i = 0; i < 13 * 120; i++) {
+    for (let i = 0; i < NUM_PIECE_TYPES * BOARD_SQ_NUM; i++) {
         BoardUtils.PieceKeys[i] = Rand32();
     }
 
@@ -43,12 +43,12 @@ function InitSq120ToSq64() { /*this could probably be done better*/
     let sq = Square.a1;
     let sq64 = 0;
     
-    for (let i = 0; i < BRD_SQ_NUM; i++) {
-        BoardUtils.Sq120ToSq64[i] = 120;
+    for (let i = 0; i < BOARD_SQ_NUM; i++) {
+        BoardUtils.Sq120ToSq64[i] = BOARD_SQ_NUM;
     }
     
-    for (let i = 0; i < 64; i++) {
-        BoardUtils.Sq64ToSq120[i] = 65;
+    for (let i = 0; i < INNER_BOARD_SQ_NUM; i++) {
+        BoardUtils.Sq64ToSq120[i] = INNER_BOARD_SQ_NUM + 1;
     }
     
     for (let rank = Rank.eight; rank >= Rank.one; rank--) {

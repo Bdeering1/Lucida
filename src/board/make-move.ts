@@ -1,4 +1,4 @@
-import { CASTLE_FLAG, EN_PAS_FLAG, PAWN_START_FLAG } from "../shared/constants";
+import { CASTLE_FLAG, EN_PAS_FLAG, NUM_PIECE_TYPES, PAWN_START_FLAG } from "../shared/constants";
 import { Captured, CastlePerm, FromSq, Kings, PieceCol, PieceIndex, PiecePawn, PieceVal, Promoted, ToSq } from "../shared/utils";
 import { Colour, Piece, Square } from "../shared/enums";
 import { GameBoard, HashCastle, HashEnPas, HashPiece, HashSide, SqAttacked } from "./board";
@@ -34,7 +34,7 @@ export function ClearPiece(sq) {
 
 
 export function AddPiece(pceType, sq) {
-    if (pceType > 13) {
+    if (pceType > NUM_PIECE_TYPES) {
         console.log(`Error: pceType = ${  pceType}`);
     }
 

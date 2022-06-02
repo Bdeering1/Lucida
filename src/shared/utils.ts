@@ -1,17 +1,17 @@
 /* eslint-disable no-magic-numbers */
 
 import { Colour, Piece, Square } from './enums';
-import { BRD_SQ_NUM } from './constants.js';
+import { BOARD_SQ_NUM } from './constants.js';
 
 export class BoardUtils {
     /* --- Empty Maps --- */
-    static FilesBoard = new Array(BRD_SQ_NUM);
-    static RanksBoard = new Array(BRD_SQ_NUM);
+    static FilesBoard = new Array(BOARD_SQ_NUM);
+    static RanksBoard = new Array(BOARD_SQ_NUM);
     /* Piece * 120 + square (gives 120 space for each piece type and with the square number added on top ensures the key is unique) */
     static PieceKeys = new Array(13 * 120);
     static SideKey = Rand32(); /* hashed in if white is to move*/
     static CastleKeys = new Array(16);
-    static Sq120ToSq64 = new Array(BRD_SQ_NUM);
+    static Sq120ToSq64 = new Array(BOARD_SQ_NUM);
     static Sq64ToSq120 = new Array(64);
 }
 
@@ -65,6 +65,7 @@ export const PieceRookQueen = [ false, false, false, false, true, true, false, f
 export const PieceBishopQueen = [ false, false, false, true, false, true, false, false, false, true, false, true, false ];
 export const PieceSlides = [ false, false, false, true, true, true, false, false, false, true, true, true, false ];
 
+// add pawn dir?
 export const NDir = [ -8, -19, -21, -12, 8, 19, 21, 12 ];
 export const RDir = [ -1, -10, 1, 10 ];
 export const BDir = [ -9, -11, 11, 9 ];
