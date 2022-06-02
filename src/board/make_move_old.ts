@@ -1,7 +1,7 @@
 import { CASTLE_FLAG, EN_PAS_FLAG, NUM_PIECE_TYPES, PAWN_START_FLAG } from "../shared/constants";
 import { Captured, CastlePerm, FromSq, Kings, PieceCol, PieceIndex, PiecePawn, PieceVal, Promoted, ToSq } from "../shared/utils";
 import { Colour, Piece, Square } from "../shared/enums";
-import { GameBoard, HashCastle, HashEnPas, HashPiece, HashSide, SqAttacked } from "./board";
+import { GameBoard, HashCastle, HashEnPas, HashPiece, HashSide, SqAttacked } from "./board_old";
 
 
 export function ClearPiece(sq) {
@@ -87,8 +87,8 @@ export function MakeMove(move) {
     GameBoard.history[GameBoard.hisPly].enPas = GameBoard.enPas;
     GameBoard.history[GameBoard.hisPly].castlePerm = GameBoard.castlePerm;
 
-    if (GameBoard.enPas !== Square.noSquare) HashEnPas();
-    GameBoard.enPas = Square.noSquare;
+    if (GameBoard.enPas !== Square.none) HashEnPas();
+    GameBoard.enPas = Square.none;
 
     if ((move & EN_PAS_FLAG) !== 0) {
         if (side === Colour.white) {
@@ -168,14 +168,14 @@ export function UndoMove() {
     const from = FromSq(move);
     const to = ToSq(move);
 
-    if (GameBoard.enPas !== Square.noSquare) HashEnPas();
+    if (GameBoard.enPas !== Square.none) HashEnPas();
     HashCastle();
 
     GameBoard.castlePerm = GameBoard.history[GameBoard.hisPly].castlePerm;
     GameBoard.fiftyMove = GameBoard.history[GameBoard.hisPly].fiftyMove;
     GameBoard.enPas = GameBoard.history[GameBoard.hisPly].enPas;
 
-    if (GameBoard.enPas !== Square.noSquare) HashEnPas();
+    if (GameBoard.enPas !== Square.none) HashEnPas();
     HashCastle();
 
     GameBoard.side ^= 1;

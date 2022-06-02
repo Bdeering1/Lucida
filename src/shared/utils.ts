@@ -84,7 +84,7 @@ export const Kings = [ Piece.whiteKing, Piece.blackKnight ];
 export const CastlePerm = [ /* this could possibly be more efficient if it was an object map with 4 values */
     15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
     15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
-    15, 7, 15, 15, 15, 3, 15, 15, 11, 15,
+    15,  7, 15, 15, 15,  3, 15, 15, 11, 15,
     15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
     15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
     15, 15, 15, 15, 15, 15, 15, 15, 15, 15,

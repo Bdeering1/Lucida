@@ -1,7 +1,7 @@
 import { BoardUtils, FromSq, GetSquare, PieceIndex, Promoted, ToSq } from "../shared/utils";
 import { CastleBit, Colour, File, Piece, Rank } from "../shared/enums";
 import { FILE_CHAR, PIECE_CHAR, RANK_CHAR, SIDE_CHAR } from "../shared/constants";
-import { GameBoard, SqAttacked } from "../board/board";
+import { GameBoard, SqAttacked } from "../board/board_old";
 
 
 export function PrintSquare(sq : number) {

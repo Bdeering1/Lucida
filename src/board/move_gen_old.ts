@@ -1,7 +1,7 @@
 import { BoardUtils, DirNum, LoopNonSlideIndex, LoopNonSlidePce, LoopSlideIndex, LoopSlidePce, PceDir, PieceCol, PieceIndex, SqOffboard } from "../shared/utils";
 import { CASTLE_FLAG, EN_PAS_FLAG, PAWN_START_FLAG } from "../shared/constants";
 import { CastleBit, Colour, Piece, Rank, Square } from "../shared/enums";
-import { GameBoard, SqAttacked } from "./board";
+import { GameBoard, SqAttacked } from "./board_old";
 
 
 function MOVE(from, to, captured, promoted, flag) {
@@ -93,7 +93,7 @@ export function GenerateMoves() { /* doesn't check if moves are illegal yet (spe
                 AddWhitePawnCaptureMove( sq, sq - 11, GameBoard.pieces[sq - 11] );
             }
             
-            if (GameBoard.enPas !== Square.noSquare) {
+            if (GameBoard.enPas !== Square.none) {
                 if (sq - 9 === GameBoard.enPas) {
                     AddEnPassantMove( MOVE(sq, sq - 9, Piece.empty, Piece.empty, EN_PAS_FLAG )); /*make move function will handle the en passant capture*/
                 } else if (sq - 11 === GameBoard.enPas) {
@@ -136,7 +136,7 @@ export function GenerateMoves() { /* doesn't check if moves are illegal yet (spe
                 AddBlackPawnCaptureMove( sq, sq + 11, GameBoard.pieces[sq + 11] );
             }
             
-            if (GameBoard.enPas !== Square.noSquare) {
+            if (GameBoard.enPas !== Square.none) {
                 if (sq + 9 === GameBoard.enPas) {
                     AddEnPassantMove( MOVE(sq, sq + 9, Piece.empty, Piece.empty, EN_PAS_FLAG ));
                 } else if (sq + 11 === GameBoard.enPas) { /*make these both into one or??*/
