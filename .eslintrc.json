@@ -16,6 +16,14 @@
     "plugins": [
         "@typescript-eslint"
     ],
+    "overrides": [
+        {
+            "files": ["*.ts"],
+            "rules": {
+                "@typescript-eslint/no-empty-function": "off"
+            }
+        }
+    ],
     "rules": {
         "accessor-pairs": "warn",
         "arrow-parens": ["warn", "as-needed"],
@@ -39,6 +47,8 @@
             "warn",
             { "ignore": [0,1,2], "ignoreDefaultValues": true }
         ],
+        "no-useless-constructor": "off",
+        "class-methods-use-this": "warn",
         "no-return-assign": "warn",
         "no-shadow": "warn",
         "no-undefined": "error",

@@ -1,3 +1,5 @@
+/*eslint-disable class-methods-use-this */
+
 import { CastleBit, Colour, Piece, Square } from "../shared/enums";
 
 
@@ -24,3 +26,37 @@ interface IBoard {
     updateCastle(to: Square, from: Square): void; // could be combined with other move making logic
     resetCastlePermissions(): void;
 }
+
+export default class Board implements IBoard {
+    public pieces: Piece[];
+    public pieceQuantities: number[];
+    public pieceSquares: Square[][];
+
+    public sideToMove: Colour;
+    public ply: number;
+    public enPas: Square;
+    public fiftyMoveCounter: number;
+
+    public material: number[];
+    public posKey: number;
+    public history : IBoard[];
+
+    public moveList: [][];
+    public moveScores: [][];
+
+    private castlePermissions: number;
+
+    public constructor(fqn?: string) {
+
+    }
+
+    public canCastle(piece: CastleBit) {
+        return false;
+    }
+    public updateCastle(to: Square, from: Square) {
+
+    }
+    public resetCastlePermissions() {
+        
+    }
+}   
