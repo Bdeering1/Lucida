@@ -48,7 +48,7 @@
             { "ignore": [0,1,2], "ignoreDefaultValues": true }
         ],
         "no-useless-constructor": "off",
-        "class-methods-use-this": "warn",
+        "class-methods-use-this": "off",
         "no-return-assign": "warn",
         "no-shadow": "warn",
         "no-undefined": "error",

@@ -1,16 +1,13 @@
-/*eslint-disable class-methods-use-this */
-
 import { CastleBit, Colour, Piece, Square } from "../shared/enums";
 
 
 interface IBoard {
-    /* Refactor these? */
     pieces: Piece[];
-    pieceQuantities: number[];
     pieceSquares: Square[][]; // was 1D array
+    pieceQuantities: number[];
 
     sideToMove: Colour;
-    ply: number; // need either new obj or new var for engine calculation
+    ply: number;
     enPas: Square;
     fiftyMoveCounter: number;
 
@@ -20,22 +17,28 @@ interface IBoard {
 
     moveList: [][]; // was 1D array
     moveScores: [][]; // was 1D array
-    //moveListStart
 
-    canCastle(piece: CastleBit): boolean;
-    updateCastle(to: Square, from: Square): void; // could be combined with other move making logic
-    resetCastlePermissions(): void;
+    get whiteKingCastle(): boolean;
+    get whiteQueenCastle(): boolean;
+    get blackKingCastle(): boolean;
+    get blackQueenCastle(): boolean;
+    setWhiteKingCastle(): void;
+    setWhiteQueenCastle(): void;
+    setBlackKingCastle(): void;
+    setBlackQueenCastle(): void;
+    updateCastling(to: Square, from: Square): void; // could be combined with other move making logic
+    resetCastling(): void;
 }
 
 export default class Board implements IBoard {
     public pieces: Piece[];
-    public pieceQuantities: number[];
     public pieceSquares: Square[][];
+    public pieceQuantities: number[];
 
     public sideToMove: Colour;
-    public ply: number;
-    public enPas: Square;
-    public fiftyMoveCounter: number;
+    public ply = 0;
+    public enPas = Square.none;
+    public fiftyMoveCounter = 0;
 
     public material: number[];
     public posKey: number;
@@ -44,19 +47,34 @@ export default class Board implements IBoard {
     public moveList: [][];
     public moveScores: [][];
 
-    private castlePermissions: number;
+    private castlePermissions = 0;
 
     public constructor(fqn?: string) {
 
     }
 
-    public canCastle(piece: CastleBit) {
-        return false;
+    public get whiteKingCastle() { return (this.castlePermissions & CastleBit.whiteKing) !== 0; }
+    public get whiteQueenCastle() { return (this.castlePermissions & CastleBit.whiteQueen) !== 0; }
+    public get blackKingCastle() { return (this.castlePermissions & CastleBit.blackKing) !== 0; }
+    public get blackQueenCastle() { return (this.castlePermissions & CastleBit.blackQueen) !== 0; }
+    
+    setWhiteKingCastle(): void {
+        throw new Error("Method not implemented.");
     }
-    public updateCastle(to: Square, from: Square) {
+    setWhiteQueenCastle(): void {
+        throw new Error("Method not implemented.");
+    }
+    setBlackKingCastle(): void {
+        throw new Error("Method not implemented.");
+    }
+    setBlackQueenCastle(): void {
+        throw new Error("Method not implemented.");
+    }
 
+    public updateCastling(to: Square, from: Square) {
+        throw new Error("Method not implemented.");
     }
-    public resetCastlePermissions() {
-        
+    public resetCastling() {
+        throw new Error("Method not implemented.");
     }
 }   
