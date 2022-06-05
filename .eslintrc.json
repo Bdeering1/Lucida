@@ -20,7 +20,8 @@
         {
             "files": ["*.ts"],
             "rules": {
-                "@typescript-eslint/no-empty-function": "off"
+                "@typescript-eslint/no-empty-function": "off",
+                "@typescript-eslint/no-extra-semi": "off"
             }
         }
     ],
@@ -68,6 +69,6 @@
         "switch-colon-spacing": "warn",
         "wrap-iife": "error",
         "yoda": "warn",
-        "semi": ["error", "always"]
+        "semi": ["warn", "always"]
     }
 }
