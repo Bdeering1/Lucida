@@ -1,14 +1,14 @@
-import { Piece, Square, Colour } from "../shared/enums";
+import { Colour, Piece, Square } from "../shared/enums";
 
 export default interface IBoard {
     /**
-     * The piece on each square of the board
+     * Stores the piece on each square of the board
      */
     pieces: Piece[];
     /**
-     * The square each piece is on
+     * Stores the square each piece is on indexed by piece type
      */
-    pieceSquares: Square[][]; // was 1D array
+    pieceSquares: Square[][];
     /**
      * Number of each type of piece on the board
      */
@@ -35,25 +35,30 @@ export default interface IBoard {
      * Stores the material count for each side
      */
     material: number[];
+    /**
+     * Unique key for each position, used for repetition detection
+     */
     posKey: number;
+
     /**
      * Stores the state of the board after each move
+     * - honestly not sure what this is for
      */
-    history : IBoard[];
+    history?: IBoard[];
+    /**
+     * Lists of possible moves indexed by game ply
+     */
+    moveList?: [][];
+    /**
+     * Lists of scores for each move indexed by game plys
+     */
+    moveScores?: [][];
 
     /**
-     * List of possible moves for each game ply
-     */
-    moveList: [][]; // was 1D array
-    /**
-     * Move scores for each game ply
-     */
-    moveScores: [][]; // was 1D array
-
-    /** Upate castling permissions given where the location of a move
+     * Upate castling permissions given where the location of a move
      * - could be combined with other move making logic
      */
-    updateCastling(to: Square, from: Square): void;
+    updateCastling(from: Square, to: Square): void;
 
     /**
      * Reset castling permissions to default (all enabled)

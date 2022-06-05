@@ -15,8 +15,8 @@ export default class Board implements IBoard {
 
     public material: number[];
     public posKey: number;
+    
     public history : IBoard[];
-
     public moveList: [][];
     public moveScores: [][];
 
@@ -26,7 +26,7 @@ export default class Board implements IBoard {
 
     }
 
-    public updateCastling(to: Square, from: Square) {
+    public updateCastling(from: Square, to: Square) {
         this.castlePermissions &= CastlePerm[from];
         this.castlePermissions &= CastlePerm[to]; /*in case a rook is captured*/
     }
