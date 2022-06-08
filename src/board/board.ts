@@ -1,9 +1,24 @@
-import { CastleBit, Colour, Piece, Square } from "../shared/enums";
-import { IBoard, IBoardData, IBoardMeta } from "./board-interface";
+import { CastleBit, Square } from "../shared/enums";
+import { IBoard, IBoardData } from "./board-types";
+import { BoardData } from "./board-data";
 import { CastlePerm } from "../shared/utils";
 
-export class Board implements IBoard {
+export default class Board implements IBoard {
     private data: IBoardData;
+
+    public constructor(fqn?: string) {
+        this.data = new BoardData();
+    }
+
+    resetBoard(): void {
+        throw new Error("Method not implemented.");
+    }
+    parseFen(fen: string): void {
+        throw new Error("Method not implemented.");
+    }
+    isSquareAttacked(): boolean {
+        throw new Error("Method not implemented.");
+    }
 
     public updateCastling(from: Square, to: Square) {
         this.data.meta.castlePermissions &= CastlePerm[from];
@@ -11,6 +26,19 @@ export class Board implements IBoard {
     }
     public resetCastling() {
         this.data.meta.castlePermissions = CastleBit.all;
+    }
+
+    hashPiece(): void {
+        throw new Error("Method not implemented.");
+    }
+    hashSide(): void {
+        throw new Error("Method not implemented.");
+    }
+    hashCastle(): void {
+        throw new Error("Method not implemented.");
+    }
+    hashEnPas(): void {
+        throw new Error("Method not implemented.");
     }
     
     public get whiteKingCastle() { return (this.data.meta.castlePermissions & CastleBit.whiteKing) !== 0; }
@@ -21,31 +49,12 @@ export class Board implements IBoard {
     setWhiteQueenCastle(): void { this.data.meta.castlePermissions |= CastleBit.whiteKing; }
     setBlackKingCastle(): void { this.data.meta.castlePermissions |= CastleBit.whiteKing; }
     setBlackQueenCastle(): void { this.data.meta.castlePermissions |= CastleBit.whiteKing; }
-}
 
-export class BoardData implements IBoardData {
-    public pieces: Piece[];
-    public pieceSquares: Square[][];
-    public pieceQuantities: number[];
-
-    public meta: IBoardMeta;
-
-    public history : IBoardMeta[];
-    public moveList: [][];
-    public moveScores: [][];
-
-    public constructor(fqn?: string) {
+    private updateListsMaterial(): void {
+        throw new Error("Method not implemented.");
 
     }
-}
-
-
-export class BoardMeta implements IBoardMeta {
-    public sideToMove: Colour.both;
-    public ply = 0;
-    public enPas = Square.none;
-    public castlePermissions = CastleBit.none;
-    public fiftyMoveCounter = 0;
-    public posKey: number;
-    public material: number[];
+    private generatePositionKey(): void {
+        throw new Error("Method not implemented.");
+    }
 }

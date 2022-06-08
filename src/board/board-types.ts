@@ -2,26 +2,43 @@
 
 import { Colour, Piece, Square } from "../shared/enums";
 
-
 export interface IBoard {
+    /**
+     * 
+     */
+    resetBoard(): void
+    /**
+     * 
+     */
+    parseFen(fen: string): void;
+    /**
+     * 
+     */
+    isSquareAttacked(): boolean;
+
     /**
      * Upate castling permissions given where the location of a move
      * - could be combined with other move making logic
      */
-     updateCastling(from: Square, to: Square): void;
-     /**
-      * Reset castling permissions to default (all enabled)
-      */
-     resetCastling(): void;
- 
-     get whiteKingCastle(): boolean;
-     get whiteQueenCastle(): boolean;
-     get blackKingCastle(): boolean;
-     get blackQueenCastle(): boolean;
-     setWhiteKingCastle(): void;
-     setWhiteQueenCastle(): void;
-     setBlackKingCastle(): void;
-     setBlackQueenCastle(): void;
+    updateCastling(from: Square, to: Square): void;
+    /**
+     * Reset castling permissions to default (all enabled)
+     */
+    resetCastling(): void; // this may not be necessary for the interface
+
+    hashPiece(): void;
+    hashSide(): void;
+    hashCastle(): void;
+    hashEnPas(): void;
+
+    get whiteKingCastle(): boolean;
+    get whiteQueenCastle(): boolean;
+    get blackKingCastle(): boolean;
+    get blackQueenCastle(): boolean;
+    setWhiteKingCastle(): void;
+    setWhiteQueenCastle(): void;
+    setBlackKingCastle(): void;
+    setBlackQueenCastle(): void;
 }
 
 export interface IBoardData {
