@@ -30,11 +30,12 @@ export enum Colour {
 }
   
 export enum CastleBit {
+    none = 0,
     whiteKing = 1,
     whiteQueen = 2,
     blackKing = 4,
     blackQueen = 8,
-    all = 15
+    all = 15,
 }
 
 /**
