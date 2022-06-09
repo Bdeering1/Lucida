@@ -1,4 +1,4 @@
-import { CastleBit, Square } from "../shared/enums";
+import { CastleBit, Colour, Square } from "../shared/enums";
 import { IBoard, IBoardData } from "./board-types";
 import { BoardData } from "./board-data";
 import { CastlePerm } from "../shared/utils";
@@ -10,13 +10,16 @@ export default class Board implements IBoard {
         this.data = new BoardData();
     }
 
-    resetBoard(): void {
+    public initialize(): void {
         throw new Error("Method not implemented.");
     }
-    parseFen(fen: string): void {
+    public reset(): void {
         throw new Error("Method not implemented.");
     }
-    isSquareAttacked(): boolean {
+    public parseFen(fen: string): void {
+        throw new Error("Method not implemented.");
+    }
+    public isSquareAttacked(sq: Square, side: Colour): boolean {
         throw new Error("Method not implemented.");
     }
 
@@ -45,16 +48,24 @@ export default class Board implements IBoard {
     public get whiteQueenCastle() { return (this.data.meta.castlePermissions & CastleBit.whiteQueen) !== 0; }
     public get blackKingCastle() { return (this.data.meta.castlePermissions & CastleBit.blackKing) !== 0; }
     public get blackQueenCastle() { return (this.data.meta.castlePermissions & CastleBit.blackQueen) !== 0; }
-    setWhiteKingCastle(): void { this.data.meta.castlePermissions |= CastleBit.whiteKing; }
-    setWhiteQueenCastle(): void { this.data.meta.castlePermissions |= CastleBit.whiteKing; }
-    setBlackKingCastle(): void { this.data.meta.castlePermissions |= CastleBit.whiteKing; }
-    setBlackQueenCastle(): void { this.data.meta.castlePermissions |= CastleBit.whiteKing; }
+    public setWhiteKingCastle(): void { this.data.meta.castlePermissions |= CastleBit.whiteKing; }
+    public setWhiteQueenCastle(): void { this.data.meta.castlePermissions |= CastleBit.whiteKing; }
+    public setBlackKingCastle(): void { this.data.meta.castlePermissions |= CastleBit.whiteKing; }
+    public setBlackQueenCastle(): void { this.data.meta.castlePermissions |= CastleBit.whiteKing; }
 
     private updateListsMaterial(): void {
         throw new Error("Method not implemented.");
-
     }
     private generatePositionKey(): void {
+        throw new Error("Method not implemented.");
+    }
+    private initFileRanksBoard(): void {
+        throw new Error("Method not implemented.");
+    }
+    private initHashKeys(): void {
+        throw new Error("Method not implemented.");
+    }
+    private initBoardHistory(): void {
         throw new Error("Method not implemented.");
     }
 }

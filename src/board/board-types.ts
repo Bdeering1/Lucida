@@ -4,17 +4,21 @@ import { Colour, Piece, Square } from "../shared/enums";
 
 export interface IBoard {
     /**
-     * 
+     * Initializes board properties and utilities, should only be called once
      */
-    resetBoard(): void
+    initialize(): void;
     /**
-     * 
+     * Reset board to starting position
+     */
+    reset(): void
+    /**
+     * Set board according to an FEN string
      */
     parseFen(fen: string): void;
     /**
-     * 
+     * Given a square on the inner board and a side, returns whether or not that square is attacked
      */
-    isSquareAttacked(): boolean;
+    isSquareAttacked(sq: Square, side: Colour): boolean;
 
     /**
      * Upate castling permissions given where the location of a move
