@@ -6,7 +6,7 @@ import { CastlePerm } from "../shared/utils";
 export default class Board implements IBoard {
     private data: IBoardData;
 
-    public constructor(fqn?: string) {
+    public constructor() {
         this.data = new BoardData();
     }
 

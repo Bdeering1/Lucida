@@ -32,6 +32,7 @@
         "default-case-last": "error",
         "default-param-last": "error",
         "dot-location": ["warn", "property"],
+        "eqeqeq": "warn",
         "func-names": ["error", "as-needed"],
         "import/no-unresolved": "off",
         "indent": [
