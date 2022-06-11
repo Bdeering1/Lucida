@@ -1,6 +1,9 @@
 # Buid Output
 build/
 
+# Test Related Files
+coverage/
+
 # Dependencies
 node_modules/
 

@@ -7,14 +7,18 @@ export class Board implements IBoard {
     public pieceSquares: Square[][];
     public pieceQuantities: number[];
 
-    public isSquareAttacked(sq: Square, side: Colour): boolean {
-        throw new Error("Method not implemented.");
-    }
-
     public meta: IBoardMeta;
     public history : IBoardMeta[];
     public moveList: [][];
     public moveScores: [][];
+
+    constructor(meta: IBoardMeta) {
+        this.meta = meta;
+    }
+
+    public isSquareAttacked(sq: Square, side: Colour): boolean {
+        throw new Error("Method not implemented.");
+    }
 }
 
 

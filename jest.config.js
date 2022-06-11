@@ -3,6 +3,7 @@
  * https://jestjs.io/docs/configuration
  */
 
+/** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
 export default {
     // All imported modules in your tests should be mocked automatically
     // automock: false,
@@ -26,9 +27,9 @@ export default {
     coverageDirectory: "coverage",
 
     // An array of regexp pattern strings used to skip coverage collection
-    // coveragePathIgnorePatterns: [
-    //   "/node_modules/"
-    // ],
+    coveragePathIgnorePatterns: [
+        "/node_modules/"
+    ],
 
     // Indicates which provider should be used to instrument code for coverage
     coverageProvider: "v8",
@@ -100,7 +101,7 @@ export default {
     // notifyMode: "failure-change",
 
     // A preset that is used as a base for Jest's configuration
-    // preset: undefined,
+    preset: 'ts-jest',
 
     // Run tests from one or more projects
     // projects: undefined,
@@ -144,7 +145,7 @@ export default {
     // snapshotSerializers: [],
 
     // The test environment that will be used for testing
-    // testEnvironment: "jest-environment-node",
+    testEnvironment: 'node',
 
     // Options that will be passed to the testEnvironment
     // testEnvironmentOptions: {},
