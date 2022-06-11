@@ -16,10 +16,26 @@ export enum Piece {
 }
   
 export enum File {
-    a, b, c, d, e, f, g, h, none
+    a,
+    b,
+    c,
+    d,
+    e,
+    f,
+    g,
+    h,
+    none
 }
 export enum Rank {
-    one, two, three, four, five, six, seven, eight, none
+    one,
+    two,
+    three,
+    four,
+    five,
+    six,
+    seven,
+    eight,
+    none
 }
   
 export enum Colour {

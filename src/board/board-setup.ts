@@ -1,5 +1,5 @@
-import { IBoardSetup, IBoard } from "./board-types";
-import { Board } from "./board-data";
+import { IBoard, IBoardSetup } from "./board-types";
+import { Board } from "./board";
 
 export default class BoardSetup implements IBoardSetup {
     private board: IBoard;
