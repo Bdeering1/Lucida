@@ -1,6 +1,6 @@
-import { BDir, BoardUtils, GetSquare, KDir, NDir, PieceBishopQueen, PieceCol, PieceIndex, PieceRookQueen, PieceVal, RDir, Sq120 } from "../shared/utils";
 import { BOARD_SQ_NUM, INNER_BOARD_SQ_NUM, MAX_DEPTH, MAX_NUM_PER_PIECE, MAX_POSITION_MOVES, NUM_PIECE_TYPES } from "../shared/constants.js";
 import { CastleBit, Colour, File, Piece, Rank, Square } from "../shared/enums.js";
+import BoardUtils from "../shared/utils.js";
 
 
 export const GameBoard = {

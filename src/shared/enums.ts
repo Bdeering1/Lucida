@@ -1,5 +1,4 @@
 /* eslint-disable no-magic-numbers, no-shadow */
-
 export enum Piece {
     empty,
     whitePawn,

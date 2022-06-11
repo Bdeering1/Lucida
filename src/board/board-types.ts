@@ -1,5 +1,4 @@
 /* eslint-disable no-use-before-define */
-
 import { Colour, Piece, Square } from "../shared/enums";
 
 export interface IBoardSetup {

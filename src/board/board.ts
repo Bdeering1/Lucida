@@ -1,34 +1,45 @@
-import { Colour, Square } from "../shared/enums";
-import { IBoardSetup, IBoard } from "./board-types";
-import { Board } from "./board-data";
+import { CastleBit, Colour, Piece, Square } from "../shared/enums";
+import { IBoard, IBoardMeta } from "./board-types";
 
-export default class BoardSetup implements IBoardSetup {
-    private board: IBoard;
 
-    public constructor() {
-        this.board = new Board();
-    }
+export class Board implements IBoard {
+    public pieces: Piece[];
+    public pieceSquares: Square[][];
+    public pieceQuantities: number[];
 
-    public reset(): void {
-        throw new Error("Method not implemented.");
-    }
-    public parseFen(fen: string): void {
+    public isSquareAttacked(sq: Square, side: Colour): boolean {
         throw new Error("Method not implemented.");
     }
 
-    private updateListsMaterial(): void {
+    public meta: IBoardMeta;
+    public history : IBoardMeta[];
+    public moveList: [][];
+    public moveScores: [][];
+}
+
+
+export class BoardMeta implements IBoardMeta {
+    public sideToMove: Colour.both;
+    public ply = 0;
+    public enPas = Square.none;
+    public castlePermissions = CastleBit.none;
+    public fiftyMoveCounter = 0;
+    public posKey: number;
+    public material: number[];
+
+    update(from: Square, to: Square): void {
         throw new Error("Method not implemented.");
     }
-    private generatePositionKey(): void {
+    resetCastling(): void {
         throw new Error("Method not implemented.");
     }
-    private initFileRanksBoard(): void {
-        throw new Error("Method not implemented.");
-    }
-    private initHashKeys(): void {
-        throw new Error("Method not implemented.");
-    }
-    private initBoardHistory(): void {
-        throw new Error("Method not implemented.");
-    }
+
+    public get whiteKingCastle() { return (this.castlePermissions & CastleBit.whiteKing) !== 0; }
+    public get whiteQueenCastle() { return (this.castlePermissions & CastleBit.whiteQueen) !== 0; }
+    public get blackKingCastle() { return (this.castlePermissions & CastleBit.blackKing) !== 0; }
+    public get blackQueenCastle() { return (this.castlePermissions & CastleBit.blackQueen) !== 0; }
+    public setWhiteKingCastle(): void { this.castlePermissions |= CastleBit.whiteKing; }
+    public setWhiteQueenCastle(): void { this.castlePermissions |= CastleBit.whiteKing; }
+    public setBlackKingCastle(): void { this.castlePermissions |= CastleBit.whiteKing; }
+    public setBlackQueenCastle(): void { this.castlePermissions |= CastleBit.whiteKing; }
 }

@@ -1,6 +1,6 @@
 /* eslint-disable no-magic-numbers */
 
-import BoardSetup from "../board/board";
+import BoardSetup from "../board/board-setup";
 
 
 describe('board setup', () => {
