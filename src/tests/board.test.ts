@@ -1,9 +1,9 @@
 /* eslint-disable no-magic-numbers */
 
-import Board from "../board/board";
+import BoardSetup from "../board/board";
 
 
-describe('board object', () => {
+describe('board setup', () => {
 
     it.todo('populates certain properties on creation');
 

@@ -2,7 +2,7 @@
 
 import { Colour, Piece, Square } from "../shared/enums";
 
-export interface IBoard {
+export interface IBoardSetup {
     /**
      * Reset board to starting position
      */
@@ -11,37 +11,9 @@ export interface IBoard {
      * Set board according to an FEN string
      */
     parseFen(fen: string): void;
-    /**
-     * Given a square on the inner board and a side, returns whether or not that square is attacked
-     */
-    isSquareAttacked(sq: Square, side: Colour): boolean;
-
-    /**
-     * Upate castling permissions given where the location of a move
-     * - could be combined with other move making logic
-     */
-    updateCastling(from: Square, to: Square): void;
-    /**
-     * Reset castling permissions to default (all enabled)
-     */
-    resetCastling(): void; // this may not be necessary for the interface
-
-    hashPiece(): void;
-    hashSide(): void;
-    hashCastle(): void;
-    hashEnPas(): void;
-
-    get whiteKingCastle(): boolean;
-    get whiteQueenCastle(): boolean;
-    get blackKingCastle(): boolean;
-    get blackQueenCastle(): boolean;
-    setWhiteKingCastle(): void;
-    setWhiteQueenCastle(): void;
-    setBlackKingCastle(): void;
-    setBlackQueenCastle(): void;
 }
 
-export interface IBoardData {
+export interface IBoard {
     //* --- Core ---
     /**
      * Stores the piece on each square of the board
@@ -55,6 +27,11 @@ export interface IBoardData {
      * Number of each type of piece on the board
      */
     pieceQuantities: number[];
+
+    /**
+     * Given a square on the inner board and a side, returns whether or not that square is attacked
+     */
+    isSquareAttacked(sq: Square, side: Colour): boolean;
 
     //* --- Meta Data ---
     /**
@@ -78,7 +55,7 @@ export interface IBoardData {
     moveScores: [][];
 }
 
-export interface IBoardMeta {
+export interface IBoardMeta { // this is only separate from the board 
     /**
      * The current side to move
      */
@@ -92,11 +69,6 @@ export interface IBoardMeta {
      */
     enPas: Square;
     /**
-     * The current castling permissions, represented by a 4 bit integer
-     */
-    castlePermissions: number;
-
-    /**
      * Running counter for the fifty move rule
      */
     fiftyMoveCounter: number;
@@ -108,4 +80,29 @@ export interface IBoardMeta {
      * Stores the material count for each side, indexed using `Colour` enum
      */
     material: number[];
+
+
+    /**
+     * Upate castling permissions and en passent
+     */
+    update(from: Square, to: Square): void;
+    /**
+     * Reset castling permissions to default (all enabled)
+     */
+    resetCastling(): void; // this may not be necessary for the interface
+
+    // this might be part of updateMeta
+    // hashPiece(): void;
+    // hashSide(): void;
+    // hashCastle(): void;
+    // hashEnPas(): void;
+
+    get whiteKingCastle(): boolean;
+    get whiteQueenCastle(): boolean;
+    get blackKingCastle(): boolean;
+    get blackQueenCastle(): boolean;
+    setWhiteKingCastle(): void;
+    setWhiteQueenCastle(): void;
+    setBlackKingCastle(): void;
+    setBlackQueenCastle(): void;
 }
