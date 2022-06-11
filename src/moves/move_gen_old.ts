@@ -1,7 +1,7 @@
-import { BoardUtils, DirNum, LoopNonSlideIndex, LoopNonSlidePce, LoopSlideIndex, LoopSlidePce, PceDir, PieceCol, PieceIndex, SqOffboard } from "../shared/utils";
 import { CASTLE_FLAG, EN_PAS_FLAG, PAWN_START_FLAG } from "../shared/constants";
 import { CastleBit, Colour, Piece, Rank, Square } from "../shared/enums";
-import { GameBoard, SqAttacked } from "./board_old";
+import { GameBoard, SqAttacked } from "../board/board_old";
+import BoardUtils from "../shared/utils";
 
 
 function MOVE(from, to, captured, promoted, flag) {
