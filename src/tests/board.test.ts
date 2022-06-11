@@ -2,26 +2,15 @@
 
 import Board from "../board/board";
 
-describe('initialize', () => {
-    test('', () => {
 
-    });
-});
+describe('board object', () => {
 
-describe('parseFen', () => {
-    test('starting position', () => {
+    it.todo('populates certain properties on creation');
 
-    });
-});
+    it.todo('parses the starting FEN correctly');
 
-describe('isSquareAttacked', () => {
-    test('', () => {
+    it.todo('can detect whether or not a square is attacked');
 
-    });
-});
+    it.todo('will update castling permissions if a king or rook move');
 
-describe('updateCastling', () => {
-    test('', () => {
-
-    });
 });

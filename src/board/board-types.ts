@@ -4,10 +4,6 @@ import { Colour, Piece, Square } from "../shared/enums";
 
 export interface IBoard {
     /**
-     * Initializes board properties and utilities, should only be called once
-     */
-    initialize(): void;
-    /**
      * Reset board to starting position
      */
     reset(): void

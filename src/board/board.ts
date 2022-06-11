@@ -10,9 +10,6 @@ export default class Board implements IBoard {
         this.data = new BoardData();
     }
 
-    public initialize(): void {
-        throw new Error("Method not implemented.");
-    }
     public reset(): void {
         throw new Error("Method not implemented.");
     }
