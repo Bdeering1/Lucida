@@ -1,3 +1,4 @@
+/* eslint-disable dot-notation */
 /* eslint-disable no-magic-numbers */
 
 import { Board, BoardMeta } from "../board/board";
@@ -8,20 +9,30 @@ describe('board', () => {
 
     beforeEach(() => {
         board = new Board(new BoardMeta());
-        console.log(board);
+        console.log(`${board.meta.whiteKingCastle}`);
     });
 
-    it.each([
-        [board.meta.setWhiteKingCastle, board.meta.whiteKingCastle],
-        [board.meta.setWhiteQueenCastle, board.meta.whiteQueenCastle],
-        [board.meta.setBlackKingCastle, board.meta.blackKingCastle],
-        [board.meta.setBlackQueenCastle, board.meta.blackQueenCastle],
-    ])('sets specific castle permissions properly', (setCastle, getCastle) => {
-        setCastle();
-        expect(getCastle).toBe(true);
+    it('sets white king-side castle permissions correctly', () => {
+        board.meta.setWhiteKingCastle();
+        expect(board.meta.whiteKingCastle).toBe(true);
     });
 
-    it.todo('resets castle permissions properly');
+    it('sets white queen-side castle permissions correctly', () => {
+        board.meta.setWhiteQueenCastle();
+        expect(board.meta.whiteQueenCastle).toBe(true);
+    });
+
+    it('sets black king-side castle permissions correctly', () => {
+        board.meta.setBlackKingCastle();
+        expect(board.meta.blackKingCastle).toBe(true);
+    });
+
+    it('sets black queen-side castle permissions correctly', () => {
+        board.meta.setBlackQueenCastle();
+        expect(board.meta.blackQueenCastle).toBe(true);
+    });
+
+    it.todo('resets castle permissions correctly');
 
     it.todo('updates castling permissions if a king or rook move for the first time');
 

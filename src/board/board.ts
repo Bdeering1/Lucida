@@ -31,6 +31,10 @@ export class BoardMeta implements IBoardMeta {
     public posKey: number;
     public material: number[];
 
+    constructor() {
+        this.castlePermissions = CastleBit.none;
+    }
+
     update(from: Square, to: Square): void {
         throw new Error("Method not implemented.");
     }
@@ -43,7 +47,7 @@ export class BoardMeta implements IBoardMeta {
     public get blackKingCastle() { return (this.castlePermissions & CastleBit.blackKing) !== 0; }
     public get blackQueenCastle() { return (this.castlePermissions & CastleBit.blackQueen) !== 0; }
     public setWhiteKingCastle(): void { this.castlePermissions |= CastleBit.whiteKing; }
-    public setWhiteQueenCastle(): void { this.castlePermissions |= CastleBit.whiteKing; }
-    public setBlackKingCastle(): void { this.castlePermissions |= CastleBit.whiteKing; }
-    public setBlackQueenCastle(): void { this.castlePermissions |= CastleBit.whiteKing; }
+    public setWhiteQueenCastle(): void { this.castlePermissions |= CastleBit.whiteQueen; }
+    public setBlackKingCastle(): void { this.castlePermissions |= CastleBit.blackKing; }
+    public setBlackQueenCastle(): void { this.castlePermissions |= CastleBit.blackQueen; }
 }
