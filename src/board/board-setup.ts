@@ -1,11 +1,11 @@
 import { IBoard, IBoardSetup } from "./board-types";
-import { Board } from "./board";
+import { Board, BoardMeta } from "./board";
 
 export default class BoardSetup implements IBoardSetup {
     private board: IBoard;
 
     public constructor() {
-        this.board = new Board();
+        this.board = new Board(new BoardMeta());
     }
 
     public reset(): void {

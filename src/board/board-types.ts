@@ -27,11 +27,6 @@ export interface IBoard {
      */
     pieceQuantities: number[];
 
-    /**
-     * Given a square on the inner board and a side, returns whether or not that square is attacked
-     */
-    isSquareAttacked(sq: Square, side: Colour): boolean;
-
     //* --- Meta Data ---
     /**
      * Stores all data not directly related to the visible state of the board
@@ -52,6 +47,16 @@ export interface IBoard {
      * Lists of scores for each move indexed by game plys
      */
     moveScores: [][];
+
+    addPiece(piece: Piece, sq: Square): void;
+    /**
+     * Upate castling permissions and en passent
+     */
+    updateMeta(from: Square, to: Square): void;
+    /**
+     * Given a square on the inner board and a side, returns whether or not that square is attacked
+     */
+    isSquareAttacked(sq: Square, side: Colour): boolean;
 }
 
 export interface IBoardMeta { // this is only separate from the board 
@@ -80,11 +85,6 @@ export interface IBoardMeta { // this is only separate from the board
      */
     material: number[];
 
-
-    /**
-     * Upate castling permissions and en passent
-     */
-    update(from: Square, to: Square): void;
     /**
      * Reset castling permissions to default (all enabled)
      */

@@ -12,6 +12,20 @@ describe('board', () => {
         console.log(`${board.meta.whiteKingCastle}`);
     });
 
+    it.todo('can add a piece to the board')
+
+    it.todo('updates castling permissions if a king or rook move for the first time');
+
+    it.todo('updates en passent permissions if a player does not take en passent');
+
+    it.todo('updates the position key correctly when a piece moves');
+
+    it.todo('updates the position key correctly when castle permissions change');
+    
+    it.todo('updates the position key correctly if a player does not take en passent');
+
+    it.todo('can detect whether or not a square is attacked');
+
     it('sets white king-side castle permissions correctly', () => {
         board.meta.setWhiteKingCastle();
         expect(board.meta.whiteKingCastle).toBe(true);
@@ -32,13 +46,17 @@ describe('board', () => {
         expect(board.meta.blackQueenCastle).toBe(true);
     });
 
-    it.todo('resets castle permissions correctly');
-
-    it.todo('updates castling permissions if a king or rook move for the first time');
-
-    it.todo('updates en passent permissions if a player does not take en passent');
-
-    it.todo('can detect whether or not a square is attacked');
+    it('resets castle permissions correctly', () => {
+        board.meta.setWhiteKingCastle();
+        board.meta.setWhiteQueenCastle();
+        board.meta.setBlackKingCastle();
+        board.meta.setBlackQueenCastle();
+        board.meta.resetCastling();
+        expect(board.meta.whiteKingCastle).toBe(false);
+        expect(board.meta.whiteQueenCastle).toBe(false);
+        expect(board.meta.blackKingCastle).toBe(false);
+        expect(board.meta.blackQueenCastle).toBe(false);
+    });
 
 });
 
