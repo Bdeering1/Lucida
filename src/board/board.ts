@@ -15,7 +15,17 @@ export class Board implements IBoard {
     constructor(meta: IBoardMeta) {
         this.meta = meta;
     }
+
     addPiece(piece: Piece, sq: Square): void {
+        throw new Error("Method not implemented.");
+    }
+    getPiece(sq: Square): Piece {
+        throw new Error("Method not implemented.");
+    }
+    getPieces(): IterableIterator<Piece> {
+        throw new Error("Method not implemented.");
+    }
+    getSquares(piece: Piece): IterableIterator<Square> {
         throw new Error("Method not implemented.");
     }
 
@@ -43,7 +53,7 @@ export class BoardMeta implements IBoardMeta {
     }
 
     resetCastling(): void {
-        throw new Error("Method not implemented.");
+        this.castlePermissions = CastleBit.none;
     }
 
     public get whiteKingCastle() { return (this.castlePermissions & CastleBit.whiteKing) !== 0; }

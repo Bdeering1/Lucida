@@ -9,10 +9,9 @@ describe('board', () => {
 
     beforeEach(() => {
         board = new Board(new BoardMeta());
-        console.log(`${board.meta.whiteKingCastle}`);
     });
 
-    it.todo('can add a piece to the board')
+    it.todo('can add a piece to the board');
 
     it.todo('updates castling permissions if a king or rook move for the first time');
 
