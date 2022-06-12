@@ -72,6 +72,8 @@ export interface IBoard {
     getSquares(piece: Piece): IterableIterator<Square>;
     /**
      * Upate castling permissions and en passent
+     * @todo this could be a makeMove() method which also effects pieces, also updateMeta
+     * by itself doesn't need access to the pieces (there's a map for that)
      */
     updateMeta(from: Square, to: Square): void;
     /**

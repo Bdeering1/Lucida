@@ -3,6 +3,7 @@
 
 import { Board, BoardMeta } from "../board/board";
 import { IBoard } from "../board/board-types";
+import { Piece, Square } from "../shared/enums";
 
 describe('board', () => {
     let board: IBoard;
@@ -11,7 +12,14 @@ describe('board', () => {
         board = new Board(new BoardMeta());
     });
 
-    it.todo('can add a piece to the board');
+    it.each([
+        [Piece.empty, Square.a1],
+        [Piece.whiteRook, Square.d1],
+        [Piece.blackKing, Square.h8],
+    ])('can add a piece to the board', (piece, sq) => {
+        board.addPiece(piece, sq);
+        expect(board.getPiece(sq)).toBe(piece);
+    });
 
     it.todo('updates castling permissions if a king or rook move for the first time');
 
