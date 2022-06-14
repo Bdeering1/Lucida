@@ -1,6 +1,6 @@
 import { CASTLE_FLAG, EN_PAS_FLAG, PAWN_START_FLAG } from "../shared/constants";
 import { CastleBit, Colour, Piece, Rank, Square } from "../shared/enums";
-import { GameBoard, SqAttacked } from "../board/board_old";
+import { GameBoard, SqAttacked } from "./board_old";
 import BoardUtils from "../shared/utils";
 
 

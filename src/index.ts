@@ -1,5 +1,5 @@
-import Initialize from './initialize.js';
-import { PrintBoard } from './cli/printing_old.js';
+import Initialize from './archive/initialize_old.js';
+import { PrintBoard } from './archive/printing_old.js';
 
 Initialize();
 PrintBoard();

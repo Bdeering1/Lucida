@@ -2,8 +2,8 @@
 /* eslint-disable no-magic-numbers */
 
 import { Board, BoardMeta } from "../board/board";
-import { IBoard } from "../board/board-types";
 import { Piece, Square } from "../shared/enums";
+import { IBoard } from "../board/board-types";
 
 describe('board', () => {
     let board: IBoard;
