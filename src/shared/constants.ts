@@ -8,11 +8,11 @@ export const MAX_POSITION_MOVES = 256; /*used for storing moves in GameBoard.mov
 export const MAX_DEPTH = 64;
 export const NO_MOVE = 0;
 export const NUM_PIECE_TYPES = 13;
-export const MAX_NUM_PER_PIECE = 1;
+export const MAX_NUM_PER_PIECE = 10;
 
 /* --- Strings ---  */
 export const START_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-export const PIECE_CHAR = ".PNBRQKpnbrqk"; /*changed from PceChar*/
+export const PIECE_CHAR = ".PNBRQKpnbrqk";
 export const SIDE_CHAR = "wb-";
 export const RANK_CHAR = "12345678";
 export const FILE_CHAR = "abcdefgh";

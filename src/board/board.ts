@@ -1,3 +1,4 @@
+import { BOARD_SQ_NUM, MAX_NUM_PER_PIECE, NUM_PIECE_TYPES } from "../shared/constants";
 import { CastleBit, Colour, Piece, Square } from "../shared/enums";
 import { IBoard, IBoardMeta } from "./board-types";
 
@@ -13,20 +14,27 @@ export class Board implements IBoard {
     public moveScores: [][];
 
     constructor(meta: IBoardMeta) {
+        this.pieces = new Array(BOARD_SQ_NUM);
+        this.pieceSquares = new Array(NUM_PIECE_TYPES).fill(new Array(MAX_NUM_PER_PIECE));
+        this.pieceQuantities = new Array(NUM_PIECE_TYPES).fill(0);
         this.meta = meta;
     }
 
     addPiece(piece: Piece, sq: Square): void {
-        throw new Error("Method not implemented.");
+        this.pieces[sq] = piece;
+        this.pieceSquares[piece].push(sq);
+        this.pieceQuantities[piece]++;
     }
     getPiece(sq: Square): Piece {
-        throw new Error("Method not implemented.");
+        return this.pieces[sq];
     }
-    getPieces(): IterableIterator<Piece> {
-        throw new Error("Method not implemented.");
+    * getPieces(): IterableIterator<Piece> {
+        for (let i = 0; i < BOARD_SQ_NUM; i++) {
+            yield this.pieces[i];
+        }
     }
-    getSquares(piece: Piece): IterableIterator<Square> {
-        throw new Error("Method not implemented.");
+    getSquares(piece: Piece): Square[] {
+        return this.pieceSquares[piece];
     }
 
     updateMeta(from: Square, to: Square): void {

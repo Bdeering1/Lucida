@@ -67,9 +67,8 @@ export interface IBoard {
      * Returns an iterator which yields the square for each piece of a certain type (if any)
      * @description this method makes interfacing with the board easier, and allows
      * for the internal implementation piece states to be easily schanged later
-     * @todo implement as a generator at first, but later as a iterator (faster)
      */
-    getSquares(piece: Piece): IterableIterator<Square>;
+    getSquares(piece: Piece): Square[];
     /**
      * Upate castling permissions and en passent
      * @todo this could be a makeMove() method which also effects pieces, also updateMeta
