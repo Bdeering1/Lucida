@@ -211,7 +211,7 @@ export function ParseFen(fen) { /*Calls ResetBoard, UpdateListsMaterial, and Gen
     UpdateListsMaterial();
 }
 
-export function SqAttacked(sq, side) { /*(is this square attacked by this side?)*/
+export function SqAttacked(sq, side) {
     let pce, t_sq, dir;
 
     /*Non sliding attacks (pawn, knight, and king)*/

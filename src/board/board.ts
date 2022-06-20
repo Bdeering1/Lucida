@@ -33,8 +33,10 @@ export class Board implements IBoard {
             yield this.pieces[i];
         }
     }
-    getSquares(piece: Piece): Square[] {
-        return this.pieceSquares[piece];
+    * getSquares(piece: Piece): IterableIterator<Square> {
+        for (let i = 0; i < BOARD_SQ_NUM; i++) {
+            yield this.pieceSquares[piece][i];
+        }
     }
 
     updateMeta(from: Square, to: Square): void {

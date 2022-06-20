@@ -68,7 +68,7 @@ export interface IBoard {
      * @description this method makes interfacing with the board easier, and allows
      * for the internal implementation piece states to be easily schanged later
      */
-    getSquares(piece: Piece): Square[];
+    getSquares(piece: Piece): IterableIterator<Square>;
     /**
      * Upate castling permissions and en passent
      * @todo this could be a makeMove() method which also effects pieces, also updateMeta
