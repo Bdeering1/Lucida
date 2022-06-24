@@ -1,4 +1,4 @@
-import { BoardUtils, FromSq, GetSquare, PieceIndex, Promoted, ToSq } from "../shared/utils";
+import { BoardUtils, FromSq, GetSquare, PieceIndex, Promoted, ToSq } from "../board/board-utils";
 import { CastleBit, Colour, File, Piece, Rank } from "../shared/enums";
 import { FILE_CHAR, PIECE_CHAR, RANK_CHAR, SIDE_CHAR } from "../shared/constants";
 import { GameBoard, SqAttacked } from "./board_old";

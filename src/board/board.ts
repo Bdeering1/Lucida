@@ -1,6 +1,7 @@
 import { BOARD_SQ_NUM, MAX_NUM_PER_PIECE, NUM_PIECE_TYPES } from "../shared/constants";
 import { CastleBit, Colour, Piece, Square } from "../shared/enums";
 import { IBoard, IBoardMeta } from "./board-types";
+import BoardUtils from "./board-utils";
 
 
 export class Board implements IBoard {
@@ -13,11 +14,14 @@ export class Board implements IBoard {
     public moveList: [][];
     public moveScores: [][];
 
-    constructor(meta: IBoardMeta) {
+    private utils: BoardUtils;
+
+    constructor(meta: IBoardMeta, utils: BoardUtils) {
         this.pieces = new Array(BOARD_SQ_NUM);
         this.pieceSquares = new Array(NUM_PIECE_TYPES);
         this.pieceQuantities = new Array(NUM_PIECE_TYPES);
         this.meta = meta;
+        this.utils = utils;
 
         const emptySqArray = new Array(MAX_NUM_PER_PIECE).fill(Square.none);
         this.pieceSquares.fill(emptySqArray);
@@ -51,7 +55,7 @@ export class Board implements IBoard {
         }
     }
 
-    updateMeta(from: Square, to: Square): void {
+    makeMove(to: Square, from: Square): void {
         throw new Error("Method not implemented.");
     }
 
@@ -70,12 +74,19 @@ export class BoardMeta implements IBoardMeta {
     public posKey: number;
     public material: number[];
 
-    constructor() {
+    private utils: BoardUtils;
+
+    constructor(utils: BoardUtils) {
+        this.utils = utils;
         this.castlePermissions = CastleBit.none;
     }
 
     resetCastling(): void {
         this.castlePermissions = CastleBit.none;
+    }
+
+    update(from: Square, to: Square): void {
+        throw new Error("Method not implemented.");
     }
 
     public get whiteKingCastle() { return (this.castlePermissions & CastleBit.whiteKing) !== 0; }

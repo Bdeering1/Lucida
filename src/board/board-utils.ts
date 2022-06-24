@@ -1,6 +1,6 @@
 /* eslint-disable no-magic-numbers */
-import { Colour, Piece, Square } from './enums';
-import { BOARD_SQ_NUM } from './constants';
+import { Colour, Piece, Square } from '../shared/enums';
+import { BOARD_SQ_NUM } from '../shared/constants';
 
 export default class BoardUtils {
 

@@ -1,5 +1,5 @@
 import { BOARD_SQ_NUM, INNER_BOARD_SQ_NUM, MAX_GAME_MOVES, NO_MOVE, NUM_PIECE_TYPES, START_FEN } from '../shared/constants.js';
-import { BoardUtils, GetSquare, Rand32 } from '../shared/utils.js';
+import { BoardUtils, GetSquare, Rand32 } from '../board/board-utils.js';
 import { File, Rank, Square } from '../shared/enums.js';
 import { GameBoard, ParseFen } from './board_old.js';
 

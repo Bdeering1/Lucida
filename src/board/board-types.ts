@@ -75,11 +75,9 @@ export interface IBoard {
      */
     getSquares(piece: Piece): IterableIterator<Square>;
     /**
-     * Upate castling permissions and en passent
-     * @todo this could be a makeMove() method which also effects pieces, also updateMeta
-     * by itself doesn't need access to the pieces (there's a map for that)
+     * 
      */
-    updateMeta(from: Square, to: Square): void;
+    makeMove(to: Square, from: Square): void;
     /**
      * Given a square on the inner board and a side, returns whether or not that square is attacked
      */
@@ -122,6 +120,11 @@ export interface IBoardMeta { // this is only separate from the board
     // hashSide(): void;
     // hashCastle(): void;
     // hashEnPas(): void;
+
+    /**
+     * Upate castling permissions, en passent, and posKey
+     */
+    update(from: Square, to: Square): void;
 
     get whiteKingCastle(): boolean;
     get whiteQueenCastle(): boolean;
