@@ -49,9 +49,13 @@ export interface IBoard {
     moveScores: [][];
 
     /**
-     * Adds a piece to the board representation
+     * Add a piece to the board
      */
     addPiece(piece: Piece, sq: Square): void;
+    /**
+     * Remove a piece from the board
+     */
+    removePiece(piece: Piece, sq: Square): void;
     /**
      * Returns the piece located on a given square
      */
@@ -67,6 +71,7 @@ export interface IBoard {
      * Returns an iterator which yields the square for each piece of a certain type (if any)
      * @description this method makes interfacing with the board easier, and allows
      * for the internal implementation piece states to be easily schanged later
+     * @todo implement as a generator at first, but later as a iterator (faster)
      */
     getSquares(piece: Piece): IterableIterator<Square>;
     /**

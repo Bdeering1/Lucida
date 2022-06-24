@@ -15,15 +15,27 @@ export class Board implements IBoard {
 
     constructor(meta: IBoardMeta) {
         this.pieces = new Array(BOARD_SQ_NUM);
-        this.pieceSquares = new Array(NUM_PIECE_TYPES).fill(new Array(MAX_NUM_PER_PIECE));
-        this.pieceQuantities = new Array(NUM_PIECE_TYPES).fill(0);
+        this.pieceSquares = new Array(NUM_PIECE_TYPES);
+        this.pieceQuantities = new Array(NUM_PIECE_TYPES);
         this.meta = meta;
+
+        const emptySqArray = new Array(MAX_NUM_PER_PIECE).fill(Square.none);
+        this.pieceSquares.fill(emptySqArray);
+        this.pieceQuantities.fill(0);
     }
 
     addPiece(piece: Piece, sq: Square): void {
         this.pieces[sq] = piece;
         this.pieceSquares[piece].push(sq);
         this.pieceQuantities[piece]++;
+    }
+    removePiece(piece: Piece, sq: Square): void {
+        this.pieces[sq] = Piece.empty;
+        this.pieceQuantities[piece]--;
+        for (let idx = 0; idx < this.pieceSquares.length; idx++) {
+            if (this.pieceSquares[piece][idx] === sq)
+                this.pieceSquares[piece][idx] = Square.none;
+        }
     }
     getPiece(sq: Square): Piece {
         return this.pieces[sq];

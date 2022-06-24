@@ -16,9 +16,19 @@ describe('board', () => {
         [Piece.empty, Square.a1],
         [Piece.whiteRook, Square.d1],
         [Piece.blackKing, Square.h8],
-    ])('can add a piece to the board', (piece, sq) => {
+    ])('can add pieces to the board', (piece, sq) => {
         board.addPiece(piece, sq);
         expect(board.getPiece(sq)).toBe(piece);
+    });
+
+    it.each([
+        [Piece.empty, Square.a8],
+        [Piece.blackPawn, Square.d8],
+        [Piece.whiteQueen, Square.h1],
+    ])('can remove pieces from the board', (piece, sq) => {
+        board.addPiece(piece, sq);
+        board.removePiece(piece, sq);
+        expect(board.getPiece(sq)).toBe(Piece.empty);
     });
 
     it.todo('updates castling permissions if a king or rook move for the first time');
