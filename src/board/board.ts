@@ -66,7 +66,7 @@ export class Board implements IBoard {
 
 
 export class BoardMeta implements IBoardMeta {
-    public sideToMove: Colour.both;
+    public sideToMove = Colour.both;
     public ply = 0;
     public enPas = Square.none;
     public castlePermissions = CastleBit.none;

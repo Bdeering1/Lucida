@@ -84,7 +84,11 @@ export interface IBoard {
     isSquareAttacked(sq: Square, side: Colour): boolean;
 }
 
-export interface IBoardMeta { // this is only separate from the board 
+/**
+ * Meta data asssociated with the board
+ * @todo should likely be merged with the board class
+ */
+export interface IBoardMeta {
     /**
      * The current side to move
      */
