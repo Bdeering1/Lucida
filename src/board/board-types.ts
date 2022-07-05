@@ -130,6 +130,11 @@ export interface IBoardMeta {
      */
     update(from: Square, to: Square): void;
 
+    /**
+     * Generate hash key for the current position
+     */
+    generatePosKey(): void;
+
     get whiteKingCastle(): boolean;
     get whiteQueenCastle(): boolean;
     get blackKingCastle(): boolean;

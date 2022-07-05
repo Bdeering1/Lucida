@@ -11,7 +11,7 @@ export default class BoardUtils {
     Sq64ToSq120 = new Array(64);
     /* Piece * 120 + square (gives 120 space for each piece type and with the square number added on top ensures the key is unique) */
     PieceKeys = new Array(13 * 120);
-    SideKey: number; /* hashed in if white is to move*/
+    SideKey = this.Rand32(); /* hashed in if white is to move*/
     CastleKeys = new Array(16);
 
     /* --- Maps --- */

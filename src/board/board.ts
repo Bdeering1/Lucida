@@ -1,4 +1,4 @@
-import { BOARD_SQ_NUM, MAX_NUM_PER_PIECE, NUM_PIECE_TYPES } from "../shared/constants";
+import { BOARD_SQ_NUM, MAX_DEPTH, MAX_NUM_PER_PIECE, MAX_POSITION_MOVES, NUM_PIECE_TYPES } from "../shared/constants";
 import { CastleBit, Colour, Piece, Square } from "../shared/enums";
 import { IBoard, IBoardMeta } from "./board-types";
 import BoardUtils from "./board-utils";
@@ -10,7 +10,7 @@ export class Board implements IBoard {
     public pieceQuantities: number[];
 
     public meta: IBoardMeta;
-    public history : IBoardMeta[];
+    public history = [];
     public moveList: [][];
     public moveScores: [][];
 
@@ -26,6 +26,10 @@ export class Board implements IBoard {
         const emptySqArray = new Array(MAX_NUM_PER_PIECE).fill(Square.none);
         this.pieceSquares.fill(emptySqArray);
         this.pieceQuantities.fill(0);
+
+        const emptyMoveArray = new Array(MAX_POSITION_MOVES);
+        this.moveList = new Array(MAX_DEPTH).fill(emptyMoveArray);
+        this.moveScores = new Array(MAX_DEPTH).fill(emptyMoveArray);
     }
 
     addPiece(piece: Piece, sq: Square): void {
@@ -59,7 +63,7 @@ export class Board implements IBoard {
         throw new Error("Method not implemented.");
     }
 
-    public isSquareAttacked(sq: Square, side: Colour): boolean {
+    isSquareAttacked(sq: Square, side: Colour): boolean {
         throw new Error("Method not implemented.");
     }
 }
@@ -71,14 +75,13 @@ export class BoardMeta implements IBoardMeta {
     public enPas = Square.none;
     public castlePermissions = CastleBit.none;
     public fiftyMoveCounter = 0;
-    public posKey: number;
-    public material: number[];
+    public posKey = 0;
+    public material = [];
 
     private utils: BoardUtils;
 
     constructor(utils: BoardUtils) {
         this.utils = utils;
-        this.castlePermissions = CastleBit.none;
     }
 
     resetCastling(): void {
@@ -89,12 +92,16 @@ export class BoardMeta implements IBoardMeta {
         throw new Error("Method not implemented.");
     }
 
-    public get whiteKingCastle() { return (this.castlePermissions & CastleBit.whiteKing) !== 0; }
-    public get whiteQueenCastle() { return (this.castlePermissions & CastleBit.whiteQueen) !== 0; }
-    public get blackKingCastle() { return (this.castlePermissions & CastleBit.blackKing) !== 0; }
-    public get blackQueenCastle() { return (this.castlePermissions & CastleBit.blackQueen) !== 0; }
-    public setWhiteKingCastle(): void { this.castlePermissions |= CastleBit.whiteKing; }
-    public setWhiteQueenCastle(): void { this.castlePermissions |= CastleBit.whiteQueen; }
-    public setBlackKingCastle(): void { this.castlePermissions |= CastleBit.blackKing; }
-    public setBlackQueenCastle(): void { this.castlePermissions |= CastleBit.blackQueen; }
+    generatePosKey() {
+        throw new Error("Method not implemented.");
+    }
+
+    get whiteKingCastle() { return (this.castlePermissions & CastleBit.whiteKing) !== 0; }
+    get whiteQueenCastle() { return (this.castlePermissions & CastleBit.whiteQueen) !== 0; }
+    get blackKingCastle() { return (this.castlePermissions & CastleBit.blackKing) !== 0; }
+    get blackQueenCastle() { return (this.castlePermissions & CastleBit.blackQueen) !== 0; }
+    setWhiteKingCastle(): void { this.castlePermissions |= CastleBit.whiteKing; }
+    setWhiteQueenCastle(): void { this.castlePermissions |= CastleBit.whiteQueen; }
+    setBlackKingCastle(): void { this.castlePermissions |= CastleBit.blackKing; }
+    setBlackQueenCastle(): void { this.castlePermissions |= CastleBit.blackQueen; }
 }
