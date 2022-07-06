@@ -1,18 +1,17 @@
 /* eslint-disable no-magic-numbers */
-import { Colour, Piece, Square } from '../shared/enums';
-import { BOARD_SQ_NUM } from '../shared/constants';
+import { BOARD_SQ_NUM, INNER_BOARD_SQ_NUM, NUM_PIECE_TYPES } from '../shared/constants';
+import { Colour, Piece, Rank, Square } from '../shared/enums';
 
 export default class BoardUtils {
 
     /* --- Empty Maps --- */
-    FilesBoard = new Array(BOARD_SQ_NUM);
-    RanksBoard = new Array(BOARD_SQ_NUM);
-    Sq120ToSq64 = new Array(BOARD_SQ_NUM);
-    Sq64ToSq120 = new Array(64);
-    /* Piece * 120 + square (gives 120 space for each piece type and with the square number added on top ensures the key is unique) */
-    PieceKeys = new Array(13 * 120);
-    SideKey = this.Rand32(); /* hashed in if white is to move*/
-    CastleKeys = new Array(16);
+    FilesBoard: (File | Square)[];
+    RanksBoard: Rank[];
+    Sq120ToSq64: Piece[];
+    Sq64ToSq120: Piece[];
+    PieceKeys: number[];
+    CastleKeys: number[];
+    SideKey: number; /* hashed in if white is to move*/
 
     /* --- Maps --- */
     readonly PieceBig = [ false, false, true, true, true, true, true, false, true, true, true, true, true ];
@@ -60,7 +59,13 @@ export default class BoardUtils {
 
 
     public constructor() {
-        // initialize empty maps here
+        this.FilesBoard = new Array(BOARD_SQ_NUM);
+        this.RanksBoard = new Array(BOARD_SQ_NUM);
+        this.Sq120ToSq64 = new Array(BOARD_SQ_NUM);
+        this.Sq64ToSq120 = new Array(INNER_BOARD_SQ_NUM);
+        this.PieceKeys = new Array(NUM_PIECE_TYPES * BOARD_SQ_NUM);
+        this.CastleKeys = new Array(16);
+        this.SideKey = this.GetRandom32();
     }
 
     GetSquare(file : number, rank : number) {
@@ -92,8 +97,12 @@ export default class BoardUtils {
         return m >> 20 & 0xF;
     }
 
-    Rand32() {
+    GetRandom32() {
         return Math.floor(Math.random() * 255 + 1) << 23 | Math.floor(Math.random() * 255 + 1) << 16
         | Math.floor(Math.random() * 255 + 1) << 8 | Math.floor(Math.random() * 255 + 1);
+    }
+
+    GenerateHash32(seed: number) {
+        return ~~(seed * 3575866506);
     }
 }
