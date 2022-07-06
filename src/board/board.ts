@@ -59,11 +59,13 @@ export class Board implements IBoard {
         }
     }
 
-    makeMove(to: Square, from: Square): void {
+    movePiece(to: Square, from: Square): void {
         throw new Error("Method not implemented.");
     }
-
     isSquareAttacked(sq: Square, side: Color): boolean {
+        throw new Error("Method not implemented.");
+    }
+    generatePosKey(): void {
         throw new Error("Method not implemented.");
     }
 }
@@ -76,12 +78,13 @@ export class BoardMeta implements IBoardMeta {
     public castlePermissions = CastleBit.none;
     public fiftyMoveCounter = 0;
     public posKey = 0;
-    public material = [];
+    public material: number[];
 
     private utils: BoardUtils;
 
     constructor(utils: BoardUtils) {
         this.utils = utils;
+        this.material = [0, 0];
     }
 
     resetCastling(): void {
@@ -104,10 +107,9 @@ export class BoardMeta implements IBoardMeta {
         this.HashCastle();
         this.HashEnPas();
         this.HashSide();
-    }
 
-    generatePosKey() {
-        throw new Error("Method not implemented.");
+        this.sideToMove = this.sideToMove === Color.white ? Color.black : Color.white;
+        this.material[this.sideToMove] -= this.utils.PieceVal[pieceTo];
     }
 
     get whiteKingCastle() { return (this.castlePermissions & CastleBit.whiteKing) !== 0; }

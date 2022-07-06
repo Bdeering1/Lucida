@@ -17,20 +17,4 @@ export default class BoardSetup implements IBoardSetup {
     public parseFen(fen: string): void {
         throw new Error("Method not implemented.");
     }
-
-    private updateListsMaterial(): void {
-        throw new Error("Method not implemented.");
-    }
-    private generatePositionKey(): void {
-        throw new Error("Method not implemented.");
-    }
-    private initFileRanksBoard(): void {
-        throw new Error("Method not implemented.");
-    }
-    private initHashKeys(): void {
-        throw new Error("Method not implemented.");
-    }
-    private initBoardHistory(): void {
-        throw new Error("Method not implemented.");
-    }
 }

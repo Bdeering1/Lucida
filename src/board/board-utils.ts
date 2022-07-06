@@ -66,6 +66,9 @@ export default class BoardUtils {
         this.PieceKeys = new Array(NUM_PIECE_TYPES * BOARD_SQ_NUM);
         this.CastleKeys = new Array(16);
         this.SideKey = this.GetRandom32();
+
+        // init hash keyss
+        // init file and rank boards
     }
 
     GetSquare(file : number, rank : number) {

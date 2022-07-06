@@ -1,6 +1,10 @@
 /* eslint-disable no-use-before-define */
 import { Color, Piece, Square } from "../shared/enums";
 
+/**
+ * Initializes the board and handles FEN parsing
+ * @todo a class may not be required for this
+ */
 export interface IBoardSetup {
     /**
      * Reset board to starting position
@@ -43,12 +47,12 @@ export interface IBoard {
     history: IBoardMeta[];
     /**
      * Lists of possible moves indexed by game ply
-     * @todo this likely belongs in a move generator class
+     * @todo this likely belongs in another class
      */
     moveList: [][];
     /**
      * Lists of scores for each move indexed by game plys
-     * @todo this likely belongs in a move generator class
+     * @todo this likely belongs in another class
      */
     moveScores: [][];
 
@@ -60,6 +64,10 @@ export interface IBoard {
      * Remove a piece from the board
      */
     removePiece(piece: Piece, sq: Square): void;
+    /**
+     * Move a piece to another squares
+     */
+    movePiece(to: Square, from: Square): void;
     /**
      * Returns the piece located on a given square
      */
@@ -79,13 +87,15 @@ export interface IBoard {
      */
     getSquares(piece: Piece): IterableIterator<Square>;
     /**
-     * 
-     */
-    makeMove(to: Square, from: Square): void;
-    /**
      * Given a square on the inner board and a side, returns whether or not that square is attacked
      */
     isSquareAttacked(sq: Square, side: Color): boolean;
+    /**
+     * Generate hash key for the current position
+     */
+    generatePosKey(): void;
+
+    // methods for iterating over possible moves by piece
 }
 
 /**
@@ -114,7 +124,7 @@ export interface IBoardMeta {
      */
     posKey: number;
     /**
-     * Stores the material count for each side, indexed using `Colour` enum
+     * Stores the material count for each side, indexed using `Color` enum
      */
     material: number[];
 
@@ -123,21 +133,10 @@ export interface IBoardMeta {
      */
     resetCastling(): void; // this may not be necessary for the interface
 
-    // this might be part of updateMeta
-    // hashPiece(): void;
-    // hashSide(): void;
-    // hashCastle(): void;
-    // hashEnPas(): void;
-
     /**
-     * Upate castling permissions, en passent, and posKey
+     * Upate castling permissions, en passent, posKey, side to move, and material
      */
     update(from: Square, to: Square, pieceFrom: Piece, pieceTo: Piece): void;
-
-    /**
-     * Generate hash key for the current position
-     */
-    generatePosKey(): void;
 
     get whiteKingCastle(): boolean;
     get whiteQueenCastle(): boolean;
