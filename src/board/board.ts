@@ -1,5 +1,5 @@
 import { BOARD_SQ_NUM, MAX_DEPTH, MAX_NUM_PER_PIECE, MAX_POSITION_MOVES, NUM_PIECE_TYPES } from "../shared/constants";
-import { CastleBit, Colour, Piece, Square } from "../shared/enums";
+import { CastleBit, Color, Piece, Square } from "../shared/enums";
 import { IBoard, IBoardMeta } from "./board-types";
 import BoardUtils from "./board-utils";
 
@@ -38,7 +38,7 @@ export class Board implements IBoard {
         this.pieceQuantities[piece]++;
     }
     removePiece(piece: Piece, sq: Square): void {
-        this.pieces[sq] = Piece.empty;
+        this.pieces[sq] = Piece.none;
         this.pieceQuantities[piece]--;
         for (let idx = 0; idx < this.pieceSquares.length; idx++) {
             if (this.pieceSquares[piece][idx] === sq)
@@ -63,14 +63,14 @@ export class Board implements IBoard {
         throw new Error("Method not implemented.");
     }
 
-    isSquareAttacked(sq: Square, side: Colour): boolean {
+    isSquareAttacked(sq: Square, side: Color): boolean {
         throw new Error("Method not implemented.");
     }
 }
 
 
 export class BoardMeta implements IBoardMeta {
-    public sideToMove = Colour.both;
+    public sideToMove = Color.none;
     public ply = 0;
     public enPas = Square.none;
     public castlePermissions = CastleBit.none;
@@ -88,8 +88,22 @@ export class BoardMeta implements IBoardMeta {
         this.castlePermissions = CastleBit.none;
     }
 
-    update(from: Square, to: Square): void {
-        throw new Error("Method not implemented.");
+    update(from: Square, to: Square, pieceFrom: Piece, pieceTo: Piece): void {
+        if (this.utils.IsPawn[pieceFrom]) {
+            this.enPas = from + this.utils.PawnDir[this.sideToMove];
+        }
+
+        if ((this.castlePermissions & CastleBit.all) !== 0) {
+            this.castlePermissions &= this.utils.CastlePerm[from];
+            this.castlePermissions &= this.utils.CastlePerm[to];
+        }
+
+        this.HashPiece(pieceTo, to);
+        this.HashPiece(pieceFrom, from);
+        this.HashPiece(pieceFrom, to);
+        this.HashCastle();
+        this.HashEnPas();
+        this.HashSide();
     }
 
     generatePosKey() {
@@ -104,4 +118,9 @@ export class BoardMeta implements IBoardMeta {
     setWhiteQueenCastle(): void { this.castlePermissions |= CastleBit.whiteQueen; }
     setBlackKingCastle(): void { this.castlePermissions |= CastleBit.blackKing; }
     setBlackQueenCastle(): void { this.castlePermissions |= CastleBit.blackQueen; }
+    
+    private HashPiece(piece: Piece, sq: number) { this.posKey ^= this.utils.PieceKeys[(piece * BOARD_SQ_NUM) + sq]; }
+    private HashCastle() { this.posKey ^= this.utils.CastleKeys[this.castlePermissions]; }
+    private HashSide() { this.posKey ^= this.utils.SideKey; }
+    private HashEnPas() { this.posKey ^= this.utils.PieceKeys[this.enPas]; }
 }

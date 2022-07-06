@@ -15,7 +15,7 @@ describe('board', () => {
     });
 
     it.each([
-        [Piece.empty, Square.a1],
+        [Piece.none, Square.a1],
         [Piece.whiteRook, Square.d1],
         [Piece.blackKing, Square.h8],
     ])('can add pieces to the board', (piece, sq) => {
@@ -24,13 +24,13 @@ describe('board', () => {
     });
 
     it.each([
-        [Piece.empty, Square.a8],
+        [Piece.none, Square.a8],
         [Piece.blackPawn, Square.d8],
         [Piece.whiteQueen, Square.h1],
     ])('can remove pieces from the board', (piece, sq) => {
         board.addPiece(piece, sq);
         board.removePiece(piece, sq);
-        expect(board.getPiece(sq)).toBe(Piece.empty);
+        expect(board.getPiece(sq)).toBe(Piece.none);
     });
 
     it.todo('updates castling permissions if a king or rook move for the first time');

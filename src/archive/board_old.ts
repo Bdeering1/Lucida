@@ -1,11 +1,11 @@
 import { BOARD_SQ_NUM, INNER_BOARD_SQ_NUM, MAX_DEPTH, MAX_NUM_PER_PIECE, MAX_POSITION_MOVES, NUM_PIECE_TYPES } from "../shared/constants.js";
-import { CastleBit, Colour, File, Piece, Rank, Square } from "../shared/enums.js";
+import { CastleBit, Color, File, Piece, Rank, Square } from "../shared/enums.js";
 import BoardUtils from "../board/board-utils.js";
 
 
 export const GameBoard = {
     pieces: new Array(BOARD_SQ_NUM), /*gives the piece id for each 120 squares on the board (0 if empty)*/
-    side: Colour.white,
+    side: Color.white,
     fiftyMove: 0,
     hisPly: 0, /*actual ply*/
     history: [],
@@ -23,16 +23,16 @@ export const GameBoard = {
 
 export function GeneratePosKey() {
     let finalKey = 0;
-    let piece = Piece.empty;
+    let piece = Piece.none;
 
     for (let sq = 0; sq < BOARD_SQ_NUM; sq++) { // should this be looping through 120 squares or only 64??
         piece = GameBoard.pieces[sq];
-        if (piece !== Piece.empty && sq !== Square.offBoard) {
+        if (piece !== Piece.none && sq !== Square.offBoard) {
             finalKey ^= BoardUtils.PieceKeys[(piece * BOARD_SQ_NUM) + sq]; /* XORing one of the 13 * 120 hashes into the final key */
         }
     }
 
-    if (GameBoard.side === Colour.white) {
+    if (GameBoard.side === Color.white) {
         finalKey ^= BoardUtils.SideKey;
     }
 
@@ -49,7 +49,7 @@ export function UpdateListsMaterial() {
     let piece, sq, colour;
 
     for (let i = 0; i < NUM_PIECE_TYPES * MAX_NUM_PER_PIECE; i++) {
-        GameBoard.pList[i] = Piece.empty;
+        GameBoard.pList[i] = Piece.none;
     }
 
     for (let i = 0; i < 2; i++) {
@@ -63,7 +63,7 @@ export function UpdateListsMaterial() {
     for (let i = 0; i < INNER_BOARD_SQ_NUM; i++) {
         sq = Sq120(i);
         piece = GameBoard.pieces[sq];
-        if (piece !== Piece.empty) {
+        if (piece !== Piece.none) {
             colour = PieceCol[piece];
 
             GameBoard.material[colour] += PieceVal[piece];
@@ -80,10 +80,10 @@ export function ResetBoard() { /* doesn't reset history (should it?)*/
     }
 
     for (let i = 0; i < INNER_BOARD_SQ_NUM; i++) {
-        GameBoard.pieces[Sq120(i)] = Piece.empty;
+        GameBoard.pieces[Sq120(i)] = Piece.none;
     }
 
-    GameBoard.side = Colour.both;
+    GameBoard.side = Color.none;
     GameBoard.enPas = Square.none;
     GameBoard.fiftyMove = 0;
     GameBoard.hisPly = 0;
@@ -152,7 +152,7 @@ export function ParseFen(fen) { /*Calls ResetBoard, UpdateListsMaterial, and Gen
             case '6':
             case '7':
             case '8':
-                piece = Piece.empty;
+                piece = Piece.none;
                 count = fen[fenIndex].charCodeAt(0) - '0'.charCodeAt(0); /*converting the char to an int*/
                 break;
 
@@ -176,7 +176,7 @@ export function ParseFen(fen) { /*Calls ResetBoard, UpdateListsMaterial, and Gen
         fenIndex++;
     }
 
-    GameBoard.side = (fen[fenIndex] === 'w') ? Colour.white : Colour.black; /*if a 1 is found, set side to white, else set to black*/
+    GameBoard.side = (fen[fenIndex] === 'w') ? Color.white : Color.black; /*if a 1 is found, set side to white, else set to black*/
     fenIndex += 2;
 
     while (fen[fenIndex] !== ' ') {
@@ -215,7 +215,7 @@ export function SqAttacked(sq, side) {
     let pce, t_sq, dir;
 
     /*Non sliding attacks (pawn, knight, and king)*/
-    if (side === Colour.white) {
+    if (side === Color.white) {
         if (GameBoard.pieces[sq + 11] === Piece.whitePawn || GameBoard.pieces[sq + 9] === Piece.whitePawn) {
             return true;
         }
@@ -252,7 +252,7 @@ export function SqAttacked(sq, side) {
         t_sq = sq + dir;
         pce = GameBoard.pieces[t_sq];
         while (pce !== Square.offBoard) {
-            if (pce !== Piece.empty) {
+            if (pce !== Piece.none) {
                 if (PieceBishopQueen[pce] && PieceCol[pce] === side) {
                     return true;
                 }
@@ -268,7 +268,7 @@ export function SqAttacked(sq, side) {
         t_sq = sq + dir;
         pce = GameBoard.pieces[t_sq];
         while (pce !== Square.offBoard) {
-            if (pce !== Piece.empty) {
+            if (pce !== Piece.none) {
                 if (PieceRookQueen[pce] && PieceCol[pce] === side) {
                     return true;
                 }

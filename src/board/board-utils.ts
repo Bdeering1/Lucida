@@ -1,6 +1,6 @@
 /* eslint-disable no-magic-numbers */
 import { BOARD_SQ_NUM, INNER_BOARD_SQ_NUM, NUM_PIECE_TYPES } from '../shared/constants';
-import { Colour, Piece, Rank, Square } from '../shared/enums';
+import { Color, Piece, Rank, Square } from '../shared/enums';
 
 export default class BoardUtils {
 
@@ -18,23 +18,23 @@ export default class BoardUtils {
     readonly PieceMaj = [ false, false, false, false, true, true, true, false, false, false, true, true, true ];
     readonly PieceMin = [ false, false, true, true, false, false, false, false, true, true, false, false, false ];
     readonly PieceVal = [ 0, 100, 325, 325, 550, 1000, 50000, 100, 325, 325, 550, 1000, 50000 ];
-    readonly PieceCol = [ Colour.both, Colour.white, Colour.white, Colour.white, Colour.white, Colour.white, Colour.white,
-        Colour.black, Colour.black, Colour.black, Colour.black, Colour.black, Colour.black ];
+    readonly PieceCol = [ Color.none, Color.white, Color.white, Color.white, Color.white, Color.white, Color.white,
+        Color.black, Color.black, Color.black, Color.black, Color.black, Color.black ];
 
-    readonly PiecePawn = [ false, true, false, false, false, false, false, true, false, false, false, false, false ]; /* not used so far, needed?*/
-    readonly PieceKnight = [ false, false, true, false, false, false, false, false, true, false, false, false, false ]; /* not used either*/
-    readonly PieceKing = [ false, false, false, false, false, false, true, false, false, false, false, false, true ]; /* not used either*/
-    readonly PieceRookQueen = [ false, false, false, false, true, true, false, false, false, false, true, true, false ];
-    readonly PieceBishopQueen = [ false, false, false, true, false, true, false, false, false, true, false, true, false ];
-    readonly PieceSlides = [ false, false, false, true, true, true, false, false, false, true, true, true, false ];
+    readonly IsPawn = [ false, true, false, false, false, false, false, true, false, false, false, false, false ]; /* not used so far, needed?*/
+    readonly IsKnight = [ false, false, true, false, false, false, false, false, true, false, false, false, false ]; /* not used either*/
+    readonly IsKing = [ false, false, false, false, false, false, true, false, false, false, false, false, true ]; /* not used either*/
+    readonly IsRookQueen = [ false, false, false, false, true, true, false, false, false, false, true, true, false ];
+    readonly IsBishopQueen = [ false, false, false, true, false, true, false, false, false, true, false, true, false ];
+    readonly IsSliding = [ false, false, false, true, true, true, false, false, false, true, true, true, false ];
     
-    //  pawn dir?
-    readonly NDir = [ -8, -19, -21, -12, 8, 19, 21, 12 ];
-    readonly RDir = [ -1, -10, 1, 10 ];
-    readonly BDir = [ -9, -11, 11, 9 ];
-    readonly KDir = [ -1, -10, 1, 10, -9, -11, 11, 9 ];
-    readonly DirNum = [ 0, 0, 8, 4, 4, 8, 8, 0, 8, 4, 4, 8, 8 ];
-    readonly PceDir = [ 0, 0, this.NDir, this.BDir, this.RDir, this.KDir, this.KDir, 0, this.NDir, this.BDir, this.RDir, this.KDir, this.KDir ];
+    readonly PawnDir = [ -10, 10 ];
+    readonly KnightDir = [ -8, -19, -21, -12, 8, 19, 21, 12 ];
+    readonly RookDir = [ -1, -10, 1, 10 ];
+    readonly BishopDir = [ -9, -11, 11, 9 ];
+    readonly KingDir = [ -1, -10, 1, 10, -9, -11, 11, 9 ];
+    readonly DirIndexes = [ 0, 0, 8, 4, 4, 8, 8, 0, 8, 4, 4, 8, 8 ];
+    readonly PieceDir = [ 0, this.PawnDir, this.KnightDir, this.BishopDir, this.RookDir, this.KingDir, this.KingDir, this.PawnDir, this.KnightDir, this.BishopDir, this.RookDir, this.KingDir, this.KingDir ];
     readonly LoopNonSlidePce = [ Piece.whiteKnight, Piece.whiteKing, 0, Piece.blackKnight, Piece.blackKnight, 0 ];
     readonly LoopNonSlideIndex = [ 0, 3 ];
     readonly LoopSlidePce = [ Piece.whiteBishop, Piece.whiteRook, Piece.whiteQueen, 0, Piece.blackBishop, Piece.blackRook, Piece.blackQueen, 0 ];

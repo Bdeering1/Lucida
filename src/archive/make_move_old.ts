@@ -5,7 +5,7 @@ import { GameBoard, HashCastle, HashEnPas, HashPiece, HashSide, SqAttacked } fro
 
 export function ClearPiece(sq) {
     const pceType = GameBoard.pieces[sq];
-    if (pceType === Piece.empty) {
+    if (pceType === Piece.none) {
         console.log("Error: trying to clear empty piece");
         return;
     }
@@ -15,7 +15,7 @@ export function ClearPiece(sq) {
 
     HashPiece(pceType, sq);
 
-    GameBoard.pieces[sq] = Piece.empty;
+    GameBoard.pieces[sq] = Piece.none;
     GameBoard.material[col] -= PieceVal[pceType];
 
     for (let i = 0; i < GameBoard.numPieces[pceType]; i++) { /*maybe if each piece had a unique ID or something this wouldn't be necessary*/
@@ -51,7 +51,7 @@ export function MovePiece(from, to) { /*make sure this is right*/
     HashPiece(pceType, from);
     HashPiece(pceType, to);
 
-    GameBoard.pieces[from] = Piece.empty;
+    GameBoard.pieces[from] = Piece.none;
     GameBoard.pieces[to] = pceType;
 
     let i = 0;
@@ -124,7 +124,7 @@ export function MakeMove(move) {
     } /*if there are no possible castlePerm changes castlePerm is not touched and not hashed in or out*/
 
     GameBoard.fiftyMove++;
-    if (Captured(move) !== Piece.empty) {
+    if (Captured(move) !== Piece.none) {
         ClearPiece(to);
         GameBoard.fiftyMove = 0;
     }
@@ -144,7 +144,7 @@ export function MakeMove(move) {
 
     MovePiece(from, to);
     const promoted = Promoted(move);
-    if (promoted !== Piece.empty) {
+    if (promoted !== Piece.none) {
         ClearPiece(to);
         AddPiece(promoted, to);
     }
@@ -209,10 +209,10 @@ export function UndoMove() {
     MovePiece(to, from);
 
     const captured = Captured(move);
-    if (captured !== Piece.empty) {
+    if (captured !== Piece.none) {
         AddPiece(captured, to);
     }
-    if (Promoted(move) !== Piece.empty) {
+    if (Promoted(move) !== Piece.none) {
         ClearPiece(from);
         AddPiece((GameBoard.side === Colour.white ? Piece.whitePawn : Piece.blackPawn), from);
     }

@@ -1,5 +1,5 @@
 /* eslint-disable no-use-before-define */
-import { Colour, Piece, Square } from "../shared/enums";
+import { Color, Piece, Square } from "../shared/enums";
 
 export interface IBoardSetup {
     /**
@@ -16,14 +16,17 @@ export interface IBoard {
     //* --- Core ---
     /**
      * Stores the piece on each square of the board
+     * @todo this is likely a private implementation detail
      */
     pieces: Piece[];
     /**
      * Stores the square each piece is on indexed by piece type
+     * @todo this is likely a private implementation detail
      */
     pieceSquares: Square[][];
     /**
      * Number of each type of piece on the board
+     * @todo this is likely a private implementation detail
      */
     pieceQuantities: number[];
 
@@ -35,16 +38,17 @@ export interface IBoard {
 
     //* --- Move Data ---
     /**
-     * Stores the state of the board after each move
-     * - honestly not sure what this is for
+     * Stores the state of the board after each move, enables undo operation
      */
     history: IBoardMeta[];
     /**
      * Lists of possible moves indexed by game ply
+     * @todo this likely belongs in a move generator class
      */
     moveList: [][];
     /**
      * Lists of scores for each move indexed by game plys
+     * @todo this likely belongs in a move generator class
      */
     moveScores: [][];
 
@@ -81,7 +85,7 @@ export interface IBoard {
     /**
      * Given a square on the inner board and a side, returns whether or not that square is attacked
      */
-    isSquareAttacked(sq: Square, side: Colour): boolean;
+    isSquareAttacked(sq: Square, side: Color): boolean;
 }
 
 /**
@@ -92,7 +96,7 @@ export interface IBoardMeta {
     /**
      * The current side to move
      */
-    sideToMove: Colour;
+    sideToMove: Color;
     /**
      * Current (half-)move number
      */
@@ -128,7 +132,7 @@ export interface IBoardMeta {
     /**
      * Upate castling permissions, en passent, and posKey
      */
-    update(from: Square, to: Square): void;
+    update(from: Square, to: Square, pieceFrom: Piece, pieceTo: Piece): void;
 
     /**
      * Generate hash key for the current position
