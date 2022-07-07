@@ -125,7 +125,7 @@ export function Promoted(m : number) {
 }
 
 export function GenerateHash32(seed: number) {
-    //return ~~(seed * 3575866506);
-    return Math.floor(Math.random() * 255 + 1) << 23 | Math.floor(Math.random() * 255 + 1) << 16
-    | Math.floor(Math.random() * 255 + 1) << 8 | Math.floor(Math.random() * 255 + 1);
+    return ~~((seed + 37) * 3575866506 + seed % 2);
+    /* return Math.floor(Math.random() * 255 + 1) << 24 | Math.floor(Math.random() * 255 + 1) << 16
+    | Math.floor(Math.random() * 255 + 1) << 8 | Math.floor(Math.random() * 255 + 1); */
 }

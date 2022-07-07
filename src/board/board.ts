@@ -137,8 +137,8 @@ export class BoardMeta implements IBoardMeta {
     setBlackKingCastle(): void { this.castlePermissions |= CastleBit.blackKing; }
     setBlackQueenCastle(): void { this.castlePermissions |= CastleBit.blackQueen; }
     
-    private HashPiece(piece: Piece, sq: number) { this.posKey ^= this.pieceKeys[piece][sq]; }
-    private HashCastle() { this.posKey ^= this.castleKeys[this.castlePermissions]; }
-    private HashSide() { this.posKey ^= this.sideKey; }
-    private HashEnPas() { this.posKey ^= this.pieceKeys[Piece.none][this.enPas]; }
+    public HashPiece(piece: Piece, sq: number) { this.posKey ^= this.pieceKeys[piece][sq]; }
+    public HashCastle() { this.posKey ^= this.castleKeys[this.castlePermissions]; }
+    public HashSide() { this.posKey ^= this.sideKey; }
+    public HashEnPas() { this.posKey ^= this.pieceKeys[Piece.none][this.enPas]; }
 }
