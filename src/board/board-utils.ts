@@ -1,5 +1,5 @@
 /* eslint-disable no-magic-numbers */
-import { Color, Piece, Square } from '../shared/enums';
+import { Color, Piece, Rank, Square } from '../shared/enums';
 
 
 /* --- Maps --- */
@@ -24,14 +24,15 @@ export const BishopDir = [ -9, -11, 11, 9 ];
 export const KingDir = [ -1, -10, 1, 10, -9, -11, 11, 9 ];
 export const DirIndexes = [ 0, 0, 8, 4, 4, 8, 8, 0, 8, 4, 4, 8, 8 ];
 export const PieceDir = [ 0, PawnDir, KnightDir, BishopDir, RookDir, KingDir, KingDir, PawnDir, KnightDir, BishopDir, RookDir, KingDir, KingDir ];
-export const LoopNonSlidePce = [ Piece.whiteKnight, Piece.whiteKing, 0, Piece.blackKnight, Piece.blackKnight, 0 ];
-export const LoopNonSlideIndex = [ 0, 3 ];
-export const LoopSlidePce = [ Piece.whiteBishop, Piece.whiteRook, Piece.whiteQueen, 0, Piece.blackBishop, Piece.blackRook, Piece.blackQueen, 0 ];
-export const LoopSlideIndex = [ 0, 4 ];
+export const EnPasRank = [ Rank.two, Rank.seven]
+export const NonSlidingPiecess = [ Piece.whiteKnight, Piece.whiteKing, 0, Piece.blackKnight, Piece.blackKnight, 0 ];
+export const NonSlidingPieceIdx = [ 0, 3 ];
+export const SlidingPieces = [ Piece.whiteBishop, Piece.whiteRook, Piece.whiteQueen, 0, Piece.blackBishop, Piece.blackRook, Piece.blackQueen, 0 ];
+export const SlidingPieceIdx = [ 0, 4 ];
 
 export const Kings = [ Piece.whiteKing, Piece.blackKnight ];
 
-export const FilesBoard = [
+export const GetFile = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 2, 3, 4, 5, 6, 7, 8, 0,
@@ -46,7 +47,7 @@ export const FilesBoard = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 ];
 
-export const RanksBoard = [
+export const GetRank = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 1, 1, 1, 1, 1, 1, 1, 0,
@@ -61,18 +62,18 @@ export const RanksBoard = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 ];
 
-export const Sq64To120 = [
-    20, 21, 22, 23, 24, 25, 26, 27,
-    30, 31, 32, 33, 34, 35, 36, 37,
-    40, 41, 42, 43, 44, 45, 46, 47,
-    50, 51, 52, 53, 54, 55, 56, 57,
-    60, 61, 62, 63, 64, 65, 66, 67,
-    70, 71, 72, 73, 74, 75, 76, 77,
-    80, 81, 82, 83, 84, 85, 86, 87,
-    90, 91, 92, 93, 94, 95, 96, 97,
+export const GetSq120 = [
+    21, 22, 23, 24, 25, 26, 27, 28,
+    31, 32, 33, 34, 35, 36, 37, 38,
+    41, 42, 43, 44, 45, 46, 47, 48,
+    51, 52, 53, 54, 55, 56, 57, 58,
+    61, 62, 63, 64, 65, 66, 67, 68,
+    71, 72, 73, 74, 75, 76, 77, 78,
+    81, 82, 83, 84, 85, 86, 87, 88,
+    91, 92, 93, 94, 95, 96, 97, 98,
 ];
 
-export const Sq120To64 = [
+export const GetSq64 = [
     99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
     99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
     99,  0,  1,  2,  3,  4,  5,  6,  7, 99,
@@ -107,7 +108,7 @@ export function GetSquare(file : number, rank : number) {
     return 21 + file + (70 - rank * 10);
 }
 export function SqOffboard(sq : number) {
-    return Sq120To64[sq] === Square.offBoard;
+    return GetSq64[sq] === Square.offBoard;
 }
 
 export function FromSq(m : number) {

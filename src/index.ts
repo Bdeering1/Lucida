@@ -1,5 +1,5 @@
-// import Initialize from './archive/initialize_old.js';
-// import { PrintBoard } from './archive/printing_old.js';
+import { createBoard } from "./board/board-setup";
+import { printBoard } from "./cli/printing";
 
-// Initialize();
-// PrintBoard();
+const board = createBoard();
+printBoard(board);

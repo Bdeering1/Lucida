@@ -1,7 +1,7 @@
-import { BOARD_SQ_NUM, NUM_CASTLE_COMBINATIONS, MAX_DEPTH, MAX_NUM_PER_PIECE, MAX_POSITION_MOVES, NUM_PIECE_TYPES } from "../shared/constants";
-import { CastleBit, Color, Piece, Rank, Square } from "../shared/enums";
+import { BOARD_SQ_NUM, MAX_DEPTH, MAX_NUM_PER_PIECE, MAX_POSITION_MOVES, NUM_CASTLE_COMBINATIONS, NUM_PIECE_TYPES } from "../shared/constants";
+import { CastleBit, Color, Piece, Square } from "../shared/enums";
+import { CastlePerm, EnPasRank, GenerateHash32, GetRank, IsPawn, PawnDir, PieceVal } from "./board-utils";
 import { IBoard, IBoardMeta } from "./board-types";
-import { CastlePerm, GenerateHash32, IsPawn, PawnDir, PieceVal, RanksBoard } from "./board-utils";
 
 
 export class Board implements IBoard {
@@ -15,7 +15,7 @@ export class Board implements IBoard {
     public moveScores: [][];
 
     constructor(meta: IBoardMeta) {
-        this.pieces = new Array(BOARD_SQ_NUM);
+        this.pieces = new Array(BOARD_SQ_NUM).fill(Piece.none);
         this.pieceSquares = new Array(NUM_PIECE_TYPES);
         this.pieceQuantities = new Array(NUM_PIECE_TYPES);
         this.meta = meta;
@@ -107,20 +107,21 @@ export class BoardMeta implements IBoardMeta {
     }
 
     update(from: Square, to: Square, pieceFrom: Piece, pieceTo: Piece): void {
-        if (IsPawn[pieceFrom] && RanksBoard[from] === Rank.one ) {
+        this.enPas = Square.none;
+        if (IsPawn[pieceFrom] && GetRank[from] === EnPasRank[this.sideToMove] ) {
             this.enPas = from + PawnDir[this.sideToMove];
+            this.HashEnPas();
         }
 
         if ((this.castlePermissions & CastleBit.all) !== 0) {
             this.castlePermissions &= CastlePerm[from];
             this.castlePermissions &= CastlePerm[to];
+            this.HashCastle();
         }
 
         this.HashPiece(pieceTo, to);
         this.HashPiece(pieceFrom, from);
         this.HashPiece(pieceFrom, to);
-        this.HashCastle();
-        this.HashEnPas();
         this.HashSide();
 
         this.sideToMove = this.sideToMove === Color.white ? Color.black : Color.white;

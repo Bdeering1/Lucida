@@ -1,17 +1,13 @@
 import { Board, BoardMeta } from "./board";
-import { IBoard, IBoardSetup } from "./board-types";
 
-export default class BoardSetup implements IBoardSetup {
-    private board: IBoard;
+export function createBoard() {
+    return new Board(new BoardMeta());
+}
 
-    public constructor() {
-        this.board = new Board(new BoardMeta());
-    }
+export function resetBoard(): void {
+    throw new Error("Method not implemented.");
+}
 
-    public reset(): void {
-        throw new Error("Method not implemented.");
-    }
-    public parseFen(fen: string): void {
-        throw new Error("Method not implemented.");
-    }
+export function parseFen(fen: string): void {
+    throw new Error("Method not implemented.");
 }

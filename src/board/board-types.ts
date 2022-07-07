@@ -1,21 +1,6 @@
 /* eslint-disable no-use-before-define */
 import { Color, Piece, Square } from "../shared/enums";
 
-/**
- * Initializes the board and handles FEN parsing
- * @todo a class may not be required for this
- */
-export interface IBoardSetup {
-    /**
-     * Reset board to starting position
-     */
-    reset(): void
-    /**
-     * Set board according to an FEN string
-     */
-    parseFen(fen: string): void;
-}
-
 export interface IBoard {
     //* --- Core ---
     /**

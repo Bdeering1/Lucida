@@ -14,7 +14,6 @@ export const MAX_NUM_PER_PIECE = 10;
 export const START_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 export const PIECE_CHAR = ".PNBRQKpnbrqk";
 export const SIDE_CHAR = "wb-";
-export const RANK_CHAR = "12345678";
 export const FILE_CHAR = "abcdefgh";
 
 /* --- Flags --- */
