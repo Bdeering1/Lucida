@@ -3,10 +3,10 @@
 /* --- Constants --- */
 export const BOARD_SQ_NUM = 120;
 export const INNER_BOARD_SQ_NUM = 64;
+export const NUM_CASTLE_COMBINATIONS = 16;
 export const MAX_GAME_MOVES = 2048; /*(half moves)*/
 export const MAX_POSITION_MOVES = 256; /*used for storing moves in GameBoard.moveList for engine calculation*/
 export const MAX_DEPTH = 64;
-export const NO_MOVE = 0;
 export const NUM_PIECE_TYPES = 13;
 export const MAX_NUM_PER_PIECE = 10;
 

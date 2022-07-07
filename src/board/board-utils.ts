@@ -1,111 +1,130 @@
 /* eslint-disable no-magic-numbers */
-import { BOARD_SQ_NUM, INNER_BOARD_SQ_NUM, NUM_PIECE_TYPES } from '../shared/constants';
-import { Color, Piece, Rank, Square } from '../shared/enums';
-
-export default class BoardUtils {
-
-    /* --- Empty Maps --- */
-    FilesBoard: (File | Square)[];
-    RanksBoard: Rank[];
-    Sq120ToSq64: Piece[];
-    Sq64ToSq120: Piece[];
-    PieceKeys: number[];
-    CastleKeys: number[];
-    SideKey: number; /* hashed in if white is to move*/
-
-    /* --- Maps --- */
-    readonly PieceBig = [ false, false, true, true, true, true, true, false, true, true, true, true, true ];
-    readonly PieceMaj = [ false, false, false, false, true, true, true, false, false, false, true, true, true ];
-    readonly PieceMin = [ false, false, true, true, false, false, false, false, true, true, false, false, false ];
-    readonly PieceVal = [ 0, 100, 325, 325, 550, 1000, 50000, 100, 325, 325, 550, 1000, 50000 ];
-    readonly PieceCol = [ Color.none, Color.white, Color.white, Color.white, Color.white, Color.white, Color.white,
-        Color.black, Color.black, Color.black, Color.black, Color.black, Color.black ];
-
-    readonly IsPawn = [ false, true, false, false, false, false, false, true, false, false, false, false, false ]; /* not used so far, needed?*/
-    readonly IsKnight = [ false, false, true, false, false, false, false, false, true, false, false, false, false ]; /* not used either*/
-    readonly IsKing = [ false, false, false, false, false, false, true, false, false, false, false, false, true ]; /* not used either*/
-    readonly IsRookQueen = [ false, false, false, false, true, true, false, false, false, false, true, true, false ];
-    readonly IsBishopQueen = [ false, false, false, true, false, true, false, false, false, true, false, true, false ];
-    readonly IsSliding = [ false, false, false, true, true, true, false, false, false, true, true, true, false ];
-    
-    readonly PawnDir = [ -10, 10 ];
-    readonly KnightDir = [ -8, -19, -21, -12, 8, 19, 21, 12 ];
-    readonly RookDir = [ -1, -10, 1, 10 ];
-    readonly BishopDir = [ -9, -11, 11, 9 ];
-    readonly KingDir = [ -1, -10, 1, 10, -9, -11, 11, 9 ];
-    readonly DirIndexes = [ 0, 0, 8, 4, 4, 8, 8, 0, 8, 4, 4, 8, 8 ];
-    readonly PieceDir = [ 0, this.PawnDir, this.KnightDir, this.BishopDir, this.RookDir, this.KingDir, this.KingDir, this.PawnDir, this.KnightDir, this.BishopDir, this.RookDir, this.KingDir, this.KingDir ];
-    readonly LoopNonSlidePce = [ Piece.whiteKnight, Piece.whiteKing, 0, Piece.blackKnight, Piece.blackKnight, 0 ];
-    readonly LoopNonSlideIndex = [ 0, 3 ];
-    readonly LoopSlidePce = [ Piece.whiteBishop, Piece.whiteRook, Piece.whiteQueen, 0, Piece.blackBishop, Piece.blackRook, Piece.blackQueen, 0 ];
-    readonly LoopSlideIndex = [ 0, 4 ];
-
-    readonly Kings = [ Piece.whiteKing, Piece.blackKnight ];
-
-    readonly CastlePerm = [
-        15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
-        15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
-        15,  7, 15, 15, 15,  3, 15, 15, 11, 15,
-        15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
-        15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
-        15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
-        15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
-        15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
-        15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
-        15, 13, 15, 15, 15, 12, 15, 15, 14, 15,
-        15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
-        15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
-    ];
+import { Color, Piece, Square } from '../shared/enums';
 
 
-    public constructor() {
-        this.FilesBoard = new Array(BOARD_SQ_NUM);
-        this.RanksBoard = new Array(BOARD_SQ_NUM);
-        this.Sq120ToSq64 = new Array(BOARD_SQ_NUM);
-        this.Sq64ToSq120 = new Array(INNER_BOARD_SQ_NUM);
-        this.PieceKeys = new Array(NUM_PIECE_TYPES * BOARD_SQ_NUM);
-        this.CastleKeys = new Array(16);
-        this.SideKey = this.GetRandom32();
+/* --- Maps --- */
+export const PieceBig = [ false, false, true, true, true, true, true, false, true, true, true, true, true ];
+export const PieceMaj = [ false, false, false, false, true, true, true, false, false, false, true, true, true ];
+export const PieceMin = [ false, false, true, true, false, false, false, false, true, true, false, false, false ];
+export const PieceVal = [ 0, 100, 325, 325, 550, 1000, 50000, 100, 325, 325, 550, 1000, 50000 ];
+export const PieceCol = [ Color.none, Color.white, Color.white, Color.white, Color.white, Color.white, Color.white,
+    Color.black, Color.black, Color.black, Color.black, Color.black, Color.black ];
 
-        // init hash keyss
-        // init file and rank boards
-    }
+export const IsPawn = [ false, true, false, false, false, false, false, true, false, false, false, false, false ]; /* not used so far, needed?*/
+export const IsKnight = [ false, false, true, false, false, false, false, false, true, false, false, false, false ]; /* not used either*/
+export const IsKing = [ false, false, false, false, false, false, true, false, false, false, false, false, true ]; /* not used either*/
+export const IsRookQueen = [ false, false, false, false, true, true, false, false, false, false, true, true, false ];
+export const IsBishopQueen = [ false, false, false, true, false, true, false, false, false, true, false, true, false ];
+export const IsSliding = [ false, false, false, true, true, true, false, false, false, true, true, true, false ];
 
-    GetSquare(file : number, rank : number) {
-        return 21 + file + (70 - rank * 10);
-    }
-    Sq64(sq120 : number) {
-        return this.Sq120ToSq64[sq120];
-    }
-    Sq120(sq64 : number) {
-        return this.Sq64ToSq120[sq64];
-    }
-    SqOffboard(sq : number) {
-        return this.FilesBoard[sq] === Square.offBoard;
-    }
-    PieceIndex(piece : number, pieceNum : number) {
-        return piece * 10 + pieceNum;
-    }
+export const PawnDir = [ -10, 10 ];
+export const KnightDir = [ -8, -19, -21, -12, 8, 19, 21, 12 ];
+export const RookDir = [ -1, -10, 1, 10 ];
+export const BishopDir = [ -9, -11, 11, 9 ];
+export const KingDir = [ -1, -10, 1, 10, -9, -11, 11, 9 ];
+export const DirIndexes = [ 0, 0, 8, 4, 4, 8, 8, 0, 8, 4, 4, 8, 8 ];
+export const PieceDir = [ 0, PawnDir, KnightDir, BishopDir, RookDir, KingDir, KingDir, PawnDir, KnightDir, BishopDir, RookDir, KingDir, KingDir ];
+export const LoopNonSlidePce = [ Piece.whiteKnight, Piece.whiteKing, 0, Piece.blackKnight, Piece.blackKnight, 0 ];
+export const LoopNonSlideIndex = [ 0, 3 ];
+export const LoopSlidePce = [ Piece.whiteBishop, Piece.whiteRook, Piece.whiteQueen, 0, Piece.blackBishop, Piece.blackRook, Piece.blackQueen, 0 ];
+export const LoopSlideIndex = [ 0, 4 ];
 
-    FromSq(m : number) {
-        return m & 0x7F;
-    }
-    ToSq(m : number) {
-        return m >> 7 & 0x7F;
-    }
-    Captured(m : number) {
-        return m >> 14 & 0xF;
-    }
-    Promoted(m : number) {
-        return m >> 20 & 0xF;
-    }
+export const Kings = [ Piece.whiteKing, Piece.blackKnight ];
 
-    GetRandom32() {
-        return Math.floor(Math.random() * 255 + 1) << 23 | Math.floor(Math.random() * 255 + 1) << 16
-        | Math.floor(Math.random() * 255 + 1) << 8 | Math.floor(Math.random() * 255 + 1);
-    }
+export const FilesBoard = [
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 0,
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 0,
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 0,
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 0,
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 0,
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 0,
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 0,
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+];
 
-    GenerateHash32(seed: number) {
-        return ~~(seed * 3575866506);
-    }
+export const RanksBoard = [
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 1, 1, 1, 1, 1, 1, 1, 1, 0,
+    0, 2, 2, 2, 2, 2, 2, 2, 2, 0,
+    0, 3, 3, 3, 3, 3, 3, 3, 3, 0,
+    0, 4, 4, 4, 4, 4, 4, 4, 4, 0,
+    0, 5, 5, 5, 5, 5, 5, 5, 5, 0,
+    0, 6, 6, 6, 6, 6, 6, 6, 6, 0,
+    0, 7, 7, 7, 7, 7, 7, 7, 7, 0,
+    0, 8, 8, 8, 8, 8, 8, 8, 8, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+];
+
+export const Sq64To120 = [
+    20, 21, 22, 23, 24, 25, 26, 27,
+    30, 31, 32, 33, 34, 35, 36, 37,
+    40, 41, 42, 43, 44, 45, 46, 47,
+    50, 51, 52, 53, 54, 55, 56, 57,
+    60, 61, 62, 63, 64, 65, 66, 67,
+    70, 71, 72, 73, 74, 75, 76, 77,
+    80, 81, 82, 83, 84, 85, 86, 87,
+    90, 91, 92, 93, 94, 95, 96, 97,
+];
+
+export const Sq120To64 = [
+    99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
+    99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
+    99,  0,  1,  2,  3,  4,  5,  6,  7, 99,
+    99, 10, 11, 12, 13, 14, 15, 16, 17, 99,
+    99, 20, 21, 22, 23, 24, 25, 26, 27, 99,
+    99, 30, 31, 32, 33, 34, 35, 36, 37, 99,
+    99, 40, 41, 42, 43, 44, 45, 46, 47, 99,
+    99, 50, 51, 52, 53, 54, 55, 56, 57, 99,
+    99, 60, 61, 62, 63, 64, 65, 66, 67, 99,
+    99, 70, 71, 72, 73, 74, 75, 76, 77, 99,
+    99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
+    99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
+];
+
+export const CastlePerm = [
+    15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+    15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+    15,  7, 15, 15, 15,  3, 15, 15, 11, 15,
+    15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+    15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+    15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+    15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+    15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+    15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+    15, 13, 15, 15, 15, 12, 15, 15, 14, 15,
+    15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+    15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+];
+
+/* --- Functions --- */
+export function GetSquare(file : number, rank : number) {
+    return 21 + file + (70 - rank * 10);
+}
+export function SqOffboard(sq : number) {
+    return Sq120To64[sq] === Square.offBoard;
+}
+
+export function FromSq(m : number) {
+    return m & 0x7F;
+}
+export function ToSq(m : number) {
+    return m >> 7 & 0x7F;
+}
+export function Captured(m : number) {
+    return m >> 14 & 0xF;
+}
+export function Promoted(m : number) {
+    return m >> 20 & 0xF;
+}
+
+export function GenerateHash32(seed: number) {
+    //return ~~(seed * 3575866506);
+    return Math.floor(Math.random() * 255 + 1) << 23 | Math.floor(Math.random() * 255 + 1) << 16
+    | Math.floor(Math.random() * 255 + 1) << 8 | Math.floor(Math.random() * 255 + 1);
 }

@@ -3,15 +3,13 @@
 
 import { Board, BoardMeta } from "../board/board";
 import { Piece, Square } from "../shared/enums";
-import BoardUtils from "../board/board-utils";
 import { IBoard } from "../board/board-types";
 
 describe('board', () => {
     let board: IBoard;
 
     beforeEach(() => {
-        const utils = new BoardUtils();
-        board = new Board(new BoardMeta(utils), utils);
+        board = new Board(new BoardMeta());
     });
 
     it.each([

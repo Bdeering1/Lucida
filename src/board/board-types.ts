@@ -67,7 +67,7 @@ export interface IBoard {
     /**
      * Move a piece to another squares
      */
-    movePiece(to: Square, from: Square): void;
+    movePiece(from: Square, to: Square): void;
     /**
      * Returns the piece located on a given square
      */

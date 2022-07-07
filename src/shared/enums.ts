@@ -16,6 +16,7 @@ export const enum Piece {
 }
   
 export const enum File {
+    none,
     a,
     b,
     c,
@@ -23,10 +24,10 @@ export const enum File {
     e,
     f,
     g,
-    h,
-    none
+    h
 }
 export enum Rank {
+    none,
     one,
     two,
     three,
@@ -34,8 +35,7 @@ export enum Rank {
     five,
     six,
     seven,
-    eight,
-    none
+    eight
 }
   
 export const enum Color {
@@ -59,13 +59,13 @@ export const enum CastleBit {
  * valid board squares: [21,98], no square: 99, off board: 100
  */
 export const enum Square {
-    a1 = 91, b1 = 92, c1 = 93, d1 = 94, e1 = 95, f1 = 96, g1 = 97, h1 = 98,
-    a2 = 81, b2 = 82, c2 = 83, d2 = 84, e2 = 85, f2 = 86, g2 = 87, h2 = 88,
-    a3 = 71, b3 = 72, c3 = 73, d3 = 74, e3 = 75, f3 = 76, g3 = 77, h3 = 78,
-    a4 = 61, b4 = 62, c4 = 63, d4 = 64, e4 = 65, f4 = 66, g4 = 67, h4 = 68,
-    a5 = 51, b5 = 52, c5 = 53, d5 = 54, e5 = 55, f5 = 56, g5 = 57, h5 = 58,
-    a6 = 41, b6 = 42, c6 = 43, d6 = 44, e6 = 45, f6 = 46, g6 = 47, h6 = 48,
-    a7 = 31, b7 = 32, c7 = 33, d7 = 34, e7 = 35, f7 = 36, g7 = 37, h7 = 38,
-    a8 = 21, b8 = 22, c8 = 23, d8 = 24, e8 = 25, f8 = 26, g8 = 27, h8 = 28,
-    none = 99, offBoard = 100
+    a1 = 21, b1 = 22, c1 = 23, d1 = 24, e1 = 25, f1 = 26, g1 = 27, h1 = 28,
+    a2 = 31, b2 = 32, c2 = 33, d2 = 34, e2 = 35, f2 = 36, g2 = 37, h2 = 38,
+    a3 = 41, b3 = 42, c3 = 43, d3 = 44, e3 = 45, f3 = 46, g3 = 47, h3 = 48,
+    a4 = 51, b4 = 52, c4 = 53, d4 = 54, e4 = 55, f4 = 56, g4 = 57, h4 = 58,
+    a5 = 61, b5 = 62, c5 = 63, d5 = 64, e5 = 65, f5 = 66, g5 = 67, h5 = 68,
+    a6 = 71, b6 = 72, c6 = 73, d6 = 74, e6 = 75, f6 = 76, g6 = 77, h6 = 78,
+    a7 = 81, b7 = 82, c7 = 83, d7 = 84, e7 = 85, f7 = 86, g7 = 87, h7 = 88,
+    a8 = 91, b8 = 92, c8 = 93, d8 = 94, e8 = 95, f8 = 96, g8 = 97, h8 = 98,
+    offBoard = 99, none = 100
 }
