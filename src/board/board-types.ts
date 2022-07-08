@@ -47,8 +47,9 @@ export interface IBoard {
     addPiece(piece: Piece, sq: Square): void;
     /**
      * Remove a piece from the board
+     * @todo decide whether or not piece type should be passed in as a param
      */
-    removePiece(piece: Piece, sq: Square): void;
+    removePiece(sq: Square): void;
     /**
      * Move a piece to another squares
      */
@@ -121,7 +122,7 @@ export interface IBoardMeta {
     /**
      * Upate castling permissions, en passent, posKey, side to move, and material
      */
-    update(from: Square, to: Square, pieceFrom: Piece, pieceTo: Piece): void;
+    update(from: Square, to: Square, piece: Piece): void;
 
     get whiteKingCastle(): boolean;
     get whiteQueenCastle(): boolean;

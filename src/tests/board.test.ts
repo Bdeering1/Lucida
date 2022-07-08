@@ -27,7 +27,7 @@ describe('board', () => {
         [Piece.whiteQueen, Square.h1],
     ])('can remove pieces from the board', (piece, sq) => {
         board.addPiece(piece, sq);
-        board.removePiece(piece, sq);
+        board.removePiece(sq);
         expect(board.getPiece(sq)).toBe(Piece.none);
     });
 

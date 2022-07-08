@@ -1,6 +1,6 @@
 import { BOARD_SQ_NUM, MAX_DEPTH, MAX_NUM_PER_PIECE, MAX_POSITION_MOVES, NUM_CASTLE_COMBINATIONS, NUM_PIECE_TYPES } from "../shared/constants";
 import { CastleBit, Color, Piece, Square } from "../shared/enums";
-import { CastlePerm, EnPasRank, GenerateHash32, GetRank, IsPawn, PawnDir, PieceVal } from "./board-utils";
+import { CastlePerm, EnPasRank, GenerateHash32, GetRank, IsPawn, PawnDir, PieceColor, PieceVal } from "./board-utils";
 import { IBoard, IBoardMeta } from "./board-types";
 
 
@@ -33,13 +33,20 @@ export class Board implements IBoard {
         this.pieces[sq] = piece;
         this.pieceSquares[piece].push(sq);
         this.pieceQuantities[piece]++;
+        this.meta.HashPiece(piece, sq);
+        this.meta.material[PieceColor[piece]] -= PieceVal[piece];
     }
-    removePiece(piece: Piece, sq: Square): void {
+    removePiece(sq: Square): void {
         this.pieces[sq] = Piece.none;
-        this.pieceQuantities[piece]--;
-        for (let idx = 0; idx < this.pieceSquares.length; idx++) {
-            if (this.pieceSquares[piece][idx] === sq)
-                this.pieceSquares[piece][idx] = Square.none;
+        const piece = this.pieces[sq];
+        if (piece !== Piece.none) {
+            this.pieceQuantities[piece]--;
+            for (let idx = 0; idx < this.pieceSquares.length; idx++) {
+                if (this.pieceSquares[piece][idx] === sq)
+                    this.pieceSquares[piece][idx] = Square.none;
+            }
+            this.meta.HashPiece(piece, sq);
+            this.meta.material[PieceColor[piece]] -= PieceVal[piece];
         }
     }
     getPiece(sq: Square): Piece {
@@ -57,11 +64,10 @@ export class Board implements IBoard {
     }
 
     movePiece(from: Square, to: Square): void {
-        const fromPiece = this.getPiece(from);
-        const toPiece = this.getPiece(to);
-        this.meta.update(from, to, fromPiece, toPiece);
-        this.removePiece(fromPiece, from);
-        this.addPiece(fromPiece, to);
+        const piece = this.getPiece(from);
+        this.meta.update(from, to, piece);
+        this.removePiece(from);
+        this.addPiece(piece, to);
     }
     isSquareAttacked(sq: Square, side: Color): boolean {
         throw new Error("Method not implemented.");
@@ -106,9 +112,9 @@ export class BoardMeta implements IBoardMeta {
         this.castlePermissions = CastleBit.none;
     }
 
-    update(from: Square, to: Square, pieceFrom: Piece, pieceTo: Piece): void {
+    update(from: Square, to: Square, piece: Piece): void {
         this.enPas = Square.none;
-        if (IsPawn[pieceFrom] && GetRank[from] === EnPasRank[this.sideToMove] ) {
+        if (IsPawn[piece] && GetRank[from] === EnPasRank[this.sideToMove] ) {
             this.enPas = from + PawnDir[this.sideToMove];
             this.HashEnPas();
         }
@@ -119,13 +125,9 @@ export class BoardMeta implements IBoardMeta {
             this.HashCastle();
         }
 
-        this.HashPiece(pieceTo, to);
-        this.HashPiece(pieceFrom, from);
-        this.HashPiece(pieceFrom, to);
         this.HashSide();
 
         this.sideToMove = this.sideToMove === Color.white ? Color.black : Color.white;
-        this.material[this.sideToMove] -= PieceVal[pieceTo];
     }
 
     get whiteKingCastle() { return (this.castlePermissions & CastleBit.whiteKing) !== 0; }

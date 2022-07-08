@@ -7,7 +7,7 @@ export const PieceBig = [ false, false, true, true, true, true, true, false, tru
 export const PieceMaj = [ false, false, false, false, true, true, true, false, false, false, true, true, true ];
 export const PieceMin = [ false, false, true, true, false, false, false, false, true, true, false, false, false ];
 export const PieceVal = [ 0, 100, 325, 325, 550, 1000, 50000, 100, 325, 325, 550, 1000, 50000 ];
-export const PieceCol = [ Color.none, Color.white, Color.white, Color.white, Color.white, Color.white, Color.white,
+export const PieceColor = [ Color.none, Color.white, Color.white, Color.white, Color.white, Color.white, Color.white,
     Color.black, Color.black, Color.black, Color.black, Color.black, Color.black ];
 
 export const IsPawn = [ false, true, false, false, false, false, false, true, false, false, false, false, false ]; /* not used so far, needed?*/
