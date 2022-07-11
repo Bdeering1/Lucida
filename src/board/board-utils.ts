@@ -24,7 +24,7 @@ export const BishopDir = [ -9, -11, 11, 9 ];
 export const KingDir = [ -1, -10, 1, 10, -9, -11, 11, 9 ];
 export const DirIndexes = [ 0, 0, 8, 4, 4, 8, 8, 0, 8, 4, 4, 8, 8 ];
 export const PieceDir = [ 0, PawnDir, KnightDir, BishopDir, RookDir, KingDir, KingDir, PawnDir, KnightDir, BishopDir, RookDir, KingDir, KingDir ];
-export const EnPasRank = [ Rank.two, Rank.seven]
+export const EnPasRank = [ Rank.two, Rank.seven];
 export const NonSlidingPiecess = [ Piece.whiteKnight, Piece.whiteKing, 0, Piece.blackKnight, Piece.blackKnight, 0 ];
 export const NonSlidingPieceIdx = [ 0, 3 ];
 export const SlidingPieces = [ Piece.whiteBishop, Piece.whiteRook, Piece.whiteQueen, 0, Piece.blackBishop, Piece.blackRook, Piece.blackQueen, 0 ];
@@ -105,7 +105,7 @@ export const CastlePerm = [
 
 /* --- Functions --- */
 export function GetSquare(file : number, rank : number) {
-    return 20 + file + (80 - rank * 10);
+    return 10 + file + rank * 10;
 }
 export function SqOffboard(sq : number) {
     return GetSq64[sq] === Square.offBoard;

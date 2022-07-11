@@ -4,38 +4,42 @@ import { GenerateHash32, GetRank, GetSq120 } from "../board/board-utils";
 import { Board } from "../board/board";
 
 export function printBoard(board: Board) {
-    console.log("\n");
+    console.log("\n  a b c d e f g h");
 
-    let line = "  ";
-    for (let i = 0; i < 8; i++) {
-        line += `${FILE_CHAR[i]} `;
-    }
-    for (let sq = INNER_BOARD_SQ_NUM - 1; sq >= 0; sq--) {
-        if ((sq + 1) % 8 === 0) {
-            console.log(line);
+    const lines = [];
+    let line = "";
+    for (let sq = 0; sq < INNER_BOARD_SQ_NUM; sq++) {
+        if (sq % 8 === 0) {
+            lines.push(line);
             line = `${GetRank[GetSq120[sq]]} `;
         }
         line += `${PIECE_CHAR[board.getPiece(GetSq120[sq])]} `;
     }
-    console.log(line);
+    lines.push(line);
+
+    for (const l of lines.reverse()) {
+        console.log(l);
+    }
     console.log("\n");
 }
 
 export function printBoard120(board: Board) {
-    console.log("\n");
+    console.log("\n    a b c d e f g h");
 
-    let line = "    ";
-    for (let i = 0; i < 8; i++) {
-        line += `${FILE_CHAR[i]} `;
-    }
-    for (let sq = BOARD_SQ_NUM - 1; sq >= 0; sq--) {
-        if ((sq + 1) % 10 === 0) {
-            console.log(line);
-            line = `${GetRank[sq - 1] !== 0 ? GetRank[sq - 1] : " "} `;
+    const lines = [];
+    let line = "";
+    for (let sq = 0; sq < BOARD_SQ_NUM; sq++) {
+        if (sq % 10 === 0) {
+            lines.push(line);
+            line = `${GetRank[sq + 1] !== 0 ? GetRank[sq + 1] : " "} `;
         }
         line += `${PIECE_CHAR[board.getPiece(sq)]} `;
     }
-    console.log(line);
+    lines.push(line);
+
+    for (const l of lines.reverse()) {
+        console.log(l);
+    }
     console.log("\n");
 }
 
