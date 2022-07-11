@@ -20,6 +20,7 @@
         {
             "files": ["*.ts"],
             "rules": {
+                "prefer-const": "warn",
                 "@typescript-eslint/no-empty-function": "off",
                 "@typescript-eslint/no-extra-semi": "off"
             }
@@ -62,7 +63,6 @@
         "prefer-object-spread": "warn",
         "prefer-promise-reject-errors": "error",
         "prefer-template": "warn",
-        "radix": "error",
         "rest-spread-spacing": "warn",
         "require-await": "warn",
         "sort-imports": "warn",

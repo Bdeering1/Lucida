@@ -105,7 +105,7 @@ export const CastlePerm = [
 
 /* --- Functions --- */
 export function GetSquare(file : number, rank : number) {
-    return 21 + file + (70 - rank * 10);
+    return 20 + file + (80 - rank * 10);
 }
 export function SqOffboard(sq : number) {
     return GetSq64[sq] === Square.offBoard;
