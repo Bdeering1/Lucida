@@ -33,8 +33,8 @@ export class Board implements IBoard {
         this.pieces[sq] = piece;
         this.pieceSquares[piece].push(sq);
         this.pieceQuantities[piece]++;
-        this.meta.HashPiece(piece, sq);
         this.meta.material[PieceColor[piece]] -= PieceVal[piece];
+        this.meta.HashPiece(piece, sq);
     }
     removePiece(sq: Square): void {
         this.pieces[sq] = Piece.none;
@@ -45,8 +45,8 @@ export class Board implements IBoard {
                 if (this.pieceSquares[piece][idx] === sq)
                     this.pieceSquares[piece][idx] = Square.none;
             }
-            this.meta.HashPiece(piece, sq);
             this.meta.material[PieceColor[piece]] -= PieceVal[piece];
+            this.meta.HashPiece(piece, sq);
         }
     }
     getPiece(sq: Square): Piece {
@@ -72,12 +72,7 @@ export class Board implements IBoard {
     isSquareAttacked(sq: Square, side: Color): boolean {
         throw new Error("Method not implemented.");
     }
-    generatePosKey(): void {
-        for (let piece = 1; piece < NUM_PIECE_TYPES; piece++) {
-            for (const sq of this.getSquares(piece)) {
-                this.meta.HashPiece(piece, sq);
-            }
-        }
+    updatePositionKey(): void {
         if (this.meta.sideToMove === Color.white) this.meta.HashSide();
         if (this.meta.enPas !== Square.none) this.meta.HashEnPas();
         this.meta.HashCastle();
@@ -103,15 +98,16 @@ export class BoardMeta implements IBoardMeta {
 
         this.castleKeys = new Array(NUM_CASTLE_COMBINATIONS);
         this.pieceKeys = new Array(NUM_PIECE_TYPES).fill(new Array(BOARD_SQ_NUM));
-        this.sideKey = GenerateHash32(0);
 
-        for (let piece = 0; piece < NUM_PIECE_TYPES; piece++) {
-            for (let sq = 0; sq < BOARD_SQ_NUM; sq++) {
-                this.pieceKeys[piece][sq] = GenerateHash32(piece * sq);
-            }
-        }
+        let seed = 0;
+        this.sideKey = GenerateHash32(seed++);
         for (let i = 0; i < NUM_CASTLE_COMBINATIONS; i++) {
-            this.castleKeys[i] = GenerateHash32(i);
+            this.castleKeys[i] = GenerateHash32(seed++);
+        }
+        for (let piece = Piece.whitePawn; piece < NUM_PIECE_TYPES; piece++) {
+            for (let sq = 0; sq < BOARD_SQ_NUM; sq++) {
+                this.pieceKeys[piece][sq] = GenerateHash32(seed++);
+            }
         }
     }
 
@@ -132,9 +128,10 @@ export class BoardMeta implements IBoardMeta {
             this.HashCastle();
         }
 
+        this.sideToMove = this.sideToMove === Color.white ? Color.black : Color.white;
         this.HashSide();
 
-        this.sideToMove = this.sideToMove === Color.white ? Color.black : Color.white;
+        this.ply++;
     }
 
     get whiteKingCastle() { return (this.castlePermissions & CastleBit.whiteKing) !== 0; }

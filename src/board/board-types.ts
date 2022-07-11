@@ -77,10 +77,9 @@ export interface IBoard {
      */
     isSquareAttacked(sq: Square, side: Color): boolean;
     /**
-     * Generate hash key for the current position
-     * @todo Is this necessary? This could likely be done alongside FEN parsing
+     * Update position key for side to move, en passent, and castling
      */
-    generatePosKey(): void;
+    updatePositionKey(): void;
 
     // methods for iterating over possible moves by piece
 }
@@ -122,7 +121,7 @@ export interface IBoardMeta {
 
     /**
      * Upate castling permissions, en passent, posKey, side to move, and material
-     * @todo upate ply and fity move counter?
+     * @todo upate fifty move counter
      */
     update(from: Square, to: Square, piece: Piece): void;
 

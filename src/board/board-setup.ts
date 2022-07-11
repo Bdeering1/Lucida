@@ -109,6 +109,8 @@ export function parseFen(board: IBoard, fen: string): void {
     board.meta.fiftyMoveCounter = parseInt(fen[fenIdx]);
     fenIdx += 2;
     board.meta.ply = parseInt(fen[fenIdx]) * 2;
+
+    board.updatePositionKey();
 }
 
 function GetFile(fileStr: string) {
