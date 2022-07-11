@@ -78,6 +78,7 @@ export interface IBoard {
     isSquareAttacked(sq: Square, side: Color): boolean;
     /**
      * Generate hash key for the current position
+     * @todo is this necessary? This could likely be done alongside FEN parsing
      */
     generatePosKey(): void;
 

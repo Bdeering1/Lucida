@@ -58,7 +58,7 @@ export class Board implements IBoard {
         }
     }
     * getSquares(piece: Piece): IterableIterator<Square> {
-        for (let i = 0; i < BOARD_SQ_NUM; i++) {
+        for (let i = 0; i < MAX_NUM_PER_PIECE; i++) {
             yield this.pieceSquares[piece][i];
         }
     }
@@ -73,7 +73,14 @@ export class Board implements IBoard {
         throw new Error("Method not implemented.");
     }
     generatePosKey(): void {
-        throw new Error("Method not implemented.");
+        for (let piece = 1; piece < NUM_PIECE_TYPES; piece++) {
+            for (const sq of this.getSquares(piece)) {
+                this.meta.HashPiece(piece, sq);
+            }
+        }
+        if (this.meta.sideToMove === Color.white) this.meta.HashSide();
+        if (this.meta.enPas !== Square.none) this.meta.HashEnPas();
+        this.meta.HashCastle();
     }
 }
 

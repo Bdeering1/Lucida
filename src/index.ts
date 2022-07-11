@@ -3,3 +3,5 @@ import { printBoard } from "./cli/printing";
 
 const board = createBoard();
 printBoard(board);
+
+board.generatePosKey();
