@@ -1,5 +1,5 @@
 import { BOARD_SQ_NUM, MAX_DEPTH, MAX_NUM_PER_PIECE, MAX_POSITION_MOVES, NUM_CASTLE_COMBINATIONS, NUM_PIECE_TYPES } from "../shared/constants";
-import { CastleBit, Color, Piece, Square } from "../shared/enums";
+import { CastleBit, Color, Piece, Rank, Square } from "../shared/enums";
 import { CastlePerm, EnPasRank, GenerateHash32, GetRank, IsPawn, PawnDir, PieceColor, PieceVal } from "./board-utils";
 import { IBoard, IBoardMeta } from "./board-types";
 
@@ -37,8 +37,8 @@ export class Board implements IBoard {
         this.meta.HashPiece(piece, sq);
     }
     removePiece(sq: Square): void {
-        this.pieces[sq] = Piece.none;
         const piece = this.pieces[sq];
+        this.pieces[sq] = Piece.none;
         if (piece !== Piece.none) {
             this.pieceQuantities[piece]--;
             for (let idx = 0; idx < this.pieceSquares.length; idx++) {
@@ -46,6 +46,7 @@ export class Board implements IBoard {
                     this.pieceSquares[piece][idx] = Square.none;
             }
             this.meta.material[PieceColor[piece]] -= PieceVal[piece];
+            this.meta.fiftyMoveCounter = 0;
             this.meta.HashPiece(piece, sq);
         }
     }
@@ -117,9 +118,16 @@ export class BoardMeta implements IBoardMeta {
 
     update(from: Square, to: Square, piece: Piece): void {
         this.enPas = Square.none;
-        if (IsPawn[piece] && GetRank[from] === EnPasRank[this.sideToMove] ) {
-            this.enPas = from + PawnDir[this.sideToMove];
-            this.HashEnPas();
+        if (IsPawn[piece]) {
+            if (GetRank[from] === EnPasRank[this.sideToMove]
+                && GetRank[to] === Rank.four || Rank.five) {
+                this.enPas = from + PawnDir[this.sideToMove];
+                this.HashEnPas();
+            }
+            this.fiftyMoveCounter = 0;
+        }
+        else {
+            this.fiftyMoveCounter++;
         }
 
         if ((this.castlePermissions & CastleBit.all) !== 0) {

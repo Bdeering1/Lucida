@@ -47,11 +47,11 @@ export interface IBoard {
     addPiece(piece: Piece, sq: Square): void;
     /**
      * Remove a piece from the board
-     * @todo decide whether or not piece type should be passed in as a param
      */
     removePiece(sq: Square): void;
     /**
      * Move a piece to another squares
+     * @todo this should be able to account for castling and en passent
      */
     movePiece(from: Square, to: Square): void;
     /**
@@ -61,7 +61,7 @@ export interface IBoard {
     /**
      * Returns an iterator which yields the piece for each square on the board
      * @description this method makes interfacing with the board easier, and allows
-     * for the internal implementation piece states to be easily schanged later
+     * for the internal implementation piece states to be easily changed later
      * @todo implement as a generator at first, but later as a iterator (faster)
      */
     getPieces(): IterableIterator<Piece>;
@@ -121,7 +121,6 @@ export interface IBoardMeta {
 
     /**
      * Upate castling permissions, en passent, posKey, side to move, and material
-     * @todo upate fifty move counter
      */
     update(from: Square, to: Square, piece: Piece): void;
 
