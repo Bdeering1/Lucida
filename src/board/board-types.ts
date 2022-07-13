@@ -104,9 +104,13 @@ export interface IBoardMeta {
     material: number[];
 
     /**
+     * Create a new copy of this object
+     */
+    copyThis(): IBoardMeta;
+    /**
      * Reset castling permissions to default (all enabled)
      */
-    resetCastling(): void; // this may not be necessary for the interface
+    resetCastling(): void;
 
     /**
      * Upate castling permissions, en passent, posKey, side to move, and material
