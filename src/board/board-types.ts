@@ -28,18 +28,9 @@ export interface IBoard {
     //* --- Move Data ---
     /**
      * Stores the state of the board after each move, enables undo operation
+     * @todo ensure this is set before making a move
      */
     history: IBoardMeta[];
-    /**
-     * Lists of possible moves indexed by game ply
-     * @todo this likely belongs in another class
-     */
-    moveList: [][];
-    /**
-     * Lists of scores for each move indexed by game plys
-     * @todo this likely belongs in another class
-     */
-    moveScores: [][];
 
     /**
      * Add a piece to the board
@@ -80,8 +71,6 @@ export interface IBoard {
      * Update position key for side to move, en passent, and castling
      */
     updatePositionKey(): void;
-
-    // methods for iterating over possible moves by piece
 }
 
 /**

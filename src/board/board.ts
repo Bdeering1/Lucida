@@ -1,4 +1,4 @@
-import { BOARD_SQ_NUM, MAX_DEPTH, MAX_NUM_PER_PIECE, MAX_POSITION_MOVES, NUM_CASTLE_COMBINATIONS, NUM_PIECE_TYPES } from "../shared/constants";
+import { BOARD_SQ_NUM, MAX_NUM_PER_PIECE, NUM_CASTLE_COMBINATIONS, NUM_PIECE_TYPES } from "../shared/constants";
 import { CastleBit, Color, Piece, Rank, Square } from "../shared/enums";
 import { CastlePerm, EnPasRank, GenerateHash32, GetRank, IsPawn, PawnDir, PieceColor, PieceVal } from "./board-utils";
 import { IBoard, IBoardMeta } from "./board-types";
@@ -11,8 +11,6 @@ export class Board implements IBoard {
 
     public meta: IBoardMeta;
     public history = [];
-    public moveList: [][];
-    public moveScores: [][];
 
     constructor(meta: IBoardMeta) {
         this.pieces = new Array(BOARD_SQ_NUM).fill(Piece.none);
@@ -23,10 +21,6 @@ export class Board implements IBoard {
         const emptySqArray = new Array(MAX_NUM_PER_PIECE).fill(Square.none);
         this.pieceSquares.fill(emptySqArray);
         this.pieceQuantities.fill(0);
-
-        const emptyMoveArray = new Array(MAX_POSITION_MOVES);
-        this.moveList = new Array(MAX_DEPTH).fill(emptyMoveArray);
-        this.moveScores = new Array(MAX_DEPTH).fill(emptyMoveArray);
     }
 
     addPiece(piece: Piece, sq: Square): void {
