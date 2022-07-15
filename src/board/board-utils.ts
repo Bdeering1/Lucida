@@ -31,6 +31,7 @@ export const SlidingPieces = [ Piece.whiteBishop, Piece.whiteRook, Piece.whiteQu
 export const SlidingPieceIdx = [ 0, 4 ];
 
 export const Kings = [ Piece.whiteKing, Piece.blackKnight ];
+export const Rooks = [ Piece.whiteRook, Piece.blackRook ];
 
 export const GetFile = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,

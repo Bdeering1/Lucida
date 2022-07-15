@@ -1,6 +1,6 @@
-import { BOARD_SQ_NUM, MAX_NUM_PER_PIECE, NUM_CASTLE_COMBINATIONS, NUM_PIECE_TYPES } from "../shared/constants";
+import { BOARD_SQ_NUM, CASTLE_LEFT, CASTLE_RIGHT, MAX_NUM_PER_PIECE, NUM_CASTLE_COMBINATIONS, NUM_PIECE_TYPES } from "../shared/constants";
 import { CastleBit, Color, Piece, Rank, Square } from "../shared/enums";
-import { CastlePerm, EnPasRank, GenerateHash32, GetRank, IsPawn, PawnDir, PieceColor, PieceVal } from "./board-utils";
+import { CastlePerm, EnPasRank, GenerateHash32, GetRank, IsKing, IsPawn, PawnDir, PieceColor, PieceVal, Rooks } from "./board-utils";
 import { IBoard, IBoardMeta } from "./board-types";
 
 
@@ -62,9 +62,24 @@ export class Board implements IBoard {
 
     movePiece(from: Square, to: Square): void {
         const piece = this.getPiece(from);
+        if (IsPawn[piece] && to === this.meta.enPas) {
+            this.removePiece(to + PawnDir[this.meta.sideToMove]);
+        }
+        else if (IsKing[piece]) {
+            if (from - to === CASTLE_LEFT) {
+                this.removePiece(to - 2);
+                this.addPiece(Rooks[this.meta.sideToMove], to + 1);
+            }
+            else if (from - to === CASTLE_RIGHT) {
+                this.removePiece(to + 1);
+                this.addPiece(Rooks[this.meta.sideToMove], to - 1);
+            }
+        }
+        
         this.history.push(this.meta.copyThis());
         this.meta.update(from, to, piece);
         this.removePiece(from);
+        this.removePiece(to);
         this.addPiece(piece, to);
     }
     isSquareAttacked(sq: Square, side: Color): boolean {
@@ -102,11 +117,13 @@ export class BoardMeta implements IBoardMeta {
         for (let i = 0; i < NUM_CASTLE_COMBINATIONS; i++) {
             BoardMeta.castleKeys[i] = GenerateHash32(seed++);
         }
+        for (let i = 0; i < BOARD_SQ_NUM; i++) { BoardMeta.pieceKeys[Piece.none][i] = 0; }
         for (let piece = Piece.whitePawn; piece < NUM_PIECE_TYPES; piece++) {
             for (let sq = 0; sq < BOARD_SQ_NUM; sq++) {
                 BoardMeta.pieceKeys[piece][sq] = GenerateHash32(seed++);
             }
         }
+        // square outside of the inner board probably don't need hashes
     }
 
     copyThis(): IBoardMeta {
@@ -118,7 +135,10 @@ export class BoardMeta implements IBoardMeta {
     }
 
     update(from: Square, to: Square, piece: Piece): void {
-        this.enPas = Square.none;
+        if (this.enPas !== Square.none) {
+            this.HashEnPas();
+            this.enPas = Square.none;
+        }
         if (IsPawn[piece]) {
             if (GetRank[from] === EnPasRank[this.sideToMove]
                 && GetRank[to] === Rank.four || Rank.five) {

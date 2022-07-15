@@ -9,6 +9,8 @@ export const MAX_POSITION_MOVES = 256; /*used for storing moves in GameBoard.mov
 export const MAX_DEPTH = 64;
 export const NUM_PIECE_TYPES = 13;
 export const MAX_NUM_PER_PIECE = 10;
+export const CASTLE_LEFT = -2;
+export const CASTLE_RIGHT = 2;
 
 /* --- Strings ---  */
 export const START_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
