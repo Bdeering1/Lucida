@@ -82,9 +82,7 @@ export class Board implements IBoard {
         this.removePiece(to);
         this.addPiece(piece, to);
     }
-    isSquareAttacked(sq: Square, side: Color): boolean {
-        throw new Error("Method not implemented.");
-    }
+
     updatePositionKey(): void {
         if (this.meta.sideToMove === Color.white) this.meta.HashSide();
         if (this.meta.enPas !== Square.none) this.meta.HashEnPas();
@@ -106,6 +104,9 @@ export class BoardMeta implements IBoardMeta {
     private static castleKeys: number[];
     private static sideKey: number;
 
+    /**
+     * @todo squares outside of the inner board probably don't need hashes
+     */
     constructor() {
         this.material = [0, 0];
 
@@ -123,7 +124,6 @@ export class BoardMeta implements IBoardMeta {
                 BoardMeta.pieceKeys[piece][sq] = GenerateHash32(seed++);
             }
         }
-        // square outside of the inner board probably don't need hashes
     }
 
     copyThis(): IBoardMeta {

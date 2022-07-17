@@ -1,6 +1,9 @@
 /* eslint-disable no-use-before-define */
 import { Color, Piece, Square } from "../shared/enums";
 
+/**
+ * Represents all aspects of board state for a given game ply
+ */
 export interface IBoard {
     //* --- Core ---
     /**
@@ -63,10 +66,6 @@ export interface IBoard {
      * @todo implement as a generator at first, but later as a iterator (faster)
      */
     getSquares(piece: Piece): IterableIterator<Square>;
-    /**
-     * Given a square on the inner board and a side, returns whether or not that square is attacked
-     */
-    isSquareAttacked(sq: Square, side: Color): boolean;
     /**
      * Update position key for side to move, en passent, and castling
      */

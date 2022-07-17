@@ -1,4 +1,10 @@
 /* eslint-disable no-magic-numbers, no-shadow */
+export const enum Color {
+    white,
+    black,
+    none
+}
+
 export const enum Piece {
     none,
     whitePawn,
@@ -38,12 +44,6 @@ export enum Rank {
     eight
 }
   
-export const enum Color {
-    white,
-    black,
-    none
-}
-  
 export const enum CastleBit {
     none = 0,
     whiteKing = 1,
@@ -51,6 +51,13 @@ export const enum CastleBit {
     blackKing = 4,
     blackQueen = 8,
     all = 15,
+}
+
+export const enum GameResult {
+    none,
+    draw,
+    whiteWin,
+    blackWin
 }
 
 /**
