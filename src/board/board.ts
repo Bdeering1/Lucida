@@ -5,9 +5,21 @@ import { IBoard, IBoardMeta } from "./board-types";
 
 
 export class Board implements IBoard {
-    public pieces: Piece[];
-    public pieceSquares: Square[][];
-    public pieceQuantities: number[];
+    /**
+     * @private
+     * Stores the piece on each square of the board
+     */
+    private pieces: Piece[];
+    /**
+     * @private
+     * Stores the square each piece is on indexed by piece type
+     */
+    private pieceSquares: Square[][];
+    /**
+     * @private
+     * Number of each type of piece on the board
+     */
+    private pieceQuantities: number[];
 
     public meta: IBoardMeta;
     public history: IBoardMeta[];
@@ -61,6 +73,8 @@ export class Board implements IBoard {
     }
 
     movePiece(from: Square, to: Square): void {
+        this.history.push(this.meta.copyThis());
+
         const piece = this.getPiece(from);
         if (IsPawn[piece] && to === this.meta.enPas) {
             this.removePiece(to + PawnDir[this.meta.sideToMove]);
@@ -76,7 +90,6 @@ export class Board implements IBoard {
             }
         }
         
-        this.history.push(this.meta.copyThis());
         this.meta.update(from, to, piece);
         this.removePiece(from);
         this.removePiece(to);
@@ -105,7 +118,7 @@ export class BoardMeta implements IBoardMeta {
     private static sideKey: number;
 
     /**
-     * @todo squares outside of the inner board probably don't need hashes
+     * @todo squares outside of the inner board probably don't need hashes (could be set to zero)
      */
     constructor() {
         this.material = [0, 0];

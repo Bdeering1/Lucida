@@ -5,33 +5,13 @@ import { Color, Piece, Square } from "../shared/enums";
  * Represents all aspects of board state for a given game ply
  */
 export interface IBoard {
-    //* --- Core ---
-    /**
-     * Stores the piece on each square of the board
-     * @todo this is likely a private implementation detail
-     */
-    pieces: Piece[];
-    /**
-     * Stores the square each piece is on indexed by piece type
-     * @todo this is likely a private implementation detail
-     */
-    pieceSquares: Square[][];
-    /**
-     * Number of each type of piece on the board
-     * @todo this is likely a private implementation detail
-     */
-    pieceQuantities: number[];
-
-    //* --- Meta Data ---
     /**
      * Stores all data not directly related to the visible state of the board
      */
     meta: IBoardMeta;
-
-    //* --- Move Data ---
     /**
      * Stores the state of the board after each move, enables undo operation
-     * @todo ensure this is set before making a move
+     * @todo should include move/piece information - either move to move generation and update alongside movePiece call, or put in board wrapper class
      */
     history: IBoardMeta[];
 
@@ -112,7 +92,7 @@ export interface IBoardMeta {
     resetCastling(): void;
 
     /**
-     * Upate castling permissions, en passent, posKey, side to move, and material
+     * Upate castling permissions, en passent, posKey, side to move, matereial, fiftyMoveCounter, and ply
      */
     update(from: Square, to: Square, piece: Piece): void;
 
