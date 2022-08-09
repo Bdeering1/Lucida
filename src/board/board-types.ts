@@ -13,7 +13,7 @@ export interface IBoard {
      * Stores the state of the board after each move, enables undo operation
      * @todo should include move/piece information - either move to move generation and update alongside movePiece call, or put in board wrapper class
      */
-    history: IBoardMeta[];
+    //history: IBoardMeta[];
 
     /**
      * Add a piece to the board

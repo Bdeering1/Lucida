@@ -1,6 +1,6 @@
-import { BOARD_SQ_NUM, CASTLE_LEFT, CASTLE_RIGHT, MAX_NUM_PER_PIECE, NUM_CASTLE_COMBINATIONS, NUM_PIECE_TYPES } from "../shared/constants";
+import { BOARD_SQ_NUM, CASTLE_LEFT, CASTLE_RIGHT, INNER_BOARD_SQ_NUM, MAX_NUM_PER_PIECE, NUM_CASTLE_COMBINATIONS, NUM_PIECE_TYPES } from "../shared/constants";
 import { CastleBit, Color, Piece, Rank, Square } from "../shared/enums";
-import { CastlePerm, EnPasRank, GenerateHash32, GetRank, IsKing, IsPawn, PawnDir, PieceColor, PieceVal, Rooks } from "./board-utils";
+import { CastlePerm, EnPasRank, GenerateHash32, GetRank, GetSq120, IsKing, IsPawn, PawnDir, PieceColor, PieceVal, Rooks } from "./board-utils";
 import { IBoard, IBoardMeta } from "./board-types";
 
 
@@ -22,7 +22,6 @@ export class Board implements IBoard {
     private pieceQuantities: number[];
 
     public meta: IBoardMeta;
-    public history: IBoardMeta[];
 
     constructor(meta: IBoardMeta) {
         this.pieces = new Array(BOARD_SQ_NUM).fill(Piece.none);
@@ -31,15 +30,18 @@ export class Board implements IBoard {
         this.meta = meta;
 
         const emptySqArray = new Array(MAX_NUM_PER_PIECE).fill(Square.none);
-        this.pieceSquares.fill(emptySqArray);
+        this.pieceSquares.fill([...emptySqArray]);
         this.pieceQuantities.fill(0);
-
-        this.history = [];
     }
 
     addPiece(piece: Piece, sq: Square): void {
         this.pieces[sq] = piece;
-        this.pieceSquares[piece].push(sq);
+        for (let i = 0; i < MAX_NUM_PER_PIECE; i++) {
+            if (this.pieceSquares[piece][i] === Square.none) {
+                this.pieceSquares[piece][i] = sq;
+                break;
+            }
+        }
         this.pieceQuantities[piece]++;
         this.meta.material[PieceColor[piece]] -= PieceVal[piece];
         this.meta.HashPiece(piece, sq);
@@ -49,9 +51,11 @@ export class Board implements IBoard {
         this.pieces[sq] = Piece.none;
         if (piece !== Piece.none) {
             this.pieceQuantities[piece]--;
-            for (let idx = 0; idx < this.pieceSquares.length; idx++) {
-                if (this.pieceSquares[piece][idx] === sq)
-                    this.pieceSquares[piece][idx] = Square.none;
+            for (let i = 0; i < MAX_NUM_PER_PIECE; i++) {
+                if (this.pieceSquares[piece][i] === sq) {
+                    this.pieceSquares[piece][i] = Square.none;
+                    break;
+                }
             }
             this.meta.material[PieceColor[piece]] -= PieceVal[piece];
             this.meta.fiftyMoveCounter = 0;
@@ -62,19 +66,19 @@ export class Board implements IBoard {
         return this.pieces[sq];
     }
     * getPieces(): IterableIterator<Piece> {
-        for (let i = 0; i < BOARD_SQ_NUM; i++) {
-            yield this.pieces[i];
+        for (let i = 0; i < INNER_BOARD_SQ_NUM; i++) {
+            yield this.pieces[GetSq120[i]];
         }
     }
     * getSquares(piece: Piece): IterableIterator<Square> {
+        console.log(this.pieceSquares);
         for (let i = 0; i < MAX_NUM_PER_PIECE; i++) {
+            if (this.pieceSquares[piece][i] === Square.none) break;
             yield this.pieceSquares[piece][i];
         }
     }
 
     movePiece(from: Square, to: Square): void {
-        this.history.push(this.meta.copyThis());
-
         const piece = this.getPiece(from);
         if (IsPawn[piece] && to === this.meta.enPas) {
             this.removePiece(to + PawnDir[this.meta.sideToMove]);

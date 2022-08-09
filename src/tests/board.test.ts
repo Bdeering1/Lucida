@@ -13,21 +13,50 @@ describe('board', () => {
 
     it.each([
         [Piece.none, Square.a1],
-        [Piece.whiteRook, Square.d1],
+        [Piece.whiteRook, Square.d4],
         [Piece.blackKing, Square.h8],
     ])('can add pieces to the board', (piece, sq) => {
         board.addPiece(piece, sq);
         expect(board.getPiece(sq)).toBe(piece);
     });
 
+    it('can return an iterator for all pieces on the board', () => {
+        board.addPiece(Piece.whitePawn, Square.a1);
+        board.addPiece(Piece.blackKnight, Square.c1);
+        const pieces = board.getPieces();
+        expect(pieces.next().value).toBe(Piece.whitePawn);
+        expect(pieces.next().value).toBe(Piece.none);
+        expect(pieces.next().value).toBe(Piece.blackKnight);
+    });
+
+    it('can return an iterator for the squares of a given piece', () => {
+        board.addPiece(Piece.blackQueen, Square.b2);
+        board.addPiece(Piece.blackQueen, Square.g7);
+        const squares = board.getSquares(Piece.blackQueen);
+        expect(squares.next().value).toBe(Square.b2);
+        expect(squares.next().value).toBe(Square.g7);
+        expect(squares.next().done).toBe(true);
+    });
+
     it.each([
         [Piece.none, Square.a8],
-        [Piece.blackPawn, Square.d8],
+        [Piece.blackPawn, Square.e5],
         [Piece.whiteQueen, Square.h1],
     ])('can remove pieces from the board', (piece, sq) => {
         board.addPiece(piece, sq);
         board.removePiece(sq);
         expect(board.getPiece(sq)).toBe(Piece.none);
+    });
+
+    it.each([
+        [Square.a1, Square.a8, Piece.whitePawn],
+        [Square.a1, Square.h8, Piece.whiteRook],
+        [Square.h1, Square.a8, Piece.blackKing],
+    ])('can move a piece from one square to another', (from, to, piece) => {
+        board.addPiece(piece, from);
+        board.movePiece(from, to);
+        expect(board.getPiece(from)).toBe(Piece.none);
+        expect(board.getPiece(to)).toBe(piece);
     });
 
     it.todo('updates castling permissions if a king or rook move for the first time');
@@ -73,13 +102,5 @@ describe('board', () => {
         expect(board.meta.blackKingCastle).toBe(false);
         expect(board.meta.blackQueenCastle).toBe(false);
     });
-
-});
-
-describe('board setup', () => {
-
-    it.todo('populates certain properties on creation');
-
-    it.todo('parses the starting FEN correctly');
 
 });
