@@ -30,7 +30,9 @@ export class Board implements IBoard {
         this.meta = meta;
 
         const emptySqArray = new Array(MAX_NUM_PER_PIECE).fill(Square.none);
-        this.pieceSquares.fill([...emptySqArray]);
+        for (let i = 0; i < NUM_PIECE_TYPES; i++) {
+            this.pieceSquares[i] = [...emptySqArray];
+        }
         this.pieceQuantities.fill(0);
     }
 
