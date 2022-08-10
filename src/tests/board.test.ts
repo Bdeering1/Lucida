@@ -1,7 +1,7 @@
 /* eslint-disable dot-notation, no-magic-numbers */
 
 import { Board, BoardMeta } from "../board/board";
-import { Piece, Square } from "../shared/enums";
+import { Color, Piece, Square } from "../shared/enums";
 import { IBoard } from "../board/board-types";
 
 describe('board', () => {
@@ -27,6 +27,15 @@ describe('board', () => {
         expect(pieces.next().value).toBe(Piece.whitePawn);
         expect(pieces.next().value).toBe(Piece.none);
         expect(pieces.next().value).toBe(Piece.blackKnight);
+    });
+
+    it('can return an iterator for all pieces of a given color on the board', () => {
+        board.addPiece(Piece.whiteKnight, Square.b3);
+        board.addPiece(Piece.whiteBishop, Square.f7);
+        const pieces = board.getPieces(Color.white);
+        expect(pieces.next().value).toBe(Piece.whiteKnight);
+        expect(pieces.next().value).toBe(Piece.whiteBishop);
+        expect(pieces.next().done).toBe(true);
     });
 
     it('can return an iterator for the squares of a given piece', () => {

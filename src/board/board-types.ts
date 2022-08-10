@@ -38,7 +38,7 @@ export interface IBoard {
      * for the internal implementation piece states to be easily changed later
      * @todo implement as a generator at first, but later as a iterator (faster)
      */
-    getPieces(): IterableIterator<Piece>;
+    getPieces(side?: Color): IterableIterator<Piece>;
     /**
      * Returns an iterator which yields the square for each piece of a certain type (if any)
      * @description this method makes interfacing with the board easier, and allows

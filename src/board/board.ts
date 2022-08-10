@@ -67,13 +67,13 @@ export class Board implements IBoard {
     getPiece(sq: Square): Piece {
         return this.pieces[sq];
     }
-    * getPieces(): IterableIterator<Piece> {
+    * getPieces(side: Color = Color.none): IterableIterator<Piece> {
         for (let i = 0; i < INNER_BOARD_SQ_NUM; i++) {
-            yield this.pieces[GetSq120[i]];
+            if (side === Color.none || PieceColor[this.pieces[GetSq120[i]]] === side)
+                yield this.pieces[GetSq120[i]];
         }
     }
     * getSquares(piece: Piece): IterableIterator<Square> {
-        console.log(this.pieceSquares);
         for (let i = 0; i < MAX_NUM_PER_PIECE; i++) {
             if (this.pieceSquares[piece][i] === Square.none) break;
             yield this.pieceSquares[piece][i];
