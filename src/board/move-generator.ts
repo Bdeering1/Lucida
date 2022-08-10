@@ -2,20 +2,27 @@ import { Color, GameResult, Square } from "../shared/enums";
 import { MAX_DEPTH, MAX_POSITION_MOVES } from "../shared/constants";
 import { IBoard } from "./board-types";
 
-/**
- * @todo better name for this class? BoardMoves? MoveManager? GameManager?
- */
-export default class MoveGenerator {
+export class Move {
+    public from: Square;
+    public to: Square;
+
+    public constructor(from: Square, to: Square) {
+        this.from = from;
+        this.to = to;
+    }
+}
+
+export default class MoveManager {
     private board: IBoard;
 
     /**
      * Lists of possible moves indexed by game ply
      */
-    public moveList: [][];
+    public moveList: Move[][];
     /**
      * Lists of scores for each move indexed by game plys
      */
-    public moveScores: [][];
+    public moveScores: Move[][];
     /**
      * Result of the game
      * @todo this might belong in another class - there could be a game class which can be written to by the board or move classes
@@ -26,7 +33,10 @@ export default class MoveGenerator {
         this.board = board;
 
         const emptyMoveArray = new Array(MAX_POSITION_MOVES);
-        this.moveList = new Array(MAX_DEPTH).fill(emptyMoveArray);
+        this.moveList = new Array(MAX_DEPTH);
+        for (let i = 0; i < MAX_DEPTH; i++) {
+            this.moveList[i] = [...emptyMoveArray];
+        }
         this.moveScores = new Array(MAX_DEPTH).fill(emptyMoveArray);
     }
 
