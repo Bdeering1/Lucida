@@ -1,4 +1,4 @@
-/* eslint-disable no-magic-numbers */
+/* eslint-disable no-magic-numbers, indent */
 import { Color, Piece, Rank, Square } from '../shared/enums';
 
 
@@ -25,9 +25,10 @@ export const KingDir = [ -1, -10, 1, 10, -9, -11, 11, 9 ];
 export const DirIndexes = [ 0, 0, 8, 4, 4, 8, 8, 0, 8, 4, 4, 8, 8 ];
 export const PieceDir = [ 0, PawnDir, KnightDir, BishopDir, RookDir, KingDir, KingDir, PawnDir, KnightDir, BishopDir, RookDir, KingDir, KingDir ];
 export const EnPasRank = [ Rank.two, Rank.seven ];
-export const NonSlidingPiecess = [ Piece.whiteKnight, Piece.whiteKing, 0, Piece.blackKnight, Piece.blackKnight, 0 ];
-export const NonSlidingPieceIdx = [ 0, 3 ];
-export const SlidingPieces = [ Piece.whiteBishop, Piece.whiteRook, Piece.whiteQueen, 0, Piece.blackBishop, Piece.blackRook, Piece.blackQueen, 0 ];
+export const NonSlidingPieces = [[Piece.whiteKnight, Piece.whiteKing],
+                                  [Piece.blackKnight, Piece.blackKing]];
+export const SlidingPieces = [[Piece.whiteBishop, Piece.whiteRook, Piece.whiteQueen],
+                              [Piece.blackBishop, Piece.blackRook, Piece.blackQueen]];
 export const SlidingPieceIdx = [ 0, 4 ];
 
 export const Kings = [ Piece.whiteKing, Piece.blackKnight ];

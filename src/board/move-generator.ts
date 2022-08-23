@@ -1,6 +1,7 @@
 import { Color, GameResult, Square } from "../shared/enums";
 import { MAX_DEPTH, MAX_POSITION_MOVES } from "../shared/constants";
 import { IBoard } from "./board-types";
+import { NonSlidingPieces, SlidingPieces } from "./board-utils";
 
 export class Move {
     public from: Square;
@@ -44,6 +45,28 @@ export default class MoveManager {
      * Generate all possible moves for the current position
      */
     public generateMoves(): void {
+        const side = this.board.meta.sideToMove;
+        if (side === Color.none) {
+            // no moves to generate
+        }
+        else if (side === Color.white) {
+            // white castle and pawn moves
+        }
+        else {
+            // black castle and pawn moves
+        }
+        // * pawn moves might not have to be side specific **
+
+        // non sliding pieces
+        NonSlidingPieces[side].forEach(piece => {
+
+        });
+
+        // sliding pieces
+        SlidingPieces[side].forEach(piece => {
+
+        });
+
         throw new Error("Method not implemented.");
     }
 
@@ -58,6 +81,6 @@ export default class MoveManager {
      * Determine if the game has ended, and if so, what the result was
      */
     private CheckGameEnded() {
-
+        throw new Error("Method not implemented.");
     }
 }
