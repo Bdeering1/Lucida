@@ -1,7 +1,7 @@
 import { Color, GameResult, Square } from "../shared/enums";
+import { EnPasRank, GetRank, NonSlidingPieces, PawnCaptureDir, Pawns, PieceColor, PieceDir, SlidingPieces } from "./board-utils";
 import { MAX_DEPTH, MAX_POSITION_MOVES } from "../shared/constants";
 import { IBoard } from "./board-types";
-import { NonSlidingPieces, SlidingPieces } from "./board-utils";
 
 export class Move {
     public from: Square;
@@ -35,39 +35,61 @@ export default class MoveManager {
 
         const emptyMoveArray = new Array(MAX_POSITION_MOVES);
         this.moveList = new Array(MAX_DEPTH);
+        this.moveScores = new Array(MAX_DEPTH);
         for (let i = 0; i < MAX_DEPTH; i++) {
             this.moveList[i] = [...emptyMoveArray];
+            this.moveScores[i] = [...emptyMoveArray];
         }
-        this.moveScores = new Array(MAX_DEPTH).fill(emptyMoveArray);
     }
 
     /**
      * Generate all possible moves for the current position
      */
     public generateMoves(): void {
+        let moveIndex = 0;
+        const ply = this.board.meta.ply;
         const side = this.board.meta.sideToMove;
+        const opposingSide = side === Color.white ? Color.black : Color.white;
         if (side === Color.none) {
-            // no moves to generate
+            return;
         }
         else if (side === Color.white) {
-            // white castle and pawn moves
+            // white castle moves
         }
         else {
-            // black castle and pawn moves
+            // black castle moves
         }
-        // * pawn moves might not have to be side specific **
+
+        // pawn moves
+        const pawnType = Pawns[side];
+        for (const sq of this.board.getSquares(pawnType)) {
+            this.moveList[this.board.meta.ply][moveIndex++] = new Move(sq, sq + PieceDir[pawnType][side]);
+            if (GetRank[sq] === EnPasRank[side]) {
+                this.moveList[ply][moveIndex++] = new Move(sq, sq + PieceDir[pawnType][side] * 2);
+            }
+            for (const captureDir of PawnCaptureDir[side]) {
+                const captureSq = sq + captureDir;
+                if (PieceColor[this.board.getPiece(captureSq)] === opposingSide) {
+                    this.moveList[ply][moveIndex++] = new Move(sq, captureSq);
+                }
+            }
+        }
 
         // non sliding pieces
         NonSlidingPieces[side].forEach(piece => {
-
+            for (const sq in this.board.getSquares(piece)) {
+                // generate moves
+            }
         });
 
         // sliding pieces
         SlidingPieces[side].forEach(piece => {
-
+            for (const sq in this.board.getSquares(piece)) {
+                // generate moves
+            }
         });
 
-        throw new Error("Method not implemented.");
+        console.log(moveIndex);
     }
 
     /**

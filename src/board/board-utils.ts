@@ -19,20 +19,21 @@ export const IsSliding = [ false, false, false, true, true, true, false, false, 
 
 export const PawnDir = [ -10, 10 ];
 export const KnightDir = [ -8, -19, -21, -12, 8, 19, 21, 12 ];
-export const RookDir = [ -1, -10, 1, 10 ];
 export const BishopDir = [ -9, -11, 11, 9 ];
+export const RookDir = [ -1, -10, 1, 10 ];
 export const KingDir = [ -1, -10, 1, 10, -9, -11, 11, 9 ];
-export const DirIndexes = [ 0, 0, 8, 4, 4, 8, 8, 0, 8, 4, 4, 8, 8 ];
-export const PieceDir = [ 0, PawnDir, KnightDir, BishopDir, RookDir, KingDir, KingDir, PawnDir, KnightDir, BishopDir, RookDir, KingDir, KingDir ];
-export const EnPasRank = [ Rank.two, Rank.seven ];
-export const NonSlidingPieces = [[Piece.whiteKnight, Piece.whiteKing],
-                                  [Piece.blackKnight, Piece.blackKing]];
-export const SlidingPieces = [[Piece.whiteBishop, Piece.whiteRook, Piece.whiteQueen],
-                              [Piece.blackBishop, Piece.blackRook, Piece.blackQueen]];
-export const SlidingPieceIdx = [ 0, 4 ];
+export const PawnCaptureDir = [[ -9, -11 ], [ 9, 11 ]];
+export const PieceDir = [ [], PawnDir, KnightDir, BishopDir, RookDir, KingDir, KingDir, PawnDir, KnightDir, BishopDir, RookDir, KingDir, KingDir ];
+export const NonSlidingPieces = [ [Piece.whiteKnight, Piece.whiteKing],
+                                  [Piece.blackKnight, Piece.blackKing] ];
+export const SlidingPieces = [ [Piece.whiteBishop, Piece.whiteRook, Piece.whiteQueen],
+                               [Piece.blackBishop, Piece.blackRook, Piece.blackQueen] ];
 
+export const Pawns = [ Piece.whitePawn, Piece.blackPawn ];
 export const Kings = [ Piece.whiteKing, Piece.blackKnight ];
 export const Rooks = [ Piece.whiteRook, Piece.blackRook ];
+
+export const EnPasRank = [ Rank.two, Rank.seven ];
 
 export const GetFile = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,

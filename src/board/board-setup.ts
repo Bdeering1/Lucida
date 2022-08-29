@@ -78,7 +78,7 @@ export function parseFen(board: IBoard, fen: string): void {
     board.meta.sideToMove = fen[fenIdx] === 'w' ? Color.white : Color.black;
     fenIdx += 2;
 
-    while (fen[fenIdx] !== '-') {
+    while (fen[fenIdx] !== ' ' && fen[fenIdx] !== '-') {
         switch (fen[fenIdx]) {
             case 'K':
                 board.meta.setWhiteKingCastle();
@@ -93,7 +93,7 @@ export function parseFen(board: IBoard, fen: string): void {
                 board.meta.setBlackQueenCastle();
                 break;
             default:
-                break;
+                break; // something is probably wrong with the FEN
         }
         fenIdx++;
     }
@@ -104,7 +104,7 @@ export function parseFen(board: IBoard, fen: string): void {
         rank = GetRank(fen[fenIdx++]);
         board.meta.enPas = GetSquare(file, rank);
     }
-    fenIdx++;
+    fenIdx += 2;
 
     board.meta.fiftyMoveCounter = parseInt(fen[fenIdx]);
     fenIdx += 2;
