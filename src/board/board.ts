@@ -80,6 +80,9 @@ export class Board implements IBoard {
         }
     }
 
+    /**
+     * @todo this should probably call updatePositionKey() 
+     */
     movePiece(from: Square, to: Square): void {
         const piece = this.getPiece(from);
         if (IsPawn[piece] && to === this.meta.enPas) {

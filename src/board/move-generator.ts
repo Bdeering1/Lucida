@@ -1,5 +1,5 @@
 import { Color, GameResult, Square } from "../shared/enums";
-import { EnPasRank, GetRank, NonSlidingPieces, PawnCaptureDir, Pawns, PieceColor, PieceDir, SlidingPieces } from "./board-utils";
+import { EnPasRank, GetRank, NonSlidingPieces, PawnCaptureDir, Pawns, PieceColor, PieceDir, SlidingPieces, SqOffboard } from "./board-utils";
 import { MAX_DEPTH, MAX_POSITION_MOVES } from "../shared/constants";
 import { IBoard } from "./board-types";
 
@@ -77,15 +77,27 @@ export default class MoveManager {
 
         // non sliding pieces
         NonSlidingPieces[side].forEach(piece => {
-            for (const sq in this.board.getSquares(piece)) {
-                // generate moves
+            for (const sq of this.board.getSquares(piece)) {
+                for (const dir of PieceDir[piece]) {
+                    if (SqOffboard(sq + dir) || PieceColor[this.board.getPiece(sq + dir)] === side) continue;
+                    this.moveList[ply][moveIndex++] = new Move(sq, sq + dir);
+                }
             }
         });
 
         // sliding pieces
         SlidingPieces[side].forEach(piece => {
-            for (const sq in this.board.getSquares(piece)) {
-                // generate moves
+            for (const sq of this.board.getSquares(piece)) {
+                for (let dir of PieceDir[piece]) {
+                    let sliding = true;
+                    while (sliding) {
+                        const colorAtSq = PieceColor[this.board.getPiece(sq + dir)];
+                        if (SqOffboard(sq + dir) || colorAtSq === side) break;
+                        if (colorAtSq === opposingSide) sliding = false;
+                        this.moveList[ply][moveIndex++] = new Move(sq, sq + dir);
+                        dir += dir;
+                    }
+                }
             }
         });
 
