@@ -2,6 +2,7 @@ import { Color, GameResult, Square } from "../shared/enums";
 import { EnPasRank, GetRank, NonSlidingPieces, PawnCaptureDir, Pawns, PieceColor, PieceDir, SlidingPieces, SqOffboard } from "./board-utils";
 import { MAX_DEPTH, MAX_POSITION_MOVES } from "../shared/constants";
 import { IBoard } from "./board-types";
+import { version } from "process";
 
 export class Move {
     public from: Square;
@@ -45,13 +46,13 @@ export default class MoveManager {
     /**
      * Generate all possible moves for the current position
      */
-    public generateMoves(): void {
+    public generateMoves(): number {
         let moveIndex = 0;
         const ply = this.board.meta.ply;
         const side = this.board.meta.sideToMove;
         const opposingSide = side === Color.white ? Color.black : Color.white;
         if (side === Color.none) {
-            return;
+            return 0;
         }
         else if (side === Color.white) {
             // white castle moves
@@ -63,9 +64,13 @@ export default class MoveManager {
         // pawn moves
         const pawnType = Pawns[side];
         for (const sq of this.board.getSquares(pawnType)) {
-            this.moveList[this.board.meta.ply][moveIndex++] = new Move(sq, sq + PieceDir[pawnType][side]);
-            if (GetRank[sq] === EnPasRank[side]) {
-                this.moveList[ply][moveIndex++] = new Move(sq, sq + PieceDir[pawnType][side] * 2);
+            let targetSq = sq + PieceDir[pawnType][side];
+            if (PieceColor[this.board.getPiece(targetSq)] === Color.none) {
+                this.moveList[this.board.meta.ply][moveIndex++] = new Move(sq, targetSq);
+            }
+            targetSq = sq + PieceDir[pawnType][side] * 2;
+            if (GetRank[sq] === EnPasRank[side] && PieceColor[this.board.getPiece(targetSq)] === Color.none) {
+                this.moveList[ply][moveIndex++] = new Move(sq, targetSq);
             }
             for (const captureDir of PawnCaptureDir[side]) {
                 const captureSq = sq + captureDir;
@@ -88,20 +93,21 @@ export default class MoveManager {
         // sliding pieces
         SlidingPieces[side].forEach(piece => {
             for (const sq of this.board.getSquares(piece)) {
-                for (let dir of PieceDir[piece]) {
+                for (const dir of PieceDir[piece]) {
+                    let totalMove = dir;
                     let sliding = true;
                     while (sliding) {
-                        const colorAtSq = PieceColor[this.board.getPiece(sq + dir)];
-                        if (SqOffboard(sq + dir) || colorAtSq === side) break;
+                        const colorAtSq = PieceColor[this.board.getPiece(sq + totalMove)];
+                        if (SqOffboard(sq + totalMove) || colorAtSq === side) break;
                         if (colorAtSq === opposingSide) sliding = false;
-                        this.moveList[ply][moveIndex++] = new Move(sq, sq + dir);
-                        dir += dir;
+                        this.moveList[ply][moveIndex++] = new Move(sq, sq + totalMove);
+                        totalMove += dir;
                     }
                 }
             }
         });
 
-        console.log(moveIndex);
+        return moveIndex;
     }
 
     /**

@@ -1,4 +1,4 @@
-/* eslint-disable dot-notation, no-magic-numbers */
+/* eslint-disable no-magic-numbers */
 
 import { Board, BoardMeta } from "../board/board";
 import { Color, Piece, Square } from "../shared/enums";

@@ -17,7 +17,7 @@ export const IsRookQueen = [ false, false, false, false, true, true, false, fals
 export const IsBishopQueen = [ false, false, false, true, false, true, false, false, false, true, false, true, false ];
 export const IsSliding = [ false, false, false, true, true, true, false, false, false, true, true, true, false ];
 
-export const PawnDir = [ -10, 10 ];
+export const PawnDir = [ 10, -10 ];
 export const KnightDir = [ -8, -19, -21, -12, 8, 19, 21, 12 ];
 export const BishopDir = [ -9, -11, 11, 9 ];
 export const RookDir = [ -1, -10, 1, 10 ];

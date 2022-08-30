@@ -62,7 +62,7 @@ export function parseFen(board: IBoard, fen: string): void {
             case '6':
             case '7':
             case '8':
-                file += parseInt(fen[fenIdx]);
+                file += parseInt(fen[fenIdx]) - 1;
                 break;
             case '/':
             case ' ':
