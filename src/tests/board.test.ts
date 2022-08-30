@@ -3,6 +3,7 @@
 import { Board, BoardMeta } from "../board/board";
 import { Color, Piece, Square } from "../shared/enums";
 import { IBoard } from "../board/board-types";
+import { PieceColor, PieceVal } from "../board/board-utils";
 
 describe('board', () => {
     let board: IBoard;
@@ -12,12 +13,15 @@ describe('board', () => {
     });
 
     it.each([
-        [Piece.none, Square.a1],
+        [Piece.whitePawn, Square.a1],
         [Piece.whiteRook, Square.d4],
         [Piece.blackKing, Square.h8],
     ])('can add pieces to the board', (piece, sq) => {
+        jest.spyOn(board.meta, 'hashPiece');
         board.addPiece(piece, sq);
         expect(board.getPiece(sq)).toBe(piece);
+        expect(board.meta.material[PieceColor[piece]]).toBe(PieceVal[piece]);
+        expect(board.meta.hashPiece).toBeCalled();
     });
 
     it('can return an iterator for all pieces on the board', () => {
@@ -48,13 +52,16 @@ describe('board', () => {
     });
 
     it.each([
-        [Piece.none, Square.a8],
+        [Piece.whitePawn, Square.a8],
         [Piece.blackPawn, Square.e5],
         [Piece.whiteQueen, Square.h1],
     ])('can remove pieces from the board', (piece, sq) => {
+        jest.spyOn(board.meta, 'hashPiece');
         board.addPiece(piece, sq);
         board.removePiece(sq);
         expect(board.getPiece(sq)).toBe(Piece.none);
+        expect(board.meta.material[PieceColor[piece]]).toBe(0);
+        expect(board.meta.hashPiece).toBeCalled();
     });
 
     it.each([

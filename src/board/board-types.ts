@@ -105,8 +105,8 @@ export interface IBoardMeta {
     setBlackKingCastle(): void;
     setBlackQueenCastle(): void;
 
-    HashPiece(piece: Piece, sq: number): void;
-    HashCastle(): void;
-    HashSide(): void;
-    HashEnPas(): void;
+    hashPiece(piece: Piece, sq: number): void;
+    hashCastle(): void;
+    hashSide(): void;
+    hashEnPas(): void;
 }

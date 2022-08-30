@@ -45,8 +45,8 @@ export class Board implements IBoard {
             }
         }
         this.pieceQuantities[piece]++;
-        this.meta.material[PieceColor[piece]] -= PieceVal[piece];
-        this.meta.HashPiece(piece, sq);
+        this.meta.material[PieceColor[piece]] += PieceVal[piece];
+        this.meta.hashPiece(piece, sq);
     }
     removePiece(sq: Square): void {
         const piece = this.pieces[sq];
@@ -61,7 +61,7 @@ export class Board implements IBoard {
             }
             this.meta.material[PieceColor[piece]] -= PieceVal[piece];
             this.meta.fiftyMoveCounter = 0;
-            this.meta.HashPiece(piece, sq);
+            this.meta.hashPiece(piece, sq);
         }
     }
     getPiece(sq: Square): Piece {
@@ -106,9 +106,9 @@ export class Board implements IBoard {
     }
 
     updatePositionKey(): void {
-        if (this.meta.sideToMove === Color.white) this.meta.HashSide();
-        if (this.meta.enPas !== Square.none) this.meta.HashEnPas();
-        this.meta.HashCastle();
+        if (this.meta.sideToMove === Color.white) this.meta.hashSide();
+        if (this.meta.enPas !== Square.none) this.meta.hashEnPas();
+        this.meta.hashCastle();
     }
 }
 
@@ -158,14 +158,14 @@ export class BoardMeta implements IBoardMeta {
 
     update(from: Square, to: Square, piece: Piece): void {
         if (this.enPas !== Square.none) {
-            this.HashEnPas();
+            this.hashEnPas();
             this.enPas = Square.none;
         }
         if (IsPawn[piece]) {
             if (GetRank[from] === EnPasRank[this.sideToMove]
                 && GetRank[to] === Rank.four || Rank.five) {
                 this.enPas = from + PawnDir[this.sideToMove];
-                this.HashEnPas();
+                this.hashEnPas();
             }
             this.fiftyMoveCounter = 0;
         }
@@ -176,11 +176,11 @@ export class BoardMeta implements IBoardMeta {
         if ((this.castlePermissions & CastleBit.all) !== 0) {
             this.castlePermissions &= CastlePerm[from];
             this.castlePermissions &= CastlePerm[to];
-            this.HashCastle();
+            this.hashCastle();
         }
 
         this.sideToMove = this.sideToMove === Color.white ? Color.black : Color.white;
-        this.HashSide();
+        this.hashSide();
 
         this.ply++;
     }
@@ -194,8 +194,8 @@ export class BoardMeta implements IBoardMeta {
     setBlackKingCastle(): void { this.castlePermissions |= CastleBit.blackKing; }
     setBlackQueenCastle(): void { this.castlePermissions |= CastleBit.blackQueen; }
     
-    public HashPiece(piece: Piece, sq: number) { this.posKey ^= BoardMeta.pieceKeys[piece][sq]; }
-    public HashCastle() { this.posKey ^= BoardMeta.castleKeys[this.castlePermissions]; }
-    public HashSide() { this.posKey ^= BoardMeta.sideKey; }
-    public HashEnPas() { this.posKey ^= BoardMeta.pieceKeys[Piece.none][this.enPas]; }
+    public hashPiece(piece: Piece, sq: number) { this.posKey ^= BoardMeta.pieceKeys[piece][sq]; }
+    public hashCastle() { this.posKey ^= BoardMeta.castleKeys[this.castlePermissions]; }
+    public hashSide() { this.posKey ^= BoardMeta.sideKey; }
+    public hashEnPas() { this.posKey ^= BoardMeta.pieceKeys[Piece.none][this.enPas]; }
 }
