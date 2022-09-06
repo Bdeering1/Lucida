@@ -2,7 +2,6 @@ import { Color, GameResult, Square } from "../shared/enums";
 import { EnPasRank, GetRank, NonSlidingPieces, PawnCaptureDir, Pawns, PieceColor, PieceDir, SlidingPieces, SqOffboard } from "./board-utils";
 import { MAX_DEPTH, MAX_POSITION_MOVES } from "../shared/constants";
 import { IBoard } from "./board-types";
-import { version } from "process";
 
 export class Move {
     public from: Square;
@@ -48,8 +47,8 @@ export default class MoveManager {
      */
     public generateMoves(): number {
         let moveIndex = 0;
-        const ply = this.board.meta.ply;
-        const side = this.board.meta.sideToMove;
+        const ply = this.board.ply;
+        const side = this.board.sideToMove;
         const opposingSide = side === Color.white ? Color.black : Color.white;
         if (side === Color.none) {
             return 0;
@@ -66,7 +65,7 @@ export default class MoveManager {
         for (const sq of this.board.getSquares(pawnType)) {
             let targetSq = sq + PieceDir[pawnType][side];
             if (PieceColor[this.board.getPiece(targetSq)] === Color.none) {
-                this.moveList[this.board.meta.ply][moveIndex++] = new Move(sq, targetSq);
+                this.moveList[this.board.ply][moveIndex++] = new Move(sq, targetSq);
             }
             targetSq = sq + PieceDir[pawnType][side] * 2;
             if (GetRank[sq] === EnPasRank[side] && PieceColor[this.board.getPiece(targetSq)] === Color.none) {

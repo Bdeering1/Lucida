@@ -6,9 +6,33 @@ import { Color, Piece, Square } from "../shared/enums";
  */
 export interface IBoard {
     /**
+     * The current side to move
+     */
+    sideToMove: Color;
+    /**
+     * Current (half-)move number
+     */
+    ply: number;
+    /**
+     * The current square a pawn can 'capture' en passent, if any
+     */
+    enPas: Square;
+    /**
+     * Running counter for the fifty move rule
+     */
+    fiftyMoveCounter: number;
+    /**
+     * Unique key for each position, used for repetition detection
+     */
+    posKey: number;
+    /**
+     * Stores the material count for each side, indexed using `Color` enum
+     */
+    material: number[];
+    /**
      * Stores all data not directly related to the visible state of the board
      */
-    meta: IBoardMeta;
+    //meta: IBoardMeta;
     /**
      * Stores the state of the board after each move, enables undo operation
      * @todo should include move/piece information - either move to move generation and update alongside movePiece call, or put in board wrapper class
@@ -50,51 +74,6 @@ export interface IBoard {
      * Update position key for side to move, en passent, and castling
      */
     updatePositionKey(): void;
-}
-
-/**
- * Meta data asssociated with the board
- * @todo should likely be merged with the board class
- */
-export interface IBoardMeta {
-    /**
-     * The current side to move
-     */
-    sideToMove: Color;
-    /**
-     * Current (half-)move number
-     */
-    ply: number;
-    /**
-     * The current square a pawn can 'capture' en passent, if any
-     */
-    enPas: Square;
-    /**
-     * Running counter for the fifty move rule
-     */
-    fiftyMoveCounter: number;
-    /**
-     * Unique key for each position, used for repetition detection
-     */
-    posKey: number;
-    /**
-     * Stores the material count for each side, indexed using `Color` enum
-     */
-    material: number[];
-
-    /**
-     * Create a new copy of this object
-     */
-    copyThis(): IBoardMeta;
-    /**
-     * Reset castling permissions to default (all enabled)
-     */
-    resetCastling(): void;
-
-    /**
-     * Upate castling permissions, en passent, posKey, side to move, matereial, fiftyMoveCounter, and ply
-     */
-    update(from: Square, to: Square, piece: Piece): void;
 
     get whiteKingCastle(): boolean;
     get whiteQueenCastle(): boolean;

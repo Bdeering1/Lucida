@@ -1,7 +1,7 @@
 /* eslint-disable no-magic-numbers */
 import { BOARD_SQ_NUM, INNER_BOARD_SQ_NUM, PIECE_CHAR } from "../shared/constants";
 import { GenerateHash32, GetRank, GetSq120 } from "../board/board-utils";
-import { Board } from "../board/board";
+import Board from "../board/board";
 
 export function printBoard(board: Board) {
     console.log("\n  a b c d e f g h");

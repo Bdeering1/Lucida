@@ -1,10 +1,20 @@
 import { BOARD_SQ_NUM, CASTLE_LEFT, CASTLE_RIGHT, INNER_BOARD_SQ_NUM, MAX_NUM_PER_PIECE, NUM_CASTLE_COMBINATIONS, NUM_PIECE_TYPES } from "../shared/constants";
 import { CastleBit, Color, Piece, Rank, Square } from "../shared/enums";
 import { CastlePerm, EnPasRank, GenerateHash32, GetRank, GetSq120, IsKing, IsPawn, PawnDir, PieceColor, PieceVal, Rooks } from "./board-utils";
-import { IBoard, IBoardMeta } from "./board-types";
+import { IBoard } from "./board-types";
 
 
-export class Board implements IBoard {
+export default class Board implements IBoard {
+    //public meta: IBoardMeta;
+
+    public sideToMove = Color.none;
+    public ply = 0;
+    public enPas = Square.none;
+    public castlePermissions = CastleBit.none;
+    public fiftyMoveCounter = 0;
+    public posKey = 0;
+    public material: number[];
+
     /**
      * @private
      * Stores the piece on each square of the board
@@ -21,19 +31,41 @@ export class Board implements IBoard {
      */
     private pieceQuantities: number[];
 
-    public meta: IBoardMeta;
+    private static pieceKeys: number[][];
+    private static castleKeys: number[];
+    private static sideKey: number;
 
-    constructor(meta: IBoardMeta) {
+    /**
+     * @todo squares outside of the inner board probably don't need hashes (could be set to zero)
+     */
+    constructor() {
         this.pieces = new Array(BOARD_SQ_NUM).fill(Piece.none);
         this.pieceSquares = new Array(NUM_PIECE_TYPES);
         this.pieceQuantities = new Array(NUM_PIECE_TYPES);
-        this.meta = meta;
+        //this = meta;
 
         const emptySqArray = new Array(MAX_NUM_PER_PIECE).fill(Square.none);
         for (let i = 0; i < NUM_PIECE_TYPES; i++) {
             this.pieceSquares[i] = [...emptySqArray];
         }
         this.pieceQuantities.fill(0);
+
+        this.material = [0, 0];
+
+        Board.castleKeys = new Array(NUM_CASTLE_COMBINATIONS);
+        Board.pieceKeys = new Array(NUM_PIECE_TYPES).fill(new Array(BOARD_SQ_NUM));
+
+        let seed = 0;
+        Board.sideKey = GenerateHash32(seed++);
+        for (let i = 0; i < NUM_CASTLE_COMBINATIONS; i++) {
+            Board.castleKeys[i] = GenerateHash32(seed++);
+        }
+        for (let i = 0; i < BOARD_SQ_NUM; i++) { Board.pieceKeys[Piece.none][i] = 0; }
+        for (let piece = Piece.whitePawn; piece < NUM_PIECE_TYPES; piece++) {
+            for (let sq = 0; sq < BOARD_SQ_NUM; sq++) {
+                Board.pieceKeys[piece][sq] = GenerateHash32(seed++);
+            }
+        }
     }
 
     addPiece(piece: Piece, sq: Square): void {
@@ -45,8 +77,8 @@ export class Board implements IBoard {
             }
         }
         this.pieceQuantities[piece]++;
-        this.meta.material[PieceColor[piece]] += PieceVal[piece];
-        this.meta.hashPiece(piece, sq);
+        this.material[PieceColor[piece]] += PieceVal[piece];
+        this.hashPiece(piece, sq);
     }
     removePiece(sq: Square): void {
         const piece = this.pieces[sq];
@@ -59,9 +91,9 @@ export class Board implements IBoard {
                     break;
                 }
             }
-            this.meta.material[PieceColor[piece]] -= PieceVal[piece];
-            this.meta.fiftyMoveCounter = 0;
-            this.meta.hashPiece(piece, sq);
+            this.material[PieceColor[piece]] -= PieceVal[piece];
+            this.fiftyMoveCounter = 0;
+            this.hashPiece(piece, sq);
         }
     }
     getPiece(sq: Square): Piece {
@@ -82,81 +114,25 @@ export class Board implements IBoard {
 
     /**
      * @todo this should probably call updatePositionKey() 
+     * @todo check this for issues after merge with meta class
      */
     movePiece(from: Square, to: Square): void {
         const piece = this.getPiece(from);
-        if (IsPawn[piece] && to === this.meta.enPas) {
-            this.removePiece(to + PawnDir[this.meta.sideToMove]);
+        if (IsPawn[piece] && to === this.enPas) {
+            this.removePiece(to + PawnDir[this.sideToMove]);
         }
         else if (IsKing[piece]) {
             if (from - to === CASTLE_LEFT) {
                 this.removePiece(to - 2);
-                this.addPiece(Rooks[this.meta.sideToMove], to + 1);
+                this.addPiece(Rooks[this.sideToMove], to + 1);
             }
             else if (from - to === CASTLE_RIGHT) {
                 this.removePiece(to + 1);
-                this.addPiece(Rooks[this.meta.sideToMove], to - 1);
+                this.addPiece(Rooks[this.sideToMove], to - 1);
             }
         }
         
-        this.meta.update(from, to, piece);
-        this.removePiece(from);
-        this.removePiece(to);
-        this.addPiece(piece, to);
-    }
-
-    updatePositionKey(): void {
-        if (this.meta.sideToMove === Color.white) this.meta.hashSide();
-        if (this.meta.enPas !== Square.none) this.meta.hashEnPas();
-        this.meta.hashCastle();
-    }
-}
-
-
-export class BoardMeta implements IBoardMeta {
-    public sideToMove = Color.none;
-    public ply = 0;
-    public enPas = Square.none;
-    public castlePermissions = CastleBit.none;
-    public fiftyMoveCounter = 0;
-    public posKey = 0;
-    public material: number[];
-
-    private static pieceKeys: number[][];
-    private static castleKeys: number[];
-    private static sideKey: number;
-
-    /**
-     * @todo squares outside of the inner board probably don't need hashes (could be set to zero)
-     */
-    constructor() {
-        this.material = [0, 0];
-
-        BoardMeta.castleKeys = new Array(NUM_CASTLE_COMBINATIONS);
-        BoardMeta.pieceKeys = new Array(NUM_PIECE_TYPES).fill(new Array(BOARD_SQ_NUM));
-
-        let seed = 0;
-        BoardMeta.sideKey = GenerateHash32(seed++);
-        for (let i = 0; i < NUM_CASTLE_COMBINATIONS; i++) {
-            BoardMeta.castleKeys[i] = GenerateHash32(seed++);
-        }
-        for (let i = 0; i < BOARD_SQ_NUM; i++) { BoardMeta.pieceKeys[Piece.none][i] = 0; }
-        for (let piece = Piece.whitePawn; piece < NUM_PIECE_TYPES; piece++) {
-            for (let sq = 0; sq < BOARD_SQ_NUM; sq++) {
-                BoardMeta.pieceKeys[piece][sq] = GenerateHash32(seed++);
-            }
-        }
-    }
-
-    copyThis(): IBoardMeta {
-        return { ...this, material: [...this.material] };
-    }
-
-    resetCastling(): void {
-        this.castlePermissions = CastleBit.none;
-    }
-
-    update(from: Square, to: Square, piece: Piece): void {
+        // from board meta
         if (this.enPas !== Square.none) {
             this.hashEnPas();
             this.enPas = Square.none;
@@ -183,6 +159,17 @@ export class BoardMeta implements IBoardMeta {
         this.hashSide();
 
         this.ply++;
+
+
+        this.removePiece(from);
+        this.removePiece(to);
+        this.addPiece(piece, to);
+    }
+
+    updatePositionKey(): void {
+        if (this.sideToMove === Color.white) this.hashSide();
+        if (this.enPas !== Square.none) this.hashEnPas();
+        this.hashCastle();
     }
 
     get whiteKingCastle() { return (this.castlePermissions & CastleBit.whiteKing) !== 0; }
@@ -194,8 +181,8 @@ export class BoardMeta implements IBoardMeta {
     setBlackKingCastle(): void { this.castlePermissions |= CastleBit.blackKing; }
     setBlackQueenCastle(): void { this.castlePermissions |= CastleBit.blackQueen; }
     
-    public hashPiece(piece: Piece, sq: number) { this.posKey ^= BoardMeta.pieceKeys[piece][sq]; }
-    public hashCastle() { this.posKey ^= BoardMeta.castleKeys[this.castlePermissions]; }
-    public hashSide() { this.posKey ^= BoardMeta.sideKey; }
-    public hashEnPas() { this.posKey ^= BoardMeta.pieceKeys[Piece.none][this.enPas]; }
+    public hashPiece(piece: Piece, sq: number) { this.posKey ^= Board.pieceKeys[piece][sq]; }
+    public hashCastle() { this.posKey ^= Board.castleKeys[this.castlePermissions]; }
+    public hashSide() { this.posKey ^= Board.sideKey; }
+    public hashEnPas() { this.posKey ^= Board.pieceKeys[Piece.none][this.enPas]; }
 }

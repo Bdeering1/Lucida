@@ -1,11 +1,6 @@
-import { Board, BoardMeta } from "./board";
 import { Color, File, Piece, Rank } from "../shared/enums";
 import { GetSquare } from "./board-utils";
 import { IBoard } from "./board-types";
-
-export function createBoard() {
-    return new Board(new BoardMeta());
-}
 
 export function resetBoard(): void {
     throw new Error("Method not implemented.");
@@ -75,22 +70,22 @@ export function parseFen(board: IBoard, fen: string): void {
         file++;
     }
 
-    board.meta.sideToMove = fen[fenIdx] === 'w' ? Color.white : Color.black;
+    board.sideToMove = fen[fenIdx] === 'w' ? Color.white : Color.black;
     fenIdx += 2;
 
     while (fen[fenIdx] !== ' ' && fen[fenIdx] !== '-') {
         switch (fen[fenIdx]) {
             case 'K':
-                board.meta.setWhiteKingCastle();
+                board.setWhiteKingCastle();
                 break;
             case 'Q':
-                board.meta.setWhiteQueenCastle();
+                board.setWhiteQueenCastle();
                 break;
             case 'k':
-                board.meta.setBlackKingCastle();
+                board.setBlackKingCastle();
                 break;
             case 'q':
-                board.meta.setBlackQueenCastle();
+                board.setBlackQueenCastle();
                 break;
             default:
                 break; // something is probably wrong with the FEN
@@ -102,13 +97,13 @@ export function parseFen(board: IBoard, fen: string): void {
     if (fen[fenIdx] !== '-') {
         file = GetFile(fen[fenIdx++]);
         rank = GetRank(fen[fenIdx++]);
-        board.meta.enPas = GetSquare(file, rank);
+        board.enPas = GetSquare(file, rank);
     }
     fenIdx += 2;
 
-    board.meta.fiftyMoveCounter = parseInt(fen[fenIdx]);
+    board.fiftyMoveCounter = parseInt(fen[fenIdx]);
     fenIdx += 2;
-    board.meta.ply = parseInt(fen[fenIdx]) * 2;
+    board.ply = parseInt(fen[fenIdx]) * 2;
 
     board.updatePositionKey();
 }

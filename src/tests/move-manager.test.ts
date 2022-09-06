@@ -1,6 +1,6 @@
 /* eslint-disable no-magic-numbers */
 
-import { Board, BoardMeta } from "../board/board";
+import Board from "../board/board";
 import { IBoard } from "../board/board-types";
 import MoveManager from "../board/move-manager";
 import { START_FEN } from "../shared/constants";
@@ -11,7 +11,7 @@ describe('move-manager', () => {
     let moveManager: MoveManager;
 
     beforeEach(() => {
-        board = new Board(new BoardMeta());
+        board = new Board();
         moveManager = new MoveManager(board);
     });
 
