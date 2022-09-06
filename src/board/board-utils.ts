@@ -33,7 +33,14 @@ export const Pawns = [ Piece.whitePawn, Piece.blackPawn ];
 export const Kings = [ Piece.whiteKing, Piece.blackKnight ];
 export const Rooks = [ Piece.whiteRook, Piece.blackRook ];
 
-export const EnPasRank = [ Rank.two, Rank.seven ];
+export const LeftRook = [ Square.a1, Square.a8 ];
+export const RightRook = [ Square.h1, Square.h8 ];
+export const CastleLeftRook = [ Square.d1, Square.d8 ];
+export const CastleRightRook = [ Square.f1, Square.f8 ];
+
+
+export const StartingRank = [ Rank.two, Rank.seven ];
+export const EnPasRank = [ Rank.four, Rank.five ];
 
 export const GetFile = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,

@@ -1,5 +1,5 @@
 import { Color, GameResult, Square } from "../shared/enums";
-import { EnPasRank, GetRank, NonSlidingPieces, PawnCaptureDir, Pawns, PieceColor, PieceDir, SlidingPieces, SqOffboard } from "./board-utils";
+import { StartingRank, GetRank, NonSlidingPieces, PawnCaptureDir, Pawns, PieceColor, PieceDir, SlidingPieces, SqOffboard } from "./board-utils";
 import { MAX_DEPTH, MAX_POSITION_MOVES } from "../shared/constants";
 import { IBoard } from "./board-types";
 
@@ -68,7 +68,7 @@ export default class MoveManager {
                 this.moveList[this.board.ply][moveIndex++] = new Move(sq, targetSq);
             }
             targetSq = sq + PieceDir[pawnType][side] * 2;
-            if (GetRank[sq] === EnPasRank[side] && PieceColor[this.board.getPiece(targetSq)] === Color.none) {
+            if (GetRank[sq] === StartingRank[side] && PieceColor[this.board.getPiece(targetSq)] === Color.none) {
                 this.moveList[ply][moveIndex++] = new Move(sq, targetSq);
             }
             for (const captureDir of PawnCaptureDir[side]) {

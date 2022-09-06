@@ -1,8 +1,7 @@
 import { BOARD_SQ_NUM, CASTLE_LEFT, CASTLE_RIGHT, INNER_BOARD_SQ_NUM, MAX_NUM_PER_PIECE, NUM_CASTLE_COMBINATIONS, NUM_PIECE_TYPES } from "../shared/constants";
-import { CastleBit, Color, Piece, Rank, Square } from "../shared/enums";
-import { CastlePerm, EnPasRank, GenerateHash32, GetRank, GetSq120, IsKing, IsPawn, PawnDir, PieceColor, PieceVal, Rooks } from "./board-utils";
+import { CastleBit, Color, Piece, Square } from "../shared/enums";
+import { CastleLeftRook, CastlePerm, CastleRightRook, EnPasRank, GenerateHash32, GetRank, GetSq120, IsKing, IsPawn, LeftRook, PawnDir, PieceColor, PieceVal, RightRook, Rooks, StartingRank } from "./board-utils";
 import { IBoard } from "./board-types";
-
 
 export default class Board implements IBoard {
     //public meta: IBoardMeta;
@@ -60,8 +59,9 @@ export default class Board implements IBoard {
         for (let i = 0; i < NUM_CASTLE_COMBINATIONS; i++) {
             Board.castleKeys[i] = GenerateHash32(seed++);
         }
-        for (let i = 0; i < BOARD_SQ_NUM; i++) { Board.pieceKeys[Piece.none][i] = 0; }
-        for (let piece = Piece.whitePawn; piece < NUM_PIECE_TYPES; piece++) {
+        //for (let i = 0; i < BOARD_SQ_NUM; i++) { Board.pieceKeys[Piece.none][i] = 0; }
+        // ^ doing this breaks hash for en pas squareZZ
+        for (let piece = Piece.none; piece < NUM_PIECE_TYPES; piece++) {
             for (let sq = 0; sq < BOARD_SQ_NUM; sq++) {
                 Board.pieceKeys[piece][sq] = GenerateHash32(seed++);
             }
@@ -112,40 +112,35 @@ export default class Board implements IBoard {
         }
     }
 
-    /**
-     * @todo this should probably call updatePositionKey() 
-     * @todo check this for issues after merge with meta class
-     */
     movePiece(from: Square, to: Square): void {
         const piece = this.getPiece(from);
-        if (IsPawn[piece] && to === this.enPas) {
-            this.removePiece(to + PawnDir[this.sideToMove]);
-        }
-        else if (IsKing[piece]) {
-            if (from - to === CASTLE_LEFT) {
-                this.removePiece(to - 2);
-                this.addPiece(Rooks[this.sideToMove], to + 1);
-            }
-            else if (from - to === CASTLE_RIGHT) {
-                this.removePiece(to + 1);
-                this.addPiece(Rooks[this.sideToMove], to - 1);
-            }
-        }
-        
-        // from board meta
-        if (this.enPas !== Square.none) {
-            this.hashEnPas();
-            this.enPas = Square.none;
-        }
+
         if (IsPawn[piece]) {
-            if (GetRank[from] === EnPasRank[this.sideToMove]
-                && GetRank[to] === Rank.four || Rank.five) {
+            if (to === this.enPas) {
+                this.removePiece(to + PawnDir[this.sideToMove]);
+            }
+            else if (GetRank[from] === StartingRank[this.sideToMove]
+                && GetRank[to] === EnPasRank[this.sideToMove]) {
                 this.enPas = from + PawnDir[this.sideToMove];
                 this.hashEnPas();
+            }
+            else {
+                this.hashEnPas();
+                this.enPas = Square.none;
             }
             this.fiftyMoveCounter = 0;
         }
         else {
+            if (IsKing[piece]) {
+                if (from - to === CASTLE_LEFT) {
+                    this.removePiece(LeftRook[this.sideToMove]);
+                    this.addPiece(Rooks[this.sideToMove], CastleLeftRook[this.sideToMove]);
+                }
+                else if (from - to === CASTLE_RIGHT) {
+                    this.removePiece(RightRook[this.sideToMove]);
+                    this.addPiece(Rooks[this.sideToMove], CastleRightRook[this.sideToMove]);
+                }
+            }
             this.fiftyMoveCounter++;
         }
 
@@ -154,16 +149,13 @@ export default class Board implements IBoard {
             this.castlePermissions &= CastlePerm[to];
             this.hashCastle();
         }
-
         this.sideToMove = this.sideToMove === Color.white ? Color.black : Color.white;
         this.hashSide();
-
-        this.ply++;
-
-
+        
         this.removePiece(from);
         this.removePiece(to);
         this.addPiece(piece, to);
+        this.ply++;
     }
 
     updatePositionKey(): void {
