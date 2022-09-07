@@ -1,8 +1,8 @@
 /* eslint-disable no-magic-numbers */
 import { BOARD_SQ_NUM, FILE_CHAR, INNER_BOARD_SQ_NUM, PIECE_CHAR } from "../shared/constants";
+import { Color, Square } from "../shared/enums";
 import { GenerateHash32, GetFile, GetRank, GetSq120 } from "../board/board-utils";
 import { IBoard } from "../board/board-types";
-import { Color, Square } from "../shared/enums";
 
 export function printBoard(board: IBoard) {
     console.log("\n  a b c d e f g h");
@@ -71,11 +71,11 @@ function getSquareString(sq: Square) {
     return GetFile[sq] !== 0 ? FILE_CHAR[GetFile[sq]] + GetRank[sq] : 'N/A';
 }
 
-function getCastleString(board: IBoard) {
+export function getCastleString(board: IBoard) {
     let out = "";
     if (board.whiteKingCastle) out += 'K';
-    if (board.blackKingCastle) out += 'Q';
-    if (board.whiteQueenCastle) out += 'k';
+    if (board.whiteQueenCastle) out += 'Q';
+    if (board.blackKingCastle) out += 'k';
     if (board.blackQueenCastle) out += 'q';
     return out;
 }

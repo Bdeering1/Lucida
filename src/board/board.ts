@@ -128,11 +128,11 @@ export default class Board implements IBoard {
         }
         else {
             if (IsKing[piece]) {
-                if (from - to === CASTLE_LEFT) {
+                if (to - from === CASTLE_LEFT) {
                     this.removePiece(LeftRook[this.sideToMove]);
                     this.addPiece(Rooks[this.sideToMove], CastleLeftRook[this.sideToMove]);
                 }
-                else if (from - to === CASTLE_RIGHT) {
+                else if (to - from === CASTLE_RIGHT) {
                     this.removePiece(RightRook[this.sideToMove]);
                     this.addPiece(Rooks[this.sideToMove], CastleRightRook[this.sideToMove]);
                 }

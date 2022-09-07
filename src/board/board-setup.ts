@@ -73,7 +73,7 @@ export function parseFen(board: IBoard, fen: string): void {
     board.sideToMove = fen[fenIdx] === 'w' ? Color.white : Color.black;
     fenIdx += 2;
 
-    while (fen[fenIdx] !== ' ' && fen[fenIdx] !== '-') {
+    while (fen[fenIdx] !== ' ') {
         switch (fen[fenIdx]) {
             case 'K':
                 board.setWhiteKingCastle();

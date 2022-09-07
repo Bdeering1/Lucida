@@ -14,14 +14,7 @@ export const CASTLE_RIGHT = 2;
 
 /* --- Strings ---  */
 export const START_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+export const CASTLE_TEST_FEN = "r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1";
 export const PIECE_CHAR = ".PNBRQKpnbrqk";
 export const SIDE_CHAR = "wb-";
 export const FILE_CHAR = "abcdefgh";
-
-/* --- Flags --- */
-export const PAWN_START_FLAG = 0x80000;
-export const EN_PAS_FLAG = 0x40000;
-export const CASTLE_FLAG = 0x1000000;
-
-export const CAPTURE_FLAG = 0x7C; /*returns a non zero number if there was a capture (including en passant)*/
-export const PROMOTION_FLAG = 0xF00000; /*these could be used instead of doing the whole shift*/

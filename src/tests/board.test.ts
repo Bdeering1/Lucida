@@ -1,9 +1,12 @@
 /* eslint-disable no-magic-numbers */
 
-import Board from "../board/board";
 import { Color, Piece, Square } from "../shared/enums";
-import { IBoard } from "../board/board-types";
 import { PieceColor, PieceVal } from "../board/board-utils";
+import Board from "../board/board";
+import { IBoard } from "../board/board-types";
+import { CASTLE_TEST_FEN } from "../shared/constants";
+import { parseFen } from "../board/board-setup";
+import { getCastleString } from "../cli/printing";
 
 describe('board', () => {
     let board: IBoard;
@@ -75,7 +78,44 @@ describe('board', () => {
         expect(board.getPiece(to)).toBe(piece);
     });
 
-    it.todo('updates castling permissions if a king or rook move for the first time');
+    it('can castle kingside', () => {
+        parseFen(board, CASTLE_TEST_FEN);
+        board.movePiece(Square.e1, Square.g1);
+        board.movePiece(Square.e8, Square.g8);
+        expect(board.getPiece(Square.g1)).toBe(Piece.whiteKing);
+        expect(board.getPiece(Square.f1)).toBe(Piece.whiteRook);
+        expect(board.getPiece(Square.e1)).toBe(Piece.none);
+        expect(board.getPiece(Square.h1)).toBe(Piece.none);
+        expect(board.getPiece(Square.g8)).toBe(Piece.blackKing);
+        expect(board.getPiece(Square.f8)).toBe(Piece.blackRook);
+        expect(board.getPiece(Square.e8)).toBe(Piece.none);
+        expect(board.getPiece(Square.h8)).toBe(Piece.none);
+    });
+
+    it('can castle queenside', () => {
+        parseFen(board, CASTLE_TEST_FEN);
+        board.movePiece(Square.e1, Square.c1);
+        board.movePiece(Square.e8, Square.c8);
+        expect(board.getPiece(Square.c1)).toBe(Piece.whiteKing);
+        expect(board.getPiece(Square.d1)).toBe(Piece.whiteRook);
+        expect(board.getPiece(Square.e1)).toBe(Piece.none);
+        expect(board.getPiece(Square.a1)).toBe(Piece.none);
+        expect(board.getPiece(Square.c8)).toBe(Piece.blackKing);
+        expect(board.getPiece(Square.d8)).toBe(Piece.blackRook);
+        expect(board.getPiece(Square.e8)).toBe(Piece.none);
+        expect(board.getPiece(Square.a8)).toBe(Piece.none);
+    });
+
+    it.each([
+        [Square.e1, Square.e2, 'kq'],
+        [Square.e8, Square.e7, 'KQ'],
+        [Square.a1, Square.a2, 'Kkq'],
+        [Square.h8, Square.h7, 'KQq'],
+    ])('updates castling permissions if a king or rook move for the first time', (from, to, permissions) => {
+        parseFen(board, CASTLE_TEST_FEN);
+        board.movePiece(from, to);
+        expect(getCastleString(board)).toBe(permissions);
+    });
 
     it.todo('updates en passent permissions if a player does not take en passent');
 
@@ -85,24 +125,22 @@ describe('board', () => {
     
     it.todo('updates the position key correctly if a player does not take en passent');
 
-    it.todo('can detect whether or not a square is attacked');
-
-    it('sets white king-side castle permissions correctly', () => {
+    it('can set white king-side castle permission', () => {
         board.setWhiteKingCastle();
         expect(board.whiteKingCastle).toBe(true);
     });
 
-    it('sets white queen-side castle permissions correctly', () => {
+    it('can set white queen-side castle permission', () => {
         board.setWhiteQueenCastle();
         expect(board.whiteQueenCastle).toBe(true);
     });
 
-    it('sets black king-side castle permissions correctly', () => {
+    it('can set black king-side castle permission', () => {
         board.setBlackKingCastle();
         expect(board.blackKingCastle).toBe(true);
     });
 
-    it('sets black queen-side castle permissions correctly', () => {
+    it('can set black queen-side castle permission', () => {
         board.setBlackQueenCastle();
         expect(board.blackQueenCastle).toBe(true);
     });
