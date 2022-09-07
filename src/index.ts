@@ -7,10 +7,10 @@ import { parseFen } from "./board/board-setup";
 
 const board = new Board();
 parseFen(board, CASTLE_TEST_FEN);
-board.movePiece(Square.e1, Square.c1);
-board.movePiece(Square.e8, Square.c8);
+board.movePiece(Square.e1, Square.g1);
+board.movePiece(Square.e8, Square.g8);
 printBoard(board);
 printBoardVars(board);
 
-//const moveManager = new MoveManager(board);
-//moveManager.generateMoves();
+const moveManager = new MoveManager(board);
+moveManager.generateMoves();

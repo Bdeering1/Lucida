@@ -1,5 +1,5 @@
-import { Color, GameResult, Square } from "../shared/enums";
-import { StartingRank, GetRank, NonSlidingPieces, PawnCaptureDir, Pawns, PieceColor, PieceDir, SlidingPieces, SqOffboard } from "./board-utils";
+import { Color, GameResult, Piece, Square } from "../shared/enums";
+import { StartingRank, GetRank, NonSlidingPieces, PawnCaptureDir, Pawns, PieceColor, PieceDir, SlidingPieces, SqOffboard, CastleRightRook, CastleLeftRook } from "./board-utils";
 import { MAX_DEPTH, MAX_POSITION_MOVES } from "../shared/constants";
 import { IBoard } from "./board-types";
 
@@ -54,10 +54,30 @@ export default class MoveManager {
             return 0;
         }
         else if (side === Color.white) {
-            // white castle moves
+            if (this.board.whiteKingCastle
+                && this.board.getPiece(Square.f1) === Piece.none
+                && this.board.getPiece(Square.g1) === Piece.none) {
+                this.moveList[ply][moveIndex++] = new Move(Square.e1, CastleRightRook[side]);
+            }
+            if (this.board.whiteQueenCastle
+                && this.board.getPiece(Square.b1) === Piece.none
+                && this.board.getPiece(Square.c1) === Piece.none
+                && this.board.getPiece(Square.d1) === Piece.none) {
+                this.moveList[ply][moveIndex++] = new Move(Square.e1, CastleLeftRook[side]);
+            }
         }
         else {
-            // black castle moves
+            if (this.board.blackKingCastle
+                && this.board.getPiece(Square.f8) === Piece.none
+                && this.board.getPiece(Square.g8) === Piece.none) {
+                this.moveList[ply][moveIndex++] = new Move(Square.e1, CastleRightRook[side]);
+            }
+            if (this.board.blackQueenCastle
+                && this.board.getPiece(Square.b8) === Piece.none
+                && this.board.getPiece(Square.c8) === Piece.none
+                && this.board.getPiece(Square.d8) === Piece.none) {
+                this.moveList[ply][moveIndex++] = new Move(Square.e1, CastleLeftRook[side]);
+            }
         }
 
         // pawn moves
@@ -73,7 +93,7 @@ export default class MoveManager {
             }
             for (const captureDir of PawnCaptureDir[side]) {
                 const captureSq = sq + captureDir;
-                if (PieceColor[this.board.getPiece(captureSq)] === opposingSide) {
+                if (PieceColor[this.board.getPiece(captureSq)] === opposingSide || captureSq === this.board.enPas) {
                     this.moveList[ply][moveIndex++] = new Move(sq, captureSq);
                 }
             }
