@@ -121,19 +121,6 @@ export function SqOffboard(sq : number) {
     return GetSq64[sq] === Square.offBoard;
 }
 
-export function FromSq(m : number) {
-    return m & 0x7F;
-}
-export function ToSq(m : number) {
-    return m >> 7 & 0x7F;
-}
-export function Captured(m : number) {
-    return m >> 14 & 0xF;
-}
-export function Promoted(m : number) {
-    return m >> 20 & 0xF;
-}
-
 export function GenerateHash32(seed: number) {
     return ~~((seed + 37) * 3575866506 + seed % 2);
     /* return Math.floor(Math.random() * 255 + 1) << 24 | Math.floor(Math.random() * 255 + 1) << 16

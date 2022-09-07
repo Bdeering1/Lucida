@@ -30,10 +30,6 @@ export interface IBoard {
      */
     material: number[];
     /**
-     * Stores all data not directly related to the visible state of the board
-     */
-    //meta: IBoardMeta;
-    /**
      * Stores the state of the board after each move, enables undo operation
      * @todo should include move/piece information - either move to move generation and update alongside movePiece call, or put in board wrapper class
      */

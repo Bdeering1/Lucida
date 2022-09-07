@@ -4,7 +4,6 @@ import { CastleLeftRook, CastlePerm, CastleRightRook, EnPasRank, GenerateHash32,
 import { IBoard } from "./board-types";
 
 export default class Board implements IBoard {
-    //public meta: IBoardMeta;
 
     public sideToMove = Color.none;
     public ply = 0;
@@ -41,7 +40,6 @@ export default class Board implements IBoard {
         this.pieces = new Array(BOARD_SQ_NUM).fill(Piece.none);
         this.pieceSquares = new Array(NUM_PIECE_TYPES);
         this.pieceQuantities = new Array(NUM_PIECE_TYPES);
-        //this = meta;
 
         const emptySqArray = new Array(MAX_NUM_PER_PIECE).fill(Square.none);
         for (let i = 0; i < NUM_PIECE_TYPES; i++) {
@@ -59,8 +57,6 @@ export default class Board implements IBoard {
         for (let i = 0; i < NUM_CASTLE_COMBINATIONS; i++) {
             Board.castleKeys[i] = GenerateHash32(seed++);
         }
-        //for (let i = 0; i < BOARD_SQ_NUM; i++) { Board.pieceKeys[Piece.none][i] = 0; }
-        // ^ doing this breaks hash for en pas squareZZ
         for (let piece = Piece.none; piece < NUM_PIECE_TYPES; piece++) {
             for (let sq = 0; sq < BOARD_SQ_NUM; sq++) {
                 Board.pieceKeys[piece][sq] = GenerateHash32(seed++);

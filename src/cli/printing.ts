@@ -1,9 +1,10 @@
 /* eslint-disable no-magic-numbers */
-import { BOARD_SQ_NUM, INNER_BOARD_SQ_NUM, PIECE_CHAR } from "../shared/constants";
-import { GenerateHash32, GetRank, GetSq120 } from "../board/board-utils";
-import Board from "../board/board";
+import { BOARD_SQ_NUM, FILE_CHAR, INNER_BOARD_SQ_NUM, PIECE_CHAR } from "../shared/constants";
+import { GenerateHash32, GetFile, GetRank, GetSq120 } from "../board/board-utils";
+import { IBoard } from "../board/board-types";
+import { Color, Square } from "../shared/enums";
 
-export function printBoard(board: Board) {
+export function printBoard(board: IBoard) {
     console.log("\n  a b c d e f g h");
 
     const lines = [];
@@ -20,10 +21,9 @@ export function printBoard(board: Board) {
     for (const l of lines.reverse()) {
         console.log(l);
     }
-    console.log("\n");
 }
 
-export function printBoard120(board: Board) {
+export function printBoard120(board: IBoard) {
     console.log("\n    a b c d e f g h");
 
     const lines = [];
@@ -40,6 +40,15 @@ export function printBoard120(board: Board) {
     for (const l of lines.reverse()) {
         console.log(l);
     }
+}
+
+export function printBoardVars(board: IBoard) {
+    console.log(`Side to move: ${getColorString(board.sideToMove)}`);
+    console.log(`Ply: ${board.ply} (Move ${getMoveNumber(board.ply)})`);
+    console.log(`En pas square: ${getSquareString(board.enPas)}`); // convert 
+    console.log(`Castle permissions: ${getCastleString(board)}`);
+    console.log(`Fifty move counter: ${board.fiftyMoveCounter}`);
+    console.log(`Material: ${board.material}`);
     console.log("\n");
 }
 
@@ -48,6 +57,27 @@ export function printGeneratedHashes() {
         const hash = GenerateHash32(i);
         console.log(`${toBinaryString(hash)} (${hash})`);
     }
+}
+
+function getColorString(color: Color) {
+    return color === Color.white ? 'W' : color === Color.black ? 'B' : 'N/A';
+}
+
+function getMoveNumber(ply: number) {
+    return (ply + 1) / 2;
+}
+
+function getSquareString(sq: Square) {
+    return GetFile[sq] !== 0 ? FILE_CHAR[GetFile[sq]] + GetRank[sq] : 'N/A';
+}
+
+function getCastleString(board: IBoard) {
+    let out = "";
+    if (board.whiteKingCastle) out += 'K';
+    if (board.blackKingCastle) out += 'Q';
+    if (board.whiteQueenCastle) out += 'k';
+    if (board.blackQueenCastle) out += 'q';
+    return out;
 }
 
 function toBinaryString(num: number) {
