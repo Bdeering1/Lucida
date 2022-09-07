@@ -88,7 +88,7 @@ export function parseFen(board: IBoard, fen: string): void {
                 board.setBlackQueenCastle();
                 break;
             default:
-                break; // something is probably wrong with the FEN
+                break;
         }
         fenIdx++;
     }
@@ -96,7 +96,7 @@ export function parseFen(board: IBoard, fen: string): void {
 
     if (fen[fenIdx] !== '-') {
         file = GetFile(fen[fenIdx++]);
-        rank = GetRank(fen[fenIdx++]);
+        rank = GetRank(fen[fenIdx]);
         board.enPas = GetSquare(file, rank);
     }
     fenIdx += 2;

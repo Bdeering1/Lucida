@@ -67,7 +67,7 @@ function getMoveNumber(ply: number) {
     return (ply + 1) / 2;
 }
 
-function getSquareString(sq: Square) {
+export function getSquareString(sq: Square) {
     return GetFile[sq] !== 0 ? FILE_CHAR[GetFile[sq]] + GetRank[sq] : 'N/A';
 }
 

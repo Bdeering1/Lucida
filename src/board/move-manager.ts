@@ -85,7 +85,7 @@ export default class MoveManager {
         for (const sq of this.board.getSquares(pawnType)) {
             let targetSq = sq + PieceDir[pawnType][side];
             if (PieceColor[this.board.getPiece(targetSq)] === Color.none) {
-                this.moveList[this.board.ply][moveIndex++] = new Move(sq, targetSq);
+                this.moveList[ply][moveIndex++] = new Move(sq, targetSq);
             }
             targetSq = sq + PieceDir[pawnType][side] * 2;
             if (GetRank[sq] === StartingRank[side] && PieceColor[this.board.getPiece(targetSq)] === Color.none) {

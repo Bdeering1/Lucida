@@ -22,7 +22,7 @@ export const KnightDir = [ -8, -19, -21, -12, 8, 19, 21, 12 ];
 export const BishopDir = [ -9, -11, 11, 9 ];
 export const RookDir = [ -1, -10, 1, 10 ];
 export const KingDir = [ -1, -10, 1, 10, -9, -11, 11, 9 ];
-export const PawnCaptureDir = [[ -9, -11 ], [ 9, 11 ]];
+export const PawnCaptureDir = [[ 9, 11 ], [ -9, -11 ]];
 export const PieceDir = [ [], PawnDir, KnightDir, BishopDir, RookDir, KingDir, KingDir, PawnDir, KnightDir, BishopDir, RookDir, KingDir, KingDir ];
 export const NonSlidingPieces = [ [Piece.whiteKnight, Piece.whiteKing],
                                   [Piece.blackKnight, Piece.blackKing] ];
