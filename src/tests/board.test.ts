@@ -1,12 +1,12 @@
 /* eslint-disable no-magic-numbers */
 
+import { CASTLE_TEST_FEN, EN_PAS_TEST_FEN } from "../shared/constants";
 import { Color, Piece, Square } from "../shared/enums";
 import { PieceColor, PieceVal } from "../board/board-utils";
 import Board from "../board/board";
 import { IBoard } from "../board/board-types";
-import { CASTLE_TEST_FEN } from "../shared/constants";
-import { parseFen } from "../board/board-setup";
 import { getCastleString } from "../cli/printing";
+import { parseFen } from "../board/board-setup";
 
 describe('board', () => {
     let board: IBoard;
@@ -117,13 +117,36 @@ describe('board', () => {
         expect(getCastleString(board)).toBe(permissions);
     });
 
-    it.todo('updates en passent permissions if a player does not take en passent');
+    it('updates en passent permissions if a player does not take en passent', () => {
+        parseFen(board, EN_PAS_TEST_FEN);
+        board.movePiece(Square.c5, Square.c6);
+        expect(board.enPas).toBe(Square.none);
+    });
 
-    it.todo('updates the position key correctly when a piece moves');
+    it('updates the position key correctly when pieces are added and removed', () => {
+        board.addPiece(Piece.whitePawn, Square.e5);
+        expect(board.posKey).not.toEqual(0);
+        board.removePiece(Square.e5);
+        expect(board.posKey).toBe(0);
+    });
 
-    it.todo('updates the position key correctly when castle permissions change');
+    it('updates the position key correctly when castle permissions change', () => {
+        jest.spyOn(board, 'hashCastle');
+        parseFen(board, CASTLE_TEST_FEN);
+        const startingKey = board.posKey;
+        board.movePiece(Square.e1, Square.e2);
+        expect(board.hashCastle).toBeCalled();
+        expect(board.posKey).not.toEqual(startingKey);
+    });
     
-    it.todo('updates the position key correctly if a player does not take en passent');
+    it('updates the position key correctly if a player does not take en passent', () => {
+        jest.spyOn(board, 'hashEnPas');
+        parseFen(board, EN_PAS_TEST_FEN);
+        const startingKey = board.posKey;
+        board.movePiece(Square.c5, Square.c6);
+        expect(board.hashEnPas).toBeCalled();
+        expect(board.posKey).not.toEqual(startingKey);
+    });
 
     it('can set white king-side castle permission', () => {
         board.setWhiteKingCastle();

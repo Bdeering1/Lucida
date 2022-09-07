@@ -76,6 +76,9 @@ export default class Board implements IBoard {
         this.material[PieceColor[piece]] += PieceVal[piece];
         this.hashPiece(piece, sq);
     }
+    /**
+     * @todo this could possibly be private
+     */
     removePiece(sq: Square): void {
         const piece = this.pieces[sq];
         this.pieces[sq] = Piece.none;
