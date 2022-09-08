@@ -121,6 +121,13 @@ export function SqOffboard(sq : number) {
     return GetSq64[sq] === Square.offBoard;
 }
 
+export function GetFileFromChar(fileStr: string) {
+    return fileStr.charCodeAt(0) - 'a'.charCodeAt(0) + 1;
+}
+export function GetRankFromChar(rankStr: string) {
+    return rankStr.charCodeAt(0) - '1'.charCodeAt(0) + 1;
+}
+
 export function GenerateHash32(seed: number) {
     return ~~((seed + 37) * 3575866506 + seed % 2);
     /* return Math.floor(Math.random() * 255 + 1) << 24 | Math.floor(Math.random() * 255 + 1) << 16

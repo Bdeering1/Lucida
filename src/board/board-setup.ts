@@ -1,5 +1,5 @@
 import { Color, File, Piece, Rank } from "../shared/enums";
-import { GetSquare } from "./board-utils";
+import { GetFileFromChar, GetRankFromChar, GetSquare } from "./board-utils";
 import { IBoard } from "./board-types";
 
 export function resetBoard(): void {
@@ -95,8 +95,8 @@ export function parseFen(board: IBoard, fen: string): void {
     fenIdx++;
 
     if (fen[fenIdx] !== '-') {
-        file = GetFile(fen[fenIdx++]);
-        rank = GetRank(fen[fenIdx]);
+        file = GetFileFromChar(fen[fenIdx++]);
+        rank = GetRankFromChar(fen[fenIdx]);
         board.enPas = GetSquare(file, rank);
     }
     fenIdx += 2;
@@ -106,12 +106,4 @@ export function parseFen(board: IBoard, fen: string): void {
     board.ply = (parseInt(fen[fenIdx]) - 1) * 2 + board.sideToMove + 1;
 
     board.updatePositionKey();
-}
-
-function GetFile(fileStr: string) {
-    return fileStr.charCodeAt(0) - 'a'.charCodeAt(0) + 1;
-}
-
-function GetRank(rankStr: string) {
-    return rankStr.charCodeAt(0) - '1'.charCodeAt(0) + 1;
 }

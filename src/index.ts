@@ -4,6 +4,7 @@ import Board from "./board/board";
 import MoveManager from "./board/move-manager";
 import { Square } from "./shared/enums";
 import { parseFen } from "./board/board-setup";
+import getInput from "./cli/input";
 
 const board = new Board();
 parseFen(board, EN_PAS_TEST_FEN);
@@ -12,3 +13,5 @@ printBoardVars(board);
 
 const moveManager = new MoveManager(board);
 console.log(moveManager.generateMoves());
+
+getInput(board);
