@@ -8,7 +8,12 @@ import getInput from "./cli/input";
 
 const board = new Board();
 parseFen(board, START_FEN);
-getInput(board);
+
+let running = true;
+while(running) {
+    printBoard(board);
+    running = await getInput(board);
+}
 
 // printBoard(board);
 // printBoardVars(board);
