@@ -7,11 +7,11 @@ import { parseFen } from "./board/board-setup";
 import getInput from "./cli/input";
 
 const board = new Board();
-parseFen(board, EN_PAS_TEST_FEN);
-printBoard(board);
-printBoardVars(board);
-
-const moveManager = new MoveManager(board);
-console.log(moveManager.generateMoves());
-
+parseFen(board, START_FEN);
 getInput(board);
+
+// printBoard(board);
+// printBoardVars(board);
+
+// const moveManager = new MoveManager(board);
+// console.log(moveManager.generateMoves());
