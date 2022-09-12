@@ -7,16 +7,14 @@ import { parseFen } from "./board/board-setup";
 import getInput from "./cli/input";
 
 const board = new Board();
+const moveManager = new MoveManager(board);
 parseFen(board, START_FEN);
 
-let running = true;
-while(running) {
+while(true) {
     printBoard(board);
-    running = await getInput(board);
+    printBoardVars(board);
+    moveManager.generateMoves();
+    const move = await getInput(moveManager.moveList[board.ply]);
+    if (move.isNoMove()) break;
+    board.movePiece(move.from, move.to);
 }
-
-// printBoard(board);
-// printBoardVars(board);
-
-// const moveManager = new MoveManager(board);
-// console.log(moveManager.generateMoves());

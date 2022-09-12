@@ -11,6 +11,14 @@ export class Move {
         this.from = from;
         this.to = to;
     }
+
+    public static NoMove() {
+        return new Move(Square.none, Square.none);
+    }
+
+    public isNoMove() {
+        return this.from === Square.none;
+    }
 }
 
 export default class MoveManager {
