@@ -52,38 +52,41 @@ export default class MoveManager {
 
     /**
      * Generate all possible moves for the current position
+     * @todo this method needs to account for checks
      */
     public generateMoves(): number {
         let moveIndex = 0;
         const ply = this.board.ply;
         const side = this.board.sideToMove;
         const opposingSide = side === Color.white ? Color.black : Color.white;
+
+        // side specific moves
         if (side === Color.none) {
             return 0;
         }
-        else if (side === Color.white) {
+        else if (side === Color.white && !this.isSquareAttacked(Square.e1, Color.black)) {
             if (this.board.whiteKingCastle
-                && this.board.getPiece(Square.f1) === Piece.none
-                && this.board.getPiece(Square.g1) === Piece.none) {
+                && this.board.getPiece(Square.f1) === Piece.none && !this.isSquareAttacked(Square.f1, Color.black)
+                && this.board.getPiece(Square.g1) === Piece.none && !this.isSquareAttacked(Square.g1, Color.black)) {
                 this.moveList[ply][moveIndex++] = new Move(Square.e1, CastleRightRook[side]);
             }
             if (this.board.whiteQueenCastle
-                && this.board.getPiece(Square.b1) === Piece.none
-                && this.board.getPiece(Square.c1) === Piece.none
-                && this.board.getPiece(Square.d1) === Piece.none) {
+                && this.board.getPiece(Square.b1) === Piece.none && !this.isSquareAttacked(Square.b1, Color.black)
+                && this.board.getPiece(Square.c1) === Piece.none && !this.isSquareAttacked(Square.c1, Color.black)
+                && this.board.getPiece(Square.d1) === Piece.none && !this.isSquareAttacked(Square.d1, Color.black)) {
                 this.moveList[ply][moveIndex++] = new Move(Square.e1, CastleLeftRook[side]);
             }
         }
-        else {
+        else if (!this.isSquareAttacked(Square.e8, Color.white)) {
             if (this.board.blackKingCastle
-                && this.board.getPiece(Square.f8) === Piece.none
-                && this.board.getPiece(Square.g8) === Piece.none) {
+                && this.board.getPiece(Square.f8) === Piece.none && !this.isSquareAttacked(Square.f8, Color.white)
+                && this.board.getPiece(Square.g8) === Piece.none && !this.isSquareAttacked(Square.g8, Color.white)) {
                 this.moveList[ply][moveIndex++] = new Move(Square.e1, CastleRightRook[side]);
             }
             if (this.board.blackQueenCastle
-                && this.board.getPiece(Square.b8) === Piece.none
-                && this.board.getPiece(Square.c8) === Piece.none
-                && this.board.getPiece(Square.d8) === Piece.none) {
+                && this.board.getPiece(Square.b8) === Piece.none && !this.isSquareAttacked(Square.b8, Color.white)
+                && this.board.getPiece(Square.c8) === Piece.none && !this.isSquareAttacked(Square.c8, Color.white)
+                && this.board.getPiece(Square.d8) === Piece.none && !this.isSquareAttacked(Square.d8, Color.white)) {
                 this.moveList[ply][moveIndex++] = new Move(Square.e1, CastleLeftRook[side]);
             }
         }
@@ -141,7 +144,7 @@ export default class MoveManager {
      * Given a square on the inner board and a side, returns whether or not that square is attacked
      */
     public isSquareAttacked(sq: Square, side: Color): boolean {
-        throw new Error("Method not implemented.");
+        return false;
     }
 
     /**

@@ -1,5 +1,5 @@
 /* eslint-disable no-use-before-define */
-import { Color, Piece, Square } from "../shared/enums";
+import { CastleBit, Color, Piece, Square } from "../shared/enums";
 
 /**
  * Represents all aspects of board state for a given game ply
@@ -29,11 +29,6 @@ export interface IBoard {
      * Stores the material count for each side, indexed using `Color` enum
      */
     material: number[];
-    /**
-     * Stores the state of the board after each move, enables undo operation
-     * @todo should include move/piece information - either move to move generation and update alongside movePiece call, or put in board wrapper class
-     */
-    //history: IBoardMeta[];
 
     /**
      * Add a piece to the board

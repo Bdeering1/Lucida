@@ -10,11 +10,27 @@ const board = new Board();
 const moveManager = new MoveManager(board);
 parseFen(board, START_FEN);
 
-while(true) {
-    printBoard(board);
-    printBoardVars(board);
-    moveManager.generateMoves();
-    const move = await getInput(moveManager.moveList[board.ply]);
-    if (move.isNoMove()) break;
-    board.movePiece(move.from, move.to);
-}
+printBoard(board);
+printBoardVars(board);
+const newBoard = board.copy();
+console.log("----NEW----");
+printBoard(newBoard);
+printBoardVars(newBoard);
+
+board.movePiece(Square.e2, Square.e4);
+printBoard(board);
+printBoardVars(board);
+console.log("----NEW----");
+newBoard.movePiece(Square.a2, Square.a4);
+printBoard(newBoard);
+printBoardVars(newBoard);
+
+
+// while(true) {
+//     printBoard(board);
+//     printBoardVars(board);
+//     moveManager.generateMoves();
+//     const move = await getInput(moveManager.moveList[board.ply]);
+//     if (move.isNoMove()) break;
+//     board.movePiece(move.from, move.to);
+// }

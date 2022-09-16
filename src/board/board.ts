@@ -1,4 +1,4 @@
-import { BOARD_SQ_NUM, CASTLE_LEFT, CASTLE_RIGHT, INNER_BOARD_SQ_NUM, MAX_NUM_PER_PIECE, NUM_CASTLE_COMBINATIONS, NUM_PIECE_TYPES } from "../shared/constants";
+import { BOARD_SQ_NUM, CASTLE_LEFT, CASTLE_RIGHT, INNER_BOARD_SQ_NUM, MAX_GAME_MOVES, MAX_NUM_PER_PIECE, NUM_CASTLE_COMBINATIONS, NUM_PIECE_TYPES } from "../shared/constants";
 import { CastleBit, Color, Piece, Square } from "../shared/enums";
 import { CastleLeftRook, CastlePerm, CastleRightRook, EnPasRank, GenerateHash32, GetRank, GetSq120, IsKing, IsPawn, LeftRook, PawnDir, PieceColor, PieceVal, RightRook, Rooks, StartingRank } from "./board-utils";
 import { IBoard } from "./board-types";
@@ -8,7 +8,7 @@ export default class Board implements IBoard {
     public sideToMove = Color.none;
     public ply = 0;
     public enPas = Square.none;
-    public castlePermissions = CastleBit.none;
+    public castlePermissions = CastleBit.none; // should this be private?
     public fiftyMoveCounter = 0;
     public posKey = 0;
     public material: number[];
@@ -28,6 +28,10 @@ export default class Board implements IBoard {
      * Number of each type of piece on the board
      */
     private pieceQuantities: number[];
+    /**
+     * Stores the state of the board after each move, enables undo operation
+     */
+    private history: IBoard[];
 
     private static pieceKeys: number[][];
     private static castleKeys: number[];
@@ -37,6 +41,8 @@ export default class Board implements IBoard {
      * @todo squares outside of the inner board probably don't need hashes (could be set to zero)
      */
     constructor() {
+        this.material = [0, 0];
+
         this.pieces = new Array(BOARD_SQ_NUM).fill(Piece.none);
         this.pieceSquares = new Array(NUM_PIECE_TYPES);
         this.pieceQuantities = new Array(NUM_PIECE_TYPES);
@@ -47,7 +53,7 @@ export default class Board implements IBoard {
         }
         this.pieceQuantities.fill(0);
 
-        this.material = [0, 0];
+        this.history = new Array(MAX_GAME_MOVES);
 
         Board.castleKeys = new Array(NUM_CASTLE_COMBINATIONS);
         Board.pieceKeys = new Array(NUM_PIECE_TYPES).fill(new Array(BOARD_SQ_NUM));
@@ -154,7 +160,29 @@ export default class Board implements IBoard {
         this.removePiece(from);
         this.removePiece(to);
         this.addPiece(piece, to);
+        this.history[this.ply] = {...this};
         this.ply++;
+    }
+
+    copy() {
+        const copy = Object.create(this);
+        copy.sideToMove = this.sideToMove;
+        copy.ply = this.ply;
+        copy.enPas = this.enPas;
+        copy.castlePermissions = this.castlePermissions;
+        copy.fiftyMoveCounter = this.fiftyMoveCounter;
+        copy.posKey = this.posKey;
+        copy.material = [...this.material];
+
+        copy.pieces = [...this.pieces];
+        copy.pieceSquares = new Array(NUM_PIECE_TYPES);
+        for (let i = 0; i < NUM_PIECE_TYPES; i++) {
+            copy.pieceSquares[i] = [...this.pieceSquares[i]];
+        }
+        copy.pieceQuantities = [...this.pieceQuantities];
+        copy.history = [...this.history];
+
+        return copy;
     }
 
     updatePositionKey(): void {
