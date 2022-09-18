@@ -38,6 +38,7 @@ export const RightRook = [ Square.h1, Square.h8 ];
 export const CastleLeftRook = [ Square.d1, Square.d8 ];
 export const CastleRightRook = [ Square.f1, Square.f8 ];
 
+export const GetOtherSide = [ Color.black, Color.white, Color.none ];
 
 export const StartingRank = [ Rank.two, Rank.seven ];
 export const EnPasRank = [ Rank.four, Rank.five ];

@@ -3,6 +3,7 @@ import { BOARD_SQ_NUM, FILE_CHAR, INNER_BOARD_SQ_NUM, PIECE_CHAR } from "../shar
 import { Color, Square } from "../shared/enums";
 import { GenerateHash32, GetFile, GetRank, GetSq120 } from "../shared/utils";
 import { IBoard } from "../board/board-types";
+import MoveManager, { Move } from "../game/move-manager";
 
 export function printBoard(board: IBoard) {
     console.log("\n  a b c d e f g h");
@@ -51,6 +52,20 @@ export function printBoardVars(board: IBoard) {
     console.log(`Material: ${board.material}`);
 }
 
+export function printMoves(board: IBoard, moveManager: MoveManager) {
+    let output = "";
+    let idx = 0;
+    while (moveManager.moveList[board.ply][idx] !== undefined) {
+        if (idx !== 0) output += ", ";
+        output += getMoveString(moveManager.moveList[board.ply][idx++]);
+    }
+    console.log(output);
+}
+
+function getMoveString(move: Move): string {
+    return `${getSquareString(move.from)}${getSquareString(move.to)}`;
+}
+
 export function printGeneratedHashes() {
     for (let i = -7; i < 8; i++) {
         const hash = GenerateHash32(i);
@@ -58,8 +73,8 @@ export function printGeneratedHashes() {
     }
 }
 
-function getColorString(color: Color) {
-    return color === Color.white ? 'W' : color === Color.black ? 'B' : 'N/A';
+export function getColorString(color: Color) {
+    return color === Color.white ? 'white' : color === Color.black ? 'black' : 'N/A';
 }
 
 function getMoveNumber(ply: number) {

@@ -106,20 +106,23 @@ export default class Board implements IBoard {
     }
     movePiece(from: Square, to: Square): void {
         this.history[this.ply] = this.copy();
+        
+        let enPas = Square.none;
+        if (this.enPas !== Square.none) {
+            enPas = this.enPas;
+            this.hashEnPas();
+            this.enPas = Square.none;
+        }
 
         const piece = this.getPiece(from);
         if (IsPawn[piece]) {
-            if (to === this.enPas) {
+            if (to === enPas) {
                 this.removePiece(to + PawnDir[this.sideToMove]);
             }
             else if (GetRank[from] === StartingRank[this.sideToMove]
                 && GetRank[to] === EnPasRank[this.sideToMove]) {
                 this.enPas = from + PawnDir[this.sideToMove];
                 this.hashEnPas();
-            }
-            else {
-                this.hashEnPas();
-                this.enPas = Square.none;
             }
             this.fiftyMoveCounter = 0;
         }
@@ -134,7 +137,12 @@ export default class Board implements IBoard {
                     this.addPiece(Rooks[this.sideToMove], CastleRightRook[this.sideToMove]);
                 }
             }
-            this.fiftyMoveCounter++;
+            if (this.getPiece(to) !== Piece.none) {
+                this.fiftyMoveCounter = 0;
+            }
+            else {
+                this.fiftyMoveCounter++;
+            }
         }
 
         if ((this.castlePermissions & CastleBit.all) !== 0) {
@@ -144,7 +152,7 @@ export default class Board implements IBoard {
         }
         this.sideToMove = this.sideToMove === Color.white ? Color.black : Color.white;
         this.hashSide();
-        
+
         this.removePiece(from);
         this.removePiece(to);
         this.addPiece(piece, to);

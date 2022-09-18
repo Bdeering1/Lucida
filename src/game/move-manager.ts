@@ -1,5 +1,5 @@
 import { Color, GameResult, Piece, Square } from "../shared/enums";
-import { StartingRank, GetRank, NonSlidingPieces, PawnCaptureDir, Pawns, PieceColor, PieceDir, SlidingPieces, SqOffboard, CastleRightRook, CastleLeftRook, Kings, IsKing, IsKnight, IsBishopQueen, IsRookQueen } from "../shared/utils";
+import { StartingRank, GetRank, NonSlidingPieces, PawnCaptureDir, Pawns, PieceColor, PieceDir, SlidingPieces, SqOffboard, CastleRightRook, CastleLeftRook, Kings, IsKing, IsKnight, IsBishopQueen, IsRookQueen, GetOtherSide } from "../shared/utils";
 import { MAX_DEPTH, MAX_POSITION_MOVES } from "../shared/constants";
 import { IBoard } from "../board/board-types";
 
@@ -62,7 +62,7 @@ export default class MoveManager {
         this.moveIndex = 0;
         const ply = this.board.ply;
         const side = this.board.sideToMove;
-        const opposingSide = side === Color.white ? Color.black : Color.white;
+        const opposingSide = GetOtherSide[side];
 
         // side specific moves
         if (side === Color.none) {
@@ -140,7 +140,10 @@ export default class MoveManager {
                 }
             }
         });
-
+        
+        const kindAttacked = this.squareAttacked(this.board.getSquares(Kings[side]).next().value, side);
+        if (this.moveIndex === 0 && kindAttacked) return -1;
+        
         return this.moveIndex;
     }
 
@@ -148,7 +151,7 @@ export default class MoveManager {
      * Given a square on the inner board and a side, returns whether or not that square is attacked
      */
     public squareAttacked(sq: Square, atkSide: Color): boolean {
-        const defSide = atkSide === Color.white ? Color.black : Color.white;
+        const defSide = GetOtherSide[atkSide];
         if (atkSide === Color.none) return false;
 
         //Pawns

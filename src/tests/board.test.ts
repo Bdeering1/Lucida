@@ -2,7 +2,7 @@
 
 import { CASTLE_TEST_FEN, EN_PAS_TEST_FEN, START_FEN } from "../shared/constants";
 import { Color, Piece, Square } from "../shared/enums";
-import { PieceColor, PieceVal } from "../board/board-utils";
+import { PieceColor, PieceVal } from "../shared/utils";
 import Board from "../board/board";
 import { IBoard } from "../board/board-types";
 import { getCastleString } from "../cli/printing";
@@ -117,9 +117,12 @@ describe('board', () => {
         expect(getCastleString(board)).toBe(permissions);
     });
 
-    it('updates en passent permissions if a player does not take en passent', () => {
+    it.each([
+        [Square.e1, Square.e2],
+        [Square.c5, Square.c6],
+    ])('updates en passent permissions if a player does not take en passent', (from, to) => {
         parseFen(board, EN_PAS_TEST_FEN);
-        board.movePiece(Square.c5, Square.c6);
+        board.movePiece(from, to);
         expect(board.enPas).toBe(Square.none);
     });
 
@@ -139,12 +142,15 @@ describe('board', () => {
         expect(board.posKey).not.toEqual(startingKey);
     });
     
-    it('updates the position key correctly if a player does not take en passent', () => {
-        jest.spyOn(board, 'hashEnPas');
+    it.each([
+        [Square.e1, Square.e2],
+        [Square.c5, Square.c6],
+    ])('updates the position key correctly if a player does not take en passent', () => {
         parseFen(board, EN_PAS_TEST_FEN);
+        jest.spyOn(board, 'hashEnPas');
         const startingKey = board.posKey;
         board.movePiece(Square.c5, Square.c6);
-        expect(board.hashEnPas).toBeCalled();
+        expect(board.hashEnPas).toBeCalledTimes(1);
         expect(board.posKey).not.toEqual(startingKey);
     });
 
