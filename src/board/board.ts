@@ -160,7 +160,7 @@ export default class Board implements IBoard {
         this.removePiece(from);
         this.removePiece(to);
         this.addPiece(piece, to);
-        this.history[this.ply] = {...this};
+        this.history[this.ply] = this.copy();
         this.ply++;
     }
 

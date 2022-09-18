@@ -64,7 +64,7 @@ function getColorString(color: Color) {
 }
 
 function getMoveNumber(ply: number) {
-    return (ply + 1) / 2;
+    return ply / 2 + 1;
 }
 
 export function getSquareString(sq: Square) {

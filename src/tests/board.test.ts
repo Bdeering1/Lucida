@@ -1,6 +1,6 @@
 /* eslint-disable no-magic-numbers */
 
-import { CASTLE_TEST_FEN, EN_PAS_TEST_FEN } from "../shared/constants";
+import { CASTLE_TEST_FEN, EN_PAS_TEST_FEN, START_FEN } from "../shared/constants";
 import { Color, Piece, Square } from "../shared/enums";
 import { PieceColor, PieceVal } from "../board/board-utils";
 import Board from "../board/board";
@@ -168,16 +168,24 @@ describe('board', () => {
         expect(board.blackQueenCastle).toBe(true);
     });
 
-    // it('resets castle permissions correctly', () => {
-    //     board.setWhiteKingCastle();
-    //     board.setWhiteQueenCastle();
-    //     board.setBlackKingCastle();
-    //     board.setBlackQueenCastle();
-    //     board.resetCastling();
-    //     expect(board.whiteKingCastle).toBe(false);
-    //     expect(board.whiteQueenCastle).toBe(false);
-    //     expect(board.blackKingCastle).toBe(false);
-    //     expect(board.blackQueenCastle).toBe(false);
-    // });
-
+    it('can copy make an identical copy of itself (with no shared references)', () => {
+        parseFen(board, START_FEN);
+        const key = board.posKey;
+        const whiteMaterial = board.material[Color.white];
+        const copy = board.copy();
+        board.movePiece(Square.d2, Square.d4);
+        board.movePiece(Square.e7, Square.e5);
+        board.movePiece(Square.e1, Square.d2);
+        board.movePiece(Square.e5, Square.d4);
+        board.movePiece(Square.c2, Square.c4);
+        expect(copy.sideToMove).toBe(Color.white);
+        expect(copy.ply).toBe(0);
+        expect(copy.enPas).toBe(Square.none);
+        expect(copy.whiteKingCastle).toBe(true);
+        expect(copy.whiteQueenCastle).toBe(true);
+        expect(copy.fiftyMoveCounter).toBe(0);
+        expect(copy.posKey).toBe(key);
+        expect(copy.material[Color.white]).toBe(whiteMaterial);
+        expect(copy.getPiece(Square.d2)).toBe(Piece.whitePawn);
+    })
 });

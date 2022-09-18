@@ -65,6 +65,10 @@ export interface IBoard {
      * Update position key for side to move, en passent, and castling
      */
     updatePositionKey(): void;
+    /**
+     * Create an identical copy of this instance
+     */
+    copy(): IBoard;
 
     get whiteKingCastle(): boolean;
     get whiteQueenCastle(): boolean;
