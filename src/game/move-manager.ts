@@ -141,8 +141,8 @@ export default class MoveManager {
             }
         });
         
-        const kindAttacked = this.squareAttacked(this.board.getSquares(Kings[side]).next().value, side);
-        if (this.moveIndex === 0 && kindAttacked) return -1;
+        const kingAttacked = this.squareAttacked(this.board.getSquares(Kings[side]).next().value, side);
+        if (this.moveIndex === 0 && kingAttacked) return -1;
         
         return this.moveIndex;
     }

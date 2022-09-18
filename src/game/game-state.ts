@@ -1,7 +1,7 @@
 import { IBoard } from "../board/board-types";
 import { getColorString } from "../cli/printing";
-import { Color } from "../shared/enums";
-import { GetOtherSide } from "../shared/utils";
+import { Color, Piece, Square } from "../shared/enums";
+import { GetOtherSide, Pawns } from "../shared/utils";
 
 export class GameStatus {
     complete: boolean = false;
@@ -20,6 +20,23 @@ export function getGameStatus(board: IBoard, moves: number): GameStatus {
         const desc = `Checkmate, ${getColorString(GetOtherSide[board.sideToMove])} wins`;
         return new GameStatus(true, desc, GetOtherSide[board.sideToMove]);
     }
+    if (board.fiftyMoveCounter >= 50) return new GameStatus(true, "Stalemate, fifty moves");
+    
+    for (let key of board.repeats) {
+        if (board.posKey === key) return new GameStatus(true, "Draw by repetition");
+    }
+
+    if (hasPawn(board, Color.white) || hasPawn(board, Color.black)) return new GameStatus(false);
+    if (board.material[Color.white] <= 50325 || board.material[Color.white] <= 50325) {
+        return new GameStatus(true, "Draw, insufficient material");
+    }
 
     return new GameStatus(false);
+}
+
+function hasPawn(board: IBoard, side: Color): boolean {
+    for (let piece of board.getPieces(side)) {
+        if (piece === Pawns[side]) return true;
+    }
+    return false;
 }

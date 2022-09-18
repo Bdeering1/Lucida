@@ -106,4 +106,5 @@ export function parseFen(board: IBoard, fen: string): void {
     board.ply = (parseInt(fen[fenIdx]) - 1) * 2 + board.sideToMove;
 
     board.updatePositionKey();
+    board.appendToHistory();
 }

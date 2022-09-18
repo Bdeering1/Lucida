@@ -10,8 +10,9 @@ export default class Board implements IBoard {
     public enPas = Square.none;
     public castlePermissions = CastleBit.none; // should this be private?
     public fiftyMoveCounter = 0;
-    public posKey = 0;
     public material: number[];
+    public posKey = 0;
+    public repeats: number[] = [];
 
     /**
      * @private
@@ -97,16 +98,15 @@ export default class Board implements IBoard {
                 }
             }
             this.material[PieceColor[piece]] -= PieceVal[piece];
-            this.fiftyMoveCounter = 0;
             this.hashPiece(piece, sq);
         }
     }
     getPiece(sq: Square): Piece {
         return this.pieces[sq];
     }
-    movePiece(from: Square, to: Square): void {
-        this.history[this.ply] = this.copy();
-        
+    movePiece(from: Square, to: Square, hard = false): void {
+        if (hard) this.checkRepeats();
+
         let enPas = Square.none;
         if (this.enPas !== Square.none) {
             enPas = this.enPas;
@@ -157,6 +157,10 @@ export default class Board implements IBoard {
         this.removePiece(to);
         this.addPiece(piece, to);
         this.ply++;
+        
+        if (hard) {
+            this.appendToHistory();
+        }
     }
     * getPieces(side: Color = Color.none): IterableIterator<Piece> {
         for (let i = 0; i < INNER_BOARD_SQ_NUM; i++) {
@@ -175,6 +179,30 @@ export default class Board implements IBoard {
         if (this.sideToMove === Color.white) this.hashSide();
         if (this.enPas !== Square.none) this.hashEnPas();
         this.hashCastle();
+    }
+
+    appendToHistory(): void {
+        this.history[this.ply] = this.copy();
+    }
+
+    restore(ply: number): void {
+        if (ply >= this.ply) return;
+        const prev = this.history[ply];
+        this.sideToMove = prev.sideToMove;
+        this.ply = prev.ply;
+        this.enPas = prev.enPas;
+        this.castlePermissions = prev.castlePermissions;
+        this.fiftyMoveCounter = prev.fiftyMoveCounter;
+        this.posKey = prev.posKey;
+        this.material = prev.material;
+
+        this.pieces = [...prev.pieces];
+        this.pieceSquares = new Array(NUM_PIECE_TYPES);
+        for (let i = 0; i < NUM_PIECE_TYPES; i++) {
+            this.pieceSquares[i] = [...prev.pieceSquares[i]];
+        }
+        this.pieceQuantities = [...prev.pieceQuantities];
+        //this.history = prev.history;
     }
 
     copy(deep = false): Board {
@@ -197,21 +225,15 @@ export default class Board implements IBoard {
 
         return copy;
     }
-    restore(ply: number): void {
-        if (ply >= this.ply) return;
-        const prev = this.history[ply];
-        this.sideToMove = prev.sideToMove;
-        this.ply = prev.ply;
-        this.enPas = prev.enPas;
-        this.castlePermissions = prev.castlePermissions;
-        this.fiftyMoveCounter = prev.fiftyMoveCounter;
-        this.posKey = prev.posKey;
-        this.material = prev.material;
 
-        this.pieces = prev.pieces;
-        this.pieceSquares = prev.pieceSquares;
-        this.pieceQuantities = this.pieceQuantities;
-        //this.history = prev.history;
+    private checkRepeats(): void {
+        if (this.fiftyMoveCounter === 0) return;
+        let idx = 0;
+        while (this.history[idx] !== undefined && idx < this.ply) {
+            if (this.history[idx].posKey === this.posKey) this.repeats.push(this.posKey);
+            idx++;
+        }
+        console.log(this.repeats);
     }
 
     get whiteKingCastle() { return (this.castlePermissions & CastleBit.whiteKing) !== 0; }

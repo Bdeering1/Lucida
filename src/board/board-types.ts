@@ -22,13 +22,17 @@ export interface IBoard {
      */
     fiftyMoveCounter: number;
     /**
+     * Stores the material count for each side, indexed using `Color` enum
+     */
+    material: number[];
+    /**
      * Unique key for each position, used for repetition detection
      */
     posKey: number;
     /**
-     * Stores the material count for each side, indexed using `Color` enum
+     * Position keys that have been repeated once
      */
-    material: number[];
+    repeats: number[];
 
     /**
      * Add a piece to the board
@@ -65,13 +69,17 @@ export interface IBoard {
      */
     updatePositionKey(): void;
     /**
+     * Add the current position to the board's history
+     */
+    appendToHistory(): void;
+    /**
+    * Restore the board state to how it was at a specified ply, where ply < current ply
+    */
+    restore(ply: number): void;
+    /**
      * Create an identical copy of this instance
      */
     copy(deep: boolean): IBoard;
-    /**
-     * Restore the board state to how it was at a specified ply, where ply < current ply
-     */
-    restore(ply: number): void;
 
     get whiteKingCastle(): boolean;
     get whiteQueenCastle(): boolean;
