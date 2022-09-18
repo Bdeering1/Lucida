@@ -1,7 +1,7 @@
 import { Color, GameResult, Piece, Square } from "../shared/enums";
-import { StartingRank, GetRank, NonSlidingPieces, PawnCaptureDir, Pawns, PieceColor, PieceDir, SlidingPieces, SqOffboard, CastleRightRook, CastleLeftRook, Kings, IsKing, IsKnight, IsBishopQueen, IsRookQueen } from "./board-utils";
+import { StartingRank, GetRank, NonSlidingPieces, PawnCaptureDir, Pawns, PieceColor, PieceDir, SlidingPieces, SqOffboard, CastleRightRook, CastleLeftRook, Kings, IsKing, IsKnight, IsBishopQueen, IsRookQueen } from "../shared/utils";
 import { MAX_DEPTH, MAX_POSITION_MOVES } from "../shared/constants";
-import { IBoard } from "./board-types";
+import { IBoard } from "../board/board-types";
 
 export class Move {
     public from: Square;
@@ -205,12 +205,5 @@ export default class MoveManager {
             this.moveList[this.board.ply - 1][this.moveIndex++] = move;
         }
         this.board.restore(this.board.ply - 1);
-    }
-
-    /**
-     * Determine if the game has ended, and if so, what the result was
-     */
-    private checkGameEnded() {
-        throw new Error("Method not implemented.");
     }
 }

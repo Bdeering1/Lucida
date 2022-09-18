@@ -1,7 +1,7 @@
 /* eslint-disable no-magic-numbers */
 import { BOARD_SQ_NUM, FILE_CHAR, INNER_BOARD_SQ_NUM, PIECE_CHAR } from "../shared/constants";
 import { Color, Square } from "../shared/enums";
-import { GenerateHash32, GetFile, GetRank, GetSq120 } from "../board/board-utils";
+import { GenerateHash32, GetFile, GetRank, GetSq120 } from "../shared/utils";
 import { IBoard } from "../board/board-types";
 
 export function printBoard(board: IBoard) {

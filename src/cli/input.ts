@@ -1,16 +1,9 @@
-import { GetFileFromChar, GetRankFromChar, GetSquare } from '../board/board-utils';
+import { GetFileFromChar, GetRankFromChar, GetSquare } from '../shared/utils';
 import { stdin as input, stdout as output } from 'node:process';
-import { IBoard } from "../board/board-types";
-import { Square } from '../shared/enums';
 import { createInterface } from 'readline';
-import { getSquareString, printBoard } from './printing';
-import { Move } from '../board/move-manager';
+import { Move } from '../game/move-manager';
 
-export default async function getInput(moves: Move[]) {
-    return await getMoveInput(moves);
-}
-
-function getMoveInput(moves: Move[]) {
+export default async function getMoveInput(moves: Move[]) {
     const moveEx = /[a-h][1-9]/g;
 
     return new Promise<Move>((resolve, reject) => {

@@ -1,5 +1,5 @@
 import { Color, File, Piece, Rank } from "../shared/enums";
-import { GetFileFromChar, GetRankFromChar, GetSquare } from "./board-utils";
+import { GetFileFromChar, GetRankFromChar, GetSquare } from "../shared/utils";
 import { IBoard } from "./board-types";
 
 export function resetBoard(): void {

@@ -1,5 +1,5 @@
 /* eslint-disable no-magic-numbers, indent */
-import { Color, Piece, Rank, Square } from '../shared/enums';
+import { Color, Piece, Rank, Square } from './enums';
 
 
 /* --- Maps --- */

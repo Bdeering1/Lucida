@@ -1,10 +1,10 @@
 import { CASTLE_TEST_FEN, EN_PAS_TEST_FEN, START_FEN } from "./shared/constants";
 import { printBoard, printBoardVars } from "./cli/printing";
 import Board from "./board/board";
-import MoveManager from "./board/move-manager";
+import MoveManager from "./game/move-manager";
 import { Square } from "./shared/enums";
 import { parseFen } from "./board/board-setup";
-import getInput from "./cli/input";
+import getMoveInput from "./cli/input";
 
 const board = new Board();
 const moveManager = new MoveManager(board);
@@ -14,7 +14,7 @@ while(true) {
     printBoard(board);
     printBoardVars(board);
     moveManager.generateMoves();
-    const move = await getInput(moveManager.moveList[board.ply]);
+    const move = await getMoveInput(moveManager.moveList[board.ply]);
     if (move.isNoMove()) break;
     board.movePiece(move.from, move.to);
 }
