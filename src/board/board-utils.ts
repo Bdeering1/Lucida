@@ -30,7 +30,7 @@ export const SlidingPieces = [ [Piece.whiteBishop, Piece.whiteRook, Piece.whiteQ
                                [Piece.blackBishop, Piece.blackRook, Piece.blackQueen] ];
 
 export const Pawns = [ Piece.whitePawn, Piece.blackPawn ];
-export const Kings = [ Piece.whiteKing, Piece.blackKnight ];
+export const Kings = [ Piece.whiteKing, Piece.blackKing ];
 export const Rooks = [ Piece.whiteRook, Piece.blackRook ];
 
 export const LeftRook = [ Square.a1, Square.a8 ];

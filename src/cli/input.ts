@@ -12,8 +12,6 @@ export default async function getInput(moves: Move[]) {
 
 function getMoveInput(moves: Move[]) {
     const moveEx = /[a-h][1-9]/g;
-    let from = Square.none;
-    let to = Square.none;
 
     return new Promise<Move>((resolve, reject) => {
         let move = Move.NoMove();
@@ -27,7 +25,7 @@ function getMoveInput(moves: Move[]) {
 
             const tokens = line.match(moveEx) || [];
             if (tokens.length !== 2) {
-                console.log(`Invalid move`);
+                console.log(`Invalid input`);
                 rl.prompt();
                 return;
             }

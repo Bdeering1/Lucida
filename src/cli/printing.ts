@@ -49,7 +49,6 @@ export function printBoardVars(board: IBoard) {
     console.log(`Castle permissions: ${getCastleString(board)}`);
     console.log(`Fifty move counter: ${board.fiftyMoveCounter}`);
     console.log(`Material: ${board.material}`);
-    console.log("\n");
 }
 
 export function printGeneratedHashes() {
