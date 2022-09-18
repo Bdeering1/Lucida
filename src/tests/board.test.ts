@@ -172,7 +172,7 @@ describe('board', () => {
         parseFen(board, START_FEN);
         const key = board.posKey;
         const whiteMaterial = board.material[Color.white];
-        const copy = board.copy();
+        let copy = board.copy(true);
         board.movePiece(Square.d2, Square.d4);
         board.movePiece(Square.e7, Square.e5);
         board.movePiece(Square.e1, Square.d2);
@@ -187,5 +187,26 @@ describe('board', () => {
         expect(copy.posKey).toBe(key);
         expect(copy.material[Color.white]).toBe(whiteMaterial);
         expect(copy.getPiece(Square.d2)).toBe(Piece.whitePawn);
+    })
+
+    it('can be restored to a previous state', () => {
+        parseFen(board, START_FEN);
+        const key = board.posKey;
+        const whiteMaterial = board.material[Color.white];
+        board.movePiece(Square.d2, Square.d4);
+        board.movePiece(Square.e7, Square.e5);
+        board.movePiece(Square.e1, Square.d2);
+        board.movePiece(Square.e5, Square.d4);
+        board.movePiece(Square.c2, Square.c4);
+        board.restore(0);
+        expect(board.sideToMove).toBe(Color.white);
+        expect(board.ply).toBe(0);
+        expect(board.enPas).toBe(Square.none);
+        expect(board.whiteKingCastle).toBe(true);
+        expect(board.whiteQueenCastle).toBe(true);
+        expect(board.fiftyMoveCounter).toBe(0);
+        expect(board.posKey).toBe(key);
+        expect(board.material[Color.white]).toBe(whiteMaterial);
+        expect(board.getPiece(Square.d2)).toBe(Piece.whitePawn);
     })
 });

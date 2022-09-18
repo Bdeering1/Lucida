@@ -40,7 +40,6 @@ export interface IBoard {
     removePiece(sq: Square): void;
     /**
      * Move a piece to another squares
-     * @todo this should be able to account for castling and en passent
      */
     movePiece(from: Square, to: Square): void;
     /**
@@ -68,7 +67,11 @@ export interface IBoard {
     /**
      * Create an identical copy of this instance
      */
-    copy(): IBoard;
+    copy(deep: boolean): IBoard;
+    /**
+     * Restore the board state to how it was at a specified ply, where ply < current ply
+     */
+    restore(ply: number): void;
 
     get whiteKingCastle(): boolean;
     get whiteQueenCastle(): boolean;

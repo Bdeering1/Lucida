@@ -31,7 +31,7 @@ export default class Board implements IBoard {
     /**
      * Stores the state of the board after each move, enables undo operation
      */
-    private history: IBoard[];
+    private history: Board[];
 
     private static pieceKeys: number[][];
     private static castleKeys: number[];
@@ -104,22 +104,10 @@ export default class Board implements IBoard {
     getPiece(sq: Square): Piece {
         return this.pieces[sq];
     }
-    * getPieces(side: Color = Color.none): IterableIterator<Piece> {
-        for (let i = 0; i < INNER_BOARD_SQ_NUM; i++) {
-            if (side === Color.none || PieceColor[this.pieces[GetSq120[i]]] === side)
-                yield this.pieces[GetSq120[i]];
-        }
-    }
-    * getSquares(piece: Piece): IterableIterator<Square> {
-        for (let i = 0; i < MAX_NUM_PER_PIECE; i++) {
-            if (this.pieceSquares[piece][i] === Square.none) break;
-            yield this.pieceSquares[piece][i];
-        }
-    }
-
     movePiece(from: Square, to: Square): void {
-        const piece = this.getPiece(from);
+        this.history[this.ply] = this.copy();
 
+        const piece = this.getPiece(from);
         if (IsPawn[piece]) {
             if (to === this.enPas) {
                 this.removePiece(to + PawnDir[this.sideToMove]);
@@ -160,12 +148,29 @@ export default class Board implements IBoard {
         this.removePiece(from);
         this.removePiece(to);
         this.addPiece(piece, to);
-        this.history[this.ply] = this.copy();
         this.ply++;
     }
+    * getPieces(side: Color = Color.none): IterableIterator<Piece> {
+        for (let i = 0; i < INNER_BOARD_SQ_NUM; i++) {
+            if (side === Color.none || PieceColor[this.pieces[GetSq120[i]]] === side)
+                yield this.pieces[GetSq120[i]];
+        }
+    }
+    * getSquares(piece: Piece): IterableIterator<Square> {
+        for (let i = 0; i < MAX_NUM_PER_PIECE; i++) {
+            if (this.pieceSquares[piece][i] === Square.none) break;
+            yield this.pieceSquares[piece][i];
+        }
+    }
 
-    copy() {
-        const copy = Object.create(this);
+    updatePositionKey(): void {
+        if (this.sideToMove === Color.white) this.hashSide();
+        if (this.enPas !== Square.none) this.hashEnPas();
+        this.hashCastle();
+    }
+
+    copy(deep = false): Board {
+        const copy = deep ? Object.create(this) : {} as Board;
         copy.sideToMove = this.sideToMove;
         copy.ply = this.ply;
         copy.enPas = this.enPas;
@@ -180,15 +185,25 @@ export default class Board implements IBoard {
             copy.pieceSquares[i] = [...this.pieceSquares[i]];
         }
         copy.pieceQuantities = [...this.pieceQuantities];
-        copy.history = [...this.history];
+        //copy.history = [...this.history];
 
         return copy;
     }
+    restore(ply: number): void {
+        if (ply >= this.ply) return;
+        const prev = this.history[ply];
+        this.sideToMove = prev.sideToMove;
+        this.ply = prev.ply;
+        this.enPas = prev.enPas;
+        this.castlePermissions = prev.castlePermissions;
+        this.fiftyMoveCounter = prev.fiftyMoveCounter;
+        this.posKey = prev.posKey;
+        this.material = prev.material;
 
-    updatePositionKey(): void {
-        if (this.sideToMove === Color.white) this.hashSide();
-        if (this.enPas !== Square.none) this.hashEnPas();
-        this.hashCastle();
+        this.pieces = prev.pieces;
+        this.pieceSquares = prev.pieceSquares;
+        this.pieceQuantities = this.pieceQuantities;
+        //this.history = prev.history;
     }
 
     get whiteKingCastle() { return (this.castlePermissions & CastleBit.whiteKing) !== 0; }
