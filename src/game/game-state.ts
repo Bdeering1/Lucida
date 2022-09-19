@@ -1,10 +1,10 @@
+import { GetOtherSide, Pawns } from "../shared/utils";
+import { Color } from "../shared/enums";
 import { IBoard } from "../board/board-types";
 import { getColorString } from "../cli/printing";
-import { Color, Piece, Square } from "../shared/enums";
-import { GetOtherSide, Pawns } from "../shared/utils";
 
 export class GameStatus {
-    complete: boolean = false;
+    complete = false;
     desc: string;
     winner: Color;
     constructor(complete: boolean, desc = "", winner = Color.none) {

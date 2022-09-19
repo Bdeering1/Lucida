@@ -2,8 +2,8 @@
 import { BOARD_SQ_NUM, FILE_CHAR, INNER_BOARD_SQ_NUM, PIECE_CHAR } from "../shared/constants";
 import { Color, Square } from "../shared/enums";
 import { GenerateHash32, GetFile, GetRank, GetSq120 } from "../shared/utils";
-import { IBoard } from "../board/board-types";
 import MoveManager, { Move } from "../game/move-manager";
+import { IBoard } from "../board/board-types";
 
 export function printBoard(board: IBoard) {
     console.log("\n  a b c d e f g h");
@@ -55,7 +55,7 @@ export function printBoardVars(board: IBoard) {
 export function printMoves(board: IBoard, moveManager: MoveManager) {
     let output = "";
     let idx = 0;
-    while (moveManager.moveList[board.ply][idx] !== undefined) {
+    while (typeof(moveManager.moveList[board.ply][idx]) !== 'undefined') {
         if (idx !== 0) output += ", ";
         output += getMoveString(moveManager.moveList[board.ply][idx++]);
     }

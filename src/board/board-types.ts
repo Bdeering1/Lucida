@@ -1,5 +1,4 @@
-/* eslint-disable no-use-before-define */
-import { CastleBit, Color, Piece, Square } from "../shared/enums";
+import { Color, Piece, Square } from "../shared/enums";
 
 /**
  * Represents all aspects of board state for a given game ply

@@ -32,6 +32,7 @@ export default class Board implements IBoard {
     /**
      * Stores the state of the board after each move, enables undo operation
      */
+    // eslint-disable-next-line no-use-before-define
     private history: Board[];
 
     private static pieceKeys: number[][];
@@ -202,7 +203,6 @@ export default class Board implements IBoard {
             this.pieceSquares[i] = [...prev.pieceSquares[i]];
         }
         this.pieceQuantities = [...prev.pieceQuantities];
-        //this.history = prev.history;
     }
 
     copy(deep = false): Board {
@@ -221,7 +221,6 @@ export default class Board implements IBoard {
             copy.pieceSquares[i] = [...this.pieceSquares[i]];
         }
         copy.pieceQuantities = [...this.pieceQuantities];
-        //copy.history = [...this.history];
 
         return copy;
     }
@@ -229,7 +228,7 @@ export default class Board implements IBoard {
     private checkRepeats(): void {
         if (this.fiftyMoveCounter === 0) return;
         let idx = 0;
-        while (this.history[idx] !== undefined && idx < this.ply) {
+        while (typeof(this.history[idx]) !== 'undefined' && idx < this.ply) {
             if (this.history[idx].posKey === this.posKey) this.repeats.push(this.posKey);
             idx++;
         }

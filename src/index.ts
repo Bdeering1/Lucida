@@ -1,10 +1,10 @@
-import { CASTLE_TEST_FEN, EN_PAS_TEST_FEN, START_FEN } from "./shared/constants";
 import { printBoard, printBoardVars, printMoves } from "./cli/printing";
 import Board from "./board/board";
 import MoveManager from "./game/move-manager";
-import { parseFen } from "./board/board-setup";
-import getMoveInput from "./cli/input";
+import { START_FEN } from "./shared/constants";
 import { getGameStatus } from "./game/game-state";
+import getMoveInput from "./cli/input";
+import { parseFen } from "./board/board-setup";
 
 const board = new Board();
 const moveManager = new MoveManager(board);

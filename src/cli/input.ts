@@ -1,9 +1,9 @@
 import { GetFileFromChar, GetRankFromChar, GetSquare } from '../shared/utils';
 import { stdin as input, stdout as output } from 'node:process';
-import { createInterface } from 'readline';
 import { Move } from '../game/move-manager';
+import { createInterface } from 'readline';
 
-export default async function getMoveInput(moves: Move[]) {
+export default function getMoveInput(moves: Move[]) {
     const moveEx = /[a-h][1-9]/g;
 
     return new Promise<Move>((resolve, reject) => {

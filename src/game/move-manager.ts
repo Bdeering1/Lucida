@@ -1,6 +1,6 @@
-import { Color, GameResult, Piece, Square } from "../shared/enums";
-import { StartingRank, GetRank, NonSlidingPieces, PawnCaptureDir, Pawns, PieceColor, PieceDir, SlidingPieces, SqOffboard, CastleRightRook, CastleLeftRook, Kings, IsKing, IsKnight, IsBishopQueen, IsRookQueen, GetOtherSide } from "../shared/utils";
-import { MAX_DEPTH, MAX_GAME_MOVES, MAX_POSITION_MOVES } from "../shared/constants";
+import { CastleLeftRook, CastleRightRook, GetOtherSide, GetRank, IsBishopQueen, IsKing, IsKnight, IsRookQueen, Kings, NonSlidingPieces, PawnCaptureDir, Pawns, PieceColor, PieceDir, SlidingPieces, SqOffboard, StartingRank } from "../shared/utils";
+import { Color, Piece, Square } from "../shared/enums";
+import { MAX_GAME_MOVES, MAX_POSITION_MOVES } from "../shared/constants";
 import { IBoard } from "../board/board-types";
 
 export class Move {
@@ -32,11 +32,6 @@ export default class MoveManager {
      * Lists of scores for each move indexed by game plys
      */
     public moveScores: Move[][];
-    /**
-     * Result of the game
-     * @todo this might belong in another class - there could be a game class which can be written to by the board or move classes
-     */
-    public gameResult = GameResult.none;
     /**
      * Move index used to populate move list
      */
