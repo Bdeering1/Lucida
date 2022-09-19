@@ -1,6 +1,6 @@
 import { Color, GameResult, Piece, Square } from "../shared/enums";
 import { StartingRank, GetRank, NonSlidingPieces, PawnCaptureDir, Pawns, PieceColor, PieceDir, SlidingPieces, SqOffboard, CastleRightRook, CastleLeftRook, Kings, IsKing, IsKnight, IsBishopQueen, IsRookQueen, GetOtherSide } from "../shared/utils";
-import { MAX_DEPTH, MAX_POSITION_MOVES } from "../shared/constants";
+import { MAX_DEPTH, MAX_GAME_MOVES, MAX_POSITION_MOVES } from "../shared/constants";
 import { IBoard } from "../board/board-types";
 
 export class Move {
@@ -46,9 +46,10 @@ export default class MoveManager {
         this.board = board;
 
         const emptyMoveArray = new Array(MAX_POSITION_MOVES);
-        this.moveList = new Array(MAX_DEPTH);
-        this.moveScores = new Array(MAX_DEPTH);
-        for (let i = 0; i < MAX_DEPTH; i++) {
+        // these should use MAX_DEPTH
+        this.moveList = new Array(MAX_GAME_MOVES);
+        this.moveScores = new Array(MAX_GAME_MOVES);
+        for (let i = 0; i < MAX_GAME_MOVES; i++) {
             this.moveList[i] = [...emptyMoveArray];
             this.moveScores[i] = [...emptyMoveArray];
         }
@@ -56,7 +57,6 @@ export default class MoveManager {
 
     /**
      * Generate all possible moves for the current position
-     * @todo this method needs to account for checks
      */
     public generateMoves(): number {
         this.moveIndex = 0;
@@ -140,8 +140,8 @@ export default class MoveManager {
                 }
             }
         });
-        
-        const kingAttacked = this.squareAttacked(this.board.getSquares(Kings[side]).next().value, side);
+    
+        const kingAttacked = this.squareAttacked(this.board.getSquares(Kings[side]).next().value, opposingSide);
         if (this.moveIndex === 0 && kingAttacked) return -1;
         
         return this.moveIndex;
@@ -191,7 +191,10 @@ export default class MoveManager {
                 const piece = this.board.getPiece(sq + totalMove);
                 const colorAtSq = PieceColor[piece];
                 if (SqOffboard(sq + totalMove) || colorAtSq === defSide) break;
-                if (colorAtSq === atkSide && IsRookQueen[piece]) return true;
+                if (colorAtSq === atkSide) {
+                    if (IsRookQueen[piece]) return true;
+                    break;
+                }
                 totalMove += dir;
             }
         }
@@ -202,7 +205,7 @@ export default class MoveManager {
      * Adds a move to the move list if a given move allows the king to be taken on the next move
      */
     private addIfLegal(move: Move, side: Color): void {
-        this.board.movePiece(move.from, move.to);
+        this.board.movePiece(move.from, move.to, false);
         const kingSq = this.board.getSquares(Kings[side]).next().value;
         if (!this.squareAttacked(kingSq, this.board.sideToMove)) {
             this.moveList[this.board.ply - 1][this.moveIndex++] = move;

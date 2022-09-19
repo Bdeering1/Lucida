@@ -45,7 +45,7 @@ export interface IBoard {
     /**
      * Move a piece to another squares
      */
-    movePiece(from: Square, to: Square): void;
+    movePiece(from: Square, to: Square, hard?: boolean): void;
     /**
      * Returns the piece located on a given square
      */

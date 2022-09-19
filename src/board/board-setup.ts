@@ -101,9 +101,12 @@ export function parseFen(board: IBoard, fen: string): void {
     }
     fenIdx += 2;
 
-    board.fiftyMoveCounter = parseInt(fen[fenIdx]);
-    fenIdx += 2;
-    board.ply = (parseInt(fen[fenIdx]) - 1) * 2 + board.sideToMove;
+    let numMatch = fen.substring(fenIdx).match(/\d+ /)?.pop() as string;
+    board.fiftyMoveCounter = parseInt(numMatch);
+    fenIdx += numMatch.length;
+
+    numMatch = fen.substring(fenIdx).match(/\d+/)?.pop() as string;
+    board.ply = (parseInt(numMatch) - 1) * 2 + board.sideToMove;
 
     board.updatePositionKey();
     board.appendToHistory();

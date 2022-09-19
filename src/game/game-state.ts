@@ -27,7 +27,7 @@ export function getGameStatus(board: IBoard, moves: number): GameStatus {
     }
 
     if (hasPawn(board, Color.white) || hasPawn(board, Color.black)) return new GameStatus(false);
-    if (board.material[Color.white] <= 50325 || board.material[Color.white] <= 50325) {
+    if (board.material[Color.white] <= 50325 && board.material[Color.black] <= 50325) {
         return new GameStatus(true, "Draw, insufficient material");
     }
 

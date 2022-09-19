@@ -13,7 +13,6 @@ parseFen(board, START_FEN);
 while(true) {
     printBoard(board);
     printBoardVars(board);
-    console.log(board.posKey);
     const status = getGameStatus(board, moveManager.generateMoves());
     printMoves(board, moveManager);
     if (status.complete) {
@@ -22,5 +21,5 @@ while(true) {
     }
     const move = await getMoveInput(moveManager.moveList[board.ply]);
     if (move.isNoMove()) break;
-    board.movePiece(move.from, move.to, true);
+    board.movePiece(move.from, move.to);
 }

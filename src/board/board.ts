@@ -104,7 +104,7 @@ export default class Board implements IBoard {
     getPiece(sq: Square): Piece {
         return this.pieces[sq];
     }
-    movePiece(from: Square, to: Square, hard = false): void {
+    movePiece(from: Square, to: Square, hard = true): void {
         if (hard) this.checkRepeats();
 
         let enPas = Square.none;
@@ -233,7 +233,6 @@ export default class Board implements IBoard {
             if (this.history[idx].posKey === this.posKey) this.repeats.push(this.posKey);
             idx++;
         }
-        console.log(this.repeats);
     }
 
     get whiteKingCastle() { return (this.castlePermissions & CastleBit.whiteKing) !== 0; }
