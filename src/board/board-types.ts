@@ -9,7 +9,7 @@ export interface IBoard {
      */
     sideToMove: Color;
     /**
-     * Current (half-)move number
+     * Current half move number
      */
     ply: number;
     /**
@@ -33,12 +33,22 @@ export interface IBoard {
      */
     repeats: number[];
 
+    get whiteKingCastle(): boolean;
+    get whiteQueenCastle(): boolean;
+    get blackKingCastle(): boolean;
+    get blackQueenCastle(): boolean;
+    setWhiteKingCastle(): void;
+    setWhiteQueenCastle(): void;
+    setBlackKingCastle(): void;
+    setBlackQueenCastle(): void;
+
     /**
      * Add a piece to the board
      */
     addPiece(piece: Piece, sq: Square): void;
     /**
      * Remove a piece from the board
+     * @todo this may be an implementation detail
      */
     removePiece(sq: Square): void;
     /**
@@ -53,14 +63,14 @@ export interface IBoard {
      * Returns an iterator which yields the piece for each square on the board
      * @description this method makes interfacing with the board easier, and allows
      * for the internal implementation piece states to be easily changed later
-     * @todo implement as a generator at first, but later as a iterator (faster)
+     * @todo implement as iterator (is currently a generator)
      */
     getPieces(side?: Color): IterableIterator<Piece>;
     /**
      * Returns an iterator which yields the square for each piece of a certain type (if any)
      * @description this method makes interfacing with the board easier, and allows
      * for the internal implementation piece states to be easily schanged later
-     * @todo implement as a generator at first, but later as a iterator (faster)
+     * @todo implement as iterator (is currently a generator)
      */
     getSquares(piece: Piece): IterableIterator<Square>;
     /**
@@ -77,20 +87,7 @@ export interface IBoard {
     restore(ply: number): void;
     /**
      * Create an identical copy of this instance
+     * @todo this may be an implementation detail
      */
     copy(deep: boolean): IBoard;
-
-    get whiteKingCastle(): boolean;
-    get whiteQueenCastle(): boolean;
-    get blackKingCastle(): boolean;
-    get blackQueenCastle(): boolean;
-    setWhiteKingCastle(): void;
-    setWhiteQueenCastle(): void;
-    setBlackKingCastle(): void;
-    setBlackQueenCastle(): void;
-
-    hashPiece(piece: Piece, sq: number): void;
-    hashCastle(): void;
-    hashSide(): void;
-    hashEnPas(): void;
 }

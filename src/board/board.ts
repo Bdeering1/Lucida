@@ -8,7 +8,6 @@ export default class Board implements IBoard {
     public sideToMove = Color.none;
     public ply = 0;
     public enPas = Square.none;
-    public castlePermissions = CastleBit.none; // should this be private?
     public fiftyMoveCounter = 0;
     public material: number[];
     public posKey = 0;
@@ -30,6 +29,11 @@ export default class Board implements IBoard {
      */
     private pieceQuantities: number[];
     /**
+     * @private
+     * Bitwise representation of the current castle permissions
+     */
+    private castlePermissions = CastleBit.none;
+    /**
      * Stores the state of the board after each move, enables undo operation
      */
     // eslint-disable-next-line no-use-before-define
@@ -39,9 +43,6 @@ export default class Board implements IBoard {
     private static castleKeys: number[];
     private static sideKey: number;
 
-    /**
-     * @todo squares outside of the inner board probably don't need hashes (could be set to zero)
-     */
     constructor() {
         this.material = [0, 0];
 
@@ -72,6 +73,15 @@ export default class Board implements IBoard {
         }
     }
 
+    get whiteKingCastle() { return (this.castlePermissions & CastleBit.whiteKing) !== 0; }
+    get whiteQueenCastle() { return (this.castlePermissions & CastleBit.whiteQueen) !== 0; }
+    get blackKingCastle() { return (this.castlePermissions & CastleBit.blackKing) !== 0; }
+    get blackQueenCastle() { return (this.castlePermissions & CastleBit.blackQueen) !== 0; }
+    setWhiteKingCastle(): void { this.castlePermissions |= CastleBit.whiteKing; }
+    setWhiteQueenCastle(): void { this.castlePermissions |= CastleBit.whiteQueen; }
+    setBlackKingCastle(): void { this.castlePermissions |= CastleBit.blackKing; }
+    setBlackQueenCastle(): void { this.castlePermissions |= CastleBit.blackQueen; }
+
     addPiece(piece: Piece, sq: Square): void {
         this.pieces[sq] = piece;
         for (let i = 0; i < MAX_NUM_PER_PIECE; i++) {
@@ -84,9 +94,6 @@ export default class Board implements IBoard {
         this.material[PieceColor[piece]] += PieceVal[piece];
         this.hashPiece(piece, sq);
     }
-    /**
-     * @todo this could possibly be private
-     */
     removePiece(sq: Square): void {
         const piece = this.pieces[sq];
         this.pieces[sq] = Piece.none;
@@ -101,9 +108,6 @@ export default class Board implements IBoard {
             this.material[PieceColor[piece]] -= PieceVal[piece];
             this.hashPiece(piece, sq);
         }
-    }
-    getPiece(sq: Square): Piece {
-        return this.pieces[sq];
     }
     movePiece(from: Square, to: Square, hard = true): void {
         if (hard) this.checkRepeats();
@@ -162,6 +166,10 @@ export default class Board implements IBoard {
         if (hard) {
             this.appendToHistory();
         }
+    }
+
+    getPiece(sq: Square): Piece {
+        return this.pieces[sq];
     }
     * getPieces(side: Color = Color.none): IterableIterator<Piece> {
         for (let i = 0; i < INNER_BOARD_SQ_NUM; i++) {
@@ -234,17 +242,8 @@ export default class Board implements IBoard {
         }
     }
 
-    get whiteKingCastle() { return (this.castlePermissions & CastleBit.whiteKing) !== 0; }
-    get whiteQueenCastle() { return (this.castlePermissions & CastleBit.whiteQueen) !== 0; }
-    get blackKingCastle() { return (this.castlePermissions & CastleBit.blackKing) !== 0; }
-    get blackQueenCastle() { return (this.castlePermissions & CastleBit.blackQueen) !== 0; }
-    setWhiteKingCastle(): void { this.castlePermissions |= CastleBit.whiteKing; }
-    setWhiteQueenCastle(): void { this.castlePermissions |= CastleBit.whiteQueen; }
-    setBlackKingCastle(): void { this.castlePermissions |= CastleBit.blackKing; }
-    setBlackQueenCastle(): void { this.castlePermissions |= CastleBit.blackQueen; }
-    
-    public hashPiece(piece: Piece, sq: number) { this.posKey ^= Board.pieceKeys[piece][sq]; }
-    public hashCastle() { this.posKey ^= Board.castleKeys[this.castlePermissions]; }
-    public hashSide() { this.posKey ^= Board.sideKey; }
-    public hashEnPas() { this.posKey ^= Board.pieceKeys[Piece.none][this.enPas]; }
+    private hashPiece(piece: Piece, sq: number) { this.posKey ^= Board.pieceKeys[piece][sq]; }
+    private hashCastle() { this.posKey ^= Board.castleKeys[this.castlePermissions]; }
+    private hashSide() { this.posKey ^= Board.sideKey; }
+    private hashEnPas() { this.posKey ^= Board.pieceKeys[Piece.none][this.enPas]; }
 }
