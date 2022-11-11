@@ -7,12 +7,15 @@ export function resetBoard(): void {
 }
 
 export function parseFen(board: IBoard, fen: string): void {
+    const tokens = fen.split(' ');
+    if (tokens.length > 6) return; // invalid FEN
+    const [ pieces, side, castling, enPas, fiftyMove, ply ] = tokens;
+    
+    let idx = 0;
     let file = File.a;
     let rank = Rank.eight;
-    let fenIdx = 0;
-
-    while (rank >= Rank.one && fenIdx < fen.length) {
-        switch (fen[fenIdx]) {
+    while (rank >= Rank.one && idx < fen.length) {
+        switch (pieces[idx]) {
             case 'P':
                 board.addPiece(Piece.whitePawn, GetSquare(file, rank));
                 break;
@@ -57,24 +60,22 @@ export function parseFen(board: IBoard, fen: string): void {
             case '6':
             case '7':
             case '8':
-                file += parseInt(fen[fenIdx]) - 1;
+                file += parseInt(fen[idx]) - 1;
                 break;
             case '/':
-            case ' ':
                 rank--;
                 file = File.a;
-                fenIdx++;
+                idx++;
                 continue;
         }
-        fenIdx++;
+        idx++;
         file++;
     }
 
-    board.sideToMove = fen[fenIdx] === 'w' ? Color.white : Color.black;
-    fenIdx += 2;
+    board.sideToMove = side === 'w' ? Color.white : Color.black;
 
-    while (fen[fenIdx] !== ' ') {
-        switch (fen[fenIdx]) {
+    for (let i = 0; i < castling.length; i++) {
+        switch (castling[i]) {
             case 'K':
                 board.setWhiteKingCastle();
                 break;
@@ -90,23 +91,16 @@ export function parseFen(board: IBoard, fen: string): void {
             default:
                 break;
         }
-        fenIdx++;
     }
-    fenIdx++;
 
-    if (fen[fenIdx] !== '-') {
-        file = GetFileFromChar(fen[fenIdx++]);
-        rank = GetRankFromChar(fen[fenIdx]);
+    if (enPas !== '-') {
+        file = GetFileFromChar(enPas[0]);
+        rank = GetRankFromChar(enPas[1]);
         board.enPas = GetSquare(file, rank);
     }
-    fenIdx += 2;
 
-    let numMatch = fen.substring(fenIdx).match(/\d+ /)?.pop() as string;
-    board.fiftyMoveCounter = parseInt(numMatch);
-    fenIdx += numMatch.length;
-
-    numMatch = fen.substring(fenIdx).match(/\d+/)?.pop() as string;
-    board.ply = (parseInt(numMatch) - 1) * 2 + board.sideToMove;
+    board.fiftyMoveCounter = parseInt(fiftyMove);
+    board.ply = (parseInt(ply) - 1) * 2 + board.sideToMove;
 
     board.updatePositionKey();
     board.appendToHistory();
