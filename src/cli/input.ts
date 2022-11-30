@@ -1,13 +1,44 @@
 import { GetFileFromChar, GetRankFromChar, GetSquare } from '../shared/utils';
 import { stdin as input, stdout as output } from 'node:process';
+import { Color } from '../shared/enums';
 import { Move } from '../game/move-manager';
 import { createInterface } from 'readline';
 
-export default function getMoveInput(moves: Move[]) {
+export function getSideInput(): Promise<Color> {
+    return new Promise((resolve, reject) => {
+        let side = Color.none;
+        const rl = createInterface({ input, output });
+        rl.setPrompt('> ');
+        rl.prompt();
+
+        rl.on('line', (line: string) => {
+            line = line.trim().toLowerCase();
+            if (line === 'w' || line === 'white') {
+                side = Color.white;
+                rl.close();
+                return;
+            }
+            if (line === 'b' || line === 'black') {
+                side = Color.black;
+                rl.close();
+                return;
+            }
+            
+            console.log('Invalid input.');
+            rl.prompt();
+        });
+
+        rl.on('close', () => {
+            resolve(side);
+        });
+    });
+}
+
+export function getMoveInput(moves: Move[]) {
     const moveEx = /[a-h][1-9]/g;
 
     return new Promise<Move>((resolve, reject) => {
-        let move = Move.NoMove();
+        let userMove = Move.NoMove();
         const rl = createInterface({ input, output });
         rl.setPrompt('> ');
         rl.prompt();
@@ -23,10 +54,10 @@ export default function getMoveInput(moves: Move[]) {
                 return;
             }
 
-            move = new Move(sqFromString(tokens[0]), sqFromString(tokens[1]));
+            userMove = new Move(sqFromString(tokens[0]), sqFromString(tokens[1]));
             let valid = false;
-            for (let i = 0; i < moves.length; i++) {
-                if (JSON.stringify(move) === JSON.stringify(moves[i])) {
+            for (const move of moves) {
+                if (JSON.stringify(userMove) === JSON.stringify(move)) {
                     valid = true;
                     break;
                 }
@@ -41,7 +72,7 @@ export default function getMoveInput(moves: Move[]) {
         });
 
         rl.on('close', () => {
-            resolve(move);
+            resolve(userMove);
         });
     });
 }

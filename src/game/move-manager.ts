@@ -2,6 +2,7 @@ import { CastleLeftRook, CastleRightRook, GetOtherSide, GetRank, IsBishopQueen, 
 import { Color, Piece, Square } from "../shared/enums";
 import { MAX_GAME_MOVES, MAX_POSITION_MOVES } from "../shared/constants";
 import { IBoard } from "../board/board-types";
+import { getSquareString } from "../cli/printing";
 
 export class Move {
     public from: Square;
@@ -19,6 +20,11 @@ export class Move {
     public isNoMove() {
         return this.from === Square.none;
     }
+
+    public toString(): string {
+        return `${getSquareString(this.from)}${getSquareString(this.to)}`;
+    }
+
 }
 
 export default class MoveManager {

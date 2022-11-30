@@ -1,25 +1,41 @@
+import MoveManager, { Move } from "./game/move-manager";
+import { getMoveInput, getSideInput } from "./cli/input";
 import { printBoard, printBoardVars, printMoves } from "./cli/printing";
 import Board from "./board/board";
-import MoveManager from "./game/move-manager";
+import { Color } from "./shared/enums";
+import NegaMax from "./intelligence/nega-max";
 import { START_FEN } from "./shared/constants";
 import { getGameStatus } from "./game/game-state";
-import getMoveInput from "./cli/input";
 import { parseFen } from "./board/board-setup";
 
 const board = new Board();
 const moveManager = new MoveManager(board);
+const negaMax = new NegaMax(board, moveManager);
 parseFen(board, START_FEN);
+
+console.log("Please chooce a side (white or black)");
+const playerColor = await getSideInput();
 
 while(true) {
     printBoard(board);
     printBoardVars(board);
     const status = getGameStatus(board, moveManager.generateMoves());
-    printMoves(board, moveManager);
     if (status.complete) {
         console.log(status.desc);
         break;
     }
-    const move = await getMoveInput(moveManager.moveList[board.ply]);
+
+    let move: Move;
+    if (playerColor !== Color.none && board.sideToMove !== playerColor) {
+        const moveIdx = negaMax.getBestMoves()[0];
+        move = moveManager.moveList[board.ply][moveIdx];
+        console.log(`Computer move: ${move}`);
+    }
+    else {
+        printMoves(board, moveManager);
+        move = await getMoveInput(moveManager.moveList[board.ply]);
+    }
+
     if (move.isNoMove()) break;
     board.movePiece(move.from, move.to);
 }

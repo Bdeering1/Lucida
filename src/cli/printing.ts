@@ -2,8 +2,8 @@
 import { BOARD_SQ_NUM, FILE_CHAR, INNER_BOARD_SQ_NUM, PIECE_CHAR } from "../shared/constants";
 import { Color, Square } from "../shared/enums";
 import { GenerateHash32, GetFile, GetRank, GetSq120 } from "../shared/utils";
-import MoveManager, { Move } from "../game/move-manager";
 import { IBoard } from "../board/board-types";
+import MoveManager from "../game/move-manager";
 
 export function printBoard(board: IBoard) {
     console.log("\n  a b c d e f g h");
@@ -49,7 +49,7 @@ export function printBoardVars(board: IBoard) {
     console.log(`En pas square: ${getSquareString(board.enPas)}`); // convert 
     console.log(`Castle permissions: ${getCastleString(board)}`);
     console.log(`Fifty move counter: ${board.fiftyMoveCounter}`);
-    console.log(`Material: ${board.material}`);
+    console.log(`Material: ${board.material}\n`);
 }
 
 export function printMoves(board: IBoard, moveManager: MoveManager) {
@@ -57,13 +57,9 @@ export function printMoves(board: IBoard, moveManager: MoveManager) {
     let idx = 0;
     while (typeof(moveManager.moveList[board.ply][idx]) !== 'undefined') {
         if (idx !== 0) output += ", ";
-        output += getMoveString(moveManager.moveList[board.ply][idx++]);
+        output += `${(moveManager.moveList[board.ply][idx++])}`;
     }
     console.log(output);
-}
-
-function getMoveString(move: Move): string {
-    return `${getSquareString(move.from)}${getSquareString(move.to)}`;
 }
 
 export function printGeneratedHashes() {
