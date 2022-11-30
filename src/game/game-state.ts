@@ -22,7 +22,7 @@ export function getGameStatus(board: IBoard, moves: number): GameStatus {
     }
     if (board.fiftyMoveCounter >= 50) return new GameStatus(true, "Stalemate, fifty moves");
     
-    for (let key of board.repeats) {
+    for (const key of board.repeats) {
         if (board.posKey === key) return new GameStatus(true, "Draw by repetition");
     }
 
@@ -35,7 +35,7 @@ export function getGameStatus(board: IBoard, moves: number): GameStatus {
 }
 
 function hasPawn(board: IBoard, side: Color): boolean {
-    for (let piece of board.getPieces(side)) {
+    for (const piece of board.getPieces(side)) {
         if (piece === Pawns[side]) return true;
     }
     return false;

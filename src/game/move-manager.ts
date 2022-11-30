@@ -56,6 +56,10 @@ export default class MoveManager {
         }
     }
 
+    get currentMoves() {
+        return this.moveList[this.board.ply];
+    }
+
     /**
      * Generate all possible moves for the current position
      */
@@ -202,8 +206,9 @@ export default class MoveManager {
 
         return false;
     }
+
     /**
-     * Adds a move to the move list if a given move allows the king to be taken on the next move
+     * Adds a move to the move list if a given move does not allow the king to be taken on the next move
      */
     private addIfLegal(move: Move, side: Color): void {
         this.board.movePiece(move.from, move.to, false);

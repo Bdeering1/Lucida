@@ -47,6 +47,12 @@ export function getMoveInput(moves: Move[]) {
             line = line.trim().toLowerCase();
             if (line === 'e' || line === 'exit') { rl.close(); return; }
 
+            if (/^\d*$/.test(line)) {
+                userMove = moves[parseInt(line)];
+                rl.close();
+                return;
+            }
+
             const tokens = line.match(moveEx) || [];
             if (tokens.length !== 2) {
                 console.log(`Invalid input`);

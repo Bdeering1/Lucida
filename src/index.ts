@@ -27,13 +27,12 @@ while(true) {
 
     let move: Move;
     if (playerColor !== Color.none && board.sideToMove !== playerColor) {
-        const moveIdx = negaMax.getBestMoves()[0];
-        move = moveManager.moveList[board.ply][moveIdx];
+        move = negaMax.getBestMove();
         console.log(`Computer move: ${move}`);
     }
     else {
         printMoves(board, moveManager);
-        move = await getMoveInput(moveManager.moveList[board.ply]);
+        move = await getMoveInput(moveManager.currentMoves);
     }
 
     if (move.isNoMove()) break;

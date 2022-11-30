@@ -1,17 +1,23 @@
+import MoveManager, { Move } from '../game/move-manager';
 import { IBoard } from '../board/board-types';
-import MoveManager from '../game/move-manager';
 
 export default class NegaMax {
     private board: IBoard;
+    private moveManager: MoveManager;
     private _depth!: number;
 
-    constructor(board: IBoard, moveManeger: MoveManager, depth = 3) {
+    constructor(board: IBoard, moveManager: MoveManager, depth = 3) {
         this.board = board;
+        this.moveManager = moveManager;
         this.depth = depth;
     }
 
-    public getBestMoves(numResults = 1): number[] {
-        return [0];
+    public getBestMove(): Move {
+        return this.getBestMoves()[0];
+    }
+
+    public getBestMoves(numResults = 1): Move[] {
+        return [this.moveManager.currentMoves[0]];
     }
 
     get depth() {
