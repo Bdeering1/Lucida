@@ -1,5 +1,5 @@
 import MoveManager, { Move } from "./game/move-manager";
-import { getMoveInput, getSideInput } from "./cli/input";
+import { getMoveInput, getSideInput, pauseForInput } from "./cli/input";
 import { printBoard, printBoardVars, printMoves } from "./cli/printing";
 import Board from "./board/board";
 import { Color } from "./shared/enums";
@@ -29,6 +29,7 @@ while(true) {
     if (playerColor !== Color.none && board.sideToMove !== playerColor) {
         move = negaMax.getBestMove();
         console.log(`Computer move: ${move}`);
+        await pauseForInput();
     }
     else {
         printMoves(board, moveManager);

@@ -110,7 +110,7 @@ export default class Board implements IBoard {
         }
     }
     public movePiece(from: Square, to: Square, hard = true): void {
-        if (hard) this.checkRepeats();
+        this.checkRepeats();
 
         let enPas = Square.none;
         if (this.enPas !== Square.none) {
@@ -163,9 +163,10 @@ export default class Board implements IBoard {
         this.addPiece(piece, to);
         this.ply++;
         
-        if (hard) {
-            this.appendToHistory();
-        }
+        this.appendToHistory();
+    }
+    public undoMove(): void {
+        this.restore(this.ply - 1);
     }
 
     public hasPawns(): boolean {
@@ -198,15 +199,16 @@ export default class Board implements IBoard {
     }
 
     public restore(ply: number): void {
-        if (ply >= this.ply) return;
+        if (ply < 0 || ply >= this.ply) return;
         const prev = this.history[ply];
         this.sideToMove = prev.sideToMove;
         this.ply = prev.ply;
         this.enPas = prev.enPas;
         this.castlePermissions = prev.castlePermissions;
         this.fiftyMoveCounter = prev.fiftyMoveCounter;
-        this.posKey = prev.posKey;
         this.material = prev.material;
+        this.posKey = prev.posKey;
+        this.repeats = prev.repeats;
 
         this.pieces = [...prev.pieces];
         this.pieceSquares = new Array(NUM_PIECE_TYPES);
@@ -223,8 +225,9 @@ export default class Board implements IBoard {
         copy.enPas = this.enPas;
         copy.castlePermissions = this.castlePermissions;
         copy.fiftyMoveCounter = this.fiftyMoveCounter;
-        copy.posKey = this.posKey;
         copy.material = [...this.material];
+        copy.posKey = this.posKey;
+        copy.repeats = [...this.repeats];
 
         copy.pieces = [...this.pieces];
         copy.pieceSquares = new Array(NUM_PIECE_TYPES);

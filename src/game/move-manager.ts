@@ -39,7 +39,11 @@ export default class MoveManager {
     /**
      * Lists of scores for each move indexed by game plys
      */
-    public moveScores: Move[][];
+    //public moveScores: Move[][]; // is this needed?
+    /**
+     * 
+     */
+    private numMoves: number[];
     /**
      * Move index used to populate move list
      */
@@ -51,15 +55,17 @@ export default class MoveManager {
         const emptyMoveArray = new Array(MAX_POSITION_MOVES);
         // these should use MAX_DEPTH
         this.moveList = new Array(MAX_GAME_MOVES);
-        this.moveScores = new Array(MAX_GAME_MOVES);
+        //this.moveScores = new Array(MAX_GAME_MOVES);
+        this.numMoves = new Array(MAX_GAME_MOVES);
         for (let i = 0; i < MAX_GAME_MOVES; i++) {
             this.moveList[i] = [...emptyMoveArray];
-            this.moveScores[i] = [...emptyMoveArray];
+            //this.moveScores[i] = [...emptyMoveArray];
+            this.numMoves[i] = 0;
         }
     }
 
     get currentMoves() {
-        return this.moveList[this.board.ply];
+        return this.moveList[this.board.ply].slice(0, this.numMoves[this.board.ply]);
     }
 
     /**
@@ -169,6 +175,7 @@ export default class MoveManager {
         const kingAttacked = this.squareAttacked(this.board.getSquares(Kings[side]).next().value, opposingSide);
         if (this.moveIndex === 0 && kingAttacked) return MoveStatus.checkmate;
         
+        this.numMoves[ply] = this.moveIndex;
         return this.moveIndex;
     }
 
@@ -237,6 +244,6 @@ export default class MoveManager {
         if (!this.squareAttacked(kingSq, side)) {
             this.moveList[this.board.ply - 1][this.moveIndex++] = move;
         }
-        this.board.restore(this.board.ply - 1);
+        this.board.undoMove();
     }
 }

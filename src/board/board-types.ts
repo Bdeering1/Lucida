@@ -52,9 +52,14 @@ export interface IBoard {
      */
     removePiece(sq: Square): void;
     /**
-     * Move a piece to another squares
+     * Move a piece to another square
+     * @description Does not check for legality
      */
     movePiece(from: Square, to: Square, hard?: boolean): void;
+    /**
+     * Undo the last move made
+     */
+    undoMove(): void;
     /**
      * Whether or not the board has any pawns left (for stalemate detection)
      */

@@ -83,6 +83,16 @@ export function getMoveInput(moves: Move[]) {
     });
 }
 
+export function pauseForInput() {
+    return new Promise<void>((resolve, reject) => {
+        const rl = createInterface({ input, output });
+        rl.question("", _ => {
+            rl.close();
+            resolve();
+        });
+    });
+}
+
 function sqFromString(sq: string) {
     return GetSquare(GetFileFromChar(sq[0]), GetRankFromChar(sq[1]));
 }

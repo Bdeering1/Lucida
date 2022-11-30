@@ -52,13 +52,12 @@ export function printBoardVars(board: IBoard) {
     console.log(`Material: ${board.material}\n`);
 }
 
-export function printMoves(board: IBoard, moveManager: MoveManager) {
+export function printMoves(board: IBoard, moveManager: MoveManager, moveScores?: number[]) {
     let output = "";
-    let idx = 0;
-    while (typeof(moveManager.moveList[board.ply][idx]) !== 'undefined') {
+    moveManager.currentMoves.forEach((move, idx) => {
         if (idx !== 0) output += ", ";
-        output += `${(moveManager.moveList[board.ply][idx++])}`;
-    }
+        output += `${move}${moveScores ? `: ${moveScores[idx]}` : ""}`;
+    });
     console.log(output);
 }
 
