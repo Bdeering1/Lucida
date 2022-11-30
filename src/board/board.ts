@@ -179,8 +179,8 @@ export default class Board implements IBoard {
         }
     }
     public * getSquares(piece: Piece): IterableIterator<Square> {
-        for (let i = 0; i < MAX_NUM_PER_PIECE; i++) {
-            if (this.pieceSquares[piece][i] === Square.none) break;
+        for (let i = 0; i < this.pieceQuantities[piece]; i++) {
+            if (this.pieceSquares[piece][i] === Square.none) continue;
             yield this.pieceSquares[piece][i];
         }
     }

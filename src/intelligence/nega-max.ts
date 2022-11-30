@@ -2,13 +2,14 @@ import MoveManager, { Move } from '../game/move-manager';
 import { Color } from '../shared/enums';
 import { IBoard } from '../board/board-types';
 import { printMoves } from '../cli/printing';
+import { SideMultiplier } from '../shared/utils';
 
 export default class NegaMax {
     private board: IBoard;
     private moveManager: MoveManager;
     private _depth!: number;
 
-    constructor(board: IBoard, moveManager: MoveManager, depth = 1) {
+    constructor(board: IBoard, moveManager: MoveManager, depth = 5) {
         this.board = board;
         this.moveManager = moveManager;
         this.depth = depth;
@@ -30,7 +31,7 @@ export default class NegaMax {
         const moveScores = new Array(numMoves);
         this.moveManager.currentMoves.forEach((move, idx) => {
             this.board.movePiece(move.from, move.to);
-            moveScores[idx] = this.negaMax(this.depth - 1);
+            moveScores[idx] = -this.negaMax(this.depth - 1);
             this.board.undoMove();
         });
 
@@ -39,8 +40,8 @@ export default class NegaMax {
         return [this.moveManager.currentMoves[0]];
     }
 
-    private negaMax(currentDepth: number) {
-        if (currentDepth === 0) return this.evaluate();
+    private negaMax(currentDepth: number): number {
+        if (currentDepth === 0) return this.evaluate() * SideMultiplier[this.board.sideToMove]; ;
 
         this.moveManager.generateMoves();
         let bestScore = -Infinity;
@@ -56,6 +57,6 @@ export default class NegaMax {
     }
 
     private evaluate() {
-        return this.board.material[Color.white] - this.board.material[Color.black];
+        return (this.board.material[Color.white] - this.board.material[Color.black]);
     }
 }

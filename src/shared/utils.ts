@@ -46,6 +46,8 @@ export const GetOtherSide = [ Color.black, Color.white, Color.none ];
 export const StartingRank = [ Rank.two, Rank.seven ];
 export const EnPasRank = [ Rank.four, Rank.five ];
 
+export const SideMultiplier = [ 1, -1 ];
+
 export const GetFile = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
