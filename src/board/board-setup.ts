@@ -1,5 +1,5 @@
 import { Color, File, Piece, Rank } from "../shared/enums";
-import { GetFileFromChar, GetRankFromChar, GetSquare } from "../shared/utils";
+import { getFileFromChar, getRankFromChar, getSquare } from "../shared/utils";
 import { IBoard } from "./board-types";
 
 export function resetBoard(): void {
@@ -17,40 +17,40 @@ export function parseFen(board: IBoard, fen: string): void {
     while (rank >= Rank.one && idx < fen.length) {
         switch (pieces[idx]) {
             case 'P':
-                board.addPiece(Piece.whitePawn, GetSquare(file, rank));
+                board.addPiece(Piece.whitePawn, getSquare(file, rank));
                 break;
             case 'N':
-                board.addPiece(Piece.whiteKnight, GetSquare(file, rank));
+                board.addPiece(Piece.whiteKnight, getSquare(file, rank));
                 break;
             case 'B':
-                board.addPiece(Piece.whiteBishop, GetSquare(file, rank));
+                board.addPiece(Piece.whiteBishop, getSquare(file, rank));
                 break;
             case 'R':
-                board.addPiece(Piece.whiteRook, GetSquare(file, rank));
+                board.addPiece(Piece.whiteRook, getSquare(file, rank));
                 break;
             case 'Q':
-                board.addPiece(Piece.whiteQueen, GetSquare(file, rank));
+                board.addPiece(Piece.whiteQueen, getSquare(file, rank));
                 break;
             case 'K':
-                board.addPiece(Piece.whiteKing, GetSquare(file, rank));
+                board.addPiece(Piece.whiteKing, getSquare(file, rank));
                 break;
             case 'p':
-                board.addPiece(Piece.blackPawn, GetSquare(file, rank));
+                board.addPiece(Piece.blackPawn, getSquare(file, rank));
                 break;
             case 'n':
-                board.addPiece(Piece.blackKnight, GetSquare(file, rank));
+                board.addPiece(Piece.blackKnight, getSquare(file, rank));
                 break;
             case 'b':
-                board.addPiece(Piece.blackBishop, GetSquare(file, rank));
+                board.addPiece(Piece.blackBishop, getSquare(file, rank));
                 break;
             case 'r':
-                board.addPiece(Piece.blackRook, GetSquare(file, rank));
+                board.addPiece(Piece.blackRook, getSquare(file, rank));
                 break;
             case 'q':
-                board.addPiece(Piece.blackQueen, GetSquare(file, rank));
+                board.addPiece(Piece.blackQueen, getSquare(file, rank));
                 break;
             case 'k':
-                board.addPiece(Piece.blackKing, GetSquare(file, rank));
+                board.addPiece(Piece.blackKing, getSquare(file, rank));
                 break;
             case '1':
             case '2':
@@ -94,14 +94,13 @@ export function parseFen(board: IBoard, fen: string): void {
     }
 
     if (enPas !== '-') {
-        file = GetFileFromChar(enPas[0]);
-        rank = GetRankFromChar(enPas[1]);
-        board.enPas = GetSquare(file, rank);
+        file = getFileFromChar(enPas[0]);
+        rank = getRankFromChar(enPas[1]);
+        board.enPas = getSquare(file, rank);
     }
 
     board.fiftyMoveCounter = parseInt(fiftyMove);
     board.ply = (parseInt(ply) - 1) * 2 + board.sideToMove;
 
     board.updatePositionKey();
-    board.appendToHistory();
 }

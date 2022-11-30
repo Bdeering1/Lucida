@@ -1,4 +1,4 @@
-import { Bishops, CastleLeftRook, CastleRightRook, GetOtherSide, GetRank, IsBishopQueen, IsKing, IsKnight, IsRookQueen, Kings, Knights, NonSlidingPieces, PawnCaptureDir, Pawns, PieceColor, PieceDir, Queens, Rooks, SlidingPieces, SqOffboard, StartingRank } from "../shared/utils";
+import { Bishops, CastleLeftRook, CastleRightRook, GetOtherSide, GetRank, IsBishopQueen, IsKing, IsKnight, IsRookQueen, Kings, Knights, NonSlidingPieces, PawnCaptureDir, Pawns, PieceColor, PieceDir, Queens, Rooks, SlidingPieces, sqOffboard, StartingRank } from "../shared/utils";
 import { Color, MoveStatus, Piece, Square } from "../shared/enums";
 import { MAX_GAME_MOVES, MAX_POSITION_MOVES } from "../shared/constants";
 import { IBoard } from "../board/board-types";
@@ -149,7 +149,7 @@ export default class MoveManager {
         NonSlidingPieces[side].forEach(piece => {
             for (const sq of this.board.getSquares(piece)) {
                 for (const dir of PieceDir[piece]) {
-                    if (SqOffboard(sq + dir) || PieceColor[this.board.getPiece(sq + dir)] === side) continue;
+                    if (sqOffboard(sq + dir) || PieceColor[this.board.getPiece(sq + dir)] === side) continue;
                     this.addIfLegal(new Move(sq, sq + dir));
                 }
             }
@@ -163,7 +163,7 @@ export default class MoveManager {
                     let sliding = true;
                     while (sliding) {
                         const colorAtSq = PieceColor[this.board.getPiece(sq + totalMove)];
-                        if (SqOffboard(sq + totalMove) || colorAtSq === side) break;
+                        if (sqOffboard(sq + totalMove) || colorAtSq === side) break;
                         if (colorAtSq === opposingSide) sliding = false;
                         this.addIfLegal(new Move(sq, sq + totalMove));
                         totalMove += dir;
@@ -196,12 +196,12 @@ export default class MoveManager {
 
         // Kings and Knights
         for (const dir of PieceDir[Piece.whiteKing]) {
-            if (SqOffboard(sq + dir)) continue;
+            if (sqOffboard(sq + dir)) continue;
             const piece = this.board.getPiece(sq + dir);
             if (PieceColor[piece] === atkSide && IsKing[piece]) return true;
         }
         for (const dir of PieceDir[Piece.whiteKnight]) {
-            if (SqOffboard(sq + dir)) continue;
+            if (sqOffboard(sq + dir)) continue;
             const piece = this.board.getPiece(sq + dir);
             if (PieceColor[piece] === atkSide && IsKnight[piece]) return true;
         }
@@ -212,7 +212,7 @@ export default class MoveManager {
             while (true) {
                 const piece = this.board.getPiece(sq + totalMove);
                 const colorAtSq = PieceColor[piece];
-                if (SqOffboard(sq + totalMove) || colorAtSq === defSide) break;
+                if (sqOffboard(sq + totalMove) || colorAtSq === defSide) break;
                 if (colorAtSq === atkSide && IsBishopQueen[piece]) return true;
                 totalMove += dir;
             }
@@ -222,7 +222,7 @@ export default class MoveManager {
             while (true) {
                 const piece = this.board.getPiece(sq + totalMove);
                 const colorAtSq = PieceColor[piece];
-                if (SqOffboard(sq + totalMove) || colorAtSq === defSide) break;
+                if (sqOffboard(sq + totalMove) || colorAtSq === defSide) break;
                 if (colorAtSq === atkSide) {
                     if (IsRookQueen[piece]) return true;
                     break;

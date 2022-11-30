@@ -1,6 +1,6 @@
-import { BOARD_SQ_NUM, CASTLE_LEFT, CASTLE_RIGHT, INNER_BOARD_SQ_NUM, MAX_GAME_MOVES, MAX_NUM_PER_PIECE, NUM_CASTLE_COMBINATIONS, NUM_PIECE_TYPES } from "../shared/constants";
+import { BOARD_SQ_NUM, CASTLE_LEFT, CASTLE_RIGHT, INNER_BOARD_SQ_NUM, MAX_GAME_MOVES, MAX_NUM_PER_PIECE, NUM_CASTLE_COMBINATIONS, NUM_PIECE_TYPES, PIECE_CHAR } from "../shared/constants";
 import { CastleBit, Color, Piece, Square } from "../shared/enums";
-import { CastleLeftRook, CastlePerm, CastleRightRook, EnPasRank, GenerateHash32, GetRank, GetSq120, IsKing, IsPawn, LeftRook, PawnDir, Pawns, PieceColor, PieceVal, RightRook, Rooks, StartingRank } from "../shared/utils";
+import { CastleLeftRook, CastlePerm, CastleRightRook, EnPasRank, generateHash32, GetOtherSide, GetRank, GetSq120, IsKing, IsPawn, LeftRook, PawnDir, Pawns, PieceColor, PieceVal, RightRook, Rooks, StartingRank } from "../shared/utils";
 import { IBoard } from "./board-types";
 
 export default class Board implements IBoard {
@@ -62,13 +62,13 @@ export default class Board implements IBoard {
         Board.pieceKeys = new Array(NUM_PIECE_TYPES).fill(new Array(BOARD_SQ_NUM));
 
         let seed = 0;
-        Board.sideKey = GenerateHash32(seed++);
+        Board.sideKey = generateHash32(seed++);
         for (let i = 0; i < NUM_CASTLE_COMBINATIONS; i++) {
-            Board.castleKeys[i] = GenerateHash32(seed++);
+            Board.castleKeys[i] = generateHash32(seed++);
         }
         for (let piece = Piece.none; piece < NUM_PIECE_TYPES; piece++) {
             for (let sq = 0; sq < BOARD_SQ_NUM; sq++) {
-                Board.pieceKeys[piece][sq] = GenerateHash32(seed++);
+                Board.pieceKeys[piece][sq] = generateHash32(seed++);
             }
         }
     }
@@ -110,6 +110,7 @@ export default class Board implements IBoard {
         }
     }
     public movePiece(from: Square, to: Square, hard = true): void {
+        this.appendToHistory();
         this.checkRepeats();
 
         let enPas = Square.none;
@@ -122,7 +123,7 @@ export default class Board implements IBoard {
         const piece = this.getPiece(from);
         if (IsPawn[piece]) {
             if (to === enPas) {
-                this.removePiece(to + PawnDir[this.sideToMove]);
+                this.removePiece(to + PawnDir[GetOtherSide[this.sideToMove]]);
             }
             else if (GetRank[from] === StartingRank[this.sideToMove]
                 && GetRank[to] === EnPasRank[this.sideToMove]) {
@@ -163,10 +164,6 @@ export default class Board implements IBoard {
         this.addPiece(piece, to);
         this.ply++;
         
-        this.appendToHistory();
-    }
-    public undoMove(): void {
-        this.restore(this.ply - 1);
     }
 
     public hasPawns(): boolean {
@@ -194,6 +191,9 @@ export default class Board implements IBoard {
         this.hashCastle();
     }
 
+    public undoMove(): void {
+        this.restore(this.ply - 1);
+    }
     public appendToHistory(): void {
         this.history[this.ply] = this.copy();
     }
@@ -219,7 +219,7 @@ export default class Board implements IBoard {
     }
 
     public copy(deep = false): Board {
-        const copy = deep ? Object.create(this) : {} as Board;
+        const copy = deep ? Object.create(this) : {} as Board; // deep copy retains methods
         copy.sideToMove = this.sideToMove;
         copy.ply = this.ply;
         copy.enPas = this.enPas;
@@ -235,7 +235,7 @@ export default class Board implements IBoard {
             copy.pieceSquares[i] = [...this.pieceSquares[i]];
         }
         copy.pieceQuantities = [...this.pieceQuantities];
-
+        
         return copy;
     }
 

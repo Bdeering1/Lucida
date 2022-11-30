@@ -52,14 +52,10 @@ export interface IBoard {
      */
     removePiece(sq: Square): void;
     /**
-     * Move a piece to another square
+     * Move a piece to another square (updates history and ply)
      * @description Does not check for legality
      */
     movePiece(from: Square, to: Square, hard?: boolean): void;
-    /**
-     * Undo the last move made
-     */
-    undoMove(): void;
     /**
      * Whether or not the board has any pawns left (for stalemate detection)
      */
@@ -86,6 +82,10 @@ export interface IBoard {
      * Update position key for side to move, en passent, and castling
      */
     updatePositionKey(): void;
+    /**
+     * Undo the last move made
+     */
+    undoMove(): void;
     /**
      * Add the current position to the board's history
      */

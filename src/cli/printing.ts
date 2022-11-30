@@ -1,7 +1,7 @@
 /* eslint-disable no-magic-numbers */
 import { BOARD_SQ_NUM, FILE_CHAR, INNER_BOARD_SQ_NUM, PIECE_CHAR } from "../shared/constants";
 import { Color, Square } from "../shared/enums";
-import { GenerateHash32, GetFile, GetRank, GetSq120 } from "../shared/utils";
+import { generateHash32, GetFile, GetRank, GetSq120 } from "../shared/utils";
 import { IBoard } from "../board/board-types";
 import MoveManager from "../game/move-manager";
 
@@ -45,7 +45,7 @@ export function printBoard120(board: IBoard) {
 
 export function printBoardVars(board: IBoard) {
     console.log(`Side to move: ${getColorString(board.sideToMove)}`);
-    console.log(`Ply: ${board.ply} (Move ${getMoveNumber(board.ply)})`);
+    console.log(`Ply: ${board.ply + 1} (Move ${getMoveNumber(board.ply)})`);
     console.log(`En pas square: ${getSquareString(board.enPas)}`); // convert 
     console.log(`Castle permissions: ${getCastleString(board)}`);
     console.log(`Fifty move counter: ${board.fiftyMoveCounter}`);
@@ -63,7 +63,7 @@ export function printMoves(board: IBoard, moveManager: MoveManager, moveScores?:
 
 export function printGeneratedHashes() {
     for (let i = -7; i < 8; i++) {
-        const hash = GenerateHash32(i);
+        const hash = generateHash32(i);
         console.log(`${toBinaryString(hash)} (${hash})`);
     }
 }

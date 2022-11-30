@@ -1,6 +1,6 @@
 /* eslint-disable no-magic-numbers */
 
-import { CASTLE_TEST_FEN, EN_PAS_TEST_FEN } from "./test-constants";
+import { CAPTURE_TEST_FEN, CASTLE_TEST_FEN, EN_PAS_TEST_FEN } from "./test-constants";
 import { Color, Piece, Square } from "../shared/enums";
 import { PieceColor, PieceVal } from "../shared/utils";
 import Board from "../board/board";
@@ -215,5 +215,20 @@ describe('board', () => {
         expect(board.posKey).toBe(key);
         expect(board.material[Color.white]).toBe(whiteMaterial);
         expect(board.getPiece(Square.d2)).toBe(Piece.whitePawn);
+    });
+
+    it('can undo and redo moves with no side effects', () => {
+        parseFen(board, CAPTURE_TEST_FEN);
+        const copy = board.copy(true);
+        board.movePiece(Square.e4, Square.d5);
+        board.undoMove();
+        board.movePiece(Square.e4, Square.d5);
+        board.undoMove();
+        expect(board.sideToMove).toBe(copy.sideToMove);
+        expect(board.ply).toBe(copy.ply);
+        expect(board.fiftyMoveCounter).toBe(copy.fiftyMoveCounter);
+        expect(board.posKey).toBe(copy.posKey);
+        expect(board.material[Color.black]).toBe(copy.material[Color.black]);
+        expect(board.getPiece(Square.e4)).toBe(copy.getPiece(Square.e4));
     });
 });

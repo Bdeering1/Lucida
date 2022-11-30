@@ -1,4 +1,4 @@
-import { GetFileFromChar, GetRankFromChar, GetSquare } from '../shared/utils';
+import { getFileFromChar, getRankFromChar, getSquare } from '../shared/utils';
 import { stdin as input, stdout as output } from 'node:process';
 import { Color } from '../shared/enums';
 import { Move } from '../game/move-manager';
@@ -20,6 +20,11 @@ export function getSideInput(): Promise<Color> {
             }
             if (line === 'b' || line === 'black') {
                 side = Color.black;
+                rl.close();
+                return;
+            }
+            if (line === 'both') {
+                side = Color.none;
                 rl.close();
                 return;
             }
@@ -94,5 +99,5 @@ export function pauseForInput() {
 }
 
 function sqFromString(sq: string) {
-    return GetSquare(GetFileFromChar(sq[0]), GetRankFromChar(sq[1]));
+    return getSquare(getFileFromChar(sq[0]), getRankFromChar(sq[1]));
 }
