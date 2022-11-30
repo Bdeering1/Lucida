@@ -56,6 +56,10 @@ export interface IBoard {
      */
     movePiece(from: Square, to: Square, hard?: boolean): void;
     /**
+     * Whether or not the board has any pawns left (for stalemate detection)
+     */
+    hasPawns(): boolean;
+    /**
      * Returns the piece located on a given square
      */
     getPiece(sq: Square): Piece;

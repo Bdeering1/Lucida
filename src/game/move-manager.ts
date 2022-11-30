@@ -1,5 +1,5 @@
-import { CastleLeftRook, CastleRightRook, GetOtherSide, GetRank, IsBishopQueen, IsKing, IsKnight, IsRookQueen, Kings, NonSlidingPieces, PawnCaptureDir, Pawns, PieceColor, PieceDir, SlidingPieces, SqOffboard, StartingRank } from "../shared/utils";
-import { Color, Piece, Square } from "../shared/enums";
+import { Bishops, CastleLeftRook, CastleRightRook, GetOtherSide, GetRank, IsBishopQueen, IsKing, IsKnight, IsRookQueen, Kings, Knights, NonSlidingPieces, PawnCaptureDir, Pawns, PieceColor, PieceDir, Queens, Rooks, SlidingPieces, SqOffboard, StartingRank } from "../shared/utils";
+import { Color, MoveStatus, Piece, Square } from "../shared/enums";
 import { MAX_GAME_MOVES, MAX_POSITION_MOVES } from "../shared/constants";
 import { IBoard } from "../board/board-types";
 import { getSquareString } from "../cli/printing";
@@ -7,10 +7,12 @@ import { getSquareString } from "../cli/printing";
 export class Move {
     public from: Square;
     public to: Square;
+    public promotion: Piece;
 
-    public constructor(from: Square, to: Square) {
+    public constructor(from: Square, to: Square, promotion = Piece.none) {
         this.from = from;
         this.to = to;
+        this.promotion = promotion;
     }
 
     public static NoMove() {
@@ -63,7 +65,7 @@ export default class MoveManager {
     /**
      * Generate all possible moves for the current position
      */
-    public generateMoves(): number {
+    public generateMoves(): number | MoveStatus {
         this.moveIndex = 0;
         const ply = this.board.ply;
         const side = this.board.sideToMove;
@@ -103,18 +105,36 @@ export default class MoveManager {
         // pawn moves
         const pawnType = Pawns[side];
         for (const sq of this.board.getSquares(pawnType)) {
-            let targetSq = sq + PieceDir[pawnType][side];
+            const targetSq = sq + PieceDir[pawnType][side];
             if (PieceColor[this.board.getPiece(targetSq)] === Color.none) {
-                this.addIfLegal(new Move(sq, targetSq), side);
+                if (GetRank[sq] === StartingRank[opposingSide]) {
+                    this.addIfLegal(new Move(sq, targetSq, Queens[side]));
+                    this.addIfLegal(new Move(sq, targetSq, Rooks[side]));
+                    this.addIfLegal(new Move(sq, targetSq, Bishops[side]));
+                    this.addIfLegal(new Move(sq, targetSq, Knights[side]));
+                }
+                else this.addIfLegal(new Move(sq, targetSq));
             }
-            targetSq = sq + PieceDir[pawnType][side] * 2;
-            if (GetRank[sq] === StartingRank[side] && PieceColor[this.board.getPiece(targetSq)] === Color.none) {
-                this.addIfLegal(new Move(sq, targetSq), side);
+
+            const doubleMoveSq = sq + PieceDir[pawnType][side] * 2;
+            if (GetRank[sq] === StartingRank[side] && PieceColor[this.board.getPiece(doubleMoveSq)] === Color.none) {
+                this.addIfLegal(new Move(sq, doubleMoveSq));
             }
+
             for (const captureDir of PawnCaptureDir[side]) {
                 const captureSq = sq + captureDir;
-                if (PieceColor[this.board.getPiece(captureSq)] === opposingSide || captureSq === this.board.enPas) {
-                    this.addIfLegal(new Move(sq, captureSq), side);
+                if (captureSq === this.board.enPas) {
+                    this.addIfLegal(new Move(sq, captureSq));
+                    continue;
+                }
+                if (PieceColor[this.board.getPiece(captureSq)] === opposingSide) {
+                    if (GetRank[sq] === StartingRank[opposingSide]) {
+                        this.addIfLegal(new Move(sq, captureSq, Queens[side]));
+                        this.addIfLegal(new Move(sq, captureSq, Rooks[side]));
+                        this.addIfLegal(new Move(sq, captureSq, Bishops[side]));
+                        this.addIfLegal(new Move(sq, captureSq, Knights[side]));
+                    }
+                    else this.addIfLegal(new Move(sq, captureSq));
                 }
             }
         }
@@ -124,7 +144,7 @@ export default class MoveManager {
             for (const sq of this.board.getSquares(piece)) {
                 for (const dir of PieceDir[piece]) {
                     if (SqOffboard(sq + dir) || PieceColor[this.board.getPiece(sq + dir)] === side) continue;
-                    this.addIfLegal(new Move(sq, sq + dir), side);
+                    this.addIfLegal(new Move(sq, sq + dir));
                 }
             }
         });
@@ -139,7 +159,7 @@ export default class MoveManager {
                         const colorAtSq = PieceColor[this.board.getPiece(sq + totalMove)];
                         if (SqOffboard(sq + totalMove) || colorAtSq === side) break;
                         if (colorAtSq === opposingSide) sliding = false;
-                        this.addIfLegal(new Move(sq, sq + totalMove), side);
+                        this.addIfLegal(new Move(sq, sq + totalMove));
                         totalMove += dir;
                     }
                 }
@@ -147,13 +167,13 @@ export default class MoveManager {
         });
     
         const kingAttacked = this.squareAttacked(this.board.getSquares(Kings[side]).next().value, opposingSide);
-        if (this.moveIndex === 0 && kingAttacked) return -1;
+        if (this.moveIndex === 0 && kingAttacked) return MoveStatus.checkmate;
         
         return this.moveIndex;
     }
 
     /**
-     * Given a square on the inner board and a side, returns whether or not that square is attacked
+     * Given a square on the inner board and a side, returns whether or not that square is attacked by the given side
      */
     public squareAttacked(sq: Square, atkSide: Color): boolean {
         const defSide = GetOtherSide[atkSide];
@@ -210,10 +230,11 @@ export default class MoveManager {
     /**
      * Adds a move to the move list if a given move does not allow the king to be taken on the next move
      */
-    private addIfLegal(move: Move, side: Color): void {
+    private addIfLegal(move: Move): void {
         this.board.movePiece(move.from, move.to, false);
-        const kingSq = this.board.getSquares(Kings[side]).next().value;
-        if (!this.squareAttacked(kingSq, this.board.sideToMove)) {
+        const side = this.board.sideToMove;
+        const kingSq = this.board.getSquares(Kings[GetOtherSide[side]]).next().value;
+        if (!this.squareAttacked(kingSq, side)) {
             this.moveList[this.board.ply - 1][this.moveIndex++] = move;
         }
         this.board.restore(this.board.ply - 1);

@@ -1,10 +1,11 @@
 /* eslint-disable no-magic-numbers */
 
-import { CASTLE_TEST_FEN, EN_PAS_TEST_FEN, START_FEN } from "../shared/constants";
+import { CASTLE_TEST_FEN, EN_PAS_TEST_FEN } from "./test-constants";
 import { Color, Piece, Square } from "../shared/enums";
 import { PieceColor, PieceVal } from "../shared/utils";
 import Board from "../board/board";
 import { IBoard } from "../board/board-types";
+import { START_FEN } from "../shared/constants";
 import { getCastleString } from "../cli/printing";
 import { parseFen } from "../board/board-setup";
 
@@ -178,7 +179,7 @@ describe('board', () => {
         parseFen(board, START_FEN);
         const key = board.posKey;
         const whiteMaterial = board.material[Color.white];
-        let copy = board.copy(true);
+        const copy = board.copy(true);
         board.movePiece(Square.d2, Square.d4);
         board.movePiece(Square.e7, Square.e5);
         board.movePiece(Square.e1, Square.d2);
@@ -193,7 +194,7 @@ describe('board', () => {
         expect(copy.posKey).toBe(key);
         expect(copy.material[Color.white]).toBe(whiteMaterial);
         expect(copy.getPiece(Square.d2)).toBe(Piece.whitePawn);
-    })
+    });
 
     it('can be restored to a previous state', () => {
         parseFen(board, START_FEN);
@@ -214,5 +215,5 @@ describe('board', () => {
         expect(board.posKey).toBe(key);
         expect(board.material[Color.white]).toBe(whiteMaterial);
         expect(board.getPiece(Square.d2)).toBe(Piece.whitePawn);
-    })
+    });
 });

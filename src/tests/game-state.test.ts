@@ -1,9 +1,9 @@
 import Board from "../board/board";
-import { parseFen } from "../board/board-setup";
 import { IBoard } from "../board/board-types";
-import { getGameStatus } from "../game/game-state";
 import MoveManager from "../game/move-manager";
 import { Square } from "../shared/enums";
+import { getGameStatus } from "../game/game-state";
+import { parseFen } from "../board/board-setup";
 
 describe('game-state', () => {
     let board: IBoard;
@@ -18,7 +18,7 @@ describe('game-state', () => {
         ['8/8/8/8/8/4k3/8/r3K3 w - - 0 1'],
         ['7k/5p1p/5BpN/8/8/8/8/6K1 b - - 0 1'],
         ['6rk/6pp/6N1/8/8/8/8/6KR b - - 0 1']
-    ])('recognizes checkmates', (fen) => {
+    ])('recognizes checkmates', fen => {
         parseFen(board, fen);
         const status = getGameStatus(board, moveManager.generateMoves());
         expect(status.complete).toBe(true);
@@ -57,7 +57,8 @@ describe('game-state', () => {
     it('recognizes draw due to insufficient material', () => {
         parseFen(board, '8/8/3k4/2n5/3N4/3K4/8/8 w - - 0 1');
         const status = getGameStatus(board, moveManager.generateMoves());
+        console.log(`Has pawns: ${board.hasPawns()}`);
         expect(status.complete).toBe(true);
         expect(status.desc).toContain('insufficient');
     });
-})
+});

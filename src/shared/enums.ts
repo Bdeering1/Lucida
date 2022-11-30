@@ -60,6 +60,11 @@ export const enum GameResult {
     blackWin
 }
 
+export const enum MoveStatus{
+    checkmate = -1,
+    stalemate = 0
+}
+
 /**
  * Represents a square on the 120 sized board
  * 
