@@ -57,7 +57,6 @@ describe('game-state', () => {
     it('recognizes draw due to insufficient material', () => {
         parseFen(board, '8/8/3k4/2n5/3N4/3K4/8/8 w - - 0 1');
         const status = getGameStatus(board, moveManager.generateMoves());
-        console.log(`Has pawns: ${board.hasPawns()}`);
         expect(status.complete).toBe(true);
         expect(status.desc).toContain('insufficient');
     });

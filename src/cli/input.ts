@@ -1,7 +1,7 @@
 import { getFileFromChar, getRankFromChar, getSquare } from '../shared/utils';
 import { stdin as input, stdout as output } from 'node:process';
 import { Color } from '../shared/enums';
-import { Move } from '../game/move-manager';
+import Move from '../game/move';
 import { createInterface } from 'readline';
 
 export function getSideInput(): Promise<Color> {
@@ -43,7 +43,7 @@ export function getMoveInput(moves: Move[]) {
     const moveEx = /[a-h][1-9]/g;
 
     return new Promise<Move>((resolve, reject) => {
-        let userMove = Move.NoMove();
+        let userMove = Move.noMove();
         const rl = createInterface({ input, output });
         rl.setPrompt('> ');
         rl.prompt();

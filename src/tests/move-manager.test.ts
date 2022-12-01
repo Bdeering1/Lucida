@@ -31,5 +31,8 @@ describe('move-manager', () => {
     ])('generates the right number of moves for test positions', (fen, moves) => {
         parseFen(board, fen);
         expect(moveManager.generateMoves()).toBe(moves);
+        for (const move of moveManager.getCurrentMoves()) {
+            expect(move).toBeDefined();
+        }
     });
 });

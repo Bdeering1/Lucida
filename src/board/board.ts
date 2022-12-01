@@ -1,6 +1,6 @@
-import { BOARD_SQ_NUM, CASTLE_LEFT, CASTLE_RIGHT, INNER_BOARD_SQ_NUM, MAX_GAME_MOVES, MAX_NUM_PER_PIECE, NUM_CASTLE_COMBINATIONS, NUM_PIECE_TYPES, PIECE_CHAR } from "../shared/constants";
+import { BOARD_SQ_NUM, CASTLE_LEFT, CASTLE_RIGHT, INNER_BOARD_SQ_NUM, MAX_GAME_MOVES, MAX_NUM_PER_PIECE, NUM_CASTLE_COMBINATIONS, NUM_PIECE_TYPES } from "../shared/constants";
 import { CastleBit, Color, Piece, Square } from "../shared/enums";
-import { CastleLeftRook, CastlePerm, CastleRightRook, EnPasRank, generateHash32, GetOtherSide, GetRank, GetSq120, IsKing, IsPawn, LeftRook, PawnDir, Pawns, PieceColor, PieceVal, RightRook, Rooks, StartingRank } from "../shared/utils";
+import { CastleLeftRook, CastlePerm, CastleRightRook, EnPasRank, GetOtherSide, GetRank, GetSq120, IsKing, IsPawn, LeftRook, PawnDir, PieceColor, PieceVal, RightRook, Rooks, StartingRank, generateHash32 } from "../shared/utils";
 import { IBoard } from "./board-types";
 
 export default class Board implements IBoard {
@@ -81,6 +81,9 @@ export default class Board implements IBoard {
     setWhiteQueenCastle(): void { this.castlePermissions |= CastleBit.whiteQueen; }
     setBlackKingCastle(): void { this.castlePermissions |= CastleBit.blackKing; }
     setBlackQueenCastle(): void { this.castlePermissions |= CastleBit.blackQueen; }
+    public hasCastleMoves(): boolean {
+        return this.castlePermissions !== CastleBit.none;
+    }
 
     public addPiece(piece: Piece, sq: Square): void {
         this.pieces[sq] = piece;

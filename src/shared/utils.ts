@@ -10,9 +10,10 @@ export const PieceVal = [ 0, 100, 325, 325, 550, 1000, 50000, 100, 325, 325, 550
 export const PieceColor = [ Color.none, Color.white, Color.white, Color.white, Color.white, Color.white, Color.white,
     Color.black, Color.black, Color.black, Color.black, Color.black, Color.black ];
 
-export const IsPawn = [ false, true, false, false, false, false, false, true, false, false, false, false, false ]; /* not used so far, needed?*/
-export const IsKnight = [ false, false, true, false, false, false, false, false, true, false, false, false, false ]; /* not used either*/
-export const IsKing = [ false, false, false, false, false, false, true, false, false, false, false, false, true ]; /* not used either*/
+export const IsPawn = [ false, true, false, false, false, false, false, true, false, false, false, false, false ];
+export const IsQueen = [ false, false, false, false, false, true, false, false, false, false, false, true, false ];
+export const IsKnight = [ false, false, true, false, false, false, false, false, true, false, false, false, false ];
+export const IsKing = [ false, false, false, false, false, false, true, false, false, false, false, false, true ];
 export const IsRookQueen = [ false, false, false, false, true, true, false, false, false, false, true, true, false ];
 export const IsBishopQueen = [ false, false, false, true, false, true, false, false, false, true, false, true, false ];
 export const IsSliding = [ false, false, false, true, true, true, false, false, false, true, true, true, false ];

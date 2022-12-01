@@ -54,7 +54,7 @@ export function printBoardVars(board: IBoard) {
 
 export function printMoves(board: IBoard, moveManager: MoveManager, moveScores?: number[]) {
     let output = "";
-    moveManager.currentMoves.forEach((move, idx) => {
+    [...moveManager.getCurrentMoves()].forEach((move, idx) => {
         if (idx !== 0) output += ", ";
         output += `${move}${moveScores ? `: ${moveScores[idx]}` : ""}`;
     });

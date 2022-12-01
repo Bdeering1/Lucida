@@ -33,6 +33,7 @@ export interface IBoard {
      */
     repeats: number[];
 
+
     get whiteKingCastle(): boolean;
     get whiteQueenCastle(): boolean;
     get blackKingCastle(): boolean;
@@ -41,6 +42,7 @@ export interface IBoard {
     setWhiteQueenCastle(): void;
     setBlackKingCastle(): void;
     setBlackQueenCastle(): void;
+    hasCastleMoves(): boolean;
 
     /**
      * Add a piece to the board
