@@ -3,14 +3,14 @@ import { getMoveInput, getSideInput, pauseForInput } from "./cli/input";
 import { printBoard, printBoardVars, printMoves } from "./cli/printing";
 import Board from "./board/board";
 import { Color } from "./shared/enums";
-import NegaMax from "./intelligence/nega-max";
+import NegaMax from "./intelligence/mini-max";
 import { START_FEN } from "./shared/constants";
 import { getGameStatus } from "./game/game-state";
 import { parseFen } from "./board/board-setup";
 
 const board = new Board();
 const moveManager = new MoveManager(board);
-const negaMax = new NegaMax(board, moveManager);
+const miniMax = new NegaMax(board, moveManager);
 parseFen(board, START_FEN);
 
 console.log("Please chooce a side (white or black)");
@@ -27,7 +27,7 @@ while(true) {
 
     let move: Move;
     if (playerColor !== Color.none && board.sideToMove !== playerColor) {
-        move = negaMax.getBestMove();
+        move = miniMax.getBestMove();
         console.log(`Computer move: ${move}`);
         await pauseForInput();
     }
