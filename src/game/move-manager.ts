@@ -1,6 +1,6 @@
 import { Bishops, CastleLeftRook, CastleRightRook, GetOtherSide, GetRank, IsBishopQueen, IsKing, IsKnight, IsQueen, IsRookQueen, Kings, Knights, NonSlidingPieces, PawnCaptureDir, Pawns, PieceColor, PieceDir, Queens, Rooks, SlidingPieces, StartingRank, sqOffboard } from "../shared/utils";
 import { Color, MoveStatus, Piece, Square } from "../shared/enums";
-import { MAX_DEPTH, MAX_GAME_MOVES, MAX_POSITION_MOVES } from "../shared/constants";
+import { MAX_GAME_MOVES, MAX_POSITION_MOVES } from "../shared/constants";
 import { IBoard } from "../board/board-types";
 import Move from "./move";
 
@@ -243,9 +243,9 @@ export default class MoveManager {
 
     private movePrecedence(move: Move): number {
         let value = 0;
-        if (move.capture) value += 2;
-        if (IsQueen[move.promotion]) value += 3;
-        else if (move.promotion !== Piece.none) value += 1;
+        if (move.capture) value += 20;
+        if (IsQueen[move.promotion]) value += 30;
+        else if (move.promotion !== Piece.none) value += 10;
         return value;
     }
 }

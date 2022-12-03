@@ -7,12 +7,16 @@ import { printMoves } from '../cli/printing';
 export default class MiniMax {
     private board: IBoard;
     private moveManager: MoveManager;
-    private depth: number;
-    private quiesceDepth = 3;
 
+    private depth: number;
+    private quiesceDepth = 1;
+    //private delta = 50;
+
+    private nodes = 0;
+    private quiesceNodes = 0;
     private scores: number[] = [];
 
-    constructor(board: IBoard, moveManager: MoveManager, depth = 5) {
+    constructor(board: IBoard, moveManager: MoveManager, depth = 7) {
         this.board = board;
         this.moveManager = moveManager;
         this.depth = depth;
@@ -20,6 +24,8 @@ export default class MiniMax {
 
     public getBestMove(): Move {
         this.scores = [];
+        this.nodes = 0;
+        this.quiesceNodes = 0;
 
         let best: number;
         let moves: Move[];
@@ -29,6 +35,9 @@ export default class MiniMax {
             [best, moves] =this.mini(this.depth, -Infinity, Infinity, new Array<Move>());
 
         console.log(`Depth: ${this.depth}`);
+        console.log(`Total nodes searched: ${this.nodes + this.quiesceNodes}`);
+        console.log(`primary: ${this.nodes} quiescent search: ${this.quiesceNodes}`);
+
         printMoves(this.board, this.moveManager, this.scores);
 
         moves.forEach((move, idx) => {
@@ -43,6 +52,7 @@ export default class MiniMax {
     }
 
     private maxi(depthLeft: number, alpha: number, beta: number, moves: Move[]): [number, Move[]] {
+        this.nodes++;
         if (depthLeft === 0) return [this.quiesceMaxi(this.quiesceDepth, alpha, beta), moves];
 
         this.moveManager.generateMoves();
@@ -65,6 +75,7 @@ export default class MiniMax {
     }
 
     private mini(depthLeft: number, alpha: number, beta: number, moves: Move[]): [number, Move[]] {
+        this.nodes++;
         if (depthLeft === 0) return [this.quiesceMini(this.quiesceDepth, alpha, beta), moves];
 
         this.moveManager.generateMoves();
@@ -87,6 +98,7 @@ export default class MiniMax {
     }
 
     private quiesceMaxi(depthLeft: number, alpha: number, beta: number) {
+        this.quiesceNodes++;
         if (depthLeft === 0) return beta;
 
         const standPat = this.evaluate();
@@ -109,6 +121,7 @@ export default class MiniMax {
     }
 
     private quiesceMini(depthLeft: number, alpha: number, beta: number) {
+        this.quiesceNodes++;
         if (depthLeft === 0) return alpha;
 
         const standPat = this.evaluate();
