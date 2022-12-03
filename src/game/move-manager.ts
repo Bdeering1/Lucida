@@ -41,7 +41,6 @@ export default class MoveManager {
 
     public * getCurrentMoves(): IterableIterator<Move> {
         for (let i = 0; i < this.numMoves[this.board.ply]; i++) {
-            //if (this.moveList[this.board.ply][i] === undefined) continue;
             yield this.moveList[this.board.ply][i];
         }
     }
@@ -234,33 +233,26 @@ export default class MoveManager {
     }
 
     private addMove(move: Move, ply = this.board.ply): void {
-        this.insertMove(move, ply, this.getSortedIndex(move));
+        this.insertMove(move, ply);
         this.moveCount++;
     }
 
-    private insertMove(move: Move, ply: number, insertIdx: number): void {
-        for (let i = this.moveCount; i > insertIdx; i--) {
-            this.moveList[ply][i] = this.moveList[ply][i - 1];
+    private insertMove(move: Move, ply: number): void {
+        if (this.moveCount === 0) { this.moveList[ply][0] = move; return; }
+            
+        let idx = this.moveCount - 1;
+        while (idx >= 0 && this.moveValue(move) > this.moveValue(this.moveList[ply][idx])) {
+            this.moveList[ply][idx + 1] = this.moveList[ply][idx];
+            idx--;
         }
-        this.moveList[ply][insertIdx] = move;
-    }
-
-    private getSortedIndex(move: Move, start = 0, end = this.numMoves[this.board.ply]): number {
-        const array = this.moveList[this.board.ply];
-        const pivot = start + (end - start) / 2;
-
-        if (end - start <= 1 || this.moveValue(move) === this.moveValue(array[pivot])) return pivot;
-
-        if (this.moveValue(move) <= this.moveValue(array[pivot]))
-            return this.getSortedIndex(move, pivot, end);
-
-        return this.getSortedIndex(move, start, pivot);
+        this.moveList[ply][idx + 1] = move;
     }
 
     private moveValue(move: Move): number {
-        if (move.capture) return 3;
-        if (IsQueen[move.promotion]) return 2;
-        if (move.promotion !== Piece.none) return 1;
-        return 0;
+        let value = 0;
+        if (move.capture) value += 2;
+        if (IsQueen[move.promotion]) value += 3;
+        else if (move.promotion !== Piece.none) value += 1;
+        return value;
     }
 }
