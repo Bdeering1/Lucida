@@ -50,7 +50,7 @@ export function getMoveInput(moves: Move[]) {
 
         rl.on('line', (line: string) => {
             line = line.trim().toLowerCase();
-            if (line === 'e' || line === 'exit') { rl.close(); return; }
+            if (line === 'e' || line === 'exit' || line === 'q' || line === 'quit') { rl.close(); return; }
 
             if (/^\d*$/.test(line)) {
                 userMove = moves[parseInt(line)];

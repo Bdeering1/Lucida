@@ -1,6 +1,6 @@
 import { Bishops, CastleLeftRook, CastleRightRook, GetOtherSide, GetRank, IsBishopQueen, IsKing, IsKnight, IsQueen, IsRookQueen, Kings, Knights, NonSlidingPieces, PawnCaptureDir, Pawns, PieceColor, PieceDir, Queens, Rooks, SlidingPieces, StartingRank, sqOffboard } from "../shared/utils";
 import { Color, MoveStatus, Piece, Square } from "../shared/enums";
-import { MAX_GAME_MOVES, MAX_POSITION_MOVES } from "../shared/constants";
+import { MAX_DEPTH, MAX_GAME_MOVES, MAX_POSITION_MOVES } from "../shared/constants";
 import { IBoard } from "../board/board-types";
 import Move from "./move";
 
@@ -12,15 +12,11 @@ export default class MoveManager {
      */
     public moveList: Move[][];
     /**
-     * Lists of scores for each move indexed by game plys
-     */
-    //public moveScores: Move[][]; // is this needed?
-    /**
-     * 
+     * Number of moves at each given ply
      */
     private numMoves: number[];
     /**
-     * Move index used to populate move list
+     * Number of moves generated for the current position
      */
     private moveCount = 0;
 
@@ -28,13 +24,10 @@ export default class MoveManager {
         this.board = board;
 
         const emptyMoveArray = new Array(MAX_POSITION_MOVES);
-        // these should use MAX_DEPTH
         this.moveList = new Array(MAX_GAME_MOVES);
-        //this.moveScores = new Array(MAX_GAME_MOVES);
         this.numMoves = new Array(MAX_GAME_MOVES);
         for (let i = 0; i < MAX_GAME_MOVES; i++) {
             this.moveList[i] = [...emptyMoveArray];
-            //this.moveScores[i] = [...emptyMoveArray];
             this.numMoves[i] = 0;
         }
     }
@@ -241,14 +234,14 @@ export default class MoveManager {
         if (this.moveCount === 0) { this.moveList[ply][0] = move; return; }
             
         let idx = this.moveCount - 1;
-        while (idx >= 0 && this.moveValue(move) > this.moveValue(this.moveList[ply][idx])) {
+        while (idx >= 0 && this.movePrecedence(move) > this.movePrecedence(this.moveList[ply][idx])) {
             this.moveList[ply][idx + 1] = this.moveList[ply][idx];
             idx--;
         }
         this.moveList[ply][idx + 1] = move;
     }
 
-    private moveValue(move: Move): number {
+    private movePrecedence(move: Move): number {
         let value = 0;
         if (move.capture) value += 2;
         if (IsQueen[move.promotion]) value += 3;

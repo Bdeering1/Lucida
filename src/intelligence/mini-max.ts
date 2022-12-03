@@ -7,29 +7,33 @@ import { printMoves } from '../cli/printing';
 export default class MiniMax {
     private board: IBoard;
     private moveManager: MoveManager;
-    private _depth!: number;
+    private depth: number;
+    private quiesceDepth = 3;
 
     private scores: number[] = [];
 
-    constructor(board: IBoard, moveManager: MoveManager, depth = 2) {
+    constructor(board: IBoard, moveManager: MoveManager, depth = 5) {
         this.board = board;
         this.moveManager = moveManager;
         this.depth = depth;
     }
 
-    get depth() {
-        return this._depth;
-    }
-    set depth(depth: number) {
-        this._depth = depth;
-    }
-
     public getBestMove(): Move {
         this.scores = [];
-        const best = this.maxi(this.depth, -Infinity, Infinity);
+
+        let best: number;
+        let moves: Move[];
+        if (this.board.sideToMove === Color.white)        
+            [best, moves] = this.maxi(this.depth, -Infinity, Infinity, new Array<Move>());
+        else
+            [best, moves] =this.mini(this.depth, -Infinity, Infinity, new Array<Move>());
 
         console.log(`Depth: ${this.depth}`);
         printMoves(this.board, this.moveManager, this.scores);
+
+        moves.forEach((move, idx) => {
+            console.log(`${idx + 1}: ${move}`);
+        });
 
         let idx = 0;
         for (const move of this.moveManager.getCurrentMoves()) {
@@ -38,16 +42,64 @@ export default class MiniMax {
         throw new Error(`No move found matching best score of ${best}`);
     }
 
-    private maxi(depth: number, alpha: number, beta: number): number {
-        if (depth === 0) return this.quiesce(alpha, beta);
+    private maxi(depthLeft: number, alpha: number, beta: number, moves: Move[]): [number, Move[]] {
+        if (depthLeft === 0) return [this.quiesceMaxi(this.quiesceDepth, alpha, beta), moves];
 
         this.moveManager.generateMoves();
         for (const move of this.moveManager.getCurrentMoves()) {
             this.board.movePiece(move.from, move.to);
-            const score = this.mini(depth - 1, alpha, beta);
+            const [score, possibleMoves] = this.mini(depthLeft - 1, alpha, beta, moves);
             this.board.undoMove();
 
-            if (depth === this.depth) this.scores.push(score);
+            if (depthLeft === this.depth) this.scores.push(score);
+
+            if (score >= beta) return [beta, moves];
+            if (score > alpha) {
+                alpha = score;
+                moves = [...possibleMoves];
+                moves[this.depth - depthLeft] = move;
+            }
+        }
+
+        return [alpha, moves];
+    }
+
+    private mini(depthLeft: number, alpha: number, beta: number, moves: Move[]): [number, Move[]] {
+        if (depthLeft === 0) return [this.quiesceMini(this.quiesceDepth, alpha, beta), moves];
+
+        this.moveManager.generateMoves();
+        for (const move of this.moveManager.getCurrentMoves()) {
+            this.board.movePiece(move.from, move.to);
+            const [score, possibleMoves] = this.maxi(depthLeft - 1, alpha, beta, moves);
+            this.board.undoMove();
+
+            if (depthLeft === this.depth) this.scores.push(score);
+
+            if (score <= alpha) return [alpha, moves];
+            if (score < beta) {
+                beta = score;
+                moves = [...possibleMoves];
+                moves[this.depth - depthLeft] = move;
+            }
+        }
+
+        return [beta, moves];
+    }
+
+    private quiesceMaxi(depthLeft: number, alpha: number, beta: number) {
+        if (depthLeft === 0) return beta;
+
+        const standPat = this.evaluate();
+        if (standPat >= beta) return beta;
+        if (standPat > alpha) alpha = standPat;
+
+        this.moveManager.generateMoves();
+        for (const move of this.moveManager.getCurrentMoves()) {
+            if (!move.capture) continue;
+
+            this.board.movePiece(move.from, move.to);
+            const score = this.quiesceMini(depthLeft - 1, alpha, beta);
+            this.board.undoMove();
 
             if (score >= beta) return beta;
             if (score > alpha) alpha = score;
@@ -56,13 +108,19 @@ export default class MiniMax {
         return alpha;
     }
 
-    private mini(depth: number, alpha: number, beta: number): number {
-        if (depth === 0) return this.quiesce(alpha, beta);
+    private quiesceMini(depthLeft: number, alpha: number, beta: number) {
+        if (depthLeft === 0) return alpha;
+
+        const standPat = this.evaluate();
+        if (standPat <= alpha) return alpha;
+        if (standPat < beta) beta = standPat;
 
         this.moveManager.generateMoves();
         for (const move of this.moveManager.getCurrentMoves()) {
+            if (!move.capture) continue;
+
             this.board.movePiece(move.from, move.to);
-            const score = this.maxi(depth - 1, alpha, beta);
+            const score = this.quiesceMaxi(depthLeft - 1, alpha, beta);
             this.board.undoMove();
 
             if (score <= alpha) return alpha;
@@ -70,10 +128,6 @@ export default class MiniMax {
         }
 
         return beta;
-    }
-
-    private quiesce(alpha: number, beta: number): number {
-        return this.evaluate();
     }
 
     private evaluate(): number {
