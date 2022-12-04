@@ -38,5 +38,5 @@ while(true) {
     }
 
     if (move.isNoMove()) break;
-    board.movePiece(move.from, move.to);
+    board.movePiece(move.from, move.to, move.promotion);
 }

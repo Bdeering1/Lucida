@@ -1,7 +1,7 @@
 /* eslint-disable no-magic-numbers */
 import { BOARD_SQ_NUM, FILE_CHAR, INNER_BOARD_SQ_NUM, PIECE_CHAR } from "../shared/constants";
-import { Color, Square } from "../shared/enums";
-import { generateHash32, GetFile, GetRank, GetSq120 } from "../shared/utils";
+import { Color, File, Square } from "../shared/enums";
+import { GetFile, GetRank, GetSq120, generateHash32 } from "../shared/utils";
 import { IBoard } from "../board/board-types";
 import MoveManager from "../game/move-manager";
 
@@ -77,7 +77,7 @@ function getMoveNumber(ply: number) {
 }
 
 export function getSquareString(sq: Square) {
-    return GetFile[sq] !== 0 ? FILE_CHAR[GetFile[sq]] + GetRank[sq] : 'N/A';
+    return GetFile[sq] !== File.none ? FILE_CHAR[GetFile[sq]] + GetRank[sq] : 'N/A';
 }
 
 export function getCastleString(board: IBoard) {

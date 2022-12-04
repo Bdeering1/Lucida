@@ -56,8 +56,9 @@ export interface IBoard {
     /**
      * Move a piece to another square (updates history and ply)
      * @description Does not check for legality
+     * @todo this should just take a Move object
      */
-    movePiece(from: Square, to: Square, hard?: boolean): void;
+    movePiece(from: Square, to: Square, promote?: Piece): void;
     /**
      * Whether or not the board has any pawns left (for stalemate detection)
      */

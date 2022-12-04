@@ -1,5 +1,6 @@
 import { Piece, Square } from "../shared/enums";
 import { getSquareString } from "../cli/printing";
+import { PIECE_CHAR } from "../shared/constants";
 
 export default class Move {
     public from: Square;
@@ -30,6 +31,6 @@ export default class Move {
         return this;
     }
     public toString(): string {
-        return `${getSquareString(this.from)}${getSquareString(this.to)}`;
+        return `${getSquareString(this.from)}${getSquareString(this.to)}${this.promotion ? PIECE_CHAR[this.promotion] : ""}`;
     }
 }

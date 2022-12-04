@@ -216,7 +216,7 @@ export default class MoveManager {
      * Adds a move to the move list if a given move does not allow the king to be taken on the next move
      */
     private addIfLegal(move: Move): void {
-        this.board.movePiece(move.from, move.to, false);
+        this.board.movePiece(move.from, move.to, move.promotion);
         const side = this.board.sideToMove;
         const kingSq = this.board.getSquares(Kings[GetOtherSide[side]]).next().value;
         if (!this.squareAttacked(kingSq, side)) {

@@ -1,4 +1,4 @@
-import { BOARD_SQ_NUM, CASTLE_LEFT, CASTLE_RIGHT, INNER_BOARD_SQ_NUM, MAX_GAME_MOVES, MAX_NUM_PER_PIECE, NUM_CASTLE_COMBINATIONS, NUM_PIECE_TYPES } from "../shared/constants";
+import { BOARD_SQ_NUM, CASTLE_LEFT, CASTLE_RIGHT, INNER_BOARD_SQ_NUM, MAX_GAME_MOVES, MAX_NUM_PER_PIECE, NUM_CASTLE_COMBINATIONS, NUM_PIECE_TYPES, PIECE_CHAR } from "../shared/constants";
 import { CastleBit, Color, Piece, Square } from "../shared/enums";
 import { CastleLeftRook, CastlePerm, CastleRightRook, EnPasRank, GetOtherSide, GetRank, GetSq120, IsKing, IsPawn, LeftRook, PawnDir, PieceColor, PieceVal, RightRook, Rooks, StartingRank, generateHash32 } from "../shared/utils";
 import { IBoard } from "./board-types";
@@ -112,7 +112,7 @@ export default class Board implements IBoard {
             this.hashPiece(piece, sq);
         }
     }
-    public movePiece(from: Square, to: Square, hard = true): void {
+    public movePiece(from: Square, to: Square, promote: Piece = Piece.none): void {
         this.appendToHistory();
         this.checkRepeats();
 
@@ -123,7 +123,7 @@ export default class Board implements IBoard {
             this.enPas = Square.none;
         }
 
-        const piece = this.getPiece(from);
+        let piece = this.getPiece(from);
         if (IsPawn[piece]) {
             if (to === enPas) {
                 this.removePiece(to + PawnDir[GetOtherSide[this.sideToMove]]);
@@ -132,6 +132,9 @@ export default class Board implements IBoard {
                 && GetRank[to] === EnPasRank[this.sideToMove]) {
                 this.enPas = from + PawnDir[this.sideToMove];
                 this.hashEnPas();
+            }
+            else if (promote !== Piece.none) {
+                piece = promote;
             }
             this.fiftyMoveCounter = 0;
         }
@@ -170,7 +173,7 @@ export default class Board implements IBoard {
     }
 
     public hasPawns(): boolean {
-        return this.pieceQuantities[Piece.whitePawn] !== 0 && this.pieceQuantities[Piece.blackPawn] !== 0;
+        return this.pieceQuantities[Piece.whitePawn] !== 0 || this.pieceQuantities[Piece.blackPawn] !== 0;
     }
     public getPiece(sq: Square): Piece {
         return this.pieces[sq];
@@ -213,12 +216,9 @@ export default class Board implements IBoard {
         this.posKey = prev.posKey;
         this.repeats = prev.repeats;
 
-        this.pieces = [...prev.pieces];
-        this.pieceSquares = new Array(NUM_PIECE_TYPES);
-        for (let i = 0; i < NUM_PIECE_TYPES; i++) {
-            this.pieceSquares[i] = [...prev.pieceSquares[i]];
-        }
-        this.pieceQuantities = [...prev.pieceQuantities];
+        this.pieces = prev.pieces;
+        this.pieceSquares = prev.pieceSquares;
+        this.pieceQuantities = prev.pieceQuantities;
     }
 
     public copy(deep = false): Board {
@@ -245,7 +245,7 @@ export default class Board implements IBoard {
     private checkRepeats(): void {
         if (this.fiftyMoveCounter === 0) return;
         let idx = 0;
-        while (typeof(this.history[idx]) !== 'undefined' && idx < this.ply) {
+        while (this.history[idx] !== undefined && idx < this.ply) {
             if (this.history[idx].posKey === this.posKey) this.repeats.push(this.posKey);
             idx++;
         }

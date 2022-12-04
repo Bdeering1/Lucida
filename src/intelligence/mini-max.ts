@@ -1,7 +1,9 @@
-import { Color } from '../shared/enums';
+import { Color, Piece } from '../shared/enums';
+import { PieceVal, SideMultiplier } from '../shared/utils';
 import { IBoard } from '../board/board-types';
 import Move from '../game/move';
 import MoveManager from '../game/move-manager';
+import { getGameStatus } from '../game/game-state';
 import { printMoves } from '../cli/printing';
 
 export default class MiniMax {
@@ -55,9 +57,11 @@ export default class MiniMax {
         this.nodes++;
         if (depthLeft === 0) return [this.quiesceMaxi(this.quiesceDepth, alpha, beta), moves];
 
-        this.moveManager.generateMoves();
+        const status = getGameStatus(this.board, this.moveManager.generateMoves());
+        if (status.complete === true) return [SideMultiplier[status.winner] * PieceVal[Piece.blackKing] - depthLeft, moves];
+
         for (const move of this.moveManager.getCurrentMoves()) {
-            this.board.movePiece(move.from, move.to);
+            this.board.movePiece(move.from, move.to, move.promotion);
             const [score, possibleMoves] = this.mini(depthLeft - 1, alpha, beta, moves);
             this.board.undoMove();
 
@@ -78,9 +82,11 @@ export default class MiniMax {
         this.nodes++;
         if (depthLeft === 0) return [this.quiesceMini(this.quiesceDepth, alpha, beta), moves];
 
-        this.moveManager.generateMoves();
+        const status = getGameStatus(this.board, this.moveManager.generateMoves());
+        if (status.complete === true) return [SideMultiplier[status.winner] * PieceVal[Piece.whiteKing] + depthLeft, moves];
+
         for (const move of this.moveManager.getCurrentMoves()) {
-            this.board.movePiece(move.from, move.to);
+            this.board.movePiece(move.from, move.to, move.promotion);
             const [score, possibleMoves] = this.maxi(depthLeft - 1, alpha, beta, moves);
             this.board.undoMove();
 
@@ -109,7 +115,7 @@ export default class MiniMax {
         for (const move of this.moveManager.getCurrentMoves()) {
             if (!move.capture) continue;
 
-            this.board.movePiece(move.from, move.to);
+            this.board.movePiece(move.from, move.to, move.promotion);
             const score = this.quiesceMini(depthLeft - 1, alpha, beta);
             this.board.undoMove();
 
@@ -132,7 +138,7 @@ export default class MiniMax {
         for (const move of this.moveManager.getCurrentMoves()) {
             if (!move.capture) continue;
 
-            this.board.movePiece(move.from, move.to);
+            this.board.movePiece(move.from, move.to, move.promotion);
             const score = this.quiesceMaxi(depthLeft - 1, alpha, beta);
             this.board.undoMove();
 

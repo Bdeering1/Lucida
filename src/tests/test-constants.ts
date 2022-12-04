@@ -5,3 +5,5 @@ export const STALEMATE_TEST_FEN = '8/4n3/5p2/8/r2PK3/8/4k2b/8 w - - 0 1';
 export const CHECKMATE_TEST_FEN = '4k3/8/8/b7/8/5q2/P7/R3K2R w KQ - 0 1';
 export const PROMOTION_TEST_FEN = '7n/5kPK/8/8/8/8/8/8 w - - 0 1';
 export const CAPTURE_TEST_FEN = '4k3/8/8/3p4/4P3/8/8/4K3 w - - 0 1';
+export const MATE_IN_ONE_FEN = '4k3/8/2R1K3/8/8/8/8/8 w - - 0 1';
+export const STALEMATE_IN_ONE_FEN = '8/8/8/8/8/1k3N2/3p4/K7 w - - 0 1';

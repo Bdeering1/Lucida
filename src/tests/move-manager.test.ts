@@ -8,8 +8,6 @@ import { MoveStatus } from "../shared/enums";
 import { START_FEN } from "../shared/constants";
 import { parseFen } from "../board/board-setup";
 
-
-
 describe('move-manager', () => {
     let board: IBoard;
     let moveManager: MoveManager;
