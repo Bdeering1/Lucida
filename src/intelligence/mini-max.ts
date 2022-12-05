@@ -1,27 +1,31 @@
 import { Color, Piece } from '../shared/enums';
-import { PieceVal, SideMultiplier } from '../shared/utils';
+import { GetSq120, PieceColor, PieceVal, SideMultiplier } from '../shared/utils';
 import { IBoard } from '../board/board-types';
+import { INNER_BOARD_SQ_NUM, PIECE_CHAR } from '../shared/constants';
 import Move from '../game/move';
 import MoveManager from '../game/move-manager';
+import PieceSquareTables from './pst';
 import { getGameStatus } from '../game/game-state';
-import { printMoves } from '../cli/printing';
+import { getSquareString, printMoves } from '../cli/printing';
 
 export default class MiniMax {
     private board: IBoard;
     private moveManager: MoveManager;
 
     private depth: number;
-    private quiesceDepth = 1;
+    private quiesceDepth = 2;
     //private delta = 50;
 
     private nodes = 0;
     private quiesceNodes = 0;
     private scores: number[] = [];
 
-    constructor(board: IBoard, moveManager: MoveManager, depth = 7) {
+    constructor(board: IBoard, moveManager: MoveManager, depth = 3) {
         this.board = board;
         this.moveManager = moveManager;
         this.depth = depth;
+
+        PieceSquareTables.init();
     }
 
     public getBestMove(): Move {
@@ -150,6 +154,17 @@ export default class MiniMax {
     }
 
     private evaluate(): number {
-        return (this.board.material[Color.white] - this.board.material[Color.black]);
+        let score = this.board.material[Color.white] - this.board.material[Color.black];
+
+        for (let sq64 = 0; sq64 < INNER_BOARD_SQ_NUM ; sq64++) {
+            const sq = GetSq120[sq64];
+            const piece = this.board.getPiece(sq);
+            if (piece === Piece.none) continue;
+
+            const side = PieceColor[piece];
+            score += PieceSquareTables.map[piece][sq] * SideMultiplier[side];
+        }
+
+        return score;
     }
 }
