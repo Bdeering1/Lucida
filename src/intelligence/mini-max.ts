@@ -1,12 +1,12 @@
 import { Color, Piece } from '../shared/enums';
 import { GetSq120, PieceColor, PieceVal, SideMultiplier } from '../shared/utils';
 import { IBoard } from '../board/board-types';
-import { INNER_BOARD_SQ_NUM, PIECE_CHAR } from '../shared/constants';
+import { INNER_BOARD_SQ_NUM } from '../shared/constants';
 import Move from '../game/move';
 import MoveManager from '../game/move-manager';
 import PieceSquareTables from './pst';
 import { getGameStatus } from '../game/game-state';
-import { getSquareString, printMoves } from '../cli/printing';
+import { printMoves } from '../cli/printing';
 
 export default class MiniMax {
     private board: IBoard;

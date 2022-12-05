@@ -5,19 +5,10 @@ import { Color } from "./shared/enums";
 import MiniMax from "./intelligence/mini-max";
 import Move from "./game/move";
 import MoveManager from "./game/move-manager";
-import { BOARD_SQ_NUM, START_FEN } from "./shared/constants";
+import { START_FEN } from "./shared/constants";
 import { getGameStatus } from "./game/game-state";
 import { parseFen } from "./board/board-setup";
-import PieceSquareTables from "./intelligence/pst";
 
-// PieceSquareTables.init();
-
-// let out = '';
-// for (let sq = 0; sq < BOARD_SQ_NUM; sq++) {
-//     out += `${PieceSquareTables.whiteRook[sq].toString().padStart(3, " ")} `;
-//     if ((sq + 1) % 10 === 0) out += '\n';
-// }
-// console.log(out);
 
 const board = new Board();
 const moveManager = new MoveManager(board);
@@ -28,7 +19,6 @@ console.log("Please chooce a side (white or black)");
 const playerColor = await getSideInput();
 
 while(true) {
-
     printBoard(board);
     printBoardVars(board);
     const status = getGameStatus(board, moveManager.generateMoves());

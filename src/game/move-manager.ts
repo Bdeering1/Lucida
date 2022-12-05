@@ -1,4 +1,4 @@
-import { Bishops, CastleLeftRook, CastleRightRook, GetOtherSide, GetRank, IsBishopQueen, IsKing, IsKnight, IsQueen, IsRookQueen, Kings, Knights, NonSlidingPieces, PawnCaptureDir, Pawns, PieceColor, PieceDir, Queens, Rooks, SlidingPieces, StartingRank, sqOffboard } from "../shared/utils";
+import { Bishops, GetOtherSide, GetRank, IsBishopQueen, IsKing, IsKnight, IsQueen, IsRookQueen, Kings, Knights, NonSlidingPieces, PawnCaptureDir, Pawns, PieceColor, PieceDir, Queens, Rooks, SlidingPieces, StartingRank, sqOffboard } from "../shared/utils";
 import { Color, MoveStatus, Piece, Square } from "../shared/enums";
 import { MAX_GAME_MOVES, MAX_POSITION_MOVES } from "../shared/constants";
 import { IBoard } from "../board/board-types";
@@ -126,26 +126,26 @@ export default class MoveManager {
                 if (this.board.whiteKingCastle
                     && this.board.getPiece(Square.f1) === Piece.none && !this.squareAttacked(Square.f1, Color.black)
                     && this.board.getPiece(Square.g1) === Piece.none && !this.squareAttacked(Square.g1, Color.black)) {
-                    this.addMove(new Move(Square.e1, CastleRightRook[side]));
+                    this.addMove(new Move(Square.e1, Square.g1));
                 }
                 if (this.board.whiteQueenCastle
                     && this.board.getPiece(Square.b1) === Piece.none && !this.squareAttacked(Square.b1, Color.black)
                     && this.board.getPiece(Square.c1) === Piece.none && !this.squareAttacked(Square.c1, Color.black)
                     && this.board.getPiece(Square.d1) === Piece.none && !this.squareAttacked(Square.d1, Color.black)) {
-                    this.addMove(new Move(Square.e1, CastleLeftRook[side]));
+                    this.addMove(new Move(Square.e1, Square.c1));
                 }
             }
             else if (!this.squareAttacked(Square.e8, Color.white)) {
                 if (this.board.blackKingCastle
                     && this.board.getPiece(Square.f8) === Piece.none && !this.squareAttacked(Square.f8, Color.white)
                     && this.board.getPiece(Square.g8) === Piece.none && !this.squareAttacked(Square.g8, Color.white)) {
-                    this.addMove(new Move(Square.e1, CastleRightRook[side]));
+                    this.addMove(new Move(Square.e8, Square.g8));
                 }
                 if (this.board.blackQueenCastle
                     && this.board.getPiece(Square.b8) === Piece.none && !this.squareAttacked(Square.b8, Color.white)
                     && this.board.getPiece(Square.c8) === Piece.none && !this.squareAttacked(Square.c8, Color.white)
                     && this.board.getPiece(Square.d8) === Piece.none && !this.squareAttacked(Square.d8, Color.white)) {
-                    this.addMove(new Move(Square.e1, CastleLeftRook[side]));
+                    this.addMove(new Move(Square.e8, Square.c8));
                 }
             }
         }
