@@ -13,14 +13,14 @@ export default class MiniMax {
     private moveManager: MoveManager;
 
     private depth: number;
-    private quiesceDepth = 2;
+    private quiesceDepth = 3;
     //private delta = 50;
 
     private nodes = 0;
     private quiesceNodes = 0;
     private scores: number[] = [];
 
-    constructor(board: IBoard, moveManager: MoveManager, depth = 3) {
+    constructor(board: IBoard, moveManager: MoveManager, depth = 4) {
         this.board = board;
         this.moveManager = moveManager;
         this.depth = depth;

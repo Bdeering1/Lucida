@@ -94,12 +94,13 @@ export default class MoveManager {
                     this.addIfLegal(new Move(sq, targetSq).setPromotion(Bishops[side]));
                     this.addIfLegal(new Move(sq, targetSq).setPromotion(Knights[side]));
                 }
-                else this.addIfLegal(new Move(sq, targetSq));
-            }
-
-            const doubleMoveSq = sq + PieceDir[pawnType][side] * 2;
-            if (GetRank[sq] === StartingRank[side] && PieceColor[this.board.getPiece(doubleMoveSq)] === Color.none) {
-                this.addIfLegal(new Move(sq, doubleMoveSq));
+                else {
+                    const doubleMoveSq = sq + PieceDir[pawnType][side] * 2;
+                    if (GetRank[sq] === StartingRank[side] && PieceColor[this.board.getPiece(doubleMoveSq)] === Color.none) {
+                        this.addIfLegal(new Move(sq, doubleMoveSq));
+                    }
+                    this.addIfLegal(new Move(sq, targetSq));
+                }
             }
 
             for (const captureDir of PawnCaptureDir[side]) {

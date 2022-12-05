@@ -49,6 +49,7 @@ export function getMoveInput(moves: Move[]) {
         rl.prompt();
 
         rl.on('line', (line: string) => {
+            userMove = Move.noMove();
             line = line.trim().toLowerCase();
             if (line === 'e' || line === 'exit' || line === 'q' || line === 'quit') { rl.close(); return; }
 
@@ -68,7 +69,7 @@ export function getMoveInput(moves: Move[]) {
             userMove = new Move(sqFromString(tokens[0]), sqFromString(tokens[1]));
             let valid = false;
             for (const move of moves) {
-                if (JSON.stringify(userMove) === JSON.stringify(move)) {
+                if (userMove.equals(move)) {
                     valid = true;
                     break;
                 }
