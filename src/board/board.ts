@@ -1,4 +1,4 @@
-import { BOARD_SQ_NUM, CASTLE_LEFT, CASTLE_RIGHT, INNER_BOARD_SQ_NUM, MAX_GAME_MOVES, MAX_NUM_PER_PIECE, NUM_CASTLE_COMBINATIONS, NUM_PIECE_TYPES, PIECE_CHAR } from "../shared/constants";
+import { BOARD_SQ_NUM, CASTLE_LEFT, CASTLE_RIGHT, INNER_BOARD_SQ_NUM, MAX_GAME_MOVES, MAX_NUM_PER_PIECE, NUM_CASTLE_COMBINATIONS, NUM_PIECE_TYPES } from "../shared/constants";
 import { CastleBit, Color, Piece, Square } from "../shared/enums";
 import { CastleLeftRook, CastlePerm, CastleRightRook, EnPasRank, GetOtherSide, GetRank, GetSq120, IsKing, IsPawn, LeftRook, PawnDir, PieceColor, PieceVal, RightRook, Rooks, StartingRank, generateHash32 } from "../shared/utils";
 import { IBoard } from "./board-types";
@@ -21,6 +21,7 @@ export default class Board implements IBoard {
     /**
      * @private
      * Stores the square each piece is on indexed by piece type
+     * @description only the first pieceQuantities[piece] squares are valid for each piece
      */
     private pieceSquares: Square[][];
     /**
@@ -87,12 +88,7 @@ export default class Board implements IBoard {
 
     public addPiece(piece: Piece, sq: Square): void {
         this.pieces[sq] = piece;
-        for (let i = 0; i < MAX_NUM_PER_PIECE; i++) {
-            if (this.pieceSquares[piece][i] === Square.none) {
-                this.pieceSquares[piece][i] = sq;
-                break;
-            }
-        }
+        this.pieceSquares[piece][this.pieceQuantities[piece]] = sq;
         this.pieceQuantities[piece]++;
         this.material[PieceColor[piece]] += PieceVal[piece];
         this.hashPiece(piece, sq);
@@ -103,8 +99,8 @@ export default class Board implements IBoard {
         if (piece !== Piece.none) {
             this.pieceQuantities[piece]--;
             for (let i = 0; i < MAX_NUM_PER_PIECE; i++) {
-                if (this.pieceSquares[piece][i] === sq) {
-                    this.pieceSquares[piece][i] = Square.none;
+                if (this.pieceSquares[piece][i] === sq) { // swap with last piece
+                    this.pieceSquares[piece][i] = this.pieceSquares[piece][this.pieceQuantities[piece]];
                     break;
                 }
             }
@@ -234,8 +230,8 @@ export default class Board implements IBoard {
 
         copy.pieces = [...this.pieces];
         copy.pieceSquares = new Array(NUM_PIECE_TYPES);
-        for (let i = 0; i < NUM_PIECE_TYPES; i++) {
-            copy.pieceSquares[i] = [...this.pieceSquares[i]];
+        for (let piece = 0; piece < NUM_PIECE_TYPES; piece++) {
+            copy.pieceSquares[piece] = [...this.pieceSquares[piece]];
         }
         copy.pieceQuantities = [...this.pieceQuantities];
         

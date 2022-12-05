@@ -13,17 +13,18 @@ export default class MiniMax {
     private moveManager: MoveManager;
 
     private depth: number;
-    private quiesceDepth = 3;
+    private quiesceDepth: number;
     //private delta = 50;
 
     private nodes = 0;
     private quiesceNodes = 0;
     private scores: number[] = [];
 
-    constructor(board: IBoard, moveManager: MoveManager, depth = 4) {
+    constructor(board: IBoard, moveManager: MoveManager, depth = 4, quiesceDepth = 3) {
         this.board = board;
         this.moveManager = moveManager;
         this.depth = depth;
+        this.quiesceDepth = quiesceDepth;
 
         PieceSquareTables.init();
     }
