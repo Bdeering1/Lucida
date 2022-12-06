@@ -124,17 +124,19 @@ export default class MoveManager {
 
         // Castle moves
         if (this.board.hasCastleMoves()) {
-            if (side === Color.white && !this.squareAttacked(Square.e1, Color.black)) {
-                if (this.board.whiteKingCastle
-                    && this.board.getPiece(Square.f1) === Piece.none && !this.squareAttacked(Square.f1, Color.black)
-                    && this.board.getPiece(Square.g1) === Piece.none && !this.squareAttacked(Square.g1, Color.black)) {
-                    this.addMove(new Move(Square.e1, Square.g1));
-                }
-                if (this.board.whiteQueenCastle
-                    && this.board.getPiece(Square.b1) === Piece.none && !this.squareAttacked(Square.b1, Color.black)
-                    && this.board.getPiece(Square.c1) === Piece.none && !this.squareAttacked(Square.c1, Color.black)
-                    && this.board.getPiece(Square.d1) === Piece.none && !this.squareAttacked(Square.d1, Color.black)) {
-                    this.addMove(new Move(Square.e1, Square.c1));
+            if (side === Color.white) {
+                if (!this.squareAttacked(Square.e1, Color.black)) {
+                    if (this.board.whiteKingCastle
+                        && this.board.getPiece(Square.f1) === Piece.none && !this.squareAttacked(Square.f1, Color.black)
+                        && this.board.getPiece(Square.g1) === Piece.none && !this.squareAttacked(Square.g1, Color.black)) {
+                        this.addMove(new Move(Square.e1, Square.g1));
+                    }
+                    if (this.board.whiteQueenCastle
+                        && this.board.getPiece(Square.b1) === Piece.none && !this.squareAttacked(Square.b1, Color.black)
+                        && this.board.getPiece(Square.c1) === Piece.none && !this.squareAttacked(Square.c1, Color.black)
+                        && this.board.getPiece(Square.d1) === Piece.none && !this.squareAttacked(Square.d1, Color.black)) {
+                        this.addMove(new Move(Square.e1, Square.c1));
+                    }
                 }
             }
             else if (!this.squareAttacked(Square.e8, Color.white)) {

@@ -23,7 +23,7 @@ export default class Move {
         return this;
     }
     public toString(): string {
-        return `${getSquareString(this.from)}${getSquareString(this.to)}${this.promotion ? PIECE_CHAR[this.promotion] : ""}`;
+        return `${getSquareString(this.from)}${getSquareString(this.to)}${this.promotion ? PIECE_CHAR[this.promotion] : ''}`;
     }
 
     public equals(other: Move): boolean {

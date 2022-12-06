@@ -42,7 +42,7 @@ export default class MiniMax {
             [best, moves] =this.mini(this.depth, -Infinity, Infinity, new Array<Move>());
 
         console.log(`Depth: ${this.depth}`);
-        console.log(`Total nodes searched: ${this.nodes + this.quiesceNodes}`);
+        //console.log(`Total nodes searched: ${this.nodes + this.quiesceNodes}`);
         console.log(`primary: ${this.nodes} quiescent search: ${this.quiesceNodes}`);
 
         printMoves(this.board, this.moveManager, this.scores);
@@ -142,11 +142,6 @@ export default class MiniMax {
         this.moveManager.generateMoves();
         for (const move of this.moveManager.getCurrentMoves()) {
             if (!move.capture) continue;
-
-            // if (this.board.getPiece(move.to) === Piece.whiteKing) {
-            //     printBoard(this.board);
-            //     console.log(`White king captured by ${move}`);
-            // }
 
             this.board.movePiece(move.from, move.to, move.promotion);
             const score = this.quiesceMaxi(depthLeft - 1, alpha, beta);
