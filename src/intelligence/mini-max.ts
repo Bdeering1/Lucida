@@ -143,6 +143,11 @@ export default class MiniMax {
         for (const move of this.moveManager.getCurrentMoves()) {
             if (!move.capture) continue;
 
+            // if (this.board.getPiece(move.to) === Piece.whiteKing) {
+            //     printBoard(this.board);
+            //     console.log(`White king captured by ${move}`);
+            // }
+
             this.board.movePiece(move.from, move.to, move.promotion);
             const score = this.quiesceMaxi(depthLeft - 1, alpha, beta);
             this.board.undoMove();

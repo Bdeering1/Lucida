@@ -1,6 +1,6 @@
+import { Color, InputOption } from '../shared/enums';
 import { getFileFromChar, getRankFromChar, getSquare } from '../shared/utils';
 import { stdin as input, stdout as output } from 'node:process';
-import { Color } from '../shared/enums';
 import Move from '../game/move';
 import { createInterface } from 'readline';
 
@@ -42,18 +42,19 @@ export function getSideInput(): Promise<Color> {
 export function getMoveInput(moves: Move[]) {
     const moveEx = /[a-h][1-9]/g;
 
-    return new Promise<Move>((resolve, reject) => {
-        let userMove = Move.noMove();
+    return new Promise<Move | InputOption>((resolve, reject) => {
+        let userMove: Move | InputOption;
         const rl = createInterface({ input, output });
         rl.setPrompt('> ');
         rl.prompt();
 
         rl.on('line', (line: string) => {
-            userMove = Move.noMove();
+            userMove = InputOption.exit;
             line = line.trim().toLowerCase();
             if (line === 'e' || line === 'exit' || line === 'q' || line === 'quit') { rl.close(); return; }
+            if (line === 'u' || line === 'undo') { userMove = InputOption.undo; rl.close(); return; }
 
-            if (/^\d*$/.test(line)) {
+            if (/^\d+$/.test(line)) {
                 userMove = moves[parseInt(line)];
                 rl.close();
                 return;

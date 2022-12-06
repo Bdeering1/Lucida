@@ -65,6 +65,11 @@ export const enum MoveStatus{
     stalemate = 0
 }
 
+export const enum InputOption {
+    exit,
+    undo
+}
+
 /**
  * Represents a square on the 120 sized board
  * 

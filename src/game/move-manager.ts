@@ -3,6 +3,7 @@ import { Color, MoveStatus, Piece, Square } from "../shared/enums";
 import { MAX_GAME_MOVES, MAX_POSITION_MOVES } from "../shared/constants";
 import { IBoard } from "../board/board-types";
 import Move from "./move";
+import { getColorString, printBoard } from "../cli/printing";
 
 export default class MoveManager {
     private board: IBoard;
@@ -220,6 +221,7 @@ export default class MoveManager {
         this.board.movePiece(move.from, move.to, move.promotion);
         const side = this.board.sideToMove;
         const kingSq = this.board.getSquares(Kings[GetOtherSide[side]]).next().value;
+        if (kingSq === undefined) throw new Error(`${getColorString(GetOtherSide[side])} king not found`);
         if (!this.squareAttacked(kingSq, side)) {
             this.addMove(move, this.board.ply - 1);
         }

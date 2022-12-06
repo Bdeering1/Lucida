@@ -13,14 +13,6 @@ export default class Move {
         this.to = to;
     }
 
-    public static noMove(): Move {
-        return new Move(Square.none, Square.none);
-    }
-
-    public isNoMove(): boolean {
-        return this.from === Square.none;
-    }
-
     public setCapture(): Move {
         this.capture = true;
         return this;
