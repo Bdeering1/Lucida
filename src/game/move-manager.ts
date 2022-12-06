@@ -1,9 +1,9 @@
-import { Bishops, GetOtherSide, GetRank, IsBishopQueen, IsKing, IsKnight, IsQueen, IsRookQueen, Kings, Knights, NonSlidingPieces, PawnCaptureDir, Pawns, PieceColor, PieceDir, Queens, Rooks, SlidingPieces, StartingRank, sqOffboard } from "../shared/utils";
+import { Bishops, GetOtherSide, GetRank, IsBishopQueen, IsKing, IsKnight, IsQueen, IsRookQueen, Kings, Knights, NonSlidingPieces, PawnCaptureDir, Pawns, PieceColor, PieceDir, Queens, Rooks, SlidingPieces, StartingRank, sqOffboard, IsPawn } from "../shared/utils";
 import { Color, MoveStatus, Piece, Square } from "../shared/enums";
 import { MAX_GAME_MOVES, MAX_POSITION_MOVES } from "../shared/constants";
 import { IBoard } from "../board/board-types";
 import Move from "./move";
-import { getColorString, printBoard } from "../cli/printing";
+import { getColorString } from "../cli/printing";
 
 export default class MoveManager {
     private board: IBoard;
@@ -170,20 +170,20 @@ export default class MoveManager {
 
         //Pawns
         for (const captureDir of PawnCaptureDir[defSide]) {
-            const attackingkSq = sq + captureDir;
-            if (PieceColor[this.board.getPiece(attackingkSq)] === atkSide) {
+            const piece = this.board.getPiece(sq + captureDir);
+            if (PieceColor[piece] === atkSide && IsPawn[piece]) {
                 return true;
             }
         }
 
         // Kings and Knights
         for (const dir of PieceDir[Piece.whiteKing]) {
-            if (sqOffboard(sq + dir)) continue;
+            //if (sqOffboard(sq + dir)) continue;
             const piece = this.board.getPiece(sq + dir);
             if (PieceColor[piece] === atkSide && IsKing[piece]) return true;
         }
         for (const dir of PieceDir[Piece.whiteKnight]) {
-            if (sqOffboard(sq + dir)) continue;
+            //if (sqOffboard(sq + dir)) continue;
             const piece = this.board.getPiece(sq + dir);
             if (PieceColor[piece] === atkSide && IsKnight[piece]) return true;
         }
