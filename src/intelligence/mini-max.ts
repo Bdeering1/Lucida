@@ -11,16 +11,27 @@ import { printMoves } from '../cli/printing';
 export default class MiniMax {
     private board: IBoard;
     private moveManager: MoveManager;
-
+    
+    /**
+     * Max of primary search tree
+     */
     private depth: number;
+    /**
+     * Max depth of quiescence search
+     */
     private quiesceDepth: number;
     //private delta = 50;
+    /**
+     * The weight of the mobility score in the evaluation function
+     * @description each 1 weight = 0.5 centipawns per move advantage
+     */
+    private mobilityWeight = 8;
 
     private nodes = 0;
     private quiesceNodes = 0;
     private scores: number[] = [];
 
-    constructor(board: IBoard, moveManager: MoveManager, depth = 4, quiesceDepth = 3) {
+    constructor(board: IBoard, moveManager: MoveManager, depth = 4, quiesceDepth = 10) {
         this.board = board;
         this.moveManager = moveManager;
         this.depth = depth;
@@ -156,6 +167,10 @@ export default class MiniMax {
 
     private evaluate(): number {
         let score = this.board.material[Color.white] - this.board.material[Color.black];
+
+        const whiteMobility = this.moveManager.generateMoves(Color.white, false);
+        const blackMobility = this.moveManager.generateMoves(Color.black, false);
+        score += ~~( (whiteMobility - blackMobility) / 2 ) * this.mobilityWeight;
 
         for (let sq64 = 0; sq64 < INNER_BOARD_SQ_NUM ; sq64++) {
             const sq = GetSq120[sq64];

@@ -20,6 +20,14 @@ export default class MoveManager {
      * Number of moves generated for the current position
      */
     private moveCount = 0;
+    /**
+     * Current side to move for move generation
+     */
+    private sideToMove = Color.none;
+    /**
+     * Whether or not moves should be added to the move list for later use
+     */
+    private addToList = true;
 
     constructor(board: IBoard) {
         this.board = board;
@@ -42,23 +50,24 @@ export default class MoveManager {
     /**
      * Generate all possible moves for the current position
      */
-    public generateMoves(): number | MoveStatus {
+    public generateMoves(sideToMove = this.board.sideToMove, addToList = true): number | MoveStatus {
         this.moveCount = 0;
+        this.addToList = addToList;
+        this.sideToMove = sideToMove;
         const ply = this.board.ply;
-        const side = this.board.sideToMove;
-        const opposingSide = GetOtherSide[side];
+        const opposingSide = GetOtherSide[sideToMove];
 
-        if (side === Color.none) return 0;
+        if (sideToMove === Color.none) return 0;
 
         // Sliding pieces
-        SlidingPieces[side].forEach(piece => {
+        SlidingPieces[sideToMove].forEach(piece => {
             for (const sq of this.board.getSquares(piece)) {
                 for (const dir of PieceDir[piece]) {
                     let totalMove = dir;
                     let sliding = true;
                     while (sliding) {
                         const colorAtSq = PieceColor[this.board.getPiece(sq + totalMove)];
-                        if (sqOffboard(sq + totalMove) || colorAtSq === side) break;
+                        if (sqOffboard(sq + totalMove) || colorAtSq === sideToMove) break;
                         if (colorAtSq === opposingSide) sliding = false;
 
                         this.addIfLegal(sliding
@@ -71,11 +80,11 @@ export default class MoveManager {
         });
 
         // Non sliding pieces
-        NonSlidingPieces[side].forEach(piece => {
+        NonSlidingPieces[sideToMove].forEach(piece => {
             for (const sq of this.board.getSquares(piece)) {
                 for (const dir of PieceDir[piece]) {
                     const targetPiece = this.board.getPiece(sq + dir);
-                    if (sqOffboard(sq + dir) || PieceColor[targetPiece] === side) continue;
+                    if (sqOffboard(sq + dir) || PieceColor[targetPiece] === sideToMove) continue;
                     
                     this.addIfLegal(PieceColor[targetPiece] !== opposingSide
                         ? new Move(sq, sq + dir)
@@ -85,26 +94,26 @@ export default class MoveManager {
         });
 
         // Pawn moves
-        const pawnType = Pawns[side];
+        const pawnType = Pawns[sideToMove];
         for (const sq of this.board.getSquares(pawnType)) {
-            const targetSq = sq + PieceDir[pawnType][side];
+            const targetSq = sq + PieceDir[pawnType][sideToMove];
             if (PieceColor[this.board.getPiece(targetSq)] === Color.none) {
                 if (GetRank[sq] === StartingRank[opposingSide]) {
-                    this.addIfLegal(new Move(sq, targetSq).setPromotion(Queens[side]));
-                    this.addIfLegal(new Move(sq, targetSq).setPromotion(Rooks[side]));
-                    this.addIfLegal(new Move(sq, targetSq).setPromotion(Bishops[side]));
-                    this.addIfLegal(new Move(sq, targetSq).setPromotion(Knights[side]));
+                    this.addIfLegal(new Move(sq, targetSq).setPromotion(Queens[sideToMove]));
+                    this.addIfLegal(new Move(sq, targetSq).setPromotion(Rooks[sideToMove]));
+                    this.addIfLegal(new Move(sq, targetSq).setPromotion(Bishops[sideToMove]));
+                    this.addIfLegal(new Move(sq, targetSq).setPromotion(Knights[sideToMove]));
                 }
                 else {
-                    const doubleMoveSq = sq + PieceDir[pawnType][side] * 2;
-                    if (GetRank[sq] === StartingRank[side] && PieceColor[this.board.getPiece(doubleMoveSq)] === Color.none) {
+                    const doubleMoveSq = sq + PieceDir[pawnType][sideToMove] * 2;
+                    if (GetRank[sq] === StartingRank[sideToMove] && PieceColor[this.board.getPiece(doubleMoveSq)] === Color.none) {
                         this.addIfLegal(new Move(sq, doubleMoveSq));
                     }
                     this.addIfLegal(new Move(sq, targetSq));
                 }
             }
 
-            for (const captureDir of PawnCaptureDir[side]) {
+            for (const captureDir of PawnCaptureDir[sideToMove]) {
                 const captureSq = sq + captureDir;
                 if (captureSq === this.board.enPas) {
                     this.addIfLegal(new Move(sq, captureSq).setCapture());
@@ -112,10 +121,10 @@ export default class MoveManager {
                 }
                 if (PieceColor[this.board.getPiece(captureSq)] === opposingSide) {
                     if (GetRank[sq] === StartingRank[opposingSide]) {
-                        this.addIfLegal(new Move(sq, captureSq).setPromotion(Queens[side]));
-                        this.addIfLegal(new Move(sq, captureSq).setPromotion(Rooks[side]));
-                        this.addIfLegal(new Move(sq, captureSq).setPromotion(Bishops[side]));
-                        this.addIfLegal(new Move(sq, captureSq).setPromotion(Knights[side]));
+                        this.addIfLegal(new Move(sq, captureSq).setPromotion(Queens[sideToMove]));
+                        this.addIfLegal(new Move(sq, captureSq).setPromotion(Rooks[sideToMove]));
+                        this.addIfLegal(new Move(sq, captureSq).setPromotion(Bishops[sideToMove]));
+                        this.addIfLegal(new Move(sq, captureSq).setPromotion(Knights[sideToMove]));
                     }
                     else this.addIfLegal(new Move(sq, captureSq).setCapture());
                 }
@@ -124,7 +133,7 @@ export default class MoveManager {
 
         // Castle moves
         if (this.board.hasCastleMoves()) {
-            if (side === Color.white) {
+            if (sideToMove === Color.white) {
                 if (!this.squareAttacked(Square.e1, Color.black)) {
                     if (this.board.whiteKingCastle
                         && this.board.getPiece(Square.f1) === Piece.none && !this.squareAttacked(Square.f1, Color.black)
@@ -154,7 +163,7 @@ export default class MoveManager {
             }
         }
 
-        const kingAttacked = this.squareAttacked(this.board.getSquares(Kings[side]).next().value, opposingSide);
+        const kingAttacked = this.squareAttacked(this.board.getSquares(Kings[sideToMove]).next().value, opposingSide);
         if (this.moveCount === 0 && kingAttacked) return MoveStatus.checkmate;
         
         this.numMoves[ply] = this.moveCount;
@@ -220,18 +229,18 @@ export default class MoveManager {
      * Adds a move to the move list if a given move does not allow the king to be taken on the next move
      */
     private addIfLegal(move: Move): void {
+        if (IsKing[this.board.getPiece(move.to)]) return;
         this.board.movePiece(move.from, move.to, move.promotion);
-        const side = this.board.sideToMove;
-        const kingSq = this.board.getSquares(Kings[GetOtherSide[side]]).next().value;
-        if (kingSq === undefined) throw new Error(`${getColorString(GetOtherSide[side])} king not found`);
-        if (!this.squareAttacked(kingSq, side)) {
+        const kingSq = this.board.getSquares(Kings[GetOtherSide[this.sideToMove]]).next().value;
+        if (kingSq === undefined) throw new Error(`${getColorString(GetOtherSide[this.sideToMove])} king not found`);
+        if (!this.squareAttacked(kingSq, this.sideToMove)) {
             this.addMove(move, this.board.ply - 1);
         }
         this.board.undoMove();
     }
 
     private addMove(move: Move, ply = this.board.ply): void {
-        this.insertMove(move, ply);
+        if (this.addToList) this.insertMove(move, ply);
         this.moveCount++;
     }
 
