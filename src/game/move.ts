@@ -22,6 +22,7 @@ export default class Move {
         this.promotion = promotion;
         return this;
     }
+    
     public toString(): string {
         return `${getSquareString(this.from)}${getSquareString(this.to)}${this.promotion ? PIECE_CHAR[this.promotion] : ''}`;
     }
