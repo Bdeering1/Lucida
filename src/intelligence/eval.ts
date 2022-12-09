@@ -20,7 +20,7 @@ export default class Eval {
      * The weight of the mobility score in the evaluation function
      * @description each 1 weight = 0.5 centipawns per move advantage
      */
-    static mobilityWeight = 8;
+    static mobilityWeight = 4;
 
     /**
      * The weight of each piece type when determining game phase
@@ -37,13 +37,13 @@ export default class Eval {
 
     static evaluate(board: IBoard, moveManager: MoveManager): number {
         let score = board.material[Color.white] - board.material[Color.black];
-        score += this.getMobilityScore(moveManager);
+        score += this.getMobilityScore(moveManager) * this.mobilityWeight;
 
         const phase = this.getGamePhase(board);
         const middlegame = this.getPSTScore(board, PieceSquareTables.middlegame);
         const endgame = this.getPSTScore(board, PieceSquareTables.endgame);
 
-        const taperedScore = (middlegame * (MAX_PHASE - phase) + endgame * phase) / MAX_PHASE;
+        const taperedScore = ~~( (middlegame * (MAX_PHASE - phase) + endgame * phase) / MAX_PHASE );
         score += taperedScore;
 
         return score;
@@ -53,7 +53,7 @@ export default class Eval {
         const whiteMobility = moveManager.generateMoves(Color.white, false);
         const blackMobility = moveManager.generateMoves(Color.black, false);
 
-        return ~~( (whiteMobility - blackMobility) / 2 ) * this.mobilityWeight;
+        return ~~( (whiteMobility - blackMobility) / 2 );
     }
 
     static getPSTScore(board: IBoard, table: number[][]): number {

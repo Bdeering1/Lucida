@@ -30,7 +30,7 @@ const MGPawnTable64 = [
  * 60 for being on the 7th rank
  * 30 for being on the 6th rank
  * 10 for being on the 5th rank
- * 5 for being on the 2nd rank
+ * 2 for being on the 2nd rank
  */
 const EGPawnTable64 = [
      0,   0,   0,   0,   0,   0,   0,   0,
@@ -39,7 +39,7 @@ const EGPawnTable64 = [
     10,  10,  10,  10,  10,  10,  10,  10,
      0,   0,   0,   0,   0,   0,   0,   0,
      0,   0,   0,   0,   0,   0,   0,   0,
-     5,   5,   5,   5,   5,   5,   5,   5,
+     2,   2,   2,   2,   2,   2,   2,   2,
      0,   0,   0,   0,   0,   0,   0,   0,
 ];
 

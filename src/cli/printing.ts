@@ -2,8 +2,10 @@
 import { BOARD_SQ_NUM, FILE_CHAR, INNER_BOARD_SQ_NUM, PIECE_CHAR } from "../shared/constants";
 import { Color, File, Square } from "../shared/enums";
 import { GetFile, GetRank, GetSq120, generateHash32 } from "../shared/utils";
+import Eval from "../intelligence/eval";
 import { IBoard } from "../board/board-types";
 import MoveManager from "../game/move-manager";
+import PieceSquareTables from "../intelligence/pst";
 
 export function printBoard(board: IBoard) {
     console.log("\n  a b c d e f g h");
@@ -43,13 +45,15 @@ export function printBoard120(board: IBoard) {
     }
 }
 
-export function printBoardVars(board: IBoard) {
+export function printBoardVars(board: IBoard, verbose = false) {
     console.log(`Side to move: ${getColorString(board.sideToMove)}`);
     console.log(`Ply: ${board.ply + 1} (Move ${getMoveNumber(board.ply)})`);
-    console.log(`En pas square: ${getSquareString(board.enPas)}`); // convert 
-    console.log(`Castle permissions: ${getCastleString(board)}`);
-    console.log(`Fifty move counter: ${board.fiftyMoveCounter}`);
-    console.log(`Material: ${board.material}\n`);
+    if (verbose) {
+        console.log(`En pas square: ${getSquareString(board.enPas)}`);
+        console.log(`Castle permissions: ${getCastleString(board)}`);
+        console.log(`Fifty move counter: ${board.fiftyMoveCounter}`);
+        console.log(`Material: ${board.material}\n`);
+    }
 }
 
 export function printMoves(board: IBoard, moveManager: MoveManager, moveScores?: number[]) {
@@ -59,6 +63,14 @@ export function printMoves(board: IBoard, moveManager: MoveManager, moveScores?:
         output += `${move}${moveScores ? `: ${moveScores[idx]}` : ""}`;
     });
     console.log(output);
+}
+
+export function printEval(board: IBoard, moveManager: MoveManager, verbose = false) {
+    console.log(`Static eval: ${Eval.evaluate(board, moveManager)}`);
+    if (verbose) {
+        console.log(`Mobility score: ${Eval.getMobilityScore(moveManager)} Weight: ${Eval.mobilityWeight}`);
+        console.log(`PST scores: MG: ${Eval.getPSTScore(board, PieceSquareTables.middlegame)} EG: ${Eval.getPSTScore(board, PieceSquareTables.endgame)} Phase: ${Eval.getGamePhase(board)}`);
+    }
 }
 
 export function printGeneratedHashes() {

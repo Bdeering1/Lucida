@@ -26,7 +26,7 @@ export default class MiniMax {
     private quiesceNodes = 0;
     private scores: number[] = [];
 
-    constructor(board: IBoard, moveManager: MoveManager, depth = 4, quiesceDepth = 10) {
+    constructor(board: IBoard, moveManager: MoveManager, depth = 6, quiesceDepth = 3) {
         this.board = board;
         this.moveManager = moveManager;
         this.depth = depth;
@@ -36,7 +36,7 @@ export default class MiniMax {
         Eval.init();
     }
 
-    public getBestMove(): Move {
+    public getBestMove(): [Move, number] {
         this.scores = [];
         this.nodes = 0;
         this.quiesceNodes = 0;
@@ -46,12 +46,11 @@ export default class MiniMax {
         if (this.board.sideToMove === Color.white)        
             [best, moves] = this.maxi(this.depth, -Infinity, Infinity, new Array<Move>());
         else
-            [best, moves] =this.mini(this.depth, -Infinity, Infinity, new Array<Move>());
+            [best, moves] = this.mini(this.depth, -Infinity, Infinity, new Array<Move>());
 
         console.log(`Depth: ${this.depth}`);
-        //console.log(`Total nodes searched: ${this.nodes + this.quiesceNodes}`);
         console.log(`primary: ${this.nodes} quiescent search: ${this.quiesceNodes}`);
-
+        
         printMoves(this.board, this.moveManager, this.scores);
 
         moves.forEach((move, idx) => {
@@ -60,7 +59,7 @@ export default class MiniMax {
 
         let idx = 0;
         for (const move of this.moveManager.getCurrentMoves()) {
-            if (this.scores[idx++] === best) return move;
+            if (this.scores[idx++] === best) return [move, best];
         }
         throw new Error(`No move found matching best score of ${best}`);
     }
