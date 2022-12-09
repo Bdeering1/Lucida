@@ -1,7 +1,7 @@
 import { Color, Piece } from '../shared/enums';
-import { GetSq120, PieceColor, PieceVal, SideMultiplier } from '../shared/utils';
+import { PieceVal, SideMultiplier } from '../shared/utils';
+import Evaluation from './evaluation';
 import { IBoard } from '../board/board-types';
-import { INNER_BOARD_SQ_NUM } from '../shared/constants';
 import Move from '../game/move';
 import MoveManager from '../game/move-manager';
 import PieceSquareTables from './pst';
@@ -21,11 +21,6 @@ export default class MiniMax {
      */
     private quiesceDepth: number;
     //private delta = 50;
-    /**
-     * The weight of the mobility score in the evaluation function
-     * @description each 1 weight = 0.5 centipawns per move advantage
-     */
-    private mobilityWeight = 8;
 
     private nodes = 0;
     private quiesceNodes = 0;
@@ -38,6 +33,7 @@ export default class MiniMax {
         this.quiesceDepth = quiesceDepth;
 
         PieceSquareTables.init();
+        Evaluation.init();
     }
 
     public getBestMove(): Move {
@@ -123,7 +119,7 @@ export default class MiniMax {
         this.quiesceNodes++;
         if (depthLeft === 0) return beta;
 
-        const standPat = this.evaluate();
+        const standPat = Evaluation.evaluate(this.board, this.moveManager);
         if (standPat >= beta) return beta;
         if (standPat > alpha) alpha = standPat;
 
@@ -146,7 +142,7 @@ export default class MiniMax {
         this.quiesceNodes++;
         if (depthLeft === 0) return alpha;
 
-        const standPat = this.evaluate();
+        const standPat = Evaluation.evaluate(this.board, this.moveManager);
         if (standPat <= alpha) return alpha;
         if (standPat < beta) beta = standPat;
 
@@ -163,24 +159,5 @@ export default class MiniMax {
         }
 
         return beta;
-    }
-
-    private evaluate(): number {
-        let score = this.board.material[Color.white] - this.board.material[Color.black];
-
-        const whiteMobility = this.moveManager.generateMoves(Color.white, false);
-        const blackMobility = this.moveManager.generateMoves(Color.black, false);
-        score += ~~( (whiteMobility - blackMobility) / 2 ) * this.mobilityWeight;
-
-        for (let sq64 = 0; sq64 < INNER_BOARD_SQ_NUM ; sq64++) {
-            const sq = GetSq120[sq64];
-            const piece = this.board.getPiece(sq);
-            if (piece === Piece.none) continue;
-
-            const side = PieceColor[piece];
-            score += PieceSquareTables.map[piece][sq] * SideMultiplier[side];
-        }
-
-        return score;
     }
 }
