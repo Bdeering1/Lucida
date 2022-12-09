@@ -186,6 +186,9 @@ export default class Board implements IBoard {
             yield this.pieceSquares[piece][i];
         }
     }
+    public getNumPieces(piece: Piece): number {
+        return this.pieceQuantities[piece];
+    }
 
     public updatePositionKey(): void {
         if (this.sideToMove === Color.white) this.hashSide();

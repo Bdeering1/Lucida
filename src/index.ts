@@ -8,7 +8,6 @@ import MoveManager from "./game/move-manager";
 import { START_FEN } from "./shared/constants";
 import { getGameStatus } from "./game/game-state";
 import { parseFen } from "./board/board-setup";
-import Evaluation from "./intelligence/evaluation";
 
 
 const board = new Board();
@@ -22,7 +21,6 @@ const playerColor = await getSideInput();
 while(true) {
     printBoard(board);
     printBoardVars(board);
-    console.log(`Game phase: ${Evaluation.getGamePhase(board)}`);
     const status = getGameStatus(board, moveManager.generateMoves());
     if (status.complete) {
         console.log(status.desc);

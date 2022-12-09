@@ -82,6 +82,10 @@ export interface IBoard {
      */
     getSquares(piece: Piece): IterableIterator<Square>;
     /**
+     * Returns the number of pieces remaining for a given piece type
+     */
+    getNumPieces(piece: Piece): number;
+    /**
      * Update position key for side to move, en passent, and castling
      */
     updatePositionKey(): void;

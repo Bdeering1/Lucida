@@ -16,7 +16,7 @@ import { Rank } from "../shared/enums";
  * -5 for being on the 2nd rank
  * -15 for being on an outside file
  */
-const PawnTable64 = [
+const MGPawnTable64 = [
       0,   0,   0,   0,   0,   0,   0,   0,
      20,  30,  32,  35,  35,  32,  30,  20,
      -5,  10,  12,  15,  15,  12,  10,  -5,
@@ -34,7 +34,7 @@ const PawnTable64 = [
  * -5 for being 1 square from an edge
  * -10 for being on an edge
  */
-const KnightTable64 = [
+const MGKnightTable64 = [
     -20, -15, -10, -10, -10, -10, -15, -20,
     -10,  -5,   0,   0,   0,   0,  -5, -10,
       0,   5,  15,  15,  15,  15,   5,   0,
@@ -51,7 +51,7 @@ const KnightTable64 = [
  * 2 for being on a 6 long diagonal
  * -5 for being on an edge
  */
-const BishopTable64 = [
+const MGBishopTable64 = [
       0,   0,  -3,  -5,  -5,  -3,   0,   0,
       0,  10,   5,   2,   2,   5,  10,   0,
      -3,   5,  10,   7,   7,  10,   5,  -3,
@@ -69,7 +69,7 @@ const BishopTable64 = [
  * 10 for being on d1 or e1
  * 5 for being on c1, d2, e2, or f1
  */
-const RookTable64 = [
+const MGRookTable64 = [
      5,  5,  5, 10, 10,  5,  5,  5,
     15, 15, 15, 20, 20, 15, 15, 15,
      0,  0,  0,  5,  5,  0,  0,  0,
@@ -86,7 +86,7 @@ const RookTable64 = [
  * -2 for being on files 1 or 8
  * -5 for being on rank 1
  */
-const QueenTable64 = [
+const MGQueenTable64 = [
       0,   2,   2,   2,  12,  12,  12,  10,
       0,   2,   2,   2,  12,  12,  12,  10,
       0,   2,   2,   2,  12,  12,  12,  10,
@@ -101,7 +101,7 @@ const QueenTable64 = [
  * -2 for being on file d or e
  * -2 for being on ranks 4 or 5
  */
-const KingTable64 = [
+const MGKingTable64 = [
       0,   0,   0,  -2,  -2,   0,   0,   0,
       0,   0,   0,  -2,  -2,   0,   0,   0,
       0,   0,   0,  -2,  -2,   0,   0,   0,
@@ -113,51 +113,40 @@ const KingTable64 = [
 ];
 
 export default class PieceSquareTables {
-    static whitePawn: number[];
-    static whiteKnight: number[];
-    static whiteBishop: number[];
-    static whiteRook: number[];
-    static whiteQueen: number[];
-    static whiteKing: number[];
-
-    static blackPawn: number[];
-    static blackKnight: number[];
-    static blackBishop: number[];
-    static blackRook: number[];
-    static blackQueen: number[];
-    static blackKing: number[];
-
-    static map: number[][];
+    static middleGame: number[][];
+    static endGame: number[][];
 
     static init() {
-        this.whitePawn = this.createTable120White(PawnTable64);
-        this.whiteKnight = this.createTable120White(KnightTable64);
-        this.whiteBishop = this.createTable120White(BishopTable64);
-        this.whiteRook = this.createTable120White(RookTable64);
-        this.whiteQueen = this.createTable120White(QueenTable64);
-        this.whiteKing = this.createTable120White(KingTable64);
-
-        this.blackPawn = this.createTable120Black(PawnTable64);
-        this.blackKnight = this.createTable120Black(KnightTable64);
-        this.blackBishop = this.createTable120Black(BishopTable64);
-        this.blackRook = this.createTable120Black(RookTable64);
-        this.blackQueen = this.createTable120Black(QueenTable64);
-        this.blackKing = this.createTable120Black(KingTable64);
-
-        this.map = [
+        this.middleGame = [
             [],
-            PieceSquareTables.whitePawn,
-            PieceSquareTables.whiteKnight,
-            PieceSquareTables.whiteBishop,
-            PieceSquareTables.whiteRook,
-            PieceSquareTables.whiteQueen,
-            PieceSquareTables.whiteKing,
-            PieceSquareTables.blackPawn,
-            PieceSquareTables.blackKnight,
-            PieceSquareTables.blackBishop,
-            PieceSquareTables.blackRook,
-            PieceSquareTables.blackQueen,
-            PieceSquareTables.blackKing,
+            this.createTable120White(MGPawnTable64),
+            this.createTable120White(MGKnightTable64),
+            this.createTable120White(MGBishopTable64),
+            this.createTable120White(MGRookTable64),
+            this.createTable120White(MGQueenTable64),
+            this.createTable120White(MGKingTable64),
+            this.createTable120Black(MGPawnTable64),
+            this.createTable120Black(MGKnightTable64),
+            this.createTable120Black(MGBishopTable64),
+            this.createTable120Black(MGRookTable64),
+            this.createTable120Black(MGQueenTable64),
+            this.createTable120Black(MGKingTable64),
+        ];
+
+        this.endGame = [
+            [],
+            this.createTable120White(MGPawnTable64),
+            this.createTable120White(MGKnightTable64),
+            this.createTable120White(MGBishopTable64),
+            this.createTable120White(MGRookTable64),
+            this.createTable120White(MGQueenTable64),
+            this.createTable120White(MGKingTable64),
+            this.createTable120Black(MGPawnTable64),
+            this.createTable120Black(MGKnightTable64),
+            this.createTable120Black(MGBishopTable64),
+            this.createTable120Black(MGRookTable64),
+            this.createTable120Black(MGQueenTable64),
+            this.createTable120Black(MGKingTable64),
         ];
     }
 
