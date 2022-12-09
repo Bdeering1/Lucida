@@ -1,6 +1,6 @@
 import { Color, Piece } from '../shared/enums';
 import { PieceVal, SideMultiplier } from '../shared/utils';
-import Evaluation from './evaluation';
+import Eval from './eval';
 import { IBoard } from '../board/board-types';
 import Move from '../game/move';
 import MoveManager from '../game/move-manager';
@@ -33,7 +33,7 @@ export default class MiniMax {
         this.quiesceDepth = quiesceDepth;
 
         PieceSquareTables.init();
-        Evaluation.init();
+        Eval.init();
     }
 
     public getBestMove(): Move {
@@ -119,7 +119,7 @@ export default class MiniMax {
         this.quiesceNodes++;
         if (depthLeft === 0) return beta;
 
-        const standPat = Evaluation.evaluate(this.board, this.moveManager);
+        const standPat = Eval.evaluate(this.board, this.moveManager);
         if (standPat >= beta) return beta;
         if (standPat > alpha) alpha = standPat;
 
@@ -142,7 +142,7 @@ export default class MiniMax {
         this.quiesceNodes++;
         if (depthLeft === 0) return alpha;
 
-        const standPat = Evaluation.evaluate(this.board, this.moveManager);
+        const standPat = Eval.evaluate(this.board, this.moveManager);
         if (standPat <= alpha) return alpha;
         if (standPat < beta) beta = standPat;
 

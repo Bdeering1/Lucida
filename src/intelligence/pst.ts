@@ -26,6 +26,22 @@ const MGPawnTable64 = [
     -20,  -5,  -5, -15, -15,  15,  15, -20,
       0,   0,   0,   0,   0,   0,   0,   0,
 ];
+/**
+ * 60 for being on the 7th rank
+ * 30 for being on the 6th rank
+ * 10 for being on the 5th rank
+ * 5 for being on the 2nd rank
+ */
+const EGPawnTable64 = [
+     0,   0,   0,   0,   0,   0,   0,   0,
+    60,  60,  60,  60,  60,  60,  60,  60,
+    30,  30,  30,  30,  30,  30,  30,  30,
+    10,  10,  10,  10,  10,  10,  10,  10,
+     0,   0,   0,   0,   0,   0,   0,   0,
+     0,   0,   0,   0,   0,   0,   0,   0,
+     5,   5,   5,   5,   5,   5,   5,   5,
+     0,   0,   0,   0,   0,   0,   0,   0,
+];
 
 /**
  * 10 for being on the 6th rank
@@ -44,6 +60,21 @@ const MGKnightTable64 = [
     -15, -10,  -5,  -5,  -5,  -5, -10, -15,
     -20, -15, -10, -10, -10, -10, -15, -20,
 ];
+/**
+ * 5 for being in the center 16 squares
+ * -2 for being 1 square from an edge
+ * -5 for being on an edge
+ */
+const EGKnightTable64 = [
+    -10,  -7,  -5,  -5,  -5,  -5,  -7, -10,
+     -7,  -2,  -2,  -2,  -2,  -2,  -2,  -7,
+     -5,  -2,   5,   5,   5,   5,  -2,  -5,
+     -5,  -2,   5,   5,   5,   5,  -2,  -5,
+     -5,  -2,   5,   5,   5,   5,  -2,  -5,
+     -5,  -2,   5,   5,   5,   5,  -2,  -5,
+     -7,  -2,  -2,  -2,  -2,  -2,  -2,  -7,
+    -10,  -7,  -5,  -5,  -5,  -5,  -7, -10,
+];
 
 /**
  * 10 for being on an 8 long diagonal
@@ -61,6 +92,19 @@ const MGBishopTable64 = [
       0,  10,   5,   2,   2,   5,  10,   0,
       0,   0,  -3,  -5,  -5,  -3,   0,   0,
 ];
+/**
+ * 
+ */
+const EGBishopTable64 = [
+    0,   0,  -3,  -5,  -5,  -3,   0,   0,
+    0,  10,   5,   2,   2,   5,  10,   0,
+   -3,   5,  10,   7,   7,  10,   5,  -3,
+   -5,   2,   7,  15,  15,   7,   2,  -5,
+   -5,   2,   7,  15,  15,   7,   2,  -5,
+   -3,   5,  10,   7,   7,  10,   5,  -3,
+    0,  10,   5,   2,   2,   5,  10,   0,
+    0,   0,  -3,  -5,  -5,  -3,   0,   0,
+];
 
 /**
  * 15 for being on the 7th rank
@@ -70,54 +114,97 @@ const MGBishopTable64 = [
  * 5 for being on c1, d2, e2, or f1
  */
 const MGRookTable64 = [
-     5,  5,  5, 10, 10,  5,  5,  5,
-    15, 15, 15, 20, 20, 15, 15, 15,
-     0,  0,  0,  5,  5,  0,  0,  0,
-     0,  0,  0,  5,  5,  0,  0,  0,
-     0,  0,  0,  5,  5,  0,  0,  0,
-     0,  0,  0,  5,  5,  0,  0,  0,
-     0,  0,  0, 10, 10,  0,  0,  0,
-     0,  0,  5, 15, 15,  5,  0,  0,
+      5,   5,   5,  10,  10,   5,   5,   5,
+     15,  15,  15,  20,  20,  15,  15,  15,
+      0,   0,   0,   5,   5,   0,   0,   0,
+      0,   0,   0,   5,   5,   0,   0,   0,
+      0,   0,   0,   5,   5,   0,   0,   0,
+      0,   0,   0,   5,   5,   0,   0,   0,
+      0,   0,   0,  10,  10,   0,   0,   0,
+      0,   0,   5,  15,  15,   5,   0,   0,
+];
+/**
+ * 5 for being on the 7th or 8th rank
+ * -2 for being in a corner
+ */
+const EGRookTable64 = [
+     3,   5,   5,   5,   5,   5,   5,   3,
+     5,   5,   5,   5,   5,   5,   5,   5,
+     0,   0,   0,   0,   0,   0,   0,   0,
+     0,   0,   0,   0,   0,   0,   0,   0,
+     0,   0,   0,   0,   0,   0,   0,   0,
+     0,   0,   0,   0,   0,   0,   0,   0,
+     0,   0,   0,   0,   0,   0,   0,   0,
+    -2,   0,   0,   0,   0,   0,   0,  -2,
 ];
 
 /**
  * 10 for being on ranks 6, 7, or 8 and on the right half of the board
  * 2 for being on ranks 6, 7, or 8
- * -2 for being on files 1 or 8
  * -5 for being on rank 1
  */
 const MGQueenTable64 = [
-      0,   2,   2,   2,  12,  12,  12,  10,
-      0,   2,   2,   2,  12,  12,  12,  10,
-      0,   2,   2,   2,  12,  12,  12,  10,
-     -2,   0,   0,   0,   0,   0,   0,  -2,
-     -2,   0,   0,   0,   0,   0,   0,  -2,
-     -2,   0,   0,   0,   0,   0,   0,  -2,
-     -2,   0,   0,   0,   0,   0,   0,  -2,
-     -7,  -5,  -5,  -5,  -5,  -5,  -5,  -5,
+      2,   2,   2,   2,  12,  12,  12,  12,
+      2,   2,   2,   2,  12,  12,  12,  12,
+      2,   2,   2,   2,  12,  12,  12,  12,
+      0,   0,   0,   0,   0,   0,   0,   0,
+      0,   0,   0,   0,   0,   0,   0,   0,
+      0,   0,   0,   0,   0,   0,   0,   0,
+      0,   0,   0,   0,   0,   0,   0,   0,
+     -5,  -5,  -5,  -5,  -5,  -5,  -5,  -5,
+];
+/**
+ * 5 for being on the upper half of the board
+ * -2 for being on an edge
+ */
+const EGQueenTable64 = [
+     1,   3,   3,   3,   3,   3,   3,   1,
+     3,   5,   5,   5,   5,   5,   5,   3,
+     3,   5,   5,   5,   5,   5,   5,   3,
+     3,   5,   5,   5,   5,   5,   5,   3,
+    -2,   0,   0,   0,   0,   0,   0,  -2,
+    -2,   0,   0,   0,   0,   0,   0,  -2,
+    -2,   0,   0,   0,   0,   0,   0,  -2,
+    -4,  -2,  -2,  -2,  -2,  -2,  -2,  -4,
 ];
 
 /**
- * -2 for being on file d or e
- * -2 for being on ranks 4 or 5
+ * 10 for being on c1 or g1
+ * -5 for being on files c or f, and on ranks 3 or 6
+ * -10 for being on files d or e, and on ranks 4 or 5
  */
 const MGKingTable64 = [
-      0,   0,   0,  -2,  -2,   0,   0,   0,
-      0,   0,   0,  -2,  -2,   0,   0,   0,
-      0,   0,   0,  -2,  -2,   0,   0,   0,
-     -2,  -2,  -2,  -4,  -4,  -2,  -2,  -2,
-     -2,  -2,  -2,  -4,  -4,  -2,  -2,  -2,
-      0,   0,   0,  -2,  -2,   0,   0,   0,
-      0,   0,   0,  -2,  -2,   0,   0,   0,
-      0,   0,   0,  -2,  -2,   0,   0,   0,
+      0,   0,  -5, -10, -10,  -5,   0,   0,
+      0,   0,  -5, -10, -10,  -5,   0,   0,
+     -5,  -5, -10, -15, -15, -10,  -5,  -5,
+    -10, -10, -10, -20, -20, -10, -10, -10,
+    -10, -10, -10, -20, -20, -10, -10, -10,
+     -5,  -5, -10, -15, -15, -10,  -5,  -5,
+      0,   0,  -5, -10, -10,  -5,   0,   0,
+      0,   0,   5, -10, -10,  -5,  10,   0,
+];
+/**
+ * 15 for being on files d or e, and on ranks 4 or 5
+ * 10 for being on files c or f, and on ranks 3 or 6
+ * -10 for being on an edge
+ */
+const EGKingTable64 = [
+    -20, -10,   0,   5,   5,   0, -10, -20,
+    -10,   0,  10,  15,  15,  10,   0, -10,
+      0,  10,  20,  25,  25,  20,  10,   0,
+      5,  15,  25,  30,  30,  25,  15,   5,
+      5,  15,  25,  30,  30,  25,  15,   5,
+      0,  10,  20,  25,  25,  20,  10,   0,
+    -10,   0,  10,  15,  15,  10,   0, -10,
+    -20, -10,   0,   5,   5,   0, -10, -20,
 ];
 
 export default class PieceSquareTables {
-    static middleGame: number[][];
-    static endGame: number[][];
+    static middlegame: number[][];
+    static endgame: number[][];
 
     static init() {
-        this.middleGame = [
+        this.middlegame = [
             [],
             this.createTable120White(MGPawnTable64),
             this.createTable120White(MGKnightTable64),
@@ -133,20 +220,20 @@ export default class PieceSquareTables {
             this.createTable120Black(MGKingTable64),
         ];
 
-        this.endGame = [
+        this.endgame = [
             [],
-            this.createTable120White(MGPawnTable64),
-            this.createTable120White(MGKnightTable64),
-            this.createTable120White(MGBishopTable64),
-            this.createTable120White(MGRookTable64),
-            this.createTable120White(MGQueenTable64),
-            this.createTable120White(MGKingTable64),
-            this.createTable120Black(MGPawnTable64),
-            this.createTable120Black(MGKnightTable64),
-            this.createTable120Black(MGBishopTable64),
-            this.createTable120Black(MGRookTable64),
-            this.createTable120Black(MGQueenTable64),
-            this.createTable120Black(MGKingTable64),
+            this.createTable120White(EGPawnTable64),
+            this.createTable120White(EGKnightTable64),
+            this.createTable120White(EGBishopTable64),
+            this.createTable120White(EGRookTable64),
+            this.createTable120White(EGQueenTable64),
+            this.createTable120White(EGKingTable64),
+            this.createTable120Black(EGPawnTable64),
+            this.createTable120Black(EGKnightTable64),
+            this.createTable120Black(EGBishopTable64),
+            this.createTable120Black(EGRookTable64),
+            this.createTable120Black(EGQueenTable64),
+            this.createTable120Black(EGKingTable64),
         ];
     }
 

@@ -34,6 +34,7 @@ export interface IBoard {
     repeats: number[];
 
 
+    get quantities(): number[];
     get whiteKingCastle(): boolean;
     get whiteQueenCastle(): boolean;
     get blackKingCastle(): boolean;
@@ -81,10 +82,6 @@ export interface IBoard {
      * @todo implement as iterator (is currently a generator)
      */
     getSquares(piece: Piece): IterableIterator<Square>;
-    /**
-     * Returns the number of pieces remaining for a given piece type
-     */
-    getNumPieces(piece: Piece): number;
     /**
      * Update position key for side to move, en passent, and castling
      */

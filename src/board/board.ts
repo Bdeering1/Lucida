@@ -74,6 +74,7 @@ export default class Board implements IBoard {
         }
     }
 
+    get quantities(): number[] { return this.pieceQuantities; }
     get whiteKingCastle() { return (this.castlePermissions & CastleBit.whiteKing) !== 0; }
     get whiteQueenCastle() { return (this.castlePermissions & CastleBit.whiteQueen) !== 0; }
     get blackKingCastle() { return (this.castlePermissions & CastleBit.blackKing) !== 0; }
@@ -185,9 +186,6 @@ export default class Board implements IBoard {
             if (this.pieceSquares[piece][i] === Square.none) continue;
             yield this.pieceSquares[piece][i];
         }
-    }
-    public getNumPieces(piece: Piece): number {
-        return this.pieceQuantities[piece];
     }
 
     public updatePositionKey(): void {
