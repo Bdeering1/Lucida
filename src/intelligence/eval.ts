@@ -12,7 +12,7 @@ const KNIGHT_PHASE = 1;
 const BISHOP_PHASE = 1;
 const ROOK_PHASE = 2;
 const QUEEN_PHASE = 4;
-const MAX_PHASE = 256;
+export const MAX_PHASE = 256;
 
 export default class Eval {
 
@@ -20,7 +20,7 @@ export default class Eval {
      * The weight of the mobility score in the evaluation function
      * @description each 1 weight = 0.5 centipawns per move advantage
      */
-    static mobilityWeight = 4;
+    static mobilityWeight = 3;
 
     /**
      * The weight of each piece type when determining game phase

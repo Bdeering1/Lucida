@@ -70,7 +70,6 @@ export default class MoveManager {
                         if (sqOffboard(sq + totalMove) || colorAtSq === sideToMove) break;
                         if (colorAtSq === opposingSide) sliding = false;
                         
-                        //console.log(`Adding ${PIECE_CHAR[piece]} move from ${getSquareString(sq)} to ${getSquareString(sq + totalMove)} colorAtSq: ${getColorString(colorAtSq)}`);
                         this.addIfLegal(sliding
                             ? new Move(sq, sq + totalMove)
                             : new Move(sq, sq + totalMove).setCapture());
@@ -167,7 +166,7 @@ export default class MoveManager {
         const kingAttacked = this.squareAttacked(this.board.getSquares(Kings[sideToMove]).next().value, opposingSide);
         if (this.moveCount === 0 && kingAttacked) return MoveStatus.checkmate;
         
-        this.numMoves[ply] = this.moveCount;
+        if (addToList) this.numMoves[ply] = this.moveCount;
         return this.moveCount;
     }
 
@@ -242,7 +241,6 @@ export default class MoveManager {
 
     private addMove(move: Move, ply = this.board.ply): void {
         if (this.addToList) this.insertMove(move, ply);
-        //console.log(`Adding ${move}`);
         this.moveCount++;
     }
 

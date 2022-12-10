@@ -1,6 +1,6 @@
 /* eslint-disable no-magic-numbers */
 
-import { CAPTURE_TEST_FEN, CASTLE_TEST_FEN, EN_PAS_TEST_FEN } from "./test-constants";
+import { CAPTURE_FEN, CASTLE_FEN, EN_PAS_FEN } from "./test-constants";
 import { Color, Piece, Square } from "../shared/enums";
 import { PieceColor, PieceVal } from "../shared/utils";
 import Board from "../board/board";
@@ -80,7 +80,7 @@ describe('board', () => {
     });
 
     it('can castle kingside', () => {
-        parseFen(board, CASTLE_TEST_FEN);
+        parseFen(board, CASTLE_FEN);
         board.movePiece(Square.e1, Square.g1);
         board.movePiece(Square.e8, Square.g8);
         expect(board.getPiece(Square.g1)).toBe(Piece.whiteKing);
@@ -94,7 +94,7 @@ describe('board', () => {
     });
 
     it('can castle queenside', () => {
-        parseFen(board, CASTLE_TEST_FEN);
+        parseFen(board, CASTLE_FEN);
         board.movePiece(Square.e1, Square.c1);
         board.movePiece(Square.e8, Square.c8);
         expect(board.getPiece(Square.c1)).toBe(Piece.whiteKing);
@@ -113,7 +113,7 @@ describe('board', () => {
         [Square.a1, Square.a2, 'Kkq'],
         [Square.h8, Square.h7, 'KQq'],
     ])('updates castling permissions if a king or rook move for the first time', (from, to, permissions) => {
-        parseFen(board, CASTLE_TEST_FEN);
+        parseFen(board, CASTLE_FEN);
         board.movePiece(from, to);
         expect(getCastleString(board)).toBe(permissions);
     });
@@ -122,7 +122,7 @@ describe('board', () => {
         [Square.e1, Square.e2],
         [Square.c5, Square.c6],
     ])('updates en passent permissions if a player does not take en passent', (from, to) => {
-        parseFen(board, EN_PAS_TEST_FEN);
+        parseFen(board, EN_PAS_FEN);
         board.movePiece(from, to);
         expect(board.enPas).toBe(Square.none);
     });
@@ -136,7 +136,7 @@ describe('board', () => {
 
     it('updates the position key correctly when castle permissions change', () => {
         //jest.spyOn(board, 'hashCastle');
-        parseFen(board, CASTLE_TEST_FEN);
+        parseFen(board, CASTLE_FEN);
         const startingKey = board.posKey;
         board.movePiece(Square.e1, Square.e2);
         //expect(board.hashCastle).toBeCalled();
@@ -147,7 +147,7 @@ describe('board', () => {
         [Square.e1, Square.e2],
         [Square.c5, Square.c6],
     ])('updates the position key correctly if a player does not take en passent', () => {
-        parseFen(board, EN_PAS_TEST_FEN);
+        parseFen(board, EN_PAS_FEN);
         //jest.spyOn(board, 'hashEnPas');
         const startingKey = board.posKey;
         board.movePiece(Square.c5, Square.c6);
@@ -218,7 +218,7 @@ describe('board', () => {
     });
 
     it('can undo and redo moves with no side effects', () => {
-        parseFen(board, CAPTURE_TEST_FEN);
+        parseFen(board, CAPTURE_FEN);
         const copy = board.copy(true);
         board.movePiece(Square.e4, Square.d5);
         board.undoMove();

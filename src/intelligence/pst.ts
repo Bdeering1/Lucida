@@ -93,7 +93,10 @@ const MGBishopTable64 = [
       0,   0,  -3,  -5,  -5,  -3,   0,   0,
 ];
 /**
- * 
+ * 10 for being on an 8 long diagonal
+ * 5 for being on a 7 long diagonal
+ * 2 for being on a 6 long diagonal
+ * -5 for being on an edge
  */
 const EGBishopTable64 = [
     0,   0,  -3,  -5,  -5,  -3,   0,   0,
@@ -139,17 +142,18 @@ const EGRookTable64 = [
 ];
 
 /**
- * 10 for being on ranks 6, 7, or 8 and on the right half of the board
+ * 5 for being on ranks 6, 7, or 8 and on the right half of the board
  * 2 for being on ranks 6, 7, or 8
  * -5 for being on rank 1
+ * -10 for being on ranks 3, 4, or 5
  */
 const MGQueenTable64 = [
-      2,   2,   2,   2,  12,  12,  12,  12,
-      2,   2,   2,   2,  12,  12,  12,  12,
-      2,   2,   2,   2,  12,  12,  12,  12,
-      0,   0,   0,   0,   0,   0,   0,   0,
-      0,   0,   0,   0,   0,   0,   0,   0,
-      0,   0,   0,   0,   0,   0,   0,   0,
+      2,   2,   2,   2,   7,   7,   7,   7,
+      2,   2,   2,   2,   7,   7,   7,   7,
+      2,   2,   2,   2,   7,   7,   7,   7,
+    -10, -10, -10, -10, -10, -10, -10, -10,
+    -10, -10, -10, -10, -10, -10, -10, -10,
+    -10, -10, -10, -10, -10, -10, -10, -10,
       0,   0,   0,   0,   0,   0,   0,   0,
      -5,  -5,  -5,  -5,  -5,  -5,  -5,  -5,
 ];
