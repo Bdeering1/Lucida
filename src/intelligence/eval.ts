@@ -1,9 +1,10 @@
 /* eslint-disable no-magic-numbers */
 
 import { Color, Piece } from "../shared/enums";
-import { GetSq120, PieceColor, SideMultiplier } from "../shared/utils";
+import { GetSq120, IsPawn, IsQueen, IsRookQueen, PieceColor, PieceMin, SideMultiplier } from "../shared/utils";
 import { IBoard } from "../board/board-types";
 import { INNER_BOARD_SQ_NUM } from "../shared/constants";
+import Move from "../game/move";
 import MoveManager from "../game/move-manager";
 import PieceSquareTables from "./pst";
 
@@ -43,8 +44,7 @@ export default class Eval {
         const middlegame = this.getPSTScore(board, PieceSquareTables.middlegame);
         const endgame = this.getPSTScore(board, PieceSquareTables.endgame);
 
-        const taperedScore = ~~( (middlegame * (MAX_PHASE - phase) + endgame * phase) / MAX_PHASE );
-        score += taperedScore;
+        score += this.getTaperedScore(middlegame, endgame, phase);
 
         return score;
     }
@@ -84,5 +84,25 @@ export default class Eval {
         phase -= board.quantities[Piece.blackQueen] * QUEEN_PHASE;
 
         return ~~( (phase * MAX_PHASE) / this.totalPhase );
+    }
+
+    static getTaperedScore(middlegame: number, endgame: number, phase: number): number {
+        return ~~( (middlegame * (MAX_PHASE - phase) + endgame * phase) / MAX_PHASE );
+    }
+
+    static getMovePrecedence(board: IBoard, move: Move): number {
+        let precedence = 0;
+
+        const piece = board.getPiece(move.from);
+        const phase = this.getGamePhase(board);
+        const middlegame = PieceSquareTables.middlegame[piece][move.to] - PieceSquareTables.middlegame[piece][move.from];
+        const endgame = PieceSquareTables.endgame[piece][move.to] - PieceSquareTables.endgame[piece][move.from];
+        precedence += this.getTaperedScore(middlegame, endgame, phase);
+
+        if (IsQueen[move.promotion]) precedence += 300;
+        else if (move.promotion !== Piece.none) precedence += 100;
+        if (move.capture) precedence += 200;
+
+        return precedence;
     }
 }

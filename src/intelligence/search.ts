@@ -26,7 +26,7 @@ export default class MiniMax {
     private quiesceNodes = 0;
     private scores: number[] = [];
 
-    constructor(board: IBoard, moveManager: MoveManager, depth = 3, quiesceDepth = 3) {
+    constructor(board: IBoard, moveManager: MoveManager, depth = 4, quiesceDepth = 5) {
         this.board = board;
         this.moveManager = moveManager;
         this.depth = depth;

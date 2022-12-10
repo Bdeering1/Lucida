@@ -4,6 +4,7 @@ import { MAX_GAME_MOVES, MAX_POSITION_MOVES } from "../shared/constants";
 import { IBoard } from "../board/board-types";
 import Move from "./move";
 import { getColorString } from "../cli/printing";
+import Eval from "../intelligence/eval";
 
 export default class MoveManager {
     private board: IBoard;
@@ -248,18 +249,10 @@ export default class MoveManager {
         if (this.moveCount === 0) { this.moveList[ply][0] = move; return; }
             
         let idx = this.moveCount - 1;
-        while (idx >= 0 && this.movePrecedence(move) > this.movePrecedence(this.moveList[ply][idx])) {
+        while (idx >= 0 && Eval.getMovePrecedence(this.board, move) > Eval.getMovePrecedence(this.board, this.moveList[ply][idx])) {
             this.moveList[ply][idx + 1] = this.moveList[ply][idx];
             idx--;
         }
         this.moveList[ply][idx + 1] = move;
-    }
-
-    private movePrecedence(move: Move): number {
-        let value = 0;
-        if (move.capture) value += 20;
-        if (IsQueen[move.promotion]) value += 30;
-        else if (move.promotion !== Piece.none) value += 10;
-        return value;
     }
 }
