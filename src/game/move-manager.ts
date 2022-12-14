@@ -4,7 +4,7 @@ import { MAX_GAME_MOVES, MAX_POSITION_MOVES } from "../shared/constants";
 import Eval from "../intelligence/eval";
 import { IBoard } from "../board/board-types";
 import Move from "./move";
-import { getColorString, getSquareString } from "../cli/printing";
+import { getColorString } from "../cli/printing";
 
 export default class MoveManager {
     private board: IBoard;
@@ -123,10 +123,10 @@ export default class MoveManager {
                 }
                 if (PieceColor[this.board.getPiece(captureSq)] === opposingSide) {
                     if (GetRank[sq] === StartingRank[opposingSide]) {
-                        this.addIfLegal(new Move(sq, captureSq).setPromotion(Queens[sideToMove]));
-                        this.addIfLegal(new Move(sq, captureSq).setPromotion(Rooks[sideToMove]));
-                        this.addIfLegal(new Move(sq, captureSq).setPromotion(Bishops[sideToMove]));
-                        this.addIfLegal(new Move(sq, captureSq).setPromotion(Knights[sideToMove]));
+                        this.addIfLegal(new Move(sq, captureSq, this.board.getPiece(captureSq)).setPromotion(Queens[sideToMove]));
+                        this.addIfLegal(new Move(sq, captureSq, this.board.getPiece(captureSq)).setPromotion(Rooks[sideToMove]));
+                        this.addIfLegal(new Move(sq, captureSq, this.board.getPiece(captureSq)).setPromotion(Bishops[sideToMove]));
+                        this.addIfLegal(new Move(sq, captureSq, this.board.getPiece(captureSq)).setPromotion(Knights[sideToMove]));
                     }
                     else this.addIfLegal(new Move(sq, captureSq, this.board.getPiece(captureSq)));
                 }

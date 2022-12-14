@@ -26,7 +26,7 @@ export default class MiniMax {
     private quiesceNodes = 0;
     private scores: number[] = [];
 
-    constructor(board: IBoard, moveManager: MoveManager, depth = 3, quiesceDepth = 15) {
+    constructor(board: IBoard, moveManager: MoveManager, depth = 2, quiesceDepth = 15) {
         this.board = board;
         this.moveManager = moveManager;
         this.depth = depth;
@@ -51,10 +51,9 @@ export default class MiniMax {
         if (verbose) {
             console.log(`Depth: ${this.depth}`);
             console.log(`primary: ${this.nodes} quiescence search: ${this.quiesceNodes}`);
+            printMoves(this.board, this.moveManager, this.scores);
         }
         
-        printMoves(this.board, this.moveManager, this.scores);
-
         moves.forEach((move, idx) => {
             console.log(`${idx + 1}: ${move}`);
         });
@@ -102,7 +101,7 @@ export default class MiniMax {
             this.board.makeMove(move);
             const [score, possibleMoves] = this.maxi(depthLeft - 1, alpha, beta, moves);
             this.board.undoMove(move);
-
+            
             if (depthLeft === this.depth) this.scores.push(score);
 
             if (score <= alpha) return [alpha, moves];
@@ -142,7 +141,7 @@ export default class MiniMax {
     private quiesceMini(depthLeft: number, alpha: number, beta: number) {
         this.quiesceNodes++;
         if (depthLeft === 0) return alpha;
-
+        
         const standPat = Eval.evaluate(this.board, this.moveManager);
         if (standPat <= alpha) return alpha;
         if (standPat < beta) beta = standPat;

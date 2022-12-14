@@ -1,8 +1,8 @@
-import Move from "../game/move";
 import { BOARD_SQ_NUM, CASTLE_LEFT, CASTLE_RIGHT, INNER_BOARD_SQ_NUM, MAX_GAME_MOVES, MAX_NUM_PER_PIECE, NUM_CASTLE_COMBINATIONS, NUM_PIECE_TYPES } from "../shared/constants";
 import { CastleBit, Color, Piece, Square } from "../shared/enums";
 import { CastleLeftRook, CastlePerm, CastleRightRook, EnPasRank, GetOtherSide, GetRank, GetSq120, IsKing, IsPawn, LeftRook, PawnDir, PieceColor, PieceVal, RightRook, Rooks, StartingRank, generateHash32, Pawns } from "../shared/utils";
 import { IBoard } from "./board-types";
+import Move from "../game/move";
 
 export default class Board implements IBoard {
 
@@ -172,7 +172,7 @@ export default class Board implements IBoard {
     }
     public undoMove(move: Move): void {
         this.sideToMove = this.sideToMove === Color.white ? Color.black : Color.white;
-        const piece = move.promotion === Piece.none ? this.getPiece(move.to) : Pawns[this.sideToMove];
+        const piece = move.promotion === Piece.none ? this.getPiece(move.to) : Pawns[PieceColor[move.promotion]];
 
         this.removePiece(move.to);
         this.addPiece(move.capture, move.to);
