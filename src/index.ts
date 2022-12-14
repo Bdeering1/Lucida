@@ -13,6 +13,7 @@ import { parseFen } from "./board/board-setup";
 const board = new Board();
 const moveManager = new MoveManager(board);
 const miniMax = new MiniMax(board, moveManager);
+const moveList: Move[] = [];
 parseFen(board, START_FEN);
 
 console.log("Please chooce a side (white or black)");
@@ -43,11 +44,12 @@ while(true) {
     }
 
     if (move === InputOption.undo) {
-        board.undoMove();
-        board.undoMove();
+        if (moveList.length === 0) continue;
+        board.undoMove(moveList.pop() as Move);
         continue;
     }
     if (move === InputOption.exit) break;
 
-    board.movePiece(move.from, move.to, move.promotion);
+    moveList.push(move);
+    board.makeMove(move);
 }

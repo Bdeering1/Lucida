@@ -7,10 +7,12 @@ import { IBoard } from "../board/board-types";
 import MoveManager from "../game/move-manager";
 import { START_FEN } from "../shared/constants";
 import { parseFen } from "../board/board-setup";
+import PieceSquareTables from "../intelligence/pst";
 
 describe('move-manager', () => {
     let board: IBoard;
     let moveManager: MoveManager;
+    PieceSquareTables.init();
 
     beforeEach(() => {
         board = new Board();

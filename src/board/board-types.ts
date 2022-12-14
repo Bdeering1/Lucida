@@ -1,4 +1,5 @@
 import { Color, Piece, Square } from "../shared/enums";
+import Move from "../game/move";
 
 /**
  * Represents all aspects of board state for a given game ply
@@ -59,7 +60,11 @@ export interface IBoard {
      * @description Does not check for legality
      * @todo this should just take a Move object
      */
-    movePiece(from: Square, to: Square, promote?: Piece): void;
+    makeMove(move: Move): void;
+    /**
+     * Undo the last move made
+     */
+    undoMove(move: Move): void;
     /**
      * Whether or not the board has any pawns left (for stalemate detection)
      */
@@ -83,24 +88,20 @@ export interface IBoard {
      */
     getSquares(piece: Piece): IterableIterator<Square>;
     /**
-     * Update position key for side to move, en passent, and castling
-     */
-    updatePositionKey(): void;
-    /**
-     * Undo the last move made
-     */
-    undoMove(): void;
-    /**
      * Add the current position to the board's history
      */
     appendToHistory(): void;
     /**
-    * Restore the board state to how it was at a specified ply, where ply < current ply
-    */
-    restore(ply: number): void;
-    /**
      * Create an identical copy of this instance
      * @todo this may be an implementation detail
      */
-    copy(deep: boolean): IBoard;
+    clone(deep: boolean): IBoard;
+    /**
+    * Restore the board state to how it was at a specified ply, where ply < current ply
+    */
+    restoreInstance(board: IBoard): void;
+    /**
+     * Update position key for side to move, en passent, and castling
+     */
+    updatePositionKey(): void;
 }

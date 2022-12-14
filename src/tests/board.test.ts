@@ -8,6 +8,7 @@ import { IBoard } from "../board/board-types";
 import { START_FEN } from "../shared/constants";
 import { getCastleString } from "../cli/printing";
 import { parseFen } from "../board/board-setup";
+import Move from "../game/move";
 
 describe('board', () => {
     let board: IBoard;
@@ -50,8 +51,8 @@ describe('board', () => {
         board.addPiece(Piece.blackQueen, Square.b2);
         board.addPiece(Piece.blackQueen, Square.g7);
         const squares = board.getSquares(Piece.blackQueen);
-        expect(squares.next().value).toBe(Square.b2);
         expect(squares.next().value).toBe(Square.g7);
+        expect(squares.next().value).toBe(Square.b2);
         expect(squares.next().done).toBe(true);
     });
 
@@ -74,15 +75,15 @@ describe('board', () => {
         [Square.h1, Square.a8, Piece.blackKing],
     ])('can move a piece from one square to another', (from, to, piece) => {
         board.addPiece(piece, from);
-        board.movePiece(from, to);
+        board.makeMove(new Move(from, to));
         expect(board.getPiece(from)).toBe(Piece.none);
         expect(board.getPiece(to)).toBe(piece);
     });
 
     it('can castle kingside', () => {
         parseFen(board, CASTLE_FEN);
-        board.movePiece(Square.e1, Square.g1);
-        board.movePiece(Square.e8, Square.g8);
+        board.makeMove(new Move(Square.e1, Square.g1));
+        board.makeMove(new Move(Square.e8, Square.g8));
         expect(board.getPiece(Square.g1)).toBe(Piece.whiteKing);
         expect(board.getPiece(Square.f1)).toBe(Piece.whiteRook);
         expect(board.getPiece(Square.e1)).toBe(Piece.none);
@@ -95,8 +96,8 @@ describe('board', () => {
 
     it('can castle queenside', () => {
         parseFen(board, CASTLE_FEN);
-        board.movePiece(Square.e1, Square.c1);
-        board.movePiece(Square.e8, Square.c8);
+        board.makeMove(new Move(Square.e1, Square.c1));
+        board.makeMove(new Move(Square.e8, Square.c8));
         expect(board.getPiece(Square.c1)).toBe(Piece.whiteKing);
         expect(board.getPiece(Square.d1)).toBe(Piece.whiteRook);
         expect(board.getPiece(Square.e1)).toBe(Piece.none);
@@ -114,7 +115,7 @@ describe('board', () => {
         [Square.h8, Square.h7, 'KQq'],
     ])('updates castling permissions if a king or rook move for the first time', (from, to, permissions) => {
         parseFen(board, CASTLE_FEN);
-        board.movePiece(from, to);
+        board.makeMove(new Move(from, to));
         expect(getCastleString(board)).toBe(permissions);
     });
 
@@ -123,7 +124,7 @@ describe('board', () => {
         [Square.c5, Square.c6],
     ])('updates en passent permissions if a player does not take en passent', (from, to) => {
         parseFen(board, EN_PAS_FEN);
-        board.movePiece(from, to);
+        board.makeMove(new Move(from, to));
         expect(board.enPas).toBe(Square.none);
     });
 
@@ -138,7 +139,7 @@ describe('board', () => {
         //jest.spyOn(board, 'hashCastle');
         parseFen(board, CASTLE_FEN);
         const startingKey = board.posKey;
-        board.movePiece(Square.e1, Square.e2);
+        board.makeMove(new Move(Square.e1, Square.e2));
         //expect(board.hashCastle).toBeCalled();
         expect(board.posKey).not.toEqual(startingKey);
     });
@@ -150,7 +151,7 @@ describe('board', () => {
         parseFen(board, EN_PAS_FEN);
         //jest.spyOn(board, 'hashEnPas');
         const startingKey = board.posKey;
-        board.movePiece(Square.c5, Square.c6);
+        board.makeMove(new Move(Square.c5, Square.c6));
         //expect(board.hashEnPas).toBeCalledTimes(1);
         expect(board.posKey).not.toEqual(startingKey);
     });
@@ -179,12 +180,12 @@ describe('board', () => {
         parseFen(board, START_FEN);
         const key = board.posKey;
         const whiteMaterial = board.material[Color.white];
-        const copy = board.copy(true);
-        board.movePiece(Square.d2, Square.d4);
-        board.movePiece(Square.e7, Square.e5);
-        board.movePiece(Square.e1, Square.d2);
-        board.movePiece(Square.e5, Square.d4);
-        board.movePiece(Square.c2, Square.c4);
+        const copy = board.clone(true);
+        board.makeMove(new Move(Square.d2, Square.d4));
+        board.makeMove(new Move(Square.e7, Square.e5));
+        board.makeMove(new Move(Square.e1, Square.d2));
+        board.makeMove(new Move(Square.e5, Square.d4));
+        board.makeMove(new Move(Square.c2, Square.c4));
         expect(copy.sideToMove).toBe(Color.white);
         expect(copy.ply).toBe(0);
         expect(copy.enPas).toBe(Square.none);
@@ -196,34 +197,35 @@ describe('board', () => {
         expect(copy.getPiece(Square.d2)).toBe(Piece.whitePawn);
     });
 
-    it('can be restored to a previous state', () => {
-        parseFen(board, START_FEN);
-        const key = board.posKey;
-        const whiteMaterial = board.material[Color.white];
-        board.movePiece(Square.d2, Square.d4);
-        board.movePiece(Square.e7, Square.e5);
-        board.movePiece(Square.e1, Square.d2);
-        board.movePiece(Square.e5, Square.d4);
-        board.movePiece(Square.c2, Square.c4);
-        board.restore(0);
-        expect(board.sideToMove).toBe(Color.white);
-        expect(board.ply).toBe(0);
-        expect(board.enPas).toBe(Square.none);
-        expect(board.whiteKingCastle).toBe(true);
-        expect(board.whiteQueenCastle).toBe(true);
-        expect(board.fiftyMoveCounter).toBe(0);
-        expect(board.posKey).toBe(key);
-        expect(board.material[Color.white]).toBe(whiteMaterial);
-        expect(board.getPiece(Square.d2)).toBe(Piece.whitePawn);
-    });
+    // it('can be restored to a previous state', () => {
+    //     parseFen(board, START_FEN);
+    //     const key = board.posKey;
+    //     const whiteMaterial = board.material[Color.white];
+    //     board.makeMove(new Move(Square.d2, Square.d4));
+    //     board.makeMove(new Move(Square.e7, Square.e5));
+    //     board.makeMove(new Move(Square.e1, Square.d2));
+    //     board.makeMove(new Move(Square.e5, Square.d4));
+    //     board.makeMove(new Move(Square.c2, Square.c4));
+    //     board.restoreInstance(0);
+    //     expect(board.sideToMove).toBe(Color.white);
+    //     expect(board.ply).toBe(0);
+    //     expect(board.enPas).toBe(Square.none);
+    //     expect(board.whiteKingCastle).toBe(true);
+    //     expect(board.whiteQueenCastle).toBe(true);
+    //     expect(board.fiftyMoveCounter).toBe(0);
+    //     expect(board.posKey).toBe(key);
+    //     expect(board.material[Color.white]).toBe(whiteMaterial);
+    //     expect(board.getPiece(Square.d2)).toBe(Piece.whitePawn);
+    // });
 
     it('can undo and redo moves with no side effects', () => {
         parseFen(board, CAPTURE_FEN);
-        const copy = board.copy(true);
-        board.movePiece(Square.e4, Square.d5);
-        board.undoMove();
-        board.movePiece(Square.e4, Square.d5);
-        board.undoMove();
+        const copy = board.clone(true);
+        const move = new Move(Square.e4, Square.d5);
+        board.makeMove(move);
+        board.undoMove(move);
+        board.makeMove(move);
+        board.undoMove(move);
         expect(board.sideToMove).toBe(copy.sideToMove);
         expect(board.ply).toBe(copy.ply);
         expect(board.fiftyMoveCounter).toBe(copy.fiftyMoveCounter);

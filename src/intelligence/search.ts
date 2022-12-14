@@ -26,7 +26,7 @@ export default class MiniMax {
     private quiesceNodes = 0;
     private scores: number[] = [];
 
-    constructor(board: IBoard, moveManager: MoveManager, depth = 4, quiesceDepth = 5) {
+    constructor(board: IBoard, moveManager: MoveManager, depth = 3, quiesceDepth = 15) {
         this.board = board;
         this.moveManager = moveManager;
         this.depth = depth;
@@ -36,7 +36,7 @@ export default class MiniMax {
         Eval.init();
     }
 
-    public getBestMove(): [Move, number] {
+    public getBestMove(verbose = false): [Move, number] {
         this.scores = [];
         this.nodes = 0;
         this.quiesceNodes = 0;
@@ -48,8 +48,10 @@ export default class MiniMax {
         else
             [best, moves] = this.mini(this.depth, -Infinity, Infinity, new Array<Move>());
 
-        console.log(`Depth: ${this.depth}`);
-        console.log(`primary: ${this.nodes} quiescent search: ${this.quiesceNodes}`);
+        if (verbose) {
+            console.log(`Depth: ${this.depth}`);
+            console.log(`primary: ${this.nodes} quiescence search: ${this.quiesceNodes}`);
+        }
         
         printMoves(this.board, this.moveManager, this.scores);
 
@@ -72,9 +74,9 @@ export default class MiniMax {
         if (status.complete === true) return [SideMultiplier[status.winner] * PieceVal[Piece.blackKing] - depthLeft, moves];
 
         for (const move of this.moveManager.getCurrentMoves()) {
-            this.board.movePiece(move.from, move.to, move.promotion);
+            this.board.makeMove(move);
             const [score, possibleMoves] = this.mini(depthLeft - 1, alpha, beta, moves);
-            this.board.undoMove();
+            this.board.undoMove(move);
 
             if (depthLeft === this.depth) this.scores.push(score);
 
@@ -97,9 +99,9 @@ export default class MiniMax {
         if (status.complete === true) return [SideMultiplier[status.winner] * PieceVal[Piece.whiteKing] + depthLeft, moves];
 
         for (const move of this.moveManager.getCurrentMoves()) {
-            this.board.movePiece(move.from, move.to, move.promotion);
+            this.board.makeMove(move);
             const [score, possibleMoves] = this.maxi(depthLeft - 1, alpha, beta, moves);
-            this.board.undoMove();
+            this.board.undoMove(move);
 
             if (depthLeft === this.depth) this.scores.push(score);
 
@@ -124,11 +126,11 @@ export default class MiniMax {
 
         this.moveManager.generateMoves();
         for (const move of this.moveManager.getCurrentMoves()) {
-            if (!move.capture) continue;
+            if (move.capture === Piece.none) continue;
 
-            this.board.movePiece(move.from, move.to, move.promotion);
+            this.board.makeMove(move);
             const score = this.quiesceMini(depthLeft - 1, alpha, beta);
-            this.board.undoMove();
+            this.board.undoMove(move);
 
             if (score >= beta) return beta;
             if (score > alpha) alpha = score;
@@ -147,11 +149,11 @@ export default class MiniMax {
 
         this.moveManager.generateMoves();
         for (const move of this.moveManager.getCurrentMoves()) {
-            if (!move.capture) continue;
+            if (move.capture === Piece.none) continue;
 
-            this.board.movePiece(move.from, move.to, move.promotion);
+            this.board.makeMove(move);
             const score = this.quiesceMaxi(depthLeft - 1, alpha, beta);
-            this.board.undoMove();
+            this.board.undoMove(move);
 
             if (score <= alpha) return alpha;
             if (score < beta) beta = score;

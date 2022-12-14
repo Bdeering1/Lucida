@@ -5,17 +5,13 @@ import { getSquareString } from "../cli/printing";
 export default class Move {
     public from: Square;
     public to: Square;
-    public capture = false;
+    public capture: Piece;
     public promotion: Piece = Piece.none;
 
-    public constructor(from: Square, to: Square) {
+    public constructor(from: Square, to: Square, capture = Piece.none) {
         this.from = from;
         this.to = to;
-    }
-
-    public setCapture(): Move {
-        this.capture = true;
-        return this;
+        this.capture = capture;
     }
 
     public setPromotion(promotion: Piece): Move {

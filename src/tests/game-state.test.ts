@@ -1,13 +1,16 @@
 import Board from "../board/board";
 import { IBoard } from "../board/board-types";
+import Move from "../game/move";
 import MoveManager from "../game/move-manager";
 import { Square } from "../shared/enums";
 import { getGameStatus } from "../game/game-state";
 import { parseFen } from "../board/board-setup";
+import PieceSquareTables from "../intelligence/pst";
 
 describe('game-state', () => {
     let board: IBoard;
     let moveManager: MoveManager;
+    PieceSquareTables.init();
 
     beforeEach(() => {
         board = new Board();
@@ -41,14 +44,14 @@ describe('game-state', () => {
 
     it('recognizes draw by repetition', () => {
         parseFen(board, '6k1/8/6P1/8/8/8/2N5/6K1 w - - 0 1');
-        board.movePiece(Square.c2, Square.e3);
-        board.movePiece(Square.g8, Square.g7);
-        board.movePiece(Square.e3, Square.c2);
-        board.movePiece(Square.g7, Square.g8);
-        board.movePiece(Square.c2, Square.e3);
-        board.movePiece(Square.g8, Square.g7);
-        board.movePiece(Square.e3, Square.c2);
-        board.movePiece(Square.g7, Square.g8);
+        board.makeMove(new Move(Square.c2, Square.e3));
+        board.makeMove(new Move(Square.g8, Square.g7));
+        board.makeMove(new Move(Square.e3, Square.c2));
+        board.makeMove(new Move(Square.g7, Square.g8));
+        board.makeMove(new Move(Square.c2, Square.e3));
+        board.makeMove(new Move(Square.g8, Square.g7));
+        board.makeMove(new Move(Square.e3, Square.c2));
+        board.makeMove(new Move(Square.g7, Square.g8));
         const status = getGameStatus(board, moveManager.generateMoves());
         expect(status.complete).toBe(true);
         expect(status.desc).toContain('repetition');

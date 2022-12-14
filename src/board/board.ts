@@ -1,6 +1,7 @@
+import Move from "../game/move";
 import { BOARD_SQ_NUM, CASTLE_LEFT, CASTLE_RIGHT, INNER_BOARD_SQ_NUM, MAX_GAME_MOVES, MAX_NUM_PER_PIECE, NUM_CASTLE_COMBINATIONS, NUM_PIECE_TYPES } from "../shared/constants";
 import { CastleBit, Color, Piece, Square } from "../shared/enums";
-import { CastleLeftRook, CastlePerm, CastleRightRook, EnPasRank, GetOtherSide, GetRank, GetSq120, IsKing, IsPawn, LeftRook, PawnDir, PieceColor, PieceVal, RightRook, Rooks, StartingRank, generateHash32 } from "../shared/utils";
+import { CastleLeftRook, CastlePerm, CastleRightRook, EnPasRank, GetOtherSide, GetRank, GetSq120, IsKing, IsPawn, LeftRook, PawnDir, PieceColor, PieceVal, RightRook, Rooks, StartingRank, generateHash32, Pawns } from "../shared/utils";
 import { IBoard } from "./board-types";
 
 export default class Board implements IBoard {
@@ -83,9 +84,7 @@ export default class Board implements IBoard {
     setWhiteQueenCastle(): void { this.castlePermissions |= CastleBit.whiteQueen; }
     setBlackKingCastle(): void { this.castlePermissions |= CastleBit.blackKing; }
     setBlackQueenCastle(): void { this.castlePermissions |= CastleBit.blackQueen; }
-    public hasCastleMoves(): boolean {
-        return this.castlePermissions !== CastleBit.none;
-    }
+    public hasCastleMoves(): boolean { return this.castlePermissions !== CastleBit.none; }
 
     public addPiece(piece: Piece, sq: Square): void {
         this.pieces[sq] = piece;
@@ -109,7 +108,11 @@ export default class Board implements IBoard {
             this.hashPiece(piece, sq);
         }
     }
-    public movePiece(from: Square, to: Square, promote: Piece = Piece.none): void {
+    public makeMove(move: Move): void {
+        const from = move.from;
+        const to = move.to;
+        const promotion = move.promotion;
+
         this.appendToHistory();
         this.checkRepeats();
 
@@ -130,8 +133,8 @@ export default class Board implements IBoard {
                 this.enPas = from + PawnDir[this.sideToMove];
                 this.hashEnPas();
             }
-            else if (promote !== Piece.none) {
-                piece = promote;
+            else if (promotion !== Piece.none) {
+                piece = promotion;
             }
             this.fiftyMoveCounter = 0;
         }
@@ -166,7 +169,38 @@ export default class Board implements IBoard {
         this.removePiece(to);
         this.addPiece(piece, to);
         this.ply++;
+    }
+    public undoMove(move: Move): void {
+        this.sideToMove = this.sideToMove === Color.white ? Color.black : Color.white;
+        const piece = move.promotion === Piece.none ? this.getPiece(move.to) : Pawns[this.sideToMove];
+
+        this.removePiece(move.to);
+        this.addPiece(move.capture, move.to);
+        this.addPiece(piece, move.from);
+        this.ply--;
+
+        this.fiftyMoveCounter = this.history[this.ply].fiftyMoveCounter;
+        this.enPas = this.history[this.ply].enPas;
+        this.castlePermissions = this.history[this.ply].castlePermissions;
+        this.posKey = this.history[this.ply].posKey;
+        this.repeats = this.history[this.ply].repeats;
         
+        if (IsPawn[piece]) {
+            if (move.to === this.enPas) {
+                this.removePiece(move.to);
+                this.addPiece(Pawns[GetOtherSide[this.sideToMove]], move.to + PawnDir[GetOtherSide[this.sideToMove]]);
+            }
+        }
+        else if (IsKing[piece]) {
+            if (move.to - move.from === CASTLE_LEFT) {
+                this.removePiece(CastleLeftRook[this.sideToMove]);
+                this.addPiece(Rooks[this.sideToMove], LeftRook[this.sideToMove]);
+            }
+            else if (move.to - move.from === CASTLE_RIGHT) {
+                this.removePiece(CastleRightRook[this.sideToMove]);
+                this.addPiece(Rooks[this.sideToMove], RightRook[this.sideToMove]);
+            }
+        }
     }
 
     public hasPawns(): boolean {
@@ -182,43 +216,21 @@ export default class Board implements IBoard {
         }
     }
     public * getSquares(piece: Piece): IterableIterator<Square> {
-        for (let i = 0; i < this.pieceQuantities[piece]; i++) {
-            if (this.pieceSquares[piece][i] === Square.none) continue;
+        for (let i = this.pieceQuantities[piece] - 1; i >= 0; i--) {
             yield this.pieceSquares[piece][i];
         }
     }
 
-    public updatePositionKey(): void {
-        if (this.sideToMove === Color.white) this.hashSide();
-        if (this.enPas !== Square.none) this.hashEnPas();
-        this.hashCastle();
-    }
-
-    public undoMove(): void {
-        this.restore(this.ply - 1);
-    }
     public appendToHistory(): void {
-        this.history[this.ply] = this.copy();
+        this.history[this.ply] = {} as Board;
+        this.history[this.ply].fiftyMoveCounter = this.fiftyMoveCounter;
+        this.history[this.ply].enPas = this.enPas;
+        this.history[this.ply].castlePermissions = this.castlePermissions;
+        this.history[this.ply].posKey = this.posKey;
+        this.history[this.ply].repeats = [...this.repeats];
     }
 
-    public restore(ply: number): void {
-        if (ply < 0 || ply >= this.ply) return;
-        const prev = this.history[ply];
-        this.sideToMove = prev.sideToMove;
-        this.ply = prev.ply;
-        this.enPas = prev.enPas;
-        this.castlePermissions = prev.castlePermissions;
-        this.fiftyMoveCounter = prev.fiftyMoveCounter;
-        this.material = prev.material;
-        this.posKey = prev.posKey;
-        this.repeats = prev.repeats;
-
-        this.pieces = prev.pieces;
-        this.pieceSquares = prev.pieceSquares;
-        this.pieceQuantities = prev.pieceQuantities;
-    }
-
-    public copy(deep = false): Board {
+    public clone(deep = false): Board {
         const copy = deep ? Object.create(this) : {} as Board; // deep copy retains methods
         copy.sideToMove = this.sideToMove;
         copy.ply = this.ply;
@@ -238,7 +250,26 @@ export default class Board implements IBoard {
         
         return copy;
     }
+    public restoreInstance(board: Board): void {
+        this.sideToMove = board.sideToMove;
+        this.ply = board.ply;
+        this.enPas = board.enPas;
+        this.castlePermissions = board.castlePermissions;
+        this.fiftyMoveCounter = board.fiftyMoveCounter;
+        this.material = board.material;
+        this.posKey = board.posKey;
+        this.repeats = board.repeats;
 
+        this.pieces = board.pieces;
+        this.pieceSquares = board.pieceSquares;
+        this.pieceQuantities = board.pieceQuantities;
+    }
+
+    public updatePositionKey(): void {
+        if (this.sideToMove === Color.white) this.hashSide();
+        if (this.enPas !== Square.none) this.hashEnPas();
+        this.hashCastle();
+    }
     private checkRepeats(): void {
         if (this.fiftyMoveCounter === 0) return;
         let idx = 0;
