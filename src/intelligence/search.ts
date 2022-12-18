@@ -26,7 +26,7 @@ export default class MiniMax {
     private quiesceNodes = 0;
     private scores: number[] = [];
 
-    constructor(board: IBoard, moveManager: MoveManager, depth = 2, quiesceDepth = 15) {
+    constructor(board: IBoard, moveManager: MoveManager, depth = 5, quiesceDepth = 15) {
         this.board = board;
         this.moveManager = moveManager;
         this.depth = depth;
@@ -101,7 +101,7 @@ export default class MiniMax {
             this.board.makeMove(move);
             const [score, possibleMoves] = this.maxi(depthLeft - 1, alpha, beta, moves);
             this.board.undoMove(move);
-            
+
             if (depthLeft === this.depth) this.scores.push(score);
 
             if (score <= alpha) return [alpha, moves];

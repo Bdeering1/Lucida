@@ -21,9 +21,16 @@ describe('eval', () => {
         [START_FEN, 0],
         [CARO_KANN_FEN, 4],
         [DOUBLE_EN_PAS_FEN, -1]
-    ])('returns the correct mobility score for test positions', (fen, expectedScore) => {
+    ])('returns the correct mobility score for test positions without side effects', (fen, expectedScore) => {
         parseFen(board, fen);
+        const clone = board.clone(true);
         expect(Eval.getMobilityScore(moveManager)).toBe(expectedScore);
+        expect(board.sideToMove).toEqual(clone.sideToMove);
+        expect(board.fiftyMoveCounter).toEqual(clone.fiftyMoveCounter);
+        expect(board.posKey).toBe(clone.posKey);
+        expect(board.material).toEqual(clone.material);
+        expect(board.repeats).toEqual(clone.repeats);
+        expect([...board.getPieces()]).toEqual([...clone.getPieces()]);
     });
 
     it('returns a game phase of zero for the starting position', () => {

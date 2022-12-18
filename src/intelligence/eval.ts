@@ -38,7 +38,7 @@ export default class Eval {
 
     static evaluate(board: IBoard, moveManager: MoveManager): number {
         let score = board.material[Color.white] - board.material[Color.black];
-        score += this.getMobilityScore(moveManager) * this.mobilityWeight;
+        //score += this.getMobilityScore(moveManager) * this.mobilityWeight;
 
         const phase = this.getGamePhase(board);
         const middlegame = this.getPSTScore(board, PieceSquareTables.middlegame);

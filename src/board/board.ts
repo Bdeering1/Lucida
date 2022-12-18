@@ -1,6 +1,6 @@
 import { BOARD_SQ_NUM, CASTLE_LEFT, CASTLE_RIGHT, INNER_BOARD_SQ_NUM, MAX_GAME_MOVES, MAX_NUM_PER_PIECE, NUM_CASTLE_COMBINATIONS, NUM_PIECE_TYPES } from "../shared/constants";
 import { CastleBit, Color, Piece, Square } from "../shared/enums";
-import { CastleLeftRook, CastlePerm, CastleRightRook, EnPasRank, GetOtherSide, GetRank, GetSq120, IsKing, IsPawn, LeftRook, PawnDir, PieceColor, PieceVal, RightRook, Rooks, StartingRank, generateHash32, Pawns } from "../shared/utils";
+import { CastleLeftRook, CastlePerm, CastleRightRook, EnPasRank, GetOtherSide, GetRank, GetSq120, IsKing, IsPawn, LeftRook, PawnDir, Pawns, PieceColor, PieceVal, RightRook, Rooks, StartingRank, generateHash32 } from "../shared/utils";
 import { IBoard } from "./board-types";
 import Move from "../game/move";
 
@@ -87,6 +87,8 @@ export default class Board implements IBoard {
     public hasCastleMoves(): boolean { return this.castlePermissions !== CastleBit.none; }
 
     public addPiece(piece: Piece, sq: Square): void {
+        if (piece === Piece.none) return;
+        
         this.pieces[sq] = piece;
         this.pieceSquares[piece][this.pieceQuantities[piece]] = sq;
         this.pieceQuantities[piece]++;
@@ -95,6 +97,7 @@ export default class Board implements IBoard {
     }
     public removePiece(sq: Square): void {
         const piece = this.pieces[sq];
+        
         this.pieces[sq] = Piece.none;
         if (piece !== Piece.none) {
             this.pieceQuantities[piece]--;

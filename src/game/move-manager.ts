@@ -164,11 +164,14 @@ export default class MoveManager {
                 }
             }
         }
+        if (this.board.posKey === 1497628063 && this.board.getPiece(Square.f7) === Piece.whiteQueen) {
+            console.log(`move count = ${this.moveCount} num moves = ${this.numMoves[ply]} moves = ${this.moveList[ply].slice(0, this.moveCount + 3).join(', ')}`);
+        }
 
+        if (addToList) this.numMoves[ply] = this.moveCount;
         const kingAttacked = this.squareAttacked(this.board.getSquares(Kings[sideToMove]).next().value, opposingSide);
         if (this.moveCount === 0 && kingAttacked) return MoveStatus.checkmate;
         
-        if (addToList) this.numMoves[ply] = this.moveCount;
         return this.moveCount;
     }
 
@@ -189,12 +192,12 @@ export default class MoveManager {
 
         // Kings and Knights
         for (const dir of PieceDir[Piece.whiteKing]) {
-            //if (sqOffboard(sq + dir)) continue;
+            if (sqOffboard(sq + dir)) continue; // not sure why this was commented out
             const piece = this.board.getPiece(sq + dir);
             if (PieceColor[piece] === atkSide && IsKing[piece]) return true;
         }
         for (const dir of PieceDir[Piece.whiteKnight]) {
-            //if (sqOffboard(sq + dir)) continue;
+            if (sqOffboard(sq + dir)) continue;
             const piece = this.board.getPiece(sq + dir);
             if (PieceColor[piece] === atkSide && IsKnight[piece]) return true;
         }
@@ -231,10 +234,11 @@ export default class MoveManager {
      * Adds a move to the move list if a given move does not allow the king to be taken on the next move
      */
     private addIfLegal(move: Move): void {
-        if (IsKing[this.board.getPiece(move.to)]) return;
+        if (IsKing[this.board.getPiece(move.to)]) return; // this shouldn't be necessary
+
         this.board.makeMove(move);
         const kingSq = this.board.getSquares(Kings[this.sideToMove]).next().value;
-        if (kingSq === undefined) throw new Error(`${getColorString(GetOtherSide[this.sideToMove])} king not found`);
+        if (kingSq === undefined) throw new Error(`${getColorString(this.sideToMove)} king not found`);
         if (!this.squareAttacked(kingSq, GetOtherSide[this.sideToMove])) {
             this.board.undoMove(move);
             this.addMove(move, this.board.ply);
