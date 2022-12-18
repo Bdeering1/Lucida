@@ -1,5 +1,5 @@
 import { Color, InputOption } from "./shared/enums";
-import { getMoveInput, getSideInput, pauseForInput } from "./cli/input";
+import { getMoveInput, getSideInput, pauseForInput as pauseConsole } from "./cli/input";
 import { printBoard, printBoardVars, printEval, printMoves } from "./cli/printing";
 import Board from "./board/board";
 import MiniMax from "./intelligence/search";
@@ -34,18 +34,19 @@ while(true) {
     let move: Move | InputOption;
     let score = 0;
     if (playerColor !== Color.none && board.sideToMove !== playerColor) {
-        [move, score] = miniMax.getBestMove();
-        console.log(`Computer move: ${move} eval: ${score}`);
-        await pauseForInput();
+        [move, score] = miniMax.getBestMove(true);
+        console.log(`\nMove: ${move} (eval: ${score})`);
+        await pauseConsole();
     }
     else {
-        printMoves(board, moveManager);
+        printMoves([...moveManager.getCurrentMoves()]);
         move = await getMoveInput([...moveManager.getCurrentMoves()]);
     }
 
     if (move === InputOption.undo) {
         if (moveList.length === 0) continue;
         board.undoMove(moveList.pop() as Move);
+        if (playerColor !== Color.none && moveList.length !== 0) board.undoMove(moveList.pop() as Move);
         continue;
     }
     if (move === InputOption.exit) break;

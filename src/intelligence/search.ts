@@ -1,12 +1,12 @@
 import { Color, Piece } from '../shared/enums';
 import { PieceVal, SideMultiplier } from '../shared/utils';
+import { getMoveNumber, printMoves } from '../cli/printing';
 import Eval from './eval';
 import { IBoard } from '../board/board-types';
 import Move from '../game/move';
 import MoveManager from '../game/move-manager';
 import PieceSquareTables from './pst';
 import { getGameStatus } from '../game/game-state';
-import { printMoves } from '../cli/printing';
 
 export default class MiniMax {
     private board: IBoard;
@@ -51,13 +51,15 @@ export default class MiniMax {
         if (verbose) {
             console.log(`Depth: ${this.depth}`);
             console.log(`primary: ${this.nodes} quiescence search: ${this.quiesceNodes}`);
-            printMoves(this.board, this.moveManager, this.scores);
+            printMoves([...this.moveManager.getCurrentMoves()], this.scores);
+            let line = '\nBest line:';
+            moves.forEach((move, idx) => {
+                if ((this.board.ply + idx) % 2 === 0) line += ` ${getMoveNumber(this.board.ply + idx)}.`;
+                line += ` ${move}`;
+            });
+            console.log(line);
         }
         
-        moves.forEach((move, idx) => {
-            console.log(`${idx + 1}: ${move}`);
-        });
-
         let idx = 0;
         for (const move of this.moveManager.getCurrentMoves()) {
             if (this.scores[idx++] === best) return [move, best];

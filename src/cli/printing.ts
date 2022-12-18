@@ -4,6 +4,7 @@ import { Color, File, Square } from "../shared/enums";
 import { GetFile, GetRank, GetSq120, generateHash32 } from "../shared/utils";
 import Eval from "../intelligence/eval";
 import { IBoard } from "../board/board-types";
+import Move from "../game/move";
 import MoveManager from "../game/move-manager";
 import PieceSquareTables from "../intelligence/pst";
 
@@ -56,9 +57,9 @@ export function printBoardVars(board: IBoard, verbose = false) {
     }
 }
 
-export function printMoves(board: IBoard, moveManager: MoveManager, moveScores?: number[]) {
+export function printMoves(moves: Move[], moveScores?: number[]) {
     let output = "";
-    [...moveManager.getCurrentMoves()].forEach((move, idx) => {
+    moves.forEach((move, idx) => {
         if (idx !== 0) output += ", ";
         output += `${move}${moveScores ? `: ${moveScores[idx]}` : ""}`;
     });
@@ -84,7 +85,7 @@ export function getColorString(color: Color) {
     return color === Color.white ? 'white' : color === Color.black ? 'black' : 'N/A';
 }
 
-function getMoveNumber(ply: number) {
+export function getMoveNumber(ply: number) {
     return ply / 2 + 1;
 }
 

@@ -21,7 +21,7 @@ export default class Eval {
      * The weight of the mobility score in the evaluation function
      * @description each 1 weight = 0.5 centipawns per move advantage
      */
-    static mobilityWeight = 3;
+    static mobilityWeight = 1;
 
     /**
      * The weight of each piece type when determining game phase
@@ -38,7 +38,7 @@ export default class Eval {
 
     static evaluate(board: IBoard, moveManager: MoveManager): number {
         let score = board.material[Color.white] - board.material[Color.black];
-        //score += this.getMobilityScore(moveManager) * this.mobilityWeight;
+        score += this.getMobilityScore(moveManager) * this.mobilityWeight;
 
         const phase = this.getGamePhase(board);
         const middlegame = this.getPSTScore(board, PieceSquareTables.middlegame);

@@ -164,9 +164,6 @@ export default class MoveManager {
                 }
             }
         }
-        if (this.board.posKey === 1497628063 && this.board.getPiece(Square.f7) === Piece.whiteQueen) {
-            console.log(`move count = ${this.moveCount} num moves = ${this.numMoves[ply]} moves = ${this.moveList[ply].slice(0, this.moveCount + 3).join(', ')}`);
-        }
 
         if (addToList) this.numMoves[ply] = this.moveCount;
         const kingAttacked = this.squareAttacked(this.board.getSquares(Kings[sideToMove]).next().value, opposingSide);
