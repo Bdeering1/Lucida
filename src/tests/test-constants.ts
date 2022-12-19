@@ -9,5 +9,6 @@ export const CAPTURE_FEN = 'K6k/8/8/8/1p6/2P5/8/8 w - - 0 1';
 export const MATE_IN_ONE_FEN = '4k3/8/2R1K3/8/8/8/8/8 w - - 0 1';
 export const STALEMATE_IN_ONE_FEN = '8/8/8/8/8/1k3N2/3p4/K7 w - - 0 1';
 export const KINGS_AND_PAWNS_FEN = '4k3/pppppppp/8/8/8/8/PPPPPPPP/4K3 w - - 0 1';
+export const SAMPLE_ENDGAME_FEN = '8/3k4/1P1pppp1/1K6/7N/8/P6P/8 w - - 0 1';
 
 export const CARO_KANN_FEN = 'rnbqkbnr/pp1ppppp/2p5/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2';

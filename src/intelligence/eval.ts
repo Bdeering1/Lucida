@@ -46,7 +46,7 @@ export default class Eval {
 
         score += this.getTaperedScore(middlegame, endgame, phase);
 
-        return score;
+        return score * SideMultiplier[board.sideToMove];
     }
 
     static getMobilityScore(moveManager: MoveManager) {
@@ -99,9 +99,8 @@ export default class Eval {
         const endgame = PieceSquareTables.endgame[piece][move.to] - PieceSquareTables.endgame[piece][move.from];
         precedence += this.getTaperedScore(middlegame, endgame, phase);
 
-        if (IsQueen[move.promotion]) precedence += 300;
-        else if (move.promotion !== Piece.none) precedence += 100;
-        if (move.capture !== Piece.none) precedence += 200;
+        if (IsQueen[move.promotion]) precedence += 200;
+        if (move.capture !== Piece.none) precedence += 100;
 
         return precedence;
     }
