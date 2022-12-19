@@ -10,6 +10,7 @@ export const MAX_NUM_PER_PIECE = 10;
 export const CASTLE_LEFT = -2;
 export const CASTLE_RIGHT = 2;
 export const INSUFFICENT_MATERIAL = 50325;
+export const MS_PER_SECOND = 1000;
 
 /* --- Strings ---  */
 export const START_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";

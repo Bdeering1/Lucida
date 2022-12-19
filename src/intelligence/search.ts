@@ -1,8 +1,9 @@
 import { Color, Piece } from '../shared/enums';
+import Eval, { MAX_PHASE } from './eval';
 import { PieceVal, SideMultiplier } from '../shared/utils';
 import { getMoveNumber, printMoves } from '../cli/printing';
-import Eval from './eval';
 import { IBoard } from '../board/board-types';
+import { MS_PER_SECOND } from '../shared/constants';
 import Move from '../game/move';
 import MoveManager from '../game/move-manager';
 import PieceSquareTables from './pst';
@@ -13,23 +14,29 @@ export default class MiniMax {
     private moveManager: MoveManager;
     
     /**
-     * Max of primary search tree
+     * Maximum depth of primary search tree
      */
     private depth: number;
     /**
-     * Max depth of quiescence search
+     * Maximum depth of primary search tree, adjusted for game phase
+     */
+    private effectiveDepth: number;
+    /**
+     * Maximum depth of quiescence search
      */
     private quiesceDepth: number;
-    //private delta = 50;
 
     private nodes = 0;
     private quiesceNodes = 0;
+    private pruned = 0;
+    private quiescePruned = 0;
     private scores: number[] = [];
 
     constructor(board: IBoard, moveManager: MoveManager, depth = 5, quiesceDepth = 15) {
         this.board = board;
         this.moveManager = moveManager;
         this.depth = depth;
+        this.effectiveDepth = depth;
         this.quiesceDepth = quiesceDepth;
 
         PieceSquareTables.init();
@@ -37,20 +44,27 @@ export default class MiniMax {
     }
 
     public getBestMove(verbose = false): [Move, number] {
+        this.effectiveDepth = this.depth + ((Eval.getGamePhase(this.board) / MAX_PHASE) > 0.85 ? 1 : 0);
         this.scores = [];
         this.nodes = 0;
         this.quiesceNodes = 0;
 
+        const startTime = Date.now();
+
         let best: number;
         let moves: Move[];
         if (this.board.sideToMove === Color.white)        
-            [best, moves] = this.maxi(this.depth, -Infinity, Infinity, new Array<Move>());
+            [best, moves] = this.maxi(this.effectiveDepth, -Infinity, Infinity, new Array<Move>());
         else
-            [best, moves] = this.mini(this.depth, -Infinity, Infinity, new Array<Move>());
+            [best, moves] = this.mini(this.effectiveDepth, -Infinity, Infinity, new Array<Move>());
+
+        const timeElapsed = Date.now() - startTime;
+        const timePerNode = timeElapsed / (this.nodes + this.quiesceNodes);
 
         if (verbose) {
-            console.log(`Depth: ${this.depth}`);
-            console.log(`primary: ${this.nodes} quiescence search: ${this.quiesceNodes}`);
+            console.log(`Depth: ${this.depth} ${this.effectiveDepth > this.depth ? `(+${this.effectiveDepth - this.depth})}` : ''}`);
+            console.log(`Time: ${(timeElapsed / MS_PER_SECOND).toFixed(2)}s (${timePerNode.toFixed(2)}ms per node)`);
+            console.log(`primary: ${this.nodes} (-${this.pruned}) quiescence search: ${this.quiesceNodes} (-${this.quiescePruned})`);
             printMoves([...this.moveManager.getCurrentMoves()], this.scores);
             let line = '\nBest line:';
             moves.forEach((move, idx) => {
@@ -79,13 +93,13 @@ export default class MiniMax {
             const [score, possibleMoves] = this.mini(depthLeft - 1, alpha, beta, moves);
             this.board.undoMove(move);
 
-            if (depthLeft === this.depth) this.scores.push(score);
+            if (depthLeft === this.effectiveDepth) this.scores.push(score);
 
-            if (score >= beta) return [beta, moves];
+            if (score >= beta) { this.pruned++; return [beta, moves]; }
             if (score > alpha) {
                 alpha = score;
                 moves = [...possibleMoves];
-                moves[this.depth - depthLeft] = move;
+                moves[this.effectiveDepth - depthLeft] = move;
             }
         }
 
@@ -104,13 +118,13 @@ export default class MiniMax {
             const [score, possibleMoves] = this.maxi(depthLeft - 1, alpha, beta, moves);
             this.board.undoMove(move);
 
-            if (depthLeft === this.depth) this.scores.push(score);
+            if (depthLeft === this.effectiveDepth) this.scores.push(score);
 
-            if (score <= alpha) return [alpha, moves];
+            if (score <= alpha) { this.pruned++; return [alpha, moves]; }
             if (score < beta) {
                 beta = score;
                 moves = [...possibleMoves];
-                moves[this.depth - depthLeft] = move;
+                moves[this.effectiveDepth - depthLeft] = move;
             }
         }
 
@@ -133,7 +147,7 @@ export default class MiniMax {
             const score = this.quiesceMini(depthLeft - 1, alpha, beta);
             this.board.undoMove(move);
 
-            if (score >= beta) return beta;
+            if (score >= beta) { this.quiescePruned++; return beta; }
             if (score > alpha) alpha = score;
         }
 
@@ -156,7 +170,7 @@ export default class MiniMax {
             const score = this.quiesceMaxi(depthLeft - 1, alpha, beta);
             this.board.undoMove(move);
 
-            if (score <= alpha) return alpha;
+            if (score <= alpha) { this.quiescePruned++; return alpha; }
             if (score < beta) beta = score;
         }
 
