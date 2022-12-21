@@ -26,15 +26,11 @@ export default class Eval {
     /**
      * The weight of each piece type when determining game phase
      */
-    static totalPhase: number;
-
-    static init() {
-        this.totalPhase = 16 * PAWN_PHASE
-                         + 4 * KNIGHT_PHASE
-                         + 4 * BISHOP_PHASE
-                         + 4 * ROOK_PHASE
-                         + 2 * QUEEN_PHASE;
-    }
+    static totalPhase: number = 16 * PAWN_PHASE
+                               + 4 * KNIGHT_PHASE
+                               + 4 * BISHOP_PHASE
+                               + 4 * ROOK_PHASE
+                               + 2 * QUEEN_PHASE;
 
     static evaluate(board: IBoard, moveManager: MoveManager): number {
         let score = board.material[Color.white] - board.material[Color.black];

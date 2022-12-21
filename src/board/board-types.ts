@@ -35,7 +35,10 @@ export interface IBoard {
     repeats: number[];
 
 
+    get hasPawns(): boolean;
     get quantities(): number[];
+    get hasCastleMoves(): boolean;
+
     get whiteKingCastle(): boolean;
     get whiteQueenCastle(): boolean;
     get blackKingCastle(): boolean;
@@ -44,7 +47,6 @@ export interface IBoard {
     setWhiteQueenCastle(): void;
     setBlackKingCastle(): void;
     setBlackQueenCastle(): void;
-    hasCastleMoves(): boolean;
 
     /**
      * Add a piece to the board
@@ -55,6 +57,7 @@ export interface IBoard {
      * @todo this may be an implementation detail
      */
     removePiece(sq: Square): void;
+    
     /**
      * Move a piece to another square (updates history and ply)
      * @description Does not check for legality
@@ -65,21 +68,11 @@ export interface IBoard {
      * Undo the last move made
      */
     undoMove(move: Move): void;
-    /**
-     * Whether or not the board has any pawns left (for stalemate detection)
-     */
-    hasPawns(): boolean;
+
     /**
      * Returns the piece located on a given square
      */
     getPiece(sq: Square): Piece;
-    /**
-     * Returns an iterator which yields the piece for each square on the board
-     * @description this method makes interfacing with the board easier, and allows
-     * for the internal implementation piece states to be easily changed later
-     * @todo implement as iterator (is currently a generator)
-     */
-    getPieces(side?: Color): IterableIterator<Piece>;
     /**
      * Returns an iterator which yields the square for each piece of a certain type (if any)
      * @description this method makes interfacing with the board easier, and allows
@@ -87,19 +80,16 @@ export interface IBoard {
      * @todo implement as iterator (is currently a generator)
      */
     getSquares(piece: Piece): IterableIterator<Square>;
-    /**
-     * Add the current position to the board's history
-     */
-    appendToHistory(): void;
+
     /**
      * Create an identical copy of this instance
      * @todo this may be an implementation detail
      */
     clone(deep: boolean): IBoard;
     /**
-    * Restore the board state to how it was at a specified ply, where ply < current ply
+    * Restore this object to a specific instance of the board
     */
-    restoreInstance(board: IBoard): void;
+    restore(board: IBoard): void;
     /**
      * Update position key for side to move, en passent, and castling
      */

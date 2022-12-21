@@ -45,7 +45,6 @@ export default class MiniMax {
         this.quiesceDepth = quiesceDepth;
 
         PieceSquareTables.init();
-        Eval.init();
     }
 
     public getBestMove(verbose = false): [Move, number] {

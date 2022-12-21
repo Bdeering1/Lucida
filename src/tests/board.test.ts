@@ -5,10 +5,10 @@ import { Color, Piece, Square } from "../shared/enums";
 import { PieceColor, PieceVal } from "../shared/utils";
 import Board from "../board/board";
 import { IBoard } from "../board/board-types";
+import Move from "../game/move";
 import { START_FEN } from "../shared/constants";
 import { getCastleString } from "../cli/printing";
 import { parseFen } from "../board/board-setup";
-import Move from "../game/move";
 
 describe('board', () => {
     let board: IBoard;
@@ -27,24 +27,6 @@ describe('board', () => {
         expect(board.getPiece(sq)).toBe(piece);
         expect(board.material[PieceColor[piece]]).toBe(PieceVal[piece]);
         //expect(board.hashPiece).toBeCalled();
-    });
-
-    it('can return an iterator for all pieces on the board', () => {
-        board.addPiece(Piece.whitePawn, Square.a1);
-        board.addPiece(Piece.blackKnight, Square.c1);
-        const pieces = board.getPieces();
-        expect(pieces.next().value).toBe(Piece.whitePawn);
-        expect(pieces.next().value).toBe(Piece.none);
-        expect(pieces.next().value).toBe(Piece.blackKnight);
-    });
-
-    it('can return an iterator for all pieces of a given color on the board', () => {
-        board.addPiece(Piece.whiteKnight, Square.b3);
-        board.addPiece(Piece.whiteBishop, Square.f7);
-        const pieces = board.getPieces(Color.white);
-        expect(pieces.next().value).toBe(Piece.whiteKnight);
-        expect(pieces.next().value).toBe(Piece.whiteBishop);
-        expect(pieces.next().done).toBe(true);
     });
 
     it('can return an iterator for the squares of a given piece', () => {

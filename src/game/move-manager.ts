@@ -134,7 +134,7 @@ export default class MoveManager {
         }
 
         // Castle moves
-        if (this.board.hasCastleMoves()) {
+        if (this.board.hasCastleMoves) {
             if (sideToMove === Color.white) {
                 if (!this.squareAttacked(Square.e1, Color.black)) {
                     if (this.board.whiteKingCastle

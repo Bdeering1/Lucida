@@ -28,7 +28,7 @@ export function getGameStatus(board: IBoard, moves: number): GameStatus {
         if (board.posKey === key) return new GameStatus(true, "Draw by repetition");
     }
 
-    if (board.hasPawns()) return new GameStatus(false);
+    if (board.hasPawns) return new GameStatus(false);
     if (board.material[Color.white] <= INSUFFICENT_MATERIAL && board.material[Color.black] <= INSUFFICENT_MATERIAL) {
         return new GameStatus(true, "Draw, insufficient material"); 
     }

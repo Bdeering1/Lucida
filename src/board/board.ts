@@ -1,6 +1,6 @@
-import { BOARD_SQ_NUM, CASTLE_LEFT, CASTLE_RIGHT, INNER_BOARD_SQ_NUM, MAX_GAME_MOVES, MAX_NUM_PER_PIECE, NUM_CASTLE_COMBINATIONS, NUM_PIECE_TYPES } from "../shared/constants";
+import { BOARD_SQ_NUM, CASTLE_LEFT, CASTLE_RIGHT, MAX_GAME_MOVES, MAX_NUM_PER_PIECE, NUM_CASTLE_COMBINATIONS, NUM_PIECE_TYPES } from "../shared/constants";
 import { CastleBit, Color, Piece, Square } from "../shared/enums";
-import { CastleLeftRook, CastlePerm, CastleRightRook, EnPasRank, GetOtherSide, GetRank, GetSq120, IsKing, IsPawn, LeftRook, PawnDir, Pawns, PieceColor, PieceVal, RightRook, Rooks, StartingRank, generateHash32 } from "../shared/utils";
+import { CastleLeftRook, CastlePerm, CastleRightRook, EnPasRank, GetOtherSide, GetRank, IsKing, IsPawn, LeftRook, PawnDir, Pawns, PieceColor, PieceVal, RightRook, Rooks, StartingRank, generateHash32 } from "../shared/utils";
 import { IBoard } from "./board-types";
 import Move from "../game/move";
 
@@ -13,6 +13,10 @@ export default class Board implements IBoard {
     public material: number[];
     public posKey = 0;
     public repeats: number[] = [];
+
+    private static pieceKeys: number[][];
+    private static castleKeys: number[];
+    private static sideKey: number;
 
     /**
      * @private
@@ -36,14 +40,11 @@ export default class Board implements IBoard {
      */
     private castlePermissions = CastleBit.none;
     /**
+     * @private
      * Stores the state of the board after each move, enables undo operation
      */
     // eslint-disable-next-line no-use-before-define
     private history: Board[];
-
-    private static pieceKeys: number[][];
-    private static castleKeys: number[];
-    private static sideKey: number;
 
     constructor() {
         this.material = [0, 0];
@@ -74,8 +75,10 @@ export default class Board implements IBoard {
             }
         }
     }
-
-    get quantities(): number[] { return this.pieceQuantities; }
+    
+    get hasPawns() { return this.pieceQuantities[Piece.whitePawn] !== 0 || this.pieceQuantities[Piece.blackPawn] !== 0; }
+    get quantities() { return this.pieceQuantities; }
+    get hasCastleMoves() { return this.castlePermissions !== CastleBit.none; }
     get whiteKingCastle() { return (this.castlePermissions & CastleBit.whiteKing) !== 0; }
     get whiteQueenCastle() { return (this.castlePermissions & CastleBit.whiteQueen) !== 0; }
     get blackKingCastle() { return (this.castlePermissions & CastleBit.blackKing) !== 0; }
@@ -84,7 +87,6 @@ export default class Board implements IBoard {
     setWhiteQueenCastle(): void { this.castlePermissions |= CastleBit.whiteQueen; }
     setBlackKingCastle(): void { this.castlePermissions |= CastleBit.blackKing; }
     setBlackQueenCastle(): void { this.castlePermissions |= CastleBit.blackQueen; }
-    public hasCastleMoves(): boolean { return this.castlePermissions !== CastleBit.none; }
 
     public addPiece(piece: Piece, sq: Square): void {
         if (piece === Piece.none) return;
@@ -206,31 +208,13 @@ export default class Board implements IBoard {
         }
     }
 
-    public hasPawns(): boolean {
-        return this.pieceQuantities[Piece.whitePawn] !== 0 || this.pieceQuantities[Piece.blackPawn] !== 0;
-    }
     public getPiece(sq: Square): Piece {
         return this.pieces[sq];
-    }
-    public * getPieces(side: Color = Color.none): IterableIterator<Piece> {
-        for (let i = 0; i < INNER_BOARD_SQ_NUM; i++) {
-            if (side === Color.none || PieceColor[this.pieces[GetSq120[i]]] === side)
-                yield this.pieces[GetSq120[i]];
-        }
     }
     public * getSquares(piece: Piece): IterableIterator<Square> {
         for (let i = this.pieceQuantities[piece] - 1; i >= 0; i--) {
             yield this.pieceSquares[piece][i];
         }
-    }
-
-    public appendToHistory(): void {
-        this.history[this.ply] = {} as Board;
-        this.history[this.ply].fiftyMoveCounter = this.fiftyMoveCounter;
-        this.history[this.ply].enPas = this.enPas;
-        this.history[this.ply].castlePermissions = this.castlePermissions;
-        this.history[this.ply].posKey = this.posKey;
-        this.history[this.ply].repeats = [...this.repeats];
     }
 
     public clone(deep = false): Board {
@@ -253,7 +237,7 @@ export default class Board implements IBoard {
         
         return copy;
     }
-    public restoreInstance(board: Board): void {
+    public restore(board: Board): void {
         this.sideToMove = board.sideToMove;
         this.ply = board.ply;
         this.enPas = board.enPas;
@@ -272,6 +256,15 @@ export default class Board implements IBoard {
         if (this.sideToMove === Color.white) this.hashSide();
         if (this.enPas !== Square.none) this.hashEnPas();
         this.hashCastle();
+    }
+
+    private appendToHistory(): void {
+        this.history[this.ply] = {} as Board;
+        this.history[this.ply].fiftyMoveCounter = this.fiftyMoveCounter;
+        this.history[this.ply].enPas = this.enPas;
+        this.history[this.ply].castlePermissions = this.castlePermissions;
+        this.history[this.ply].posKey = this.posKey;
+        this.history[this.ply].repeats = [...this.repeats];
     }
     private checkRepeats(): void {
         if (this.fiftyMoveCounter === 0) return;

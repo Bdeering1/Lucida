@@ -30,13 +30,11 @@ describe('eval', () => {
         expect(board.posKey).toBe(clone.posKey);
         expect(board.material).toEqual(clone.material);
         expect(board.repeats).toEqual(clone.repeats);
-        expect([...board.getPieces()]).toEqual([...clone.getPieces()]);
     });
 
     it('returns a game phase of zero for the starting position', () => {
         parseFen(board, START_FEN);
         expect(Eval.getGamePhase(board)).toBe(0);
-        Eval.init();
     });
 
     it('retuns the maximum game phase for a position with only kings and pawns left', () => {
