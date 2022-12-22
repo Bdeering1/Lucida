@@ -1,10 +1,13 @@
 import { Color, Piece, Square } from "../shared/enums";
+import { IAttackTable } from "./attack-table";
 import Move from "../game/move";
 
 /**
  * Represents all aspects of board state for a given game ply
  */
 export interface IBoard {
+    attackTable: IAttackTable | undefined;
+
     /**
      * The current side to move
      */

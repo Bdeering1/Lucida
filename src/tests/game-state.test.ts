@@ -1,5 +1,5 @@
 import Board from "../board/board";
-import { IBoard } from "../board/board-types";
+import { IBoard } from "../board/iboard";
 import Move from "../game/move";
 import MoveManager from "../game/move-manager";
 import { Square } from "../shared/enums";

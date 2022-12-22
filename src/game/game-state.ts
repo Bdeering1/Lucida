@@ -1,6 +1,6 @@
 import { Color, MoveStatus } from "../shared/enums";
 import { GetOtherSide } from "../shared/utils";
-import { IBoard } from "../board/board-types";
+import { IBoard } from "../board/iboard";
 import { INSUFFICENT_MATERIAL } from "../shared/constants";
 import { getColorString } from "../cli/printing";
 

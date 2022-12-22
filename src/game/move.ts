@@ -6,17 +6,13 @@ export default class Move {
     public from: Square;
     public to: Square;
     public capture: Piece;
-    public promotion: Piece = Piece.none;
+    public promotion: Piece;
 
-    public constructor(from: Square, to: Square, capture = Piece.none) {
+    public constructor(from: Square, to: Square, capture = Piece.none, promotion = Piece.none) {
         this.from = from;
         this.to = to;
         this.capture = capture;
-    }
-
-    public setPromotion(promotion: Piece): Move {
         this.promotion = promotion;
-        return this;
     }
     
     public toString(): string {

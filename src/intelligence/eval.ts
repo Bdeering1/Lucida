@@ -2,7 +2,7 @@
 
 import { Color, Piece } from "../shared/enums";
 import { GetSq120, IsQueen, PieceColor, SideMultiplier } from "../shared/utils";
-import { IBoard } from "../board/board-types";
+import { IBoard } from "../board/iboard";
 import { INNER_BOARD_SQ_NUM } from "../shared/constants";
 import Move from "../game/move";
 import MoveManager from "../game/move-manager";

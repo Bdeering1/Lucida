@@ -3,7 +3,7 @@
 import { CASTLE_FEN, CHECKMATE_FEN, EN_PAS_FEN, PROMOTION_FEN, STALEMATE_FEN } from "./test-constants";
 import { Color, MoveStatus } from "../shared/enums";
 import Board from "../board/board";
-import { IBoard } from "../board/board-types";
+import { IBoard } from "../board/iboard";
 import MoveManager from "../game/move-manager";
 import { START_FEN } from "../shared/constants";
 import { parseFen } from "../board/board-setup";

@@ -1,6 +1,6 @@
 import { Color, File, Piece, Rank } from "../shared/enums";
 import { getFileFromChar, getRankFromChar, getSquare } from "../shared/utils";
-import { IBoard } from "./board-types";
+import { IBoard } from "./iboard";
 
 export function resetBoard(): void {
     throw new Error("Method not implemented.");
@@ -102,5 +102,6 @@ export function parseFen(board: IBoard, fen: string): void {
     board.fiftyMoveCounter = parseInt(fiftyMove);
     board.ply = (parseInt(ply) - 1) * 2 + board.sideToMove;
 
+    board.attackTable?.init();
     board.updatePositionKey();
 }

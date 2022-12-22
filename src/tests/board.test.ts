@@ -4,7 +4,7 @@ import { CAPTURE_FEN, CASTLE_FEN, EN_PAS_FEN } from "./test-constants";
 import { Color, Piece, Square } from "../shared/enums";
 import { PieceColor, PieceVal } from "../shared/utils";
 import Board from "../board/board";
-import { IBoard } from "../board/board-types";
+import { IBoard } from "../board/iboard";
 import Move from "../game/move";
 import { START_FEN } from "../shared/constants";
 import { getCastleString } from "../cli/printing";

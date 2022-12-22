@@ -1,11 +1,13 @@
 import { BOARD_SQ_NUM, CASTLE_LEFT, CASTLE_RIGHT, MAX_GAME_MOVES, MAX_NUM_PER_PIECE, NUM_CASTLE_COMBINATIONS, NUM_PIECE_TYPES } from "../shared/constants";
 import { CastleBit, Color, Piece, Square } from "../shared/enums";
 import { CastleLeftRook, CastlePerm, CastleRightRook, EnPasRank, GetOtherSide, GetRank, IsKing, IsPawn, LeftRook, PawnDir, Pawns, PieceColor, PieceVal, RightRook, Rooks, StartingRank, generateHash32 } from "../shared/utils";
-import { IBoard } from "./board-types";
+import { IAttackTable } from "./attack-table";
+import { IBoard } from "./iboard";
 import Move from "../game/move";
 
 export default class Board implements IBoard {
-
+    public attackTable: IAttackTable | undefined;
+    
     public sideToMove = Color.none;
     public ply = 0;
     public enPas = Square.none;
@@ -13,11 +15,11 @@ export default class Board implements IBoard {
     public material: number[];
     public posKey = 0;
     public repeats: number[] = [];
-
+    
     private static pieceKeys: number[][];
     private static castleKeys: number[];
     private static sideKey: number;
-
+    
     /**
      * @private
      * Stores the piece on each square of the board
@@ -46,7 +48,9 @@ export default class Board implements IBoard {
     // eslint-disable-next-line no-use-before-define
     private history: Board[];
 
-    constructor() {
+    constructor(attackTable?: IAttackTable) {
+        this.attackTable = attackTable;
+
         this.material = [0, 0];
 
         this.pieces = new Array(BOARD_SQ_NUM).fill(Piece.none);
@@ -96,6 +100,8 @@ export default class Board implements IBoard {
         this.pieceQuantities[piece]++;
         this.material[PieceColor[piece]] += PieceVal[piece];
         this.hashPiece(piece, sq);
+
+        this.attackTable?.updateTo(sq);
     }
     public removePiece(sq: Square): void {
         const piece = this.pieces[sq];
@@ -112,6 +118,8 @@ export default class Board implements IBoard {
             this.material[PieceColor[piece]] -= PieceVal[piece];
             this.hashPiece(piece, sq);
         }
+
+        this.attackTable?.updateFrom(sq);
     }
     public makeMove(move: Move): void {
         const from = move.from;

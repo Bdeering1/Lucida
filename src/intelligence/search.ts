@@ -1,6 +1,6 @@
 import Eval, { MAX_PHASE } from './eval';
 import { getMoveNumber, printMoves } from '../cli/printing';
-import { IBoard } from '../board/board-types';
+import { IBoard } from '../board/iboard';
 import { MS_PER_SECOND } from '../shared/constants';
 import Move from '../game/move';
 import MoveManager from '../game/move-manager';

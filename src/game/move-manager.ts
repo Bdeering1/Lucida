@@ -2,7 +2,7 @@ import { Bishops, GetOtherSide, GetRank, IsBishopQueen, IsKing, IsKnight, IsPawn
 import { Color, MoveStatus, Piece, Square } from "../shared/enums";
 import { MAX_GAME_MOVES, MAX_POSITION_MOVES } from "../shared/constants";
 import Eval from "../intelligence/eval";
-import { IBoard } from "../board/board-types";
+import { IBoard } from "../board/iboard";
 import Move from "./move";
 import { getColorString } from "../cli/printing";
 
@@ -101,10 +101,10 @@ export default class MoveManager {
             const targetSq = sq + PieceDir[pawnType][sideToMove];
             if (PieceColor[this.board.getPiece(targetSq)] === Color.none) {
                 if (GetRank[sq] === StartingRank[opposingSide]) {
-                    this.addIfLegal(new Move(sq, targetSq).setPromotion(Queens[sideToMove]));
-                    this.addIfLegal(new Move(sq, targetSq).setPromotion(Rooks[sideToMove]));
-                    this.addIfLegal(new Move(sq, targetSq).setPromotion(Bishops[sideToMove]));
-                    this.addIfLegal(new Move(sq, targetSq).setPromotion(Knights[sideToMove]));
+                    this.addIfLegal(new Move(sq, targetSq, Piece.none, Queens[sideToMove]));
+                    this.addIfLegal(new Move(sq, targetSq, Piece.none, Rooks[sideToMove]));
+                    this.addIfLegal(new Move(sq, targetSq, Piece.none, Bishops[sideToMove]));
+                    this.addIfLegal(new Move(sq, targetSq, Piece.none, Knights[sideToMove]));
                 }
                 else {
                     const doubleMoveSq = sq + PieceDir[pawnType][sideToMove] * 2;
@@ -123,10 +123,10 @@ export default class MoveManager {
                 }
                 if (PieceColor[this.board.getPiece(captureSq)] === opposingSide) {
                     if (GetRank[sq] === StartingRank[opposingSide]) {
-                        this.addIfLegal(new Move(sq, captureSq, this.board.getPiece(captureSq)).setPromotion(Queens[sideToMove]));
-                        this.addIfLegal(new Move(sq, captureSq, this.board.getPiece(captureSq)).setPromotion(Rooks[sideToMove]));
-                        this.addIfLegal(new Move(sq, captureSq, this.board.getPiece(captureSq)).setPromotion(Bishops[sideToMove]));
-                        this.addIfLegal(new Move(sq, captureSq, this.board.getPiece(captureSq)).setPromotion(Knights[sideToMove]));
+                        this.addIfLegal(new Move(sq, captureSq, this.board.getPiece(captureSq), Queens[sideToMove]));
+                        this.addIfLegal(new Move(sq, captureSq, this.board.getPiece(captureSq), Rooks[sideToMove]));
+                        this.addIfLegal(new Move(sq, captureSq, this.board.getPiece(captureSq), Bishops[sideToMove]));
+                        this.addIfLegal(new Move(sq, captureSq, this.board.getPiece(captureSq), Knights[sideToMove]));
                     }
                     else this.addIfLegal(new Move(sq, captureSq, this.board.getPiece(captureSq)));
                 }

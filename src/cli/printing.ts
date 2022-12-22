@@ -3,7 +3,7 @@ import { BOARD_SQ_NUM, FILE_CHAR, INNER_BOARD_SQ_NUM, PIECE_CHAR } from "../shar
 import { Color, File, Square } from "../shared/enums";
 import { GetFile, GetRank, GetSq120, generateHash32 } from "../shared/utils";
 import Eval from "../intelligence/eval";
-import { IBoard } from "../board/board-types";
+import { IBoard } from "../board/iboard";
 import Move from "../game/move";
 import MoveManager from "../game/move-manager";
 import PieceSquareTables from "../intelligence/pst";

@@ -1,7 +1,7 @@
 import { CAPTURE_FEN, MATE_IN_ONE_FEN, STALEMATE_IN_ONE_FEN } from "./test-constants";
 import { Piece, Square } from "../shared/enums";
 import Board from "../board/board";
-import { IBoard } from "../board/board-types";
+import { IBoard } from "../board/iboard";
 import MiniMax from "../intelligence/search";
 import Move from "../game/move";
 import MoveManager from "../game/move-manager";
