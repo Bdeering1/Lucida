@@ -32,8 +32,6 @@ export default class MiniMax {
 
     private nodes = 0;
     private quiesceNodes = 0;
-    private pruned = 0;
-    private quiescePruned = 0;
     private transpositions = 0;
     private scores: number[] = [];
 
@@ -63,7 +61,7 @@ export default class MiniMax {
         if (verbose) {
             console.log(`depth: ${this.depth} ${this.effectiveDepth > this.depth ? `(+${this.effectiveDepth - this.depth})` : ''}`);
             console.log(`time: ${(timeElapsed / MS_PER_SECOND).toFixed(2)}s (${timePerNode.toFixed(2)}ms per node)`);
-            console.log(`primary: ${this.nodes} (-${this.pruned}) quiescence search: ${this.quiesceNodes} (-${this.quiescePruned})`);
+            console.log(`primary: ${this.nodes} quiescence search: ${this.quiesceNodes}`);
             console.log(`transpositions: ${this.transpositions} table size ${this.positionScores.size}`);
             printMoves([...this.moveManager.getCurrentMoves()], this.scores);
             let line = '\nBest line:';
@@ -101,7 +99,7 @@ export default class MiniMax {
                 }
                 this.board.undoMove(move);
     
-                if (score >= beta) { this.pruned++; return [beta, moves]; }
+                if (score >= beta) return [beta, moves];
                 if (score > alpha) {
                     alpha = score;
                     moves = [...moves];
@@ -118,7 +116,7 @@ export default class MiniMax {
 
             if (depthLeft === this.effectiveDepth) this.scores.push(score);
 
-            if (score >= beta) { this.pruned++; return [beta, moves]; }
+            if (score >= beta) return [beta, moves];
             if (score > alpha) {
                 if (depthLeft <= this.effectiveDepth - 2) this.positionScores.set(this.board.posKey, alpha);
                 alpha = score;
@@ -139,6 +137,24 @@ export default class MiniMax {
         if (standPat > alpha) alpha = standPat;
 
         this.moveManager.generateMoves();
+
+        if (depthLeft <= this.quiesceDepth - 2) {
+            for (const move of this.moveManager.getCurrentMoves()) {
+                if (move.capture === Piece.none) continue;
+    
+                let score = -Infinity;
+                this.board.makeMove(move);
+                if (this.positionScores.has(this.board.posKey)) {
+                    score = this.positionScores.get(this.board.posKey) as number;
+                    this.transpositions++;
+                }
+                this.board.undoMove(move);
+    
+                if (score >= beta) return beta;
+                if (score > alpha) alpha = score;
+            }
+        }
+
         for (const move of this.moveManager.getCurrentMoves()) {
             if (move.capture === Piece.none) continue;
 
@@ -146,8 +162,11 @@ export default class MiniMax {
             const score = -this.quiesce(depthLeft - 1, -beta, -alpha);
             this.board.undoMove(move);
 
-            if (score >= beta) { this.quiescePruned++; return beta; }
-            if (score > alpha) alpha = score;
+            if (score >= beta) return beta;
+            if (score > alpha) {
+                this.positionScores.set(this.board.posKey, alpha);
+                alpha = score;
+            }
         }
 
         return alpha;
