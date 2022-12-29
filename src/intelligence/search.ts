@@ -1,4 +1,5 @@
 import Eval, { MAX_PHASE } from './eval';
+import { PieceVal, SideMultiplier } from '../shared/utils';
 import { getMoveNumber, printMoves } from '../cli/printing';
 import { IBoard } from '../board/iboard';
 import { MS_PER_SECOND } from '../shared/constants';
@@ -6,7 +7,6 @@ import Move from '../game/move';
 import MoveManager from '../game/move-manager';
 import { Piece } from '../shared/enums';
 import PieceSquareTables from './pst';
-import { PieceVal } from '../shared/utils';
 import { getGameStatus } from '../game/game-state';
 
 export default class MiniMax {
@@ -63,7 +63,7 @@ export default class MiniMax {
             console.log(`time: ${(timeElapsed / MS_PER_SECOND).toFixed(2)}s (${timePerNode.toFixed(2)}ms per node)`);
             console.log(`primary: ${this.nodes} quiescence search: ${this.quiesceNodes}`);
             console.log(`transpositions: ${this.transpositions} table size ${this.positionScores.size}`);
-            printMoves([...this.moveManager.getCurrentMoves()], this.scores);
+            printMoves([...this.moveManager.getCurrentMoves()], this.scores, SideMultiplier[this.board.sideToMove]);
             let line = '\nBest line:';
             moves.forEach((move, idx) => {
                 if ((this.board.ply + idx) % 2 === 0) line += ` ${getMoveNumber(this.board.ply + idx)}.`;
@@ -82,7 +82,6 @@ export default class MiniMax {
     private negaMax(depthLeft: number, alpha: number, beta: number, moves: Move[]): [number, Move[]] {
         this.nodes++;
         if (depthLeft === 0) {
-            this.positionScores.set(this.board.posKey, alpha);
             return [this.quiesce(this.quiesceDepth, alpha, beta), moves];
         }
 
@@ -113,12 +112,12 @@ export default class MiniMax {
             let [score, possibleMoves] = this.negaMax(depthLeft - 1, -beta, -alpha, moves);
             score = -score;
             this.board.undoMove(move);
-
+            
             if (depthLeft === this.effectiveDepth) this.scores.push(score);
-
+            
             if (score >= beta) return [beta, moves];
             if (score > alpha) {
-                if (depthLeft <= this.effectiveDepth - 2) this.positionScores.set(this.board.posKey, alpha);
+                this.positionScores.set(this.board.posKey, score);
                 alpha = score;
                 moves = [...possibleMoves];
                 moves[this.effectiveDepth - depthLeft] = move;
@@ -127,7 +126,6 @@ export default class MiniMax {
 
         return [alpha, moves];
     }
-
     private quiesce(depthLeft: number, alpha: number, beta: number) {
         this.quiesceNodes++;
         if (depthLeft === 0) return beta;

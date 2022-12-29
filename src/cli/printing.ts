@@ -1,7 +1,7 @@
 /* eslint-disable no-magic-numbers */
 import { BOARD_SQ_NUM, FILE_CHAR, INNER_BOARD_SQ_NUM, PIECE_CHAR } from "../shared/constants";
 import { Color, File, Square } from "../shared/enums";
-import { GetFile, GetRank, GetSq120, generateHash32 } from "../shared/utils";
+import { GetFile, GetRank, GetSq120, SideMultiplier, generateHash32 } from "../shared/utils";
 import Eval from "../intelligence/eval";
 import { IBoard } from "../board/iboard";
 import Move from "../game/move";
@@ -57,17 +57,17 @@ export function printBoardVars(board: IBoard, verbose = false) {
     }
 }
 
-export function printMoves(moves: Move[], moveScores?: number[]) {
+export function printMoves(moves: Move[], moveScores?: number[], scoreMultiplier?: number) {
     let output = "";
     moves.forEach((move, idx) => {
         if (idx !== 0) output += ", ";
-        output += `${move}${moveScores ? `: ${moveScores[idx]}` : ""}`;
+        output += `${move}${moveScores ? `: ${moveScores[idx] * (scoreMultiplier ?? 1)}` : ""}`;
     });
     console.log(output);
 }
 
 export function printEval(board: IBoard, moveManager: MoveManager, verbose = false) {
-    console.log(`Static eval: ${Eval.evaluate(board, moveManager)}`);
+    console.log(`Static eval: ${Eval.evaluate(board, moveManager) * SideMultiplier[board.sideToMove]}`);
     if (verbose) {
         console.log(`Mobility score: ${Eval.getMobilityScore(moveManager)} Weight: ${Eval.mobilityWeight}`);
         console.log(`PST scores: MG: ${Eval.getPSTScore(board, PieceSquareTables.middlegame)} EG: ${Eval.getPSTScore(board, PieceSquareTables.endgame)} Phase: ${Eval.getGamePhase(board)}`);
