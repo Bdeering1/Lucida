@@ -7,6 +7,7 @@ import Move from '../game/move';
 import MoveManager from '../game/move-manager';
 import { Piece } from '../shared/enums';
 import PieceSquareTables from './pst';
+import SearchResult from './search-result';
 import { getGameStatus } from '../game/game-state';
 
 export default class MiniMax {
@@ -26,9 +27,9 @@ export default class MiniMax {
      */
     private quiesceDepth: number;
     /**
-     * Hash map used to store previously evaluated positions (transposition table)
+     * Hash map used to store previously evaluated positions
      */
-    private positionScores: Map<number, number> = new Map();
+    private transpositionTable: Map<number, SearchResult> = new Map();
 
     private nodes = 0;
     private quiesceNodes = 0;
@@ -46,8 +47,9 @@ export default class MiniMax {
     }
 
     public getBestMove(verbose = false): [Move, number] {
-        this.positionScores = new Map<number, number>();
+        this.transpositionTable = new Map<number, SearchResult>();
         this.effectiveDepth = this.getEffectiveDepth();
+        this.depth--;
         this.scores = [];
         this.nodes = 0;
         this.quiesceNodes = 0;
@@ -62,7 +64,7 @@ export default class MiniMax {
             console.log(`depth: ${this.depth} ${this.effectiveDepth > this.depth ? `(+${this.effectiveDepth - this.depth})` : ''}`);
             console.log(`time: ${(timeElapsed / MS_PER_SECOND).toFixed(2)}s (${timePerNode.toFixed(2)}ms per node)`);
             console.log(`primary: ${this.nodes} quiescence search: ${this.quiesceNodes}`);
-            console.log(`transpositions: ${this.transpositions} table size ${this.positionScores.size}`);
+            console.log(`transpositions: ${this.transpositions} table size ${this.transpositionTable.size}`);
             printMoves([...this.moveManager.getCurrentMoves()], this.scores, SideMultiplier[this.board.sideToMove]);
             let line = '\nBest line:';
             moves.forEach((move, idx) => {
@@ -92,8 +94,9 @@ export default class MiniMax {
             for (const move of this.moveManager.getCurrentMoves()) {
                 let score = -Infinity;
                 this.board.makeMove(move);
-                if (this.positionScores.has(this.board.posKey)) {
-                    score = this.positionScores.get(this.board.posKey) as number;
+                if (this.transpositionTable.has(this.board.posKey)) {
+                    const res = this.transpositionTable.get(this.board.posKey) as SearchResult;
+                    if (res.depth === depthLeft) score = res.score;
                     this.transpositions++;
                 }
                 this.board.undoMove(move);
@@ -117,7 +120,7 @@ export default class MiniMax {
             
             if (score >= beta) return [beta, moves];
             if (score > alpha) {
-                this.positionScores.set(this.board.posKey, score);
+                this.transpositionTable.set(this.board.posKey, new SearchResult(score, depthLeft));
                 alpha = score;
                 moves = [...possibleMoves];
                 moves[this.effectiveDepth - depthLeft] = move;
@@ -142,10 +145,10 @@ export default class MiniMax {
     
                 let score = -Infinity;
                 this.board.makeMove(move);
-                if (this.positionScores.has(this.board.posKey)) {
-                    score = this.positionScores.get(this.board.posKey) as number;
-                    this.transpositions++;
-                }
+                // if (this.transpositionTable.has(this.board.posKey)) {
+                //     score = this.transpositionTable.get(this.board.posKey) as number;
+                //     this.transpositions++;
+                // }
                 this.board.undoMove(move);
     
                 if (score >= beta) return beta;
@@ -162,7 +165,7 @@ export default class MiniMax {
 
             if (score >= beta) return beta;
             if (score > alpha) {
-                this.positionScores.set(this.board.posKey, alpha);
+                //this.transpositionTable.set(this.board.posKey, score);
                 alpha = score;
             }
         }

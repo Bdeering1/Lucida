@@ -15,7 +15,7 @@ const board = new Board();
 const moveManager = new MoveManager(board);
 const miniMax = new MiniMax(board, moveManager);
 const moveList: Move[] = [];
-parseFen(board, START_FEN);
+parseFen(board, `r2qk2r/ppp2p1p/2n5/3pP1p1/3P1p2/B1PB1RnP/P1P3P1/1R1Q2K1 b kq - 3 13`);
 
 console.log("Please chooce a side (white or black)");
 const playerColor = await getSideInput();
