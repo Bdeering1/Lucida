@@ -43,6 +43,7 @@
         ],
         "linebreak-style": ["error", "unix"],
         "new-parens": "warn",
+        "no-cond-assign": "off",
         "no-constructor-return": "error",
         "no-console": "off",
         "no-eq-null": "error",

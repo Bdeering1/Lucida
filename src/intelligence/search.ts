@@ -49,13 +49,12 @@ export default class MiniMax {
     public getBestMove(verbose = false): [Move, number] {
         this.transpositionTable = new Map<number, SearchResult>();
         this.effectiveDepth = this.getEffectiveDepth();
-        this.depth--;
         this.scores = [];
         this.nodes = 0;
         this.quiesceNodes = 0;
 
         const startTime = Date.now();
-        const [best, moves] = this.negaMax(this.effectiveDepth, -Infinity, Infinity, new Array<Move>());
+        const [best, moves] = this.negaMax(0, -Infinity, Infinity, new Array<Move>());
 
         const timeElapsed = Date.now() - startTime;
         const timePerNode = timeElapsed / (this.nodes + this.quiesceNodes);
@@ -81,22 +80,23 @@ export default class MiniMax {
         throw new Error(`No move found matching best score of ${best}`);
     }
 
-    private negaMax(depthLeft: number, alpha: number, beta: number, moves: Move[]): [number, Move[]] {
+    private negaMax(depth: number, alpha: number, beta: number, moves: Move[]): [number, Move[]] {
         this.nodes++;
-        if (depthLeft === 0) {
-            return [this.quiesce(this.quiesceDepth, alpha, beta), moves];
+        if (depth === this.effectiveDepth) {
+            return [this.quiesce(0, alpha, beta), moves];
         }
 
         const status = getGameStatus(this.board, this.moveManager.generateMoves());
-        if (status.complete === true) return [-(PieceVal[Piece.blackKing] + depthLeft), moves];
+        if (status.complete === true) return [-(PieceVal[Piece.blackKing] - depth), moves];
 
-        if (depthLeft <= this.effectiveDepth - 2) {
+        if (depth >= 2) {
             for (const move of this.moveManager.getCurrentMoves()) {
                 let score = -Infinity;
                 this.board.makeMove(move);
-                if (this.transpositionTable.has(this.board.posKey)) {
-                    const res = this.transpositionTable.get(this.board.posKey) as SearchResult;
-                    if (res.depth === depthLeft) score = res.score;
+                let res;
+                // why isn't this depth + 1?
+                if ((res = this.transpositionTable.get(this.board.posKey)) && res.depth <= depth - 1) {
+                    score = res.score;
                     this.transpositions++;
                 }
                 this.board.undoMove(move);
@@ -105,33 +105,43 @@ export default class MiniMax {
                 if (score > alpha) {
                     alpha = score;
                     moves = [...moves];
-                    moves[this.effectiveDepth - depthLeft] = move;
+                    moves[depth] = move;
                 }
             } 
         }
 
         for (const move of this.moveManager.getCurrentMoves()) {
             this.board.makeMove(move);
-            let [score, possibleMoves] = this.negaMax(depthLeft - 1, -beta, -alpha, moves);
-            score = -score;
+            let score, possibleMoves, res;
+            if ((res = this.transpositionTable.get(this.board.posKey)) && res.depth <= depth - 1) {
+                score = res.score;
+                possibleMoves = moves;
+                this.transpositions++;
+            }
+            else {
+                [score, possibleMoves] = this.negaMax(depth + 1, -beta, -alpha, moves);
+                score = -score;
+            }
+            // let [score, possibleMoves] = this.negaMax(depth + 1, -beta, -alpha, moves);
+            // score = -score;
             this.board.undoMove(move);
             
-            if (depthLeft === this.effectiveDepth) this.scores.push(score);
+            if (depth === 0) this.scores.push(score);
             
             if (score >= beta) return [beta, moves];
             if (score > alpha) {
-                this.transpositionTable.set(this.board.posKey, new SearchResult(score, depthLeft));
+                this.transpositionTable.set(this.board.posKey, new SearchResult(score, depth));
                 alpha = score;
                 moves = [...possibleMoves];
-                moves[this.effectiveDepth - depthLeft] = move;
+                moves[depth] = move;
             }
         }
 
         return [alpha, moves];
     }
-    private quiesce(depthLeft: number, alpha: number, beta: number) {
+    private quiesce(depth: number, alpha: number, beta: number) {
         this.quiesceNodes++;
-        if (depthLeft === 0) return beta;
+        if (depth === this.quiesceDepth) return beta;
 
         const standPat = Eval.evaluate(this.board, this.moveManager);
         if (standPat >= beta) return beta;
@@ -139,33 +149,39 @@ export default class MiniMax {
 
         this.moveManager.generateMoves();
 
-        if (depthLeft <= this.quiesceDepth - 2) {
-            for (const move of this.moveManager.getCurrentMoves()) {
-                if (move.capture === Piece.none) continue;
-    
-                let score = -Infinity;
-                this.board.makeMove(move);
-                // if (this.transpositionTable.has(this.board.posKey)) {
-                //     score = this.transpositionTable.get(this.board.posKey) as number;
-                //     this.transpositions++;
-                // }
-                this.board.undoMove(move);
-    
-                if (score >= beta) return beta;
-                if (score > alpha) alpha = score;
+        for (const move of this.moveManager.getCurrentMoves()) {
+            if (move.capture === Piece.none) continue;
+
+            let score = -Infinity;
+            this.board.makeMove(move);
+            let res;
+            if ((res = this.transpositionTable.get(this.board.posKey)) && res.depth <= this.effectiveDepth + depth - 1) {
+                score = res.score;
+                this.transpositions++;
             }
+            this.board.undoMove(move);
+
+            if (score >= beta) return beta;
+            if (score > alpha) alpha = score;
         }
 
         for (const move of this.moveManager.getCurrentMoves()) {
             if (move.capture === Piece.none) continue;
 
             this.board.makeMove(move);
-            const score = -this.quiesce(depthLeft - 1, -beta, -alpha);
+            let score, res;
+            if ((res = this.transpositionTable.get(this.board.posKey)) && res.depth <= this.effectiveDepth + depth - 1) {
+                score = res.score;
+                this.transpositions++;
+            }
+            else {
+                score = -this.quiesce(depth + 1, -beta, -alpha);
+            }
             this.board.undoMove(move);
 
             if (score >= beta) return beta;
             if (score > alpha) {
-                //this.transpositionTable.set(this.board.posKey, score);
+                this.transpositionTable.set(this.board.posKey, new SearchResult(score, this.effectiveDepth + depth));
                 alpha = score;
             }
         }
