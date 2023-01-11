@@ -14,6 +14,10 @@ export default class MoveManager {
      */
     public moveList: Move[][];
     /**
+     * 
+     */
+    public movePrecedences: number[];
+    /**
      * Number of moves at each given ply
      */
     private numMoves: number[];
@@ -40,6 +44,7 @@ export default class MoveManager {
             this.moveList[i] = [...emptyMoveArray];
             this.numMoves[i] = 0;
         }
+        this.movePrecedences = new Array(MAX_POSITION_MOVES);
     }
 
     public * getCurrentMoves(): IterableIterator<Move> {
@@ -250,13 +255,20 @@ export default class MoveManager {
     }
 
     private insertMove(move: Move, ply: number): void {
-        if (this.moveCount === 0) { this.moveList[ply][0] = move; return; }
+        if (this.moveCount === 0) {
+            this.moveList[ply][0] = move;
+            this.movePrecedences[0] = Eval.getMovePrecedence(this.board, move);
+            return;
+        }
         
+        let precedence = Eval.getMovePrecedence(this.board, move);
         let idx = this.moveCount - 1;
-        while (idx >= 0 && Eval.getMovePrecedence(this.board, move) > Eval.getMovePrecedence(this.board, this.moveList[ply][idx])) {
+        while (idx >= 0 && precedence > this.movePrecedences[idx]) {
             this.moveList[ply][idx + 1] = this.moveList[ply][idx];
+            this.movePrecedences[idx + 1] = this.movePrecedences[idx];
             idx--;
         }
         this.moveList[ply][idx + 1] = move;
+        this.movePrecedences[idx + 1] = precedence;
     }
 }

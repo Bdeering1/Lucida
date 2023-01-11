@@ -27,12 +27,18 @@ export default class MiniMax {
      */
     private quiesceDepth: number;
     /**
+     * Margin used for delta pruning
+     * @description if a capture does not raise the static eval to within this margin, it is not searched further
+     */
+    private deltaMargin = 350;
+    /**
      * Hash map used to store previously evaluated positions
      */
     private transpositionTable: Map<number, SearchResult> = new Map();
 
     private nodes = 0;
     private quiesceNodes = 0;
+    private deltaPruned = 0;
     private transpositions = 0;
     private scores: number[] = [];
 
@@ -62,7 +68,7 @@ export default class MiniMax {
         if (verbose) {
             console.log(`depth: ${this.depth} ${this.effectiveDepth > this.depth ? `(+${this.effectiveDepth - this.depth})` : ''}`);
             console.log(`time: ${(timeElapsed / MS_PER_SECOND).toFixed(2)}s (${timePerNode.toFixed(2)}ms per node)`);
-            console.log(`primary: ${this.nodes} quiescence search: ${this.quiesceNodes}`);
+            console.log(`primary: ${this.nodes} quiescence search: ${this.quiesceNodes} delta pruned: ${this.deltaPruned}`);
             console.log(`transpositions: ${this.transpositions} table size ${this.transpositionTable.size}`);
             printMoves([...this.moveManager.getCurrentMoves()], this.scores, SideMultiplier[this.board.sideToMove]);
             let line = '\nBest line:';
@@ -94,7 +100,6 @@ export default class MiniMax {
                 let score = -Infinity;
                 this.board.makeMove(move);
                 let res;
-                // why isn't this depth + 1?
                 if ((res = this.transpositionTable.get(this.board.posKey)) && res.depth <= depth - 1) {
                     score = res.score;
                     this.transpositions++;
@@ -144,6 +149,7 @@ export default class MiniMax {
 
         const standPat = Eval.evaluate(this.board, this.moveManager);
         if (standPat >= beta) return [beta, true];
+        if (standPat < alpha - this.deltaMargin) { this.deltaPruned++; return [alpha, false]; }
         if (standPat > alpha) alpha = standPat;
 
         this.moveManager.generateMoves();
