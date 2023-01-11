@@ -54,7 +54,7 @@ export default class MiniMax {
         this.quiesceNodes = 0;
 
         const startTime = Date.now();
-        const [best, moves] = this.negaMax(0, -Infinity, Infinity, new Array<Move>());
+        const [best, _, moves] = this.negaMax(0, -Infinity, Infinity, new Array<Move>());
 
         const timeElapsed = Date.now() - startTime;
         const timePerNode = timeElapsed / (this.nodes + this.quiesceNodes);
@@ -80,14 +80,14 @@ export default class MiniMax {
         throw new Error(`No move found matching best score of ${best}`);
     }
 
-    private negaMax(depth: number, alpha: number, beta: number, moves: Move[]): [number, Move[]] {
+    private negaMax(depth: number, alpha: number, beta: number, moves: Move[]): [number, boolean, Move[]] {
         this.nodes++;
         if (depth === this.effectiveDepth) {
-            return [this.quiesce(0, alpha, beta), moves];
+            return [this.quiesce(0, alpha, beta)[0], false, moves];
         }
 
         const status = getGameStatus(this.board, this.moveManager.generateMoves());
-        if (status.complete === true) return [-(PieceVal[Piece.blackKing] - depth), moves];
+        if (status.complete === true) return [-(PieceVal[Piece.blackKing] - depth), false, moves];
 
         if (depth >= 2) {
             for (const move of this.moveManager.getCurrentMoves()) {
@@ -101,7 +101,7 @@ export default class MiniMax {
                 }
                 this.board.undoMove(move);
     
-                if (score >= beta) return [beta, moves];
+                if (score >= beta) return [beta, true, moves];
                 if (score > alpha) {
                     alpha = score;
                     moves = [...moves];
@@ -109,7 +109,8 @@ export default class MiniMax {
                 }
             } 
         }
-
+        
+        let truncated = false;
         for (const move of this.moveManager.getCurrentMoves()) {
             this.board.makeMove(move);
             let score, possibleMoves, res;
@@ -119,32 +120,30 @@ export default class MiniMax {
                 this.transpositions++;
             }
             else {
-                [score, possibleMoves] = this.negaMax(depth + 1, -beta, -alpha, moves);
+                [score, truncated, possibleMoves] = this.negaMax(depth + 1, -beta, -alpha, moves);
                 score = -score;
             }
-            // let [score, possibleMoves] = this.negaMax(depth + 1, -beta, -alpha, moves);
-            // score = -score;
             this.board.undoMove(move);
             
             if (depth === 0) this.scores.push(score);
             
-            if (score >= beta) return [beta, moves];
+            if (score >= beta) return [beta, true, moves];
+            if (!truncated) this.transpositionTable.set(this.board.posKey, new SearchResult(score, depth));
             if (score > alpha) {
-                this.transpositionTable.set(this.board.posKey, new SearchResult(score, depth));
                 alpha = score;
                 moves = [...possibleMoves];
                 moves[depth] = move;
             }
         }
 
-        return [alpha, moves];
+        return [alpha, truncated, moves];
     }
-    private quiesce(depth: number, alpha: number, beta: number) {
+    private quiesce(depth: number, alpha: number, beta: number): [number, boolean] {
         this.quiesceNodes++;
-        if (depth === this.quiesceDepth) return beta;
+        if (depth === this.quiesceDepth) return [beta, false];
 
         const standPat = Eval.evaluate(this.board, this.moveManager);
-        if (standPat >= beta) return beta;
+        if (standPat >= beta) return [beta, true];
         if (standPat > alpha) alpha = standPat;
 
         this.moveManager.generateMoves();
@@ -161,10 +160,11 @@ export default class MiniMax {
             }
             this.board.undoMove(move);
 
-            if (score >= beta) return beta;
+            if (score >= beta) return [beta, true];
             if (score > alpha) alpha = score;
         }
 
+        let truncated = false;
         for (const move of this.moveManager.getCurrentMoves()) {
             if (move.capture === Piece.none) continue;
 
@@ -175,18 +175,19 @@ export default class MiniMax {
                 this.transpositions++;
             }
             else {
-                score = -this.quiesce(depth + 1, -beta, -alpha);
+                [score, truncated] = this.quiesce(depth + 1, -beta, -alpha);
+                score = -score;
             }
             this.board.undoMove(move);
 
-            if (score >= beta) return beta;
+            if (score >= beta) return [beta, true];
+            if (!truncated) this.transpositionTable.set(this.board.posKey, new SearchResult(score, this.effectiveDepth + depth));
             if (score > alpha) {
-                this.transpositionTable.set(this.board.posKey, new SearchResult(score, this.effectiveDepth + depth));
                 alpha = score;
             }
         }
 
-        return alpha;
+        return [alpha, truncated];
     }
 
     private getEffectiveDepth(): number {
