@@ -2,7 +2,7 @@ import Eval, { MAX_PHASE } from './eval';
 import { PieceVal, SideMultiplier } from '../shared/utils';
 import { getMoveNumber, printMoves } from '../cli/printing';
 import { IBoard } from '../board/iboard';
-import { MS_PER_SECOND } from '../shared/constants';
+import { MAX_DEPTH, MS_PER_SECOND } from '../shared/constants';
 import Move from '../game/move';
 import MoveManager from '../game/move-manager';
 import { Piece } from '../shared/enums';
@@ -26,6 +26,10 @@ export default class MiniMax {
      * Maximum depth of quiescence search
      */
     private quiesceDepth: number;
+    /**
+     * Whether or not to use delta pruning
+     */
+    private deltaPruning = true;
     /**
      * Margin used for delta pruning
      * @description if a capture does not raise the static eval to within this margin, it is not searched further
@@ -58,6 +62,9 @@ export default class MiniMax {
         this.scores = [];
         this.nodes = 0;
         this.quiesceNodes = 0;
+
+        this.deltaPruning = true;
+        if (Eval.getGamePhase(this.board)  / MAX_PHASE >= 0.95) this.deltaPruning = false;
 
         const startTime = Date.now();
         const [best, _, moves] = this.negaMax(0, -Infinity, Infinity, new Array<Move>());
@@ -131,9 +138,12 @@ export default class MiniMax {
             this.board.undoMove(move);
             
             if (depth === 0) this.scores.push(score);
-            
+
             if (score >= beta) return [beta, true, moves];
-            if (!truncated) this.transpositionTable.set(this.board.posKey, new SearchResult(score, depth));
+            if (!truncated/* && depth < (this.transpositionTable.get(this.board.posKey)?.depth || MAX_DEPTH)*/) {
+                this.transpositionTable.set(this.board.posKey, new SearchResult(score, depth));
+            }
+
             if (score > alpha) {
                 alpha = score;
                 moves = [...possibleMoves];
@@ -149,7 +159,7 @@ export default class MiniMax {
 
         const standPat = Eval.evaluate(this.board, this.moveManager);
         if (standPat >= beta) return [beta, true];
-        if (standPat < alpha - this.deltaMargin) { this.deltaPruned++; return [alpha, false]; }
+        if (this.deltaPruning && standPat < alpha - this.deltaMargin) { this.deltaPruned++; return [alpha, false]; }
         if (standPat > alpha) alpha = standPat;
 
         this.moveManager.generateMoves();
@@ -187,7 +197,10 @@ export default class MiniMax {
             this.board.undoMove(move);
 
             if (score >= beta) return [beta, true];
-            if (!truncated) this.transpositionTable.set(this.board.posKey, new SearchResult(score, this.effectiveDepth + depth));
+            if (!truncated/* && this.effectiveDepth + depth < (this.transpositionTable.get(this.board.posKey)?.depth || MAX_DEPTH)*/) {
+                this.transpositionTable.set(this.board.posKey, new SearchResult(score, this.effectiveDepth + depth));
+            }
+
             if (score > alpha) {
                 alpha = score;
             }

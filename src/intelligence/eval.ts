@@ -7,6 +7,7 @@ import { INNER_BOARD_SQ_NUM } from "../shared/constants";
 import Move from "../game/move";
 import MoveManager from "../game/move-manager";
 import PieceSquareTables from "./pst";
+import { IAttackTable } from "../board/attack-table";
 
 const PAWN_PHASE = 0;
 const KNIGHT_PHASE = 1;
@@ -99,5 +100,11 @@ export default class Eval {
         if (move.capture !== Piece.none) precedence += 100;
 
         return precedence;
+    }
+
+    static getKingAttackScore(attackTable: IAttackTable, moveManager: MoveManager): number {
+        // king attacked score = valueOfAttacks (using PieceAttackVal[piece]) * attackWeight[attackingPiecesCount] / 100
+        // https://www.chessprogramming.org/King_Safety
+        return 0;
     }
 }

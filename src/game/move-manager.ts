@@ -211,7 +211,10 @@ export default class MoveManager {
                 const piece = this.board.getPiece(sq + totalMove);
                 const colorAtSq = PieceColor[piece];
                 if (sqOffboard(sq + totalMove) || colorAtSq === defSide) break;
-                if (colorAtSq === atkSide && IsBishopQueen[piece]) return true;
+                if (colorAtSq === atkSide) {
+                    if (IsBishopQueen[piece]) return true;
+                    break;
+                }
                 totalMove += dir;
             }
         }

@@ -65,6 +65,11 @@ export const enum MoveStatus{
     stalemate = 0
 }
 
+export const enum AttackValMultiplier {
+    remove = -1,
+    add = 1
+}
+
 export const enum InputOption {
     exit,
     undo
