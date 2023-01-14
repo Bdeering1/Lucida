@@ -102,6 +102,5 @@ export function parseFen(board: IBoard, fen: string): void {
     board.fiftyMoveCounter = parseInt(fiftyMove);
     board.ply = (parseInt(ply) - 1) * 2 + board.sideToMove;
 
-    board.attackTable?.init();
     board.updatePositionKey();
 }

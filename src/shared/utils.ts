@@ -7,7 +7,7 @@ export const PieceBig = [ false, false, true, true, true, true, true, false, tru
 export const PieceMaj = [ false, false, false, false, true, true, true, false, false, false, true, true, true ];
 export const PieceMin = [ false, false, true, true, false, false, false, false, true, true, false, false, false ];
 export const PieceVal = [ 0, 100, 325, 325, 550, 1000, 50000, 100, 325, 325, 550, 1000, 50000 ];
-export const PieceAttackVal = [ 0, 10, 20, 20, 40, 80, 10, 10, 20, 20, 40, 40, 10 ];
+export const PieceAttackVal = [ 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ]/*[ 0, 10, 20, 20, 40, 80, 10, 10, 20, 20, 40, 40, 10 ]*/;
 export const PieceColor = [ Color.none, Color.white, Color.white, Color.white, Color.white, Color.white, Color.white,
     Color.black, Color.black, Color.black, Color.black, Color.black, Color.black ];
 
@@ -26,6 +26,7 @@ export const RookDir = [ -1, -10, 1, 10 ];
 export const KingDir = [ -1, -10, 1, 10, -9, -11, 11, 9 ];
 export const PawnCaptureDir = [[ 9, 11 ], [ -9, -11 ]];
 export const PieceDir = [ [], PawnDir, KnightDir, BishopDir, RookDir, KingDir, KingDir, PawnDir, KnightDir, BishopDir, RookDir, KingDir, KingDir ];
+export const CaptureDir = [ [], PawnCaptureDir[Color.white], KnightDir, BishopDir, RookDir, KingDir, KingDir, PawnCaptureDir[Color.black], KnightDir, BishopDir, RookDir, KingDir, KingDir ];
 export const NonSlidingPieces = [ [Piece.whiteKnight, Piece.whiteKing],
                                   [Piece.blackKnight, Piece.blackKing] ];
 export const SlidingPieces = [ [Piece.whiteBishop, Piece.whiteRook, Piece.whiteQueen],
@@ -95,13 +96,13 @@ export const GetSq64 = [
     99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
     99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
     99,  0,  1,  2,  3,  4,  5,  6,  7, 99,
-    99, 10, 11, 12, 13, 14, 15, 16, 17, 99,
-    99, 20, 21, 22, 23, 24, 25, 26, 27, 99,
-    99, 30, 31, 32, 33, 34, 35, 36, 37, 99,
+    99,  8,  9, 10, 11, 12, 13, 14, 15, 99,
+    99, 16, 17, 18, 19, 20, 21, 22, 23, 99,
+    99, 24, 25, 26, 27, 28, 29, 30, 31, 99,
+    99, 32, 33, 34, 35, 36, 37, 38, 39, 99,
     99, 40, 41, 42, 43, 44, 45, 46, 47, 99,
-    99, 50, 51, 52, 53, 54, 55, 56, 57, 99,
-    99, 60, 61, 62, 63, 64, 65, 66, 67, 99,
-    99, 70, 71, 72, 73, 74, 75, 76, 77, 99,
+    99, 48, 49, 50, 51, 52, 53, 54, 55, 99,
+    99, 56, 57, 58, 59, 60, 61, 62, 63, 99,
     99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
     99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
 ];

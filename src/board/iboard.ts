@@ -6,7 +6,7 @@ import Move from "../game/move";
  * Represents all aspects of board state for a given game ply
  */
 export interface IBoard {
-    attackTable: IAttackTable | undefined;
+    attackTable: IAttackTable;
 
     /**
      * The current side to move

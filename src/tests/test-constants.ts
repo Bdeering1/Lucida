@@ -1,4 +1,5 @@
 /* --- FENs --- */
+export const EMPTY_FEN = '8/8/8/8/8/8/8/8 w - - 0 1';
 export const CASTLE_FEN = 'r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1';
 export const EN_PAS_FEN = '4k3/8/8/1pP5/8/8/8/4K3 w - b6 0 2';
 export const DOUBLE_EN_PAS_FEN = '4k3/8/8/1p6/pPp5/8/P1P5/4K3 b - b3 0 1';

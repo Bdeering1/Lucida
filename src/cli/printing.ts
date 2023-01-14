@@ -7,6 +7,7 @@ import { IBoard } from "../board/iboard";
 import Move from "../game/move";
 import MoveManager from "../game/move-manager";
 import PieceSquareTables from "../intelligence/pst";
+import { IAttackTable } from "../board/attack-table";
 
 export function printBoard(board: IBoard) {
     console.log("\n  a b c d e f g h");
@@ -38,6 +39,25 @@ export function printBoard120(board: IBoard) {
             line = `${GetRank[sq + 1] !== 0 ? GetRank[sq + 1] : " "} `;
         }
         line += `${PIECE_CHAR[board.getPiece(sq)]} `;
+    }
+    lines.push(line);
+
+    for (const l of lines.reverse()) {
+        console.log(l);
+    }
+}
+
+export function printAttackTable(table: IAttackTable, color: Color) {
+    console.log("\n   a  b  c  d  e  f  g  h");
+
+    const lines = [];
+    let line = "";
+    for (let sq = 0; sq < INNER_BOARD_SQ_NUM; sq++) {
+        if (sq % 8 === 0) {
+            lines.push(line);
+            line = `${GetRank[GetSq120[sq]]} `;
+        }
+        line += `${table.getAttacks(color, GetSq120[sq])} `.padStart(3);
     }
     lines.push(line);
 
