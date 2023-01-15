@@ -4,7 +4,7 @@ import { getMoveNumber, printMoves } from '../cli/printing';
 import { IBoard } from '../board/iboard';
 import { MAX_DEPTH, MS_PER_SECOND } from '../shared/constants';
 import Move from '../game/move';
-import MoveManager from '../game/move-manager';
+import MoveGenerator from '../game/move-generator';
 import { Piece } from '../shared/enums';
 import PieceSquareTables from './pst';
 import SearchResult from './search-result';
@@ -12,7 +12,7 @@ import { getGameStatus } from '../game/game-state';
 
 export default class MiniMax {
     private board: IBoard;
-    private moveManager: MoveManager;
+    private moveManager: MoveGenerator;
     
     /**
      * Maximum depth of primary search tree
@@ -46,7 +46,7 @@ export default class MiniMax {
     private transpositions = 0;
     private scores: number[] = [];
 
-    constructor(board: IBoard, moveManager: MoveManager, depth = 5, quiesceDepth = 15) {
+    constructor(board: IBoard, moveManager: MoveGenerator, depth = 5, quiesceDepth = 15) {
         this.board = board;
         this.moveManager = moveManager;
         this.depth = depth;

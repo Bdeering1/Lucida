@@ -6,7 +6,7 @@ import { IBoard } from "../board/iboard";
 import Move from "./move";
 import { getColorString } from "../cli/printing";
 
-export default class MoveManager {
+export default class MoveGenerator {
     private board: IBoard;
 
     /**
@@ -55,6 +55,7 @@ export default class MoveManager {
 
     /**
      * Generate all possible moves for the current position
+     * @todo create new function to handle move gen when king is in check
      */
     public generateMoves(sideToMove = this.board.sideToMove, addToList = true): number | MoveStatus {
         this.moveCount = 0;
@@ -141,98 +142,40 @@ export default class MoveManager {
         // Castle moves
         if (this.board.hasCastleMoves) {
             if (sideToMove === Color.white) {
-                if (!this.squareAttacked(Square.e1, Color.black)) {
+                if (!this.board.attackTable.getAttacks(Square.e1, Color.black)) {
                     if (this.board.whiteKingCastle
-                        && this.board.getPiece(Square.f1) === Piece.none && !this.squareAttacked(Square.f1, Color.black)
-                        && this.board.getPiece(Square.g1) === Piece.none && !this.squareAttacked(Square.g1, Color.black)) {
+                        && this.board.getPiece(Square.f1) === Piece.none && !this.board.attackTable.getAttacks(Square.f1, Color.black)
+                        && this.board.getPiece(Square.g1) === Piece.none && !this.board.attackTable.getAttacks(Square.g1, Color.black)) {
                         this.addMove(new Move(Square.e1, Square.g1));
                     }
                     if (this.board.whiteQueenCastle
-                        && this.board.getPiece(Square.b1) === Piece.none && !this.squareAttacked(Square.b1, Color.black)
-                        && this.board.getPiece(Square.c1) === Piece.none && !this.squareAttacked(Square.c1, Color.black)
-                        && this.board.getPiece(Square.d1) === Piece.none && !this.squareAttacked(Square.d1, Color.black)) {
+                        && this.board.getPiece(Square.b1) === Piece.none && !this.board.attackTable.getAttacks(Square.b1, Color.black)
+                        && this.board.getPiece(Square.c1) === Piece.none && !this.board.attackTable.getAttacks(Square.c1, Color.black)
+                        && this.board.getPiece(Square.d1) === Piece.none && !this.board.attackTable.getAttacks(Square.d1, Color.black)) {
                         this.addMove(new Move(Square.e1, Square.c1));
                     }
                 }
             }
-            else if (!this.squareAttacked(Square.e8, Color.white)) {
+            else if (!this.board.attackTable.getAttacks(Square.e8, Color.white)) {
                 if (this.board.blackKingCastle
-                    && this.board.getPiece(Square.f8) === Piece.none && !this.squareAttacked(Square.f8, Color.white)
-                    && this.board.getPiece(Square.g8) === Piece.none && !this.squareAttacked(Square.g8, Color.white)) {
+                    && this.board.getPiece(Square.f8) === Piece.none && !this.board.attackTable.getAttacks(Square.f8, Color.white)
+                    && this.board.getPiece(Square.g8) === Piece.none && !this.board.attackTable.getAttacks(Square.g8, Color.white)) {
                     this.addMove(new Move(Square.e8, Square.g8));
                 }
                 if (this.board.blackQueenCastle
-                    && this.board.getPiece(Square.b8) === Piece.none && !this.squareAttacked(Square.b8, Color.white)
-                    && this.board.getPiece(Square.c8) === Piece.none && !this.squareAttacked(Square.c8, Color.white)
-                    && this.board.getPiece(Square.d8) === Piece.none && !this.squareAttacked(Square.d8, Color.white)) {
+                    && this.board.getPiece(Square.b8) === Piece.none && !this.board.attackTable.getAttacks(Square.b8, Color.white)
+                    && this.board.getPiece(Square.c8) === Piece.none && !this.board.attackTable.getAttacks(Square.c8, Color.white)
+                    && this.board.getPiece(Square.d8) === Piece.none && !this.board.attackTable.getAttacks(Square.d8, Color.white)) {
                     this.addMove(new Move(Square.e8, Square.c8));
                 }
             }
         }
 
         if (addToList) this.numMoves[ply] = this.moveCount;
-        const kingAttacked = this.squareAttacked(this.board.getSquares(Kings[sideToMove]).next().value, opposingSide);
+        const kingAttacked = this.board.attackTable.getAttacks(this.board.getSquares(Kings[sideToMove]).next().value, opposingSide);
         if (this.moveCount === 0 && kingAttacked) return MoveStatus.checkmate;
         
         return this.moveCount;
-    }
-
-    /**
-     * Given a square on the inner board and a side, returns whether or not that square is attacked by the given side
-     */
-    public squareAttacked(sq: Square, atkSide: Color): boolean {
-        const defSide = GetOtherSide[atkSide];
-        if (atkSide === Color.none) return false;
-
-        //Pawns
-        for (const captureDir of PawnCaptureDir[defSide]) {
-            const piece = this.board.getPiece(sq + captureDir);
-            if (PieceColor[piece] === atkSide && IsPawn[piece]) {
-                return true;
-            }
-        }
-
-        // Kings and Knights
-        for (const dir of PieceDir[Piece.whiteKing]) {
-            if (sqOffboard(sq + dir)) continue; // not sure why this was commented out
-            const piece = this.board.getPiece(sq + dir);
-            if (PieceColor[piece] === atkSide && IsKing[piece]) return true;
-        }
-        for (const dir of PieceDir[Piece.whiteKnight]) {
-            if (sqOffboard(sq + dir)) continue;
-            const piece = this.board.getPiece(sq + dir);
-            if (PieceColor[piece] === atkSide && IsKnight[piece]) return true;
-        }
-
-        // Bishops, Rooks, and Queens
-        for (const dir of PieceDir[Piece.whiteBishop]) {
-            let totalMove = dir;
-            while (true) {
-                const piece = this.board.getPiece(sq + totalMove);
-                const colorAtSq = PieceColor[piece];
-                if (sqOffboard(sq + totalMove) || colorAtSq === defSide) break;
-                if (colorAtSq === atkSide) {
-                    if (IsBishopQueen[piece]) return true;
-                    break;
-                }
-                totalMove += dir;
-            }
-        }
-        for (const dir of PieceDir[Piece.whiteRook]) {
-            let totalMove = dir;
-            while (true) {
-                const piece = this.board.getPiece(sq + totalMove);
-                const colorAtSq = PieceColor[piece];
-                if (sqOffboard(sq + totalMove) || colorAtSq === defSide) break;
-                if (colorAtSq === atkSide) {
-                    if (IsRookQueen[piece]) return true;
-                    break;
-                }
-                totalMove += dir;
-            }
-        }
-
-        return false;
     }
 
     /**
@@ -244,7 +187,7 @@ export default class MoveManager {
         this.board.makeMove(move);
         const kingSq = this.board.getSquares(Kings[this.sideToMove]).next().value;
         if (kingSq === undefined) throw new Error(`${getColorString(this.sideToMove)} king not found`);
-        if (!this.squareAttacked(kingSq, GetOtherSide[this.sideToMove])) {
+        if (!this.board.attackTable.getAttacks(kingSq, GetOtherSide[this.sideToMove])) {
             this.board.undoMove(move);
             this.addMove(move, this.board.ply);
             return;

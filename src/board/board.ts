@@ -1,7 +1,7 @@
 import { BOARD_SQ_NUM, CASTLE_LEFT, CASTLE_RIGHT, MAX_GAME_MOVES, MAX_NUM_PER_PIECE, NUM_CASTLE_COMBINATIONS, NUM_PIECE_TYPES } from "../shared/constants";
 import { CastleBit, Color, Piece, Square } from "../shared/enums";
 import { CastleLeftRook, CastlePerm, CastleRightRook, EnPasRank, GetOtherSide, GetRank, IsKing, IsPawn, LeftRook, PawnDir, Pawns, PieceColor, PieceVal, RightRook, Rooks, StartingRank, generateHash32 } from "../shared/utils";
-import AttackTable, { IAttackTable } from "./attack-table";
+import AttackTable, { DummyAttackTable, IAttackTable } from "./attack-table";
 import { IBoard } from "./iboard";
 import Move from "../game/move";
 
@@ -49,7 +49,7 @@ export default class Board implements IBoard {
     private history: Board[];
 
     constructor() {
-        this.attackTable = new AttackTable(this);
+        this.attackTable = new DummyAttackTable(this);
 
         this.material = [0, 0];
 

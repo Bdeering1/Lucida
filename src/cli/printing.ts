@@ -5,7 +5,7 @@ import { GetFile, GetRank, GetSq120, SideMultiplier, generateHash32 } from "../s
 import Eval from "../intelligence/eval";
 import { IBoard } from "../board/iboard";
 import Move from "../game/move";
-import MoveManager from "../game/move-manager";
+import MoveGenerator from "../game/move-generator";
 import PieceSquareTables from "../intelligence/pst";
 import { IAttackTable } from "../board/attack-table";
 
@@ -57,7 +57,7 @@ export function printAttackTable(table: IAttackTable, color: Color) {
             lines.push(line);
             line = `${GetRank[GetSq120[sq]]} `;
         }
-        line += `${table.getAttacks(color, GetSq120[sq])} `.padStart(3);
+        line += `${table.getAttacks(GetSq120[sq], color)} `.padStart(3);
     }
     lines.push(line);
 
@@ -86,7 +86,7 @@ export function printMoves(moves: Move[], moveScores?: number[], scoreMultiplier
     console.log(output);
 }
 
-export function printEval(board: IBoard, moveManager: MoveManager, verbose = false) {
+export function printEval(board: IBoard, moveManager: MoveGenerator, verbose = false) {
     console.log(`Static eval: ${Eval.evaluate(board, moveManager) * SideMultiplier[board.sideToMove]}`);
     if (verbose) {
         console.log(`Mobility score: ${Eval.getMobilityScore(moveManager)} Weight: ${Eval.mobilityWeight}`);

@@ -5,7 +5,7 @@ import { GetSq120, IsQueen, PieceColor, SideMultiplier } from "../shared/utils";
 import { IBoard } from "../board/iboard";
 import { INNER_BOARD_SQ_NUM } from "../shared/constants";
 import Move from "../game/move";
-import MoveManager from "../game/move-manager";
+import MoveGenerator from "../game/move-generator";
 import PieceSquareTables from "./pst";
 import { IAttackTable } from "../board/attack-table";
 
@@ -22,7 +22,7 @@ export default class Eval {
      * The weight of the mobility score in the evaluation function
      * @description each 1 weight = 0.5 centipawns per move advantage
      */
-    static mobilityWeight = 1;
+    static mobilityWeight = 0;
 
     /**
      * The weight of each piece type when determining game phase
@@ -33,7 +33,7 @@ export default class Eval {
                                + 4 * ROOK_PHASE
                                + 2 * QUEEN_PHASE;
 
-    static evaluate(board: IBoard, moveManager: MoveManager): number {
+    static evaluate(board: IBoard, moveManager: MoveGenerator): number {
         let score = board.material[Color.white] - board.material[Color.black];
         if (this.mobilityWeight !== 0) score += this.getMobilityScore(moveManager) * this.mobilityWeight;
 
@@ -46,7 +46,7 @@ export default class Eval {
         return score * SideMultiplier[board.sideToMove];
     }
 
-    static getMobilityScore(moveManager: MoveManager) {
+    static getMobilityScore(moveManager: MoveGenerator) {
         const whiteMobility = moveManager.generateMoves(Color.white, false);
         const blackMobility = moveManager.generateMoves(Color.black, false);
 
@@ -102,7 +102,7 @@ export default class Eval {
         return precedence;
     }
 
-    static getKingAttackScore(attackTable: IAttackTable, moveManager: MoveManager): number {
+    static getKingAttackScore(attackTable: IAttackTable, moveManager: MoveGenerator): number {
         // king attacked score = valueOfAttacks (using PieceAttackVal[piece]) * attackWeight[attackingPiecesCount] / 100
         // https://www.chessprogramming.org/King_Safety
         return 0;

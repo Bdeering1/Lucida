@@ -1,10 +1,10 @@
 import { Color, InputOption } from "./shared/enums";
 import { getMoveInput, getSideInput, pauseForInput as pauseConsole } from "./cli/input";
-import { printBoard, printBoardVars, printEval, printMoves } from "./cli/printing";
+import { printAttackTable, printBoard, printBoardVars, printEval, printMoves } from "./cli/printing";
 import Board from "./board/board";
 import MiniMax from "./intelligence/search";
 import Move from "./game/move";
-import MoveManager from "./game/move-manager";
+import MoveGenerator from "./game/move-generator";
 import { START_FEN } from "./shared/constants";
 import { SideMultiplier } from "./shared/utils";
 import { getGameStatus } from "./game/game-state";
@@ -12,7 +12,7 @@ import { parseFen } from "./board/board-setup";
 
 
 const board = new Board();
-const moveManager = new MoveManager(board);
+const moveManager = new MoveGenerator(board);
 const miniMax = new MiniMax(board, moveManager);
 const moveList: Move[] = [];
 parseFen(board, `r2qk2r/ppp2p1p/2n5/3pP1p1/3P1p2/B1PB1RnP/P1P3P1/1R1Q2K1 b kq - 3 13`);
