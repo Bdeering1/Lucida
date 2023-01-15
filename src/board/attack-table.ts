@@ -38,19 +38,19 @@ export default class AttackTable implements IAttackTable {
         if (IsSliding[piece]) {
             if (IsBishopQueen[piece]) {
                 for (const dir of PieceDir[Piece.whiteBishop]) {
-                    this.updateAttackRay(-PieceAttackVal[piece], PieceColor[piece], sq, dir, IsBishopQueen);
+                    this.updateAttackRay(piece, sq, dir, IsBishopQueen, AttackValMultiplier.remove);
                 }
             }
             if (IsRookQueen[piece]) {
                 for (const dir of PieceDir[Piece.whiteRook]) {
-                    this.updateAttackRay(-PieceAttackVal[piece], PieceColor[piece], sq, dir, IsRookQueen);
+                    this.updateAttackRay(piece, sq, dir, IsRookQueen, AttackValMultiplier.remove);
                 }
             }
         }
         else { // non-sliding pieces
             for (const dir of CaptureDir[piece]) {
                 if (sqOffboard(sq + dir)) continue;
-                (PieceColor[piece] === Color.white ? this.whiteAttacks : this.blackAttacks)[GetSq64[sq + dir]] -= PieceAttackVal[piece];
+                this.updateAttack(piece, sq + dir, AttackValMultiplier.remove);
             }
         }
 
@@ -70,19 +70,19 @@ export default class AttackTable implements IAttackTable {
         if (IsSliding[piece]) {
             if (IsBishopQueen[piece]) {
                 for (const dir of PieceDir[Piece.whiteBishop]) {
-                    this.updateAttackRay(PieceAttackVal[piece], PieceColor[piece], sq, dir, IsBishopQueen);
+                    this.updateAttackRay(piece, sq, dir, IsBishopQueen, AttackValMultiplier.add);
                 }
             }
             if (IsRookQueen[piece]) {
                 for (const dir of PieceDir[Piece.whiteRook]) {
-                    this.updateAttackRay(PieceAttackVal[piece], PieceColor[piece], sq, dir, IsRookQueen);
+                    this.updateAttackRay(piece, sq, dir, IsRookQueen, AttackValMultiplier.add);
                 }
             }
         }
         else { // non-sliding pieces
             for (const dir of CaptureDir[piece]) {
                 if (sqOffboard(sq + dir)) continue;
-                (PieceColor[piece] === Color.white ? this.whiteAttacks : this.blackAttacks)[GetSq64[sq + dir]] += PieceAttackVal[piece];
+                this.updateAttack(piece, sq + dir, AttackValMultiplier.add);
             }
         }
 
@@ -103,7 +103,7 @@ export default class AttackTable implements IAttackTable {
             let targetColor = Color.none;
             if (!isTargetPiece[originalPiece] && isTargetPiece[piece] && (targetColor === Color.none || PieceColor[piece] === targetColor)) {
                 // piece of target piece type has line of sight to sq
-                this.updateAttackRay(PieceAttackVal[piece] * multiplier, PieceColor[piece], sq, -dir, isTargetPiece);
+                this.updateAttackRay(piece, sq, -dir, isTargetPiece, multiplier);
                 targetColor = PieceColor[piece];
             }
             if (piece !== Piece.none && !(PieceColor[piece] === targetColor && isTargetPiece[piece])) break;
@@ -112,15 +112,19 @@ export default class AttackTable implements IAttackTable {
         }
     }
 
-    private updateAttackRay(increment: number, color: Color, sq: Square, dir: number, isTargetPiece: boolean[]): void {
+    private updateAttackRay(originalPiece: Piece, sq: Square, dir: number, isTargetPiece: boolean[], multiplier: AttackValMultiplier): void {
         let totalMove = dir;
         while (true) {
             if (sqOffboard(sq + totalMove)) break;
-            (color === Color.white ? this.whiteAttacks : this.blackAttacks)[GetSq64[sq + totalMove]] += increment;
+            this.updateAttack(originalPiece, sq + totalMove, multiplier);
             const piece = this.board.getPiece(sq + totalMove);
-            if (piece !== Piece.none && !(PieceColor[piece] === color && isTargetPiece[piece])) break;
+            if (piece !== Piece.none && !(PieceColor[piece] === PieceColor[originalPiece] && isTargetPiece[piece])) break;
             totalMove += dir;
         }
+    }
+
+    private updateAttack(piece: Piece, sq: Square, multiplier: AttackValMultiplier) {
+        (PieceColor[piece] === Color.white ? this.whiteAttacks : this.blackAttacks)[GetSq64[sq]] += PieceAttackVal[piece] * multiplier;
     }
 }
 

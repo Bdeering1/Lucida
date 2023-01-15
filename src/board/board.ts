@@ -49,7 +49,7 @@ export default class Board implements IBoard {
     private history: Board[];
 
     constructor() {
-        this.attackTable = new DummyAttackTable(this);
+        this.attackTable = new AttackTable(this);
 
         this.material = [0, 0];
 
@@ -105,19 +105,18 @@ export default class Board implements IBoard {
     }
     public removePiece(sq: Square): void {
         const piece = this.pieces[sq];
+        if (piece === Piece.none) return;
         
         this.pieces[sq] = Piece.none;
-        if (piece !== Piece.none) { // pretty sure this can be refactored as a guard statement
-            this.pieceQuantities[piece]--;
-            for (let i = 0; i < MAX_NUM_PER_PIECE; i++) {
-                if (this.pieceSquares[piece][i] === sq) { // swap with last piece
-                    this.pieceSquares[piece][i] = this.pieceSquares[piece][this.pieceQuantities[piece]];
-                    break;
-                }
+        this.pieceQuantities[piece]--;
+        for (let i = 0; i < MAX_NUM_PER_PIECE; i++) {
+            if (this.pieceSquares[piece][i] === sq) { // swap with last piece
+                this.pieceSquares[piece][i] = this.pieceSquares[piece][this.pieceQuantities[piece]];
+                break;
             }
-            this.material[PieceColor[piece]] -= PieceVal[piece];
-            this.hashPiece(piece, sq);
         }
+        this.material[PieceColor[piece]] -= PieceVal[piece];
+        this.hashPiece(piece, sq);
         
         this.attackTable.updateFrom(piece, sq);
     }
