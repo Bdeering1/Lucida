@@ -59,7 +59,7 @@ export default class MoveGenerator {
 
     /**
      * Generate all possible moves for the current position
-     * @todo create new function to handle move gen when king is in check
+     * @todo check for PV moves when sorting
      */
     public generateMoves(sideToMove = this.board.sideToMove, addToList = true): number | MoveStatus {
         if (sideToMove === Color.none) return 0;

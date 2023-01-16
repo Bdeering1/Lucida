@@ -4,19 +4,19 @@ import Board from "../board/board";
 import { IBoard } from "../board/iboard";
 import MiniMax from "../intelligence/search";
 import Move from "../game/move";
-import MoveManager from "../game/move-manager";
+import MoveGenerator from "../game/move-generator";
 import { parseFen } from "../board/board-setup";
 
 describe('search', () => {
     let board: IBoard;
-    let moveManager: MoveManager;
+    let moveGenerator: MoveGenerator;
     let miniMax: MiniMax;
 
     beforeEach(() => {
         const TEST_DEPTH = 5;
         board = new Board();
-        moveManager = new MoveManager(board);
-        miniMax = new MiniMax(board, moveManager, TEST_DEPTH);
+        moveGenerator = new MoveGenerator(board);
+        miniMax = new MiniMax(board, moveGenerator, TEST_DEPTH);
     });
 
     it.each([

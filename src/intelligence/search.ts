@@ -5,12 +5,12 @@ import { IBoard } from '../board/iboard';
 import { MAX_DEPTH, MS_PER_SECOND } from '../shared/constants';
 import Move from '../game/move';
 import MoveGenerator from '../game/move-generator';
-import { Piece } from '../shared/enums';
+import { Piece, Square } from '../shared/enums';
 import PieceSquareTables from './pst';
-import SearchResult from './search-result';
+import SearchResult, { trimTranspositions } from './search-result';
 import { getGameStatus } from '../game/game-state';
 
-export default class MiniMax {
+export default class Search {
     private board: IBoard;
     private moveManager: MoveGenerator;
     
@@ -57,7 +57,7 @@ export default class MiniMax {
     }
 
     public getBestMove(verbose = false): [Move, number] {
-        this.transpositionTable = new Map<number, SearchResult>();
+        trimTranspositions(this.transpositionTable, this.board.ply);
         this.effectiveDepth = this.getEffectiveDepth();
         this.scores = [];
         this.nodes = 0;
@@ -122,9 +122,9 @@ export default class MiniMax {
             } 
         }
         
-        let truncated = false;
         for (const move of this.moveManager.getCurrentMoves()) {
             this.board.makeMove(move);
+            let truncated = false;
             let score, possibleMoves, res;
             if ((res = this.transpositionTable.get(this.board.posKey)) && res.depth <= depth - 1) {
                 score = res.score;
@@ -140,8 +140,8 @@ export default class MiniMax {
             if (depth === 0) this.scores.push(score);
 
             if (score >= beta) return [beta, true, moves];
-            if (!truncated/* && depth < (this.transpositionTable.get(this.board.posKey)?.depth || MAX_DEPTH)*/) {
-                this.transpositionTable.set(this.board.posKey, new SearchResult(score, depth));
+            if (!truncated && depth <= (this.transpositionTable.get(this.board.posKey)?.depth || MAX_DEPTH)) {
+                this.transpositionTable.set(this.board.posKey, new SearchResult(score, depth, this.board.ply));
             }
 
             if (score > alpha) {
@@ -151,7 +151,7 @@ export default class MiniMax {
             }
         }
 
-        return [alpha, truncated, moves];
+        return [alpha, false, moves];
     }
     private quiesce(depth: number, alpha: number, beta: number): [number, boolean] {
         this.quiesceNodes++;
@@ -180,11 +180,11 @@ export default class MiniMax {
             if (score > alpha) alpha = score;
         }
 
-        let truncated = false;
         for (const move of this.moveManager.getCurrentMoves()) {
             if (move.capture === Piece.none) continue;
-
+            
             this.board.makeMove(move);
+            let truncated = false;
             let score, res;
             if ((res = this.transpositionTable.get(this.board.posKey)) && res.depth <= this.effectiveDepth + depth - 1) {
                 score = res.score;
@@ -197,8 +197,8 @@ export default class MiniMax {
             this.board.undoMove(move);
 
             if (score >= beta) return [beta, true];
-            if (!truncated/* && this.effectiveDepth + depth < (this.transpositionTable.get(this.board.posKey)?.depth || MAX_DEPTH)*/) {
-                this.transpositionTable.set(this.board.posKey, new SearchResult(score, this.effectiveDepth + depth));
+            if (!truncated && this.effectiveDepth + depth <= (this.transpositionTable.get(this.board.posKey)?.depth || MAX_DEPTH)) {
+                this.transpositionTable.set(this.board.posKey, new SearchResult(score, this.effectiveDepth + depth, this.board.ply));
             }
 
             if (score > alpha) {
@@ -206,7 +206,7 @@ export default class MiniMax {
             }
         }
 
-        return [alpha, truncated];
+        return [alpha, false];
     }
 
     private getEffectiveDepth(): number {

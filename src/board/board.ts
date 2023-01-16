@@ -49,7 +49,7 @@ export default class Board implements IBoard {
     private history: Board[];
 
     constructor() {
-        this.attackTable = new AttackTable(this);
+        this.attackTable = new DummyAttackTable(this);
 
         this.material = [0, 0];
 

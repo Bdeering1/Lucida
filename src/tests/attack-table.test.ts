@@ -17,6 +17,6 @@ describe('attack-table', () => {
         ['8/8/8/8/8/8/7r/7R w - - 0 1', Piece.whiteRook, Square.h8, 0],
     ])('takes batteres into account when generating attack counts', (fen, piece, sq, attackers) => {
         parseFen(board, fen);
-        expect(board.attackTable.getAttacks(PieceColor[piece], sq)).toBe(attackers * PieceAttackVal[piece]);
+        expect(board.attackTable.getAttacks(sq, PieceColor[piece])).toBe(attackers * PieceAttackVal[piece]);
     });
 });

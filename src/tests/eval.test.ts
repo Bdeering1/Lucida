@@ -3,18 +3,18 @@ import { CARO_KANN_FEN, DOUBLE_EN_PAS_FEN, KINGS_AND_PAWNS_FEN } from "./test-co
 import Eval, { MAX_PHASE } from "../intelligence/eval";
 import Board from "../board/board";
 import { IBoard } from "../board/iboard";
-import MoveManager from "../game/move-manager";
+import MoveGenerator from "../game/move-generator";
 import { START_FEN } from "../shared/constants";
 import { parseFen } from "../board/board-setup";
 
 
 describe('eval', () => {
     let board: IBoard;
-    let moveManager: MoveManager;
+    let moveGenerator: MoveGenerator;
 
     beforeEach(() => {
         board = new Board();
-        moveManager = new MoveManager(board);
+        moveGenerator = new MoveGenerator(board);
     });
 
     it.each([
@@ -24,7 +24,7 @@ describe('eval', () => {
     ])('returns the correct mobility score for test positions without side effects', (fen, expectedScore) => {
         parseFen(board, fen);
         const clone = board.clone(true);
-        expect(Eval.getMobilityScore(moveManager)).toBe(expectedScore);
+        expect(Eval.getMobilityScore(moveGenerator)).toBe(expectedScore);
         expect(board.sideToMove).toEqual(clone.sideToMove);
         expect(board.fiftyMoveCounter).toEqual(clone.fiftyMoveCounter);
         expect(board.posKey).toBe(clone.posKey);

@@ -33,9 +33,9 @@ export default class Eval {
                                + 4 * ROOK_PHASE
                                + 2 * QUEEN_PHASE;
 
-    static evaluate(board: IBoard, moveManager: MoveGenerator): number {
+    static evaluate(board: IBoard, moveGenerator: MoveGenerator): number {
         let score = board.material[Color.white] - board.material[Color.black];
-        if (this.mobilityWeight !== 0) score += this.getMobilityScore(moveManager) * this.mobilityWeight;
+        if (this.mobilityWeight !== 0) score += this.getMobilityScore(moveGenerator) * this.mobilityWeight;
 
         const phase = this.getGamePhase(board);
         const middlegame = this.getPSTScore(board, PieceSquareTables.middlegame);
@@ -46,9 +46,9 @@ export default class Eval {
         return score * SideMultiplier[board.sideToMove];
     }
 
-    static getMobilityScore(moveManager: MoveGenerator) {
-        const whiteMobility = moveManager.generateMoves(Color.white, false);
-        const blackMobility = moveManager.generateMoves(Color.black, false);
+    static getMobilityScore(moveGenerator: MoveGenerator) {
+        const whiteMobility = moveGenerator.generateMoves(Color.white, false);
+        const blackMobility = moveGenerator.generateMoves(Color.black, false);
 
         return ~~( (whiteMobility - blackMobility) / 2 );
     }

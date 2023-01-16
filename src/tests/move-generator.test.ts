@@ -4,19 +4,19 @@ import { CASTLE_FEN, CHECKMATE_FEN, EN_PAS_FEN, PROMOTION_FEN, STALEMATE_FEN } f
 import { Color, MoveStatus } from "../shared/enums";
 import Board from "../board/board";
 import { IBoard } from "../board/iboard";
-import MoveManager from "../game/move-manager";
+import MoveGenerator from "../game/move-generator";
 import { START_FEN } from "../shared/constants";
 import { parseFen } from "../board/board-setup";
 import PieceSquareTables from "../intelligence/pst";
 
 describe('move-manager', () => {
     let board: IBoard;
-    let moveManager: MoveManager;
+    let moveGenerator: MoveGenerator;
     PieceSquareTables.init();
 
     beforeEach(() => {
         board = new Board();
-        moveManager = new MoveManager(board);
+        moveGenerator = new MoveGenerator(board);
     });
 
     it.each([
@@ -30,8 +30,8 @@ describe('move-manager', () => {
         [PROMOTION_FEN, 10],
     ])('generates the right number of moves for test positions', (fen, moves) => {
         parseFen(board, fen);
-        expect(moveManager.generateMoves()).toBe(moves);
-        for (const move of moveManager.getCurrentMoves()) {
+        expect(moveGenerator.generateMoves()).toBe(moves);
+        for (const move of moveGenerator.getCurrentMoves()) {
             expect(move).toBeDefined();
         }
     });
@@ -42,10 +42,10 @@ describe('move-manager', () => {
         [Color.black],
     ])('will not update the move list when addToList = false', (sideToMove: Color) => {
         parseFen(board, START_FEN);
-        const oldMoves = [...moveManager.getCurrentMoves()];
-        const oldMoveList = [...moveManager.moveList[board.ply]];
-        moveManager.generateMoves(sideToMove, false);
-        expect([...moveManager.getCurrentMoves()]).toEqual(oldMoves);
-        expect(moveManager.moveList[board.ply]).toEqual(oldMoveList);
+        const oldMoves = [...moveGenerator.getCurrentMoves()];
+        const oldMoveList = [...moveGenerator.moveList[board.ply]];
+        moveGenerator.generateMoves(sideToMove, false);
+        expect([...moveGenerator.getCurrentMoves()]).toEqual(oldMoves);
+        expect(moveGenerator.moveList[board.ply]).toEqual(oldMoveList);
     });
 });
