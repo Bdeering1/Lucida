@@ -1,6 +1,6 @@
 import Eval, { MAX_PHASE } from './eval';
 import { PieceVal, SideMultiplier } from '../shared/utils';
-import { getMoveNumber, printMoves } from '../cli/printing';
+import { getLineString, printMoves } from '../cli/printing';
 import { IBoard } from '../board/iboard';
 import { MAX_DEPTH, MS_PER_SECOND } from '../shared/constants';
 import Move from '../game/move';
@@ -59,16 +59,28 @@ export default class Search {
 
     public getBestMove(verbose = false): [Move, number] {
         trimTranspositions(this.transpositionTable, this.board.ply);
-        this.effectiveDepth = this.getEffectiveDepth();
+        const depthCutoff = this.getDepthCutoff();
         this.scores = [];
         this.nodes = 0;
         this.quiesceNodes = 0;
-
+        
         this.deltaPruning = true;
         if (Eval.getGamePhase(this.board)  / MAX_PHASE >= 0.95) this.deltaPruning = false;
-
+        
         const startTime = Date.now();
-        const [best, _] = this.negaMax(0, -Infinity, Infinity);
+        
+        this.effectiveDepth = 0;
+        let best = 0;
+        while (this.effectiveDepth < depthCutoff) {
+            this.effectiveDepth++;
+            [best,] = this.negaMax(0, -Infinity, Infinity);
+            best *= SideMultiplier[this.board.sideToMove];
+            
+            if (verbose) {
+                const moves = getPV(this.transpositionTable, this.board);
+                console.log(`Depth ${this.effectiveDepth}: score: ${best} Best line: ${getLineString(this.board, moves, this.effectiveDepth)}`);
+            }
+        }
 
         const timeElapsed = Date.now() - startTime;
         const timePerNode = timeElapsed / (this.nodes + this.quiesceNodes);
@@ -81,19 +93,11 @@ export default class Search {
             printMoves([...this.moveManager.getCurrentMoves()], this.scores, SideMultiplier[this.board.sideToMove]);
 
             const moves = getPV(this.transpositionTable, this.board);
-            let line = '\nBest line:';
-            moves.forEach((move, idx) => {
-                if ((this.board.ply + idx) % 2 === 0) line += ` ${getMoveNumber(this.board.ply + idx)}.`;
-                line += ` ${move}`;
-            });
-            console.log(line);
+            console.log(`Best line: ${getLineString(this.board, moves)}`);
         }
         
-        let idx = 0;
-        for (const move of this.moveManager.getCurrentMoves()) {
-            if (this.scores[idx++] === best) return [move, best];
-        }
-        throw new Error(`No move found matching best score of ${best}`);
+        let move = getPV(this.transpositionTable, this.board)[0];
+        return [move, best];
     }
 
     private negaMax(depth: number, alpha: number, beta: number): [number, boolean] {
@@ -211,7 +215,7 @@ export default class Search {
         return [alpha, false];
     }
 
-    private getEffectiveDepth(): number {
+    private getDepthCutoff(): number {
         let depth = this.depth;
         const phaseRatio = Eval.getGamePhase(this.board) / MAX_PHASE;
 

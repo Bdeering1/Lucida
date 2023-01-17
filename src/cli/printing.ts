@@ -87,6 +87,16 @@ export function printMoves(moves: Move[], moveScores?: number[], scoreMultiplier
     console.log(output);
 }
 
+export function getLineString(board: IBoard, moves: Move[], cutoff = Infinity) {
+    let output = "";
+    moves.forEach((move, idx) => {
+        if (idx >= cutoff) return;
+        if ((board.ply + idx) % 2 === 0) output += ` ${getMoveNumber(board.ply + idx)}.`;
+        output += ` ${move}`;
+    });
+    return output;
+}
+
 export function printEval(board: IBoard, moveManager: MoveGenerator, verbose = false) {
     console.log(`Static eval: ${Eval.evaluate(board, moveManager) * SideMultiplier[board.sideToMove]}`);
     if (verbose) {

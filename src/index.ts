@@ -6,7 +6,6 @@ import Search from "./intelligence/search";
 import Move from "./game/move";
 import MoveGenerator from "./game/move-generator";
 import { START_FEN } from "./shared/constants";
-import { SideMultiplier } from "./shared/utils";
 import { getGameStatus } from "./game/game-state";
 import { parseFen } from "./board/board-setup";
 
@@ -38,7 +37,7 @@ while(true) {
     let score = 0;
     if (playerColor !== Color.none && board.sideToMove !== playerColor) {
         [move, score] = search.getBestMove(true);
-        console.log(`\nMove: ${move} (eval: ${score * SideMultiplier[board.sideToMove]})`);
+        console.log(`\nMove: ${move} (eval: ${score})`);
         await pauseConsole();
     }
     else {
