@@ -191,10 +191,9 @@ export default class Board implements IBoard {
         this.addPiece(piece, move.from);
         this.ply--;
 
-        this.fiftyMoveCounter = this.history[this.ply].fiftyMoveCounter;
         this.enPas = this.history[this.ply].enPas;
+        this.fiftyMoveCounter = this.history[this.ply].fiftyMoveCounter;
         this.castlePermissions = this.history[this.ply].castlePermissions;
-        this.posKey = this.history[this.ply].posKey;
         this.repeats = this.history[this.ply].repeats;
         
         if (IsPawn[piece]) {
@@ -213,6 +212,8 @@ export default class Board implements IBoard {
                 this.addPiece(Rooks[this.sideToMove], RightRook[this.sideToMove]);
             }
         }
+
+        this.posKey = this.history[this.ply].posKey;
     }
 
     public getPiece(sq: Square): Piece {

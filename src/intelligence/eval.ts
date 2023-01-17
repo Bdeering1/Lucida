@@ -22,7 +22,7 @@ export default class Eval {
      * The weight of the mobility score in the evaluation function
      * @description each 1 weight = 0.5 centipawns per move advantage
      */
-    static mobilityWeight = 0;
+    static mobilityWeight = 0; 
 
     /**
      * The weight of each piece type when determining game phase

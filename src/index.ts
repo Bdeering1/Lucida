@@ -1,6 +1,6 @@
 import { Color, InputOption } from "./shared/enums";
 import { getMoveInput, getSideInput, pauseForInput as pauseConsole } from "./cli/input";
-import { printAttackTable, printBoard, printBoardVars, printEval, printMoves } from "./cli/printing";
+import { printBoard, printBoardVars, printEval, printMoves } from "./cli/printing";
 import Board from "./board/board";
 import Search from "./intelligence/search";
 import Move from "./game/move";
@@ -15,8 +15,9 @@ const board = new Board();
 const moveGenerator = new MoveGenerator(board);
 const search = new Search(board, moveGenerator);
 const moveList: Move[] = [];
-//parseFen(board, `r2qk2r/ppp2p1p/2n5/3pP1p1/3P1p2/B1PB1RnP/P1P3P1/1R1Q2K1 b kq - 3 13`);
-parseFen(board, START_FEN);
+
+parseFen(board, `r2qk2r/ppp2p1p/2n5/3pP1p1/3P1p2/B1PB1RnP/P1P3P1/1R1Q2K1 b kq - 3 13`);
+//parseFen(board, START_FEN);
 
 console.log("Please chooce a side (white or black)");
 const playerColor = await getSideInput();
@@ -24,7 +25,7 @@ const playerColor = await getSideInput();
 while(true) {
     printBoard(board);
     printBoardVars(board);
-    printEval(board, moveGenerator, true);
+    printEval(board, moveGenerator, false);
     console.log();
 
     const status = getGameStatus(board, moveGenerator.generateMoves());
@@ -47,8 +48,8 @@ while(true) {
 
     if (move === InputOption.undo) {
         if (moveList.length === 0) continue;
-        board.undoMove(moveList.pop() as Move);
-        if (playerColor !== Color.none && moveList.length !== 0) board.undoMove(moveList.pop() as Move);
+        board.undoMove(moveList.pop()!);
+        if (playerColor !== Color.none && moveList.length !== 0) board.undoMove(moveList.pop()!);
         continue;
     }
     if (move === InputOption.exit) break;

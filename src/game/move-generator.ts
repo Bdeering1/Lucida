@@ -5,6 +5,7 @@ import Eval from "../intelligence/eval";
 import { IBoard } from "../board/iboard";
 import Move from "./move";
 import { getColorString } from "../cli/printing";
+import SearchResult from "../intelligence/search-result";
 
 export default class MoveGenerator {
     private board: IBoard;
@@ -37,6 +38,14 @@ export default class MoveGenerator {
      * Whether or not moves should be added to the move list for later use
      */
     private addToList = true;
+    /**
+     * Hash map used to store previously evaluated positions
+     */
+    public transpositionTable: Map<number, SearchResult>;
+    /**
+     * Principal variation move if any
+     */
+    private pvMove: Move | undefined;
 
     constructor(board: IBoard) {
         this.board = board;
@@ -49,6 +58,7 @@ export default class MoveGenerator {
             this.numMoves[i] = 0;
         }
         this.movePrecedences = new Array(MAX_POSITION_MOVES);
+        this.transpositionTable = new Map();
     }
 
     public * getCurrentMoves(): IterableIterator<Move> {
@@ -64,6 +74,7 @@ export default class MoveGenerator {
     public generateMoves(sideToMove = this.board.sideToMove, addToList = true): number | MoveStatus {
         if (sideToMove === Color.none) return 0;
 
+        this.pvMove = this.transpositionTable.get(this.board.posKey)?.move;
         this.moveCount = 0;
         this.addToList = addToList;
         this.sideToMove = sideToMove;
@@ -221,7 +232,10 @@ export default class MoveGenerator {
             return;
         }
         
-        let precedence = Eval.getMovePrecedence(this.board, move);
+        let precedence;
+        if (this.pvMove && move.equals(this.pvMove)) precedence = Infinity;
+        else precedence = Eval.getMovePrecedence(this.board, move);
+        
         let idx = this.moveCount - 1;
         while (idx >= 0 && precedence > this.movePrecedences[idx]) {
             this.moveList[ply][idx + 1] = this.moveList[ply][idx];

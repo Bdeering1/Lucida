@@ -5,9 +5,9 @@ import { IBoard } from '../board/iboard';
 import { MAX_DEPTH, MS_PER_SECOND } from '../shared/constants';
 import Move from '../game/move';
 import MoveGenerator from '../game/move-generator';
-import { Piece, Square } from '../shared/enums';
+import { Piece } from '../shared/enums';
 import PieceSquareTables from './pst';
-import SearchResult, { trimTranspositions } from './search-result';
+import SearchResult, { getPV, trimTranspositions } from './search-result';
 import { getGameStatus } from '../game/game-state';
 
 export default class Search {
@@ -46,13 +46,14 @@ export default class Search {
     private transpositions = 0;
     private scores: number[] = [];
 
-    constructor(board: IBoard, moveManager: MoveGenerator, depth = 5, quiesceDepth = 15) {
+    constructor(board: IBoard, moveGenerator: MoveGenerator, depth = 5, quiesceDepth = 15) {
         this.board = board;
-        this.moveManager = moveManager;
+        this.moveManager = moveGenerator;
         this.depth = depth;
         this.effectiveDepth = depth;
         this.quiesceDepth = quiesceDepth;
-
+        this.transpositionTable = moveGenerator.transpositionTable;
+        
         PieceSquareTables.init();
     }
 
@@ -67,7 +68,7 @@ export default class Search {
         if (Eval.getGamePhase(this.board)  / MAX_PHASE >= 0.95) this.deltaPruning = false;
 
         const startTime = Date.now();
-        const [best, _, moves] = this.negaMax(0, -Infinity, Infinity, new Array<Move>());
+        const [best, _] = this.negaMax(0, -Infinity, Infinity);
 
         const timeElapsed = Date.now() - startTime;
         const timePerNode = timeElapsed / (this.nodes + this.quiesceNodes);
@@ -78,6 +79,8 @@ export default class Search {
             console.log(`primary: ${this.nodes} quiescence search: ${this.quiesceNodes} delta pruned: ${this.deltaPruned}`);
             console.log(`transpositions: ${this.transpositions} table size ${this.transpositionTable.size}`);
             printMoves([...this.moveManager.getCurrentMoves()], this.scores, SideMultiplier[this.board.sideToMove]);
+
+            const moves = getPV(this.transpositionTable, this.board);
             let line = '\nBest line:';
             moves.forEach((move, idx) => {
                 if ((this.board.ply + idx) % 2 === 0) line += ` ${getMoveNumber(this.board.ply + idx)}.`;
@@ -93,14 +96,14 @@ export default class Search {
         throw new Error(`No move found matching best score of ${best}`);
     }
 
-    private negaMax(depth: number, alpha: number, beta: number, moves: Move[]): [number, boolean, Move[]] {
+    private negaMax(depth: number, alpha: number, beta: number): [number, boolean] {
         this.nodes++;
         if (depth === this.effectiveDepth) {
-            return [this.quiesce(0, alpha, beta)[0], false, moves];
+            return [this.quiesce(0, alpha, beta)[0], false];
         }
 
         const status = getGameStatus(this.board, this.moveManager.generateMoves());
-        if (status.complete === true) return [-(PieceVal[Piece.blackKing] - depth), false, moves];
+        if (status.complete === true) return [-(PieceVal[Piece.blackKing] - depth), false];
 
         if (depth >= 2) {
             for (const move of this.moveManager.getCurrentMoves()) {
@@ -113,46 +116,45 @@ export default class Search {
                 }
                 this.board.undoMove(move);
     
-                if (score >= beta) return [beta, true, moves];
+                if (score >= beta) return [beta, true];
                 if (score > alpha) {
                     alpha = score;
-                    moves = [...moves];
-                    moves[depth] = move;
                 }
             } 
         }
         
+        let pvMove: Move | undefined;
         for (const move of this.moveManager.getCurrentMoves()) {
             this.board.makeMove(move);
             let truncated = false;
-            let score, possibleMoves, res;
+            let score, res;
             if ((res = this.transpositionTable.get(this.board.posKey)) && res.depth <= depth - 1) {
                 score = res.score;
-                possibleMoves = moves;
                 this.transpositions++;
             }
             else {
-                [score, truncated, possibleMoves] = this.negaMax(depth + 1, -beta, -alpha, moves);
+                [score, truncated] = this.negaMax(depth + 1, -beta, -alpha);
                 score = -score;
             }
             this.board.undoMove(move);
             
             if (depth === 0) this.scores.push(score);
 
-            if (score >= beta) return [beta, true, moves];
-            if (!truncated && depth <= (this.transpositionTable.get(this.board.posKey)?.depth || MAX_DEPTH)) {
+            if (score >= beta) return [beta, true];
+            if (!truncated && depth < (this.transpositionTable.get(this.board.posKey)?.depth || MAX_DEPTH)) {
                 this.transpositionTable.set(this.board.posKey, new SearchResult(score, depth, this.board.ply));
             }
 
             if (score > alpha) {
                 alpha = score;
-                moves = [...possibleMoves];
-                moves[depth] = move;
+                pvMove = move;
             }
         }
 
-        return [alpha, false, moves];
+        if (pvMove) this.transpositionTable.get(this.board.posKey)!.move = pvMove;
+        return [alpha, false];
     }
+
     private quiesce(depth: number, alpha: number, beta: number): [number, boolean] {
         this.quiesceNodes++;
         if (depth === this.quiesceDepth) return [beta, false];
@@ -197,7 +199,7 @@ export default class Search {
             this.board.undoMove(move);
 
             if (score >= beta) return [beta, true];
-            if (!truncated && this.effectiveDepth + depth <= (this.transpositionTable.get(this.board.posKey)?.depth || MAX_DEPTH)) {
+            if (!truncated && this.effectiveDepth + depth < (this.transpositionTable.get(this.board.posKey)?.depth || MAX_DEPTH)) {
                 this.transpositionTable.set(this.board.posKey, new SearchResult(score, this.effectiveDepth + depth, this.board.ply));
             }
 

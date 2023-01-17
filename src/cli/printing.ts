@@ -67,6 +67,7 @@ export function printAttackTable(table: IAttackTable, color: Color) {
 }
 
 export function printBoardVars(board: IBoard, verbose = false) {
+    if (verbose) console.log(`Hash: ${board.posKey}`);
     console.log(`Side to move: ${getColorString(board.sideToMove)}`);
     console.log(`Ply: ${board.ply + 1} (Move ${getMoveNumber(board.ply)})`);
     if (verbose) {
