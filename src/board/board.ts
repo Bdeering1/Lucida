@@ -14,7 +14,7 @@ export default class Board implements IBoard {
     public fiftyMoveCounter = 0;
     public material: number[];
     public posKey = 0;
-    public repeats: number[] = [];
+    public repeats = new Map();
     
     private static pieceKeys: number[][];
     private static castleKeys: number[];
@@ -126,7 +126,7 @@ export default class Board implements IBoard {
         const promotion = move.promotion;
 
         this.appendToHistory();
-        this.checkRepeats();
+        this.addRepeat();
 
         let enPas = Square.none;
         if (this.enPas !== Square.none) {
@@ -168,33 +168,32 @@ export default class Board implements IBoard {
                 this.fiftyMoveCounter++;
             }
         }
-
+        
         if ((this.castlePermissions & CastleBit.all) !== 0) {
             this.castlePermissions &= CastlePerm[from];
             this.castlePermissions &= CastlePerm[to];
             this.hashCastle();
         }
-        this.sideToMove = this.sideToMove === Color.white ? Color.black : Color.white;
+        this.sideToMove = GetOtherSide[this.sideToMove];
         this.hashSide();
-
+        
         this.removePiece(from);
         this.removePiece(to);
         this.addPiece(piece, to);
         this.ply++;
     }
     public undoMove(move: Move): void {
-        this.sideToMove = this.sideToMove === Color.white ? Color.black : Color.white;
+        this.sideToMove = GetOtherSide[this.sideToMove];
         const piece = move.promotion === Piece.none ? this.getPiece(move.to) : Pawns[PieceColor[move.promotion]];
-
+        
         this.removePiece(move.to);
         this.addPiece(move.capture, move.to);
         this.addPiece(piece, move.from);
         this.ply--;
-
+        
         this.enPas = this.history[this.ply].enPas;
         this.fiftyMoveCounter = this.history[this.ply].fiftyMoveCounter;
         this.castlePermissions = this.history[this.ply].castlePermissions;
-        this.repeats = this.history[this.ply].repeats;
         
         if (IsPawn[piece]) {
             if (move.to === this.enPas) {
@@ -212,8 +211,9 @@ export default class Board implements IBoard {
                 this.addPiece(Rooks[this.sideToMove], RightRook[this.sideToMove]);
             }
         }
-
+        
         this.posKey = this.history[this.ply].posKey;
+        this.removeRepeat();
     }
 
     public getPiece(sq: Square): Piece {
@@ -234,7 +234,6 @@ export default class Board implements IBoard {
         copy.fiftyMoveCounter = this.fiftyMoveCounter;
         copy.material = [...this.material];
         copy.posKey = this.posKey;
-        copy.repeats = [...this.repeats];
 
         copy.pieces = [...this.pieces];
         copy.pieceSquares = new Array(NUM_PIECE_TYPES);
@@ -253,7 +252,6 @@ export default class Board implements IBoard {
         this.fiftyMoveCounter = board.fiftyMoveCounter;
         this.material = board.material;
         this.posKey = board.posKey;
-        this.repeats = board.repeats;
 
         this.pieces = board.pieces;
         this.pieceSquares = board.pieceSquares;
@@ -272,15 +270,16 @@ export default class Board implements IBoard {
         this.history[this.ply].enPas = this.enPas;
         this.history[this.ply].castlePermissions = this.castlePermissions;
         this.history[this.ply].posKey = this.posKey;
-        this.history[this.ply].repeats = [...this.repeats];
     }
-    private checkRepeats(): void {
-        if (this.fiftyMoveCounter === 0) return;
-        let idx = 0;
-        while (this.history[idx] !== undefined && idx < this.ply) {
-            if (this.history[idx].posKey === this.posKey) this.repeats.push(this.posKey);
-            idx++;
-        }
+    private addRepeat(): void {
+        if (this.fiftyMoveCounter === 0 && this.repeats.size !== 0) return;
+        this.repeats.set(this.posKey, (this.repeats.get(this.posKey) || 0) + 1);
+    }
+    private removeRepeat(): void {
+        const count = this.repeats.get(this.posKey);
+        if (!count) return;
+        if (count === 1) { this.repeats.delete(this.posKey); return; }
+        this.repeats.set(this.posKey, count - 1);
     }
 
     private hashPiece(piece: Piece, sq: number) { this.posKey ^= Board.pieceKeys[piece][sq]; }

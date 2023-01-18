@@ -24,9 +24,7 @@ export function getGameStatus(board: IBoard, moves: number): GameStatus {
     // eslint-disable-next-line no-magic-numbers
     if (board.fiftyMoveCounter >= 50) return new GameStatus(true, "Stalemate, fifty moves");
     
-    for (const key of board.repeats) {
-        if (board.posKey === key) return new GameStatus(true, "Draw by repetition");
-    }
+    if (board.repeats.get(board.posKey) === 2) return new GameStatus(true, "Draw by repetition");
 
     if (board.hasPawns) return new GameStatus(false);
     if (board.material[Color.white] <= INSUFFICENT_MATERIAL && board.material[Color.black] <= INSUFFICENT_MATERIAL) {

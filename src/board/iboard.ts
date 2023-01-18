@@ -35,7 +35,7 @@ export interface IBoard {
     /**
      * Position keys that have been repeated once
      */
-    repeats: number[];
+    repeats: Map<number, number>;
 
 
     get hasPawns(): boolean;

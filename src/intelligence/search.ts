@@ -36,6 +36,11 @@ export default class Search {
      */
     private deltaMargin = 350;
     /**
+     * Additional margin for beta cutoff
+     * @desription higher values lead faster but less accurate search
+     */
+    private betaMargin = 0;
+    /**
      * Hash map used to store previously evaluated positions
      */
     private transpositionTable: Map<number, SearchResult> = new Map();
@@ -102,30 +107,10 @@ export default class Search {
 
     private negaMax(depth: number, alpha: number, beta: number): [number, boolean] {
         this.nodes++;
-        if (depth === this.effectiveDepth) {
-            return [this.quiesce(0, alpha, beta)[0], false];
-        }
+        if (depth === this.effectiveDepth) return [this.quiesce(0, alpha, beta)[0], false];
 
         const status = getGameStatus(this.board, this.moveManager.generateMoves());
-        if (status.complete === true) return [-(PieceVal[Piece.blackKing] - depth), false];
-
-        if (depth >= 2) {
-            for (const move of this.moveManager.getCurrentMoves()) {
-                let score = -Infinity;
-                this.board.makeMove(move);
-                let res;
-                if ((res = this.transpositionTable.get(this.board.posKey)) && res.depth <= depth - 1) {
-                    score = res.score;
-                    this.transpositions++;
-                }
-                this.board.undoMove(move);
-    
-                if (score >= beta) return [beta, true];
-                if (score > alpha) {
-                    alpha = score;
-                }
-            } 
-        }
+        if (status.complete === true) return [-(PieceVal[Piece.whiteKing] - depth), false];
         
         let pvMove: Move | undefined;
         for (const move of this.moveManager.getCurrentMoves()) {
@@ -144,7 +129,7 @@ export default class Search {
             
             if (depth === 0) this.scores.push(score);
 
-            if (score >= beta) return [beta, true];
+            if (score >= beta - this.betaMargin) return [beta, true];
             if (!truncated && depth < (this.transpositionTable.get(this.board.posKey)?.depth || MAX_DEPTH)) {
                 this.transpositionTable.set(this.board.posKey, new SearchResult(score, depth, this.board.ply));
             }
@@ -169,23 +154,6 @@ export default class Search {
         if (standPat > alpha) alpha = standPat;
 
         this.moveManager.generateMoves();
-
-        for (const move of this.moveManager.getCurrentMoves()) {
-            if (move.capture === Piece.none) continue;
-
-            let score = -Infinity;
-            this.board.makeMove(move);
-            let res;
-            if ((res = this.transpositionTable.get(this.board.posKey)) && res.depth <= this.effectiveDepth + depth - 1) {
-                score = res.score;
-                this.transpositions++;
-            }
-            this.board.undoMove(move);
-
-            if (score >= beta) return [beta, true];
-            if (score > alpha) alpha = score;
-        }
-
         for (const move of this.moveManager.getCurrentMoves()) {
             if (move.capture === Piece.none) continue;
             
