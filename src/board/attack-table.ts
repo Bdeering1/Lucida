@@ -96,17 +96,19 @@ export default class AttackTable implements IAttackTable {
     }
 
     private updateLineOfSight(originalPiece: Piece, sq: Square, dir: number, isTargetPiece: boolean[], multiplier: AttackValMultiplier): void {
+        const origIsTarget = isTargetPiece[originalPiece];
         let totalMove = dir;
+        let targetColor = Color.none;
         while (true) {
             if (sqOffboard(sq + totalMove)) break;
             const piece = this.board.getPiece(sq + totalMove);
-            let targetColor = Color.none;
-            if (!isTargetPiece[originalPiece] && isTargetPiece[piece] && (targetColor === Color.none || PieceColor[piece] === targetColor)) {
-                // piece of target piece type has line of sight to sq
+            if (isTargetPiece[piece]
+                && (targetColor === Color.none || PieceColor[piece] === targetColor) // second piece of same color and type -> add battery
+                && !(origIsTarget && PieceColor[piece] === PieceColor[originalPiece])) { // same color and type as original piece -> don't double count battery
                 this.updateAttackRay(piece, sq, -dir, isTargetPiece, multiplier);
                 targetColor = PieceColor[piece];
             }
-            if (piece !== Piece.none && !(PieceColor[piece] === targetColor && isTargetPiece[piece])) break;
+            if (piece !== Piece.none && !(isTargetPiece[piece] && PieceColor[piece] === targetColor)) break;
 
             totalMove += dir;
         }
