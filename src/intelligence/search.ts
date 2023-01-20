@@ -10,6 +10,8 @@ import PieceSquareTables from './pst';
 import SearchResult, { getPV, trimTranspositions } from './search-result';
 import { getGameStatus } from '../game/game-state';
 
+const DEFAULT_TIME_LIMIT = 12 * MS_PER_SECOND;
+
 export default class Search {
     private board: IBoard;
     private moveManager: MoveGenerator;
@@ -17,7 +19,7 @@ export default class Search {
     /**
      * Maximum depth of primary search tree
      */
-    private depth: number;
+    private depthLimit: number;
     /**
      * Maximum depth of primary search tree, adjusted for game phase
      */
@@ -26,6 +28,10 @@ export default class Search {
      * Maximum depth of quiescence search
      */
     private quiesceDepth: number;
+    /**
+     * Maximum time to spend searching, in milliseconds
+     */
+    private targetTime: number;
     /**
      * Whether or not to use delta pruning
      */
@@ -39,7 +45,7 @@ export default class Search {
      * Additional margin for beta cutoff
      * @desription higher values lead faster but less accurate search
      */
-    private betaMargin = 0;
+    private betaMargin = 30;
     /**
      * Hash map used to store previously evaluated positions
      */
@@ -51,20 +57,22 @@ export default class Search {
     private transpositions = 0;
     private scores: number[] = [];
 
-    constructor(board: IBoard, moveGenerator: MoveGenerator, depth = 5, quiesceDepth = 15) {
+    constructor(board: IBoard, moveGenerator: MoveGenerator, depth = 6, quiesceDepth = 15) {
         this.board = board;
         this.moveManager = moveGenerator;
-        this.depth = depth;
+        this.depthLimit = depth;
         this.effectiveDepth = depth;
         this.quiesceDepth = quiesceDepth;
         this.transpositionTable = moveGenerator.transpositionTable;
+        this.targetTime = DEFAULT_TIME_LIMIT;
         
         PieceSquareTables.init();
     }
 
-    public getBestMove(verbose = false): [Move, number] {
+    public getBestMove(verbose = false, targetTime = DEFAULT_TIME_LIMIT): [Move, number] {
         trimTranspositions(this.transpositionTable, this.board.ply);
         const depthCutoff = this.getDepthCutoff();
+        //this.targetTime = targetTime;
         this.scores = [];
         this.nodes = 0;
         this.quiesceNodes = 0;
@@ -76,14 +84,14 @@ export default class Search {
         
         this.effectiveDepth = 0;
         let best = 0;
-        while (this.effectiveDepth < depthCutoff) {
+        while (this.effectiveDepth < depthCutoff && Date.now() - startTime < targetTime / 4) {
             this.effectiveDepth++;
             [best,] = this.negaMax(0, -Infinity, Infinity);
             best *= SideMultiplier[this.board.sideToMove];
             
             if (verbose) {
                 const moves = getPV(this.transpositionTable, this.board);
-                console.log(`Depth ${this.effectiveDepth}: score: ${best} Best line: ${getLineString(this.board, moves, this.effectiveDepth)}`);
+                console.log(`depth: ${this.effectiveDepth} (${((Date.now() - startTime) / 1000).toFixed(2)}s) score: ${best} Best line:${getLineString(this.board, moves, this.effectiveDepth)}`);
             }
         }
 
@@ -91,7 +99,7 @@ export default class Search {
         const timePerNode = timeElapsed / (this.nodes + this.quiesceNodes);
 
         if (verbose) {
-            console.log(`depth: ${this.depth} ${this.effectiveDepth > this.depth ? `(+${this.effectiveDepth - this.depth})` : ''}`);
+            console.log(`depth: ${this.effectiveDepth} ${this.effectiveDepth > this.depthLimit ? `(+${this.effectiveDepth - this.depthLimit})` : ''}`);
             console.log(`time: ${(timeElapsed / MS_PER_SECOND).toFixed(2)}s (${timePerNode.toFixed(2)}ms per node)`);
             console.log(`primary: ${this.nodes} quiescence search: ${this.quiesceNodes} delta pruned: ${this.deltaPruned}`);
             console.log(`transpositions: ${this.transpositions} table size ${this.transpositionTable.size}`);
@@ -184,7 +192,7 @@ export default class Search {
     }
 
     private getDepthCutoff(): number {
-        let depth = this.depth;
+        let depth = this.depthLimit;
         const phaseRatio = Eval.getGamePhase(this.board) / MAX_PHASE;
 
         if (phaseRatio > 0.85) depth++;

@@ -4,6 +4,7 @@ import { getGameStatus } from "../game/game-state";
 import Move from "../game/move";
 import MoveGenerator from "../game/move-generator";
 import Search from "../intelligence/search";
+import { START_FEN } from "../shared/constants";
 import { InputOption, Color } from "../shared/enums";
 import { getSideInput, getMoveInput, pauseForInput } from "./input";
 import { printBoard, printBoardVars, printEval, printMoves } from "./printing";
