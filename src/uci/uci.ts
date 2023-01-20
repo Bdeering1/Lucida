@@ -46,7 +46,7 @@ export default function runUci(): Promise<void> {
                     break;
                 case "go":
                     // parse go command
-                    const [move, score] = search.getBestMove(false, 12000)
+                    const [move, score] = search.getBestMove(false)
                     console.log(`bestmove ${move}`);
                 case "quit":
                     rl.close();

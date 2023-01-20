@@ -1,10 +1,12 @@
 import { AttackValMultiplier, Color, Piece, Square } from "../shared/enums";
-import { CaptureDir, GetOtherSide, GetSq64, IsBishopQueen, IsKing, IsKnight, IsPawn, IsRookQueen, IsSliding, PawnCaptureDir, PieceAttackVal, PieceColor, PieceDir, sqOffboard } from "../shared/utils";
+import { CaptureDir, GetOtherSide, GetSq64, IsBishopQueen, IsKing, IsKnight, IsPawn, IsRookQueen, IsSliding, Kings, PawnCaptureDir, PieceAttackVal, PieceColor, PieceDir, sqOffboard } from "../shared/utils";
 import { IBoard } from "./iboard";
 import { INNER_BOARD_SQ_NUM } from "../shared/constants";
+import { getColorString } from "../cli/printing";
 
 export interface IAttackTable {
     getAttacks(sq: Square, color: Color): number;
+    inCheck(color: Color): boolean;
     /**
      * Updates table when sliding attacks are revealed by moving away from a square
      */
@@ -29,6 +31,12 @@ export default class AttackTable implements IAttackTable {
 
     public getAttacks(sq: Square, color: Color): number {
         return (color === Color.white ? this.whiteAttacks : this.blackAttacks)[GetSq64[sq]];
+    }
+
+    public inCheck(color: Color): boolean {
+        const kingSq = this.board.getSquares(Kings[color]).next().value;
+        if (kingSq === undefined) throw new Error(`${getColorString(color)} king not found`);
+        return this.board.attackTable.getAttacks(kingSq, GetOtherSide[color]) !== 0;
     }
 
     public updateFrom(piece: Piece, sq: Square): void {
@@ -190,6 +198,12 @@ export class DummyAttackTable implements IAttackTable {
         }
 
         return 0;
+    }
+
+    public inCheck(color: Color): boolean {
+        const kingSq = this.board.getSquares(Kings[color]).next().value;
+        if (kingSq === undefined) throw new Error(`${getColorString(color)} king not found`);
+        return this.board.attackTable.getAttacks(kingSq, GetOtherSide[color]) !== 0;
     }
 
     public updateFrom(piece: Piece, sq: Square): void {}

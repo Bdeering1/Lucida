@@ -10,7 +10,7 @@ import PieceSquareTables from './pst';
 import SearchResult, { getPV, trimTranspositions } from './search-result';
 import { getGameStatus } from '../game/game-state';
 
-const DEFAULT_TIME_LIMIT = 12 * MS_PER_SECOND;
+const LAST_DEPTH_CUTOFF = 3 * MS_PER_SECOND;
 
 export default class Search {
     private board: IBoard;
@@ -29,10 +29,6 @@ export default class Search {
      */
     private quiesceDepth: number;
     /**
-     * Maximum time to spend searching, in milliseconds
-     */
-    private targetTime: number;
-    /**
      * Whether or not to use delta pruning
      */
     private deltaPruning = true;
@@ -42,10 +38,24 @@ export default class Search {
      */
     private deltaMargin = 350;
     /**
-     * Additional margin for beta cutoff
-     * @desription higher values lead faster but less accurate search
+     * Additional margin for beta cutoff (in centipawns)
+     * @desription higher values lead faster but less accurate search (greatly decreases accuracy)
      */
-    private betaMargin = 30;
+    private betaMargin = 20;
+    /**
+     * Whether or not to use null move pruning
+     */
+    private nullMovePruning = true;
+    /**
+     * Margin used to account for the reduced depth of null move search (in centipawns)
+     * @description higher values lead to slower but more accurate search
+     */
+    private nullMoveMargin = 100;
+    /**
+     * Depth reduction for null move search
+     * @description higher values lead to faster but less accurate search
+     */
+    private nullMoveDepthReduction = 2;
     /**
      * Hash map used to store previously evaluated positions
      */
@@ -57,35 +67,36 @@ export default class Search {
     private transpositions = 0;
     private scores: number[] = [];
 
-    constructor(board: IBoard, moveGenerator: MoveGenerator, depth = 6, quiesceDepth = 15) {
+    constructor(board: IBoard, moveGenerator: MoveGenerator, depth = 7, quiesceDepth = 15) {
         this.board = board;
         this.moveManager = moveGenerator;
         this.depthLimit = depth;
         this.effectiveDepth = depth;
         this.quiesceDepth = quiesceDepth;
         this.transpositionTable = moveGenerator.transpositionTable;
-        this.targetTime = DEFAULT_TIME_LIMIT;
         
         PieceSquareTables.init();
     }
 
-    public getBestMove(verbose = false, targetTime = DEFAULT_TIME_LIMIT): [Move, number] {
+    public getBestMove(verbose = false, lastDepthCutoff = LAST_DEPTH_CUTOFF): [Move, number] {
         trimTranspositions(this.transpositionTable, this.board.ply);
         const depthCutoff = this.getDepthCutoff();
-        //this.targetTime = targetTime;
         this.scores = [];
         this.nodes = 0;
         this.quiesceNodes = 0;
         
-        this.deltaPruning = true;
-        if (Eval.getGamePhase(this.board)  / MAX_PHASE >= 0.95) this.deltaPruning = false;
+        if (Eval.getGamePhase(this.board) / MAX_PHASE >= 0.95) {
+            this.deltaPruning = false;
+            this.nullMovePruning = false;
+        }
         
         const startTime = Date.now();
         
         this.effectiveDepth = 0;
         let best = 0;
-        while (this.effectiveDepth < depthCutoff && Date.now() - startTime < targetTime / 4) {
+        while (this.effectiveDepth < depthCutoff && Date.now() - startTime < lastDepthCutoff) {
             this.effectiveDepth++;
+            if (this.effectiveDepth > 5) this.betaMargin = 0;
             [best,] = this.negaMax(0, -Infinity, Infinity);
             best *= SideMultiplier[this.board.sideToMove];
             
@@ -115,10 +126,22 @@ export default class Search {
 
     private negaMax(depth: number, alpha: number, beta: number): [number, boolean] {
         this.nodes++;
-        if (depth === this.effectiveDepth) return [this.quiesce(0, alpha, beta)[0], false];
+        if (depth >= this.effectiveDepth) return [this.quiesce(0, alpha, beta)[0], false];
 
         const status = getGameStatus(this.board, this.moveManager.generateMoves());
         if (status.complete === true) return [-(PieceVal[Piece.whiteKing] - depth), false];
+        
+        if (this.nullMovePruning) {
+            let passScore = -Infinity;
+            if (!this.board.attackTable.inCheck(this.board.sideToMove)) {
+                this.board.makeMove(Move.noMove());
+                [passScore,] = this.negaMax(depth + 1 + this.nullMoveDepthReduction, -beta, -alpha);
+                passScore = -passScore;
+                this.board.undoMove(Move.noMove());
+            }
+            if (passScore >= beta + this.nullMoveMargin) return [beta, true];
+            if (passScore > alpha + this.nullMoveMargin) alpha = passScore;
+        }
         
         let pvMove: Move | undefined;
         for (const move of this.moveManager.getCurrentMoves()) {
@@ -136,7 +159,7 @@ export default class Search {
             this.board.undoMove(move);
             
             if (depth === 0) this.scores.push(score);
-
+            
             if (score >= beta - this.betaMargin) return [beta, true];
             if (!truncated && depth < (this.transpositionTable.get(this.board.posKey)?.depth || MAX_DEPTH)) {
                 this.transpositionTable.set(this.board.posKey, new SearchResult(score, depth, this.board.ply));
@@ -147,7 +170,7 @@ export default class Search {
                 pvMove = move;
             }
         }
-
+        
         if (pvMove) this.transpositionTable.get(this.board.posKey)!.move = pvMove;
         return [alpha, false];
     }

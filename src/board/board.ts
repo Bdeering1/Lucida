@@ -121,6 +121,13 @@ export default class Board implements IBoard {
         this.attackTable.updateFrom(piece, sq);
     }
     public makeMove(move: Move): void {
+        if (move.isNoMove()) {
+            this.sideToMove = GetOtherSide[this.sideToMove];
+            this.enPas = Square.none;
+            this.ply++;
+            return;
+        }
+
         const from = move.from;
         const to = move.to;
         const promotion = move.promotion;
@@ -183,6 +190,13 @@ export default class Board implements IBoard {
         this.ply++;
     }
     public undoMove(move: Move): void {
+        if (move.isNoMove()) {
+            this.sideToMove = GetOtherSide[this.sideToMove];
+            this.ply--;
+            this.enPas = this.history[this.ply].enPas;
+            return;
+        }
+
         this.sideToMove = GetOtherSide[this.sideToMove];
         const piece = move.promotion === Piece.none ? this.getPiece(move.to) : Pawns[PieceColor[move.promotion]];
         

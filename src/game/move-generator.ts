@@ -209,9 +209,7 @@ export default class MoveGenerator {
      */
     private addIfLegal(move: Move): boolean {
         this.board.makeMove(move);
-        const kingSq = this.board.getSquares(Kings[this.sideToMove]).next().value;
-        if (kingSq === undefined) throw new Error(`${getColorString(this.sideToMove)} king not found`);
-        if (!this.board.attackTable.getAttacks(kingSq, GetOtherSide[this.sideToMove])) {
+        if (!this.board.attackTable.inCheck(this.sideToMove)) {
             this.board.undoMove(move);
             this.addMove(move, this.board.ply);
             return true;

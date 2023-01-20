@@ -14,11 +14,19 @@ export default class Move {
         this.value = from | (to << 7) | (capture << 14) | (promotion << 18);
     }
 
+    public static noMove(): Move {
+        return new Move(Square.none, Square.none);
+    }
+
+    public isNoMove(): boolean {
+        return this.value === 0;
+    }
+
     public toString(): string {
         return `${getSquareString(this.from)}${getSquareString(this.to)}${this.promotion ? PIECE_CHAR[this.promotion] : ''}`;
     }
 
     public equals(other: Move): boolean {
-        return this.value === other.value;
+        return (this.value & 0x3C3FFF) === (other.value & 0x3C3FFF); // ignore capture
     }
 }
