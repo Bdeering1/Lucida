@@ -9,6 +9,9 @@ import MoveGenerator from "../game/move-generator";
 import PieceSquareTables from "./pst";
 import { IAttackTable } from "../board/attack-table";
 
+const ENDGAME_MATERIAL_WEIGHT = 1.5;
+const PST_WEIGHT = 2;
+
 const PAWN_PHASE = 0;
 const KNIGHT_PHASE = 1;
 const BISHOP_PHASE = 1;
@@ -22,7 +25,7 @@ export default class Eval {
      * The weight of the mobility score in the evaluation function
      * @description each 1 weight = 0.5 centipawns per move advantage
      */
-    static mobilityWeight = 0; 
+    static mobilityWeight = 0;
 
     /**
      * The weight of each piece type when determining game phase
@@ -33,17 +36,22 @@ export default class Eval {
                                + 4 * ROOK_PHASE
                                + 2 * QUEEN_PHASE;
 
-    static evaluate(board: IBoard, moveGenerator: MoveGenerator): number {
-        let score = board.material[Color.white] - board.material[Color.black];
-        if (this.mobilityWeight !== 0) score += this.getMobilityScore(moveGenerator) * this.mobilityWeight;
-
+    static evaluate(board: IBoard, moveGenerator: MoveGenerator): number {        
         const phase = this.getGamePhase(board);
-        const middlegame = this.getPSTScore(board, PieceSquareTables.middlegame);
-        const endgame = this.getPSTScore(board, PieceSquareTables.endgame);
-
-        score += this.getTaperedScore(middlegame, endgame, phase);
-
+        let middlegame = this.getMaterialScore(board)
+        let endgame = this.getMaterialScore(board, ENDGAME_MATERIAL_WEIGHT)
+        middlegame += this.getPSTScore(board, PieceSquareTables.middlegame) * PST_WEIGHT;
+        endgame += this.getPSTScore(board, PieceSquareTables.endgame) * PST_WEIGHT;
+        
+        let score = this.getTaperedScore(middlegame, endgame, phase);
+        score += this.getCoverageScore(board.attackTable);
+        if (this.mobilityWeight !== 0) score += this.getMobilityScore(moveGenerator) * this.mobilityWeight;
+        
         return score * SideMultiplier[board.sideToMove];
+    }
+
+    static getMaterialScore(board: IBoard, multiplier = 1): number {
+        return (board.material[Color.white] - board.material[Color.black]) * multiplier;
     }
 
     static getMobilityScore(moveGenerator: MoveGenerator) {
@@ -51,6 +59,10 @@ export default class Eval {
         const blackMobility = moveGenerator.generateMoves(Color.black, false);
 
         return ~~( (whiteMobility - blackMobility) / 2 );
+    }
+
+    static getCoverageScore(attackTable: IAttackTable) {
+        return ((attackTable.getCoverage(Color.white) - attackTable.getCoverage(Color.black)) / 2) | 0;
     }
 
     static getPSTScore(board: IBoard, table: number[][]): number {

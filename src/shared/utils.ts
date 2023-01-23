@@ -7,7 +7,7 @@ export const PieceBig = [ false, false, true, true, true, true, true, false, tru
 export const PieceMaj = [ false, false, false, false, true, true, true, false, false, false, true, true, true ];
 export const PieceMin = [ false, false, true, true, false, false, false, false, true, true, false, false, false ];
 export const PieceVal = [ 0, 100, 325, 325, 550, 1000, 50000, 100, 325, 325, 550, 1000, 50000 ];
-export const PieceAttackVal = [ 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ]/*[ 0, 10, 20, 20, 40, 80, 10, 10, 20, 20, 40, 40, 10 ]*/;
+export const PieceAttackVal = [ 0, 3, 3, 3, 2, 1, 1, 3, 3, 3, 2, 1, 1 ];
 export const PieceColor = [ Color.none, Color.white, Color.white, Color.white, Color.white, Color.white, Color.white,
     Color.black, Color.black, Color.black, Color.black, Color.black, Color.black ];
 

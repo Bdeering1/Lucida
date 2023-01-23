@@ -143,19 +143,19 @@ const EGRookTable64 = [
 
 /**
  * 5 for being on ranks 6, 7, or 8 and on the right half of the board
+ * 5 for being on rank 2
  * 2 for being on ranks 6, 7, or 8
- * -5 for being on rank 1
  * -10 for being on ranks 3, 4, or 5
  */
 const MGQueenTable64 = [
       2,   2,   2,   2,   7,   7,   7,   7,
       2,   2,   2,   2,   7,   7,   7,   7,
       2,   2,   2,   2,   7,   7,   7,   7,
-    -10, -10, -10, -10, -10, -10, -10, -10,
-    -10, -10, -10, -10, -10, -10, -10, -10,
-    -10, -10, -10, -10, -10, -10, -10, -10,
+    -15, -15, -15, -15, -15, -15, -15, -15,
+    -15, -15, -15, -15, -15, -15, -15, -15,
+    -15, -15, -15, -15, -15, -15, -15, -15,
+      5,   5,   5,   5,   5,   5,   5,   5,
       0,   0,   0,   0,   0,   0,   0,   0,
-     -5,  -5,  -5,  -5,  -5,  -5,  -5,  -5,
 ];
 /**
  * 5 for being on the upper half of the board

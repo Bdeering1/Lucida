@@ -6,6 +6,7 @@ import { getColorString } from "../cli/printing";
 
 export interface IAttackTable {
     getAttacks(sq: Square, color: Color): number;
+    getCoverage(color: Color): number;
     inCheck(color: Color): boolean;
     /**
      * Updates table when sliding attacks are revealed by moving away from a square
@@ -23,14 +24,22 @@ export default class AttackTable implements IAttackTable {
     private whiteAttacks: number[];
     private blackAttacks: number[];
 
+    public attackSums: number[];
+
     constructor(board: IBoard) {
         this.board = board;
         this.whiteAttacks = new Array(INNER_BOARD_SQ_NUM).fill(0);
         this.blackAttacks = new Array(INNER_BOARD_SQ_NUM).fill(0);
+
+        this.attackSums = [0, 0];
     }
 
     public getAttacks(sq: Square, color: Color): number {
         return (color === Color.white ? this.whiteAttacks : this.blackAttacks)[GetSq64[sq]];
+    }
+
+    public getCoverage(color: Color) {
+        return this.attackSums[color];
     }
 
     public inCheck(color: Color): boolean {
@@ -134,7 +143,15 @@ export default class AttackTable implements IAttackTable {
     }
 
     private updateAttack(piece: Piece, sq: Square, multiplier: AttackValMultiplier) {
-        (PieceColor[piece] === Color.white ? this.whiteAttacks : this.blackAttacks)[GetSq64[sq]] += PieceAttackVal[piece] * multiplier;
+        const color = PieceColor[piece];
+        if (color === Color.white) {
+            this.whiteAttacks[GetSq64[sq]] += PieceAttackVal[piece] * multiplier;
+            this.attackSums[Color.white] += PieceAttackVal[piece] * multiplier;
+        }
+        else {
+            this.blackAttacks[GetSq64[sq]] += PieceAttackVal[piece] * multiplier;
+            this.attackSums[Color.black] += PieceAttackVal[piece] * multiplier;
+        }
     }
 }
 
@@ -197,6 +214,10 @@ export class DummyAttackTable implements IAttackTable {
             }
         }
 
+        return 0;
+    }
+
+    public getCoverage(color: Color): number {
         return 0;
     }
 

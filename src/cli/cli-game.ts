@@ -15,8 +15,9 @@ export default async function runCli() {
     const search = new Search(board, moveGenerator);
     const moveList: Move[] = [];
     
-    parseFen(board, `r2qk2r/ppp2p1p/2n5/3pP1p1/3P1p2/B1PB1RnP/P1P3P1/1R1Q2K1 b kq - 3 13`);
-    //parseFen(board, START_FEN);
+    //parseFen(board, `r2qk2r/ppp2p1p/2n5/3pP1p1/3P1p2/B1PB1RnP/P1P3P1/1R1Q2K1 b kq - 3 13`);
+    //parseFen(board, '2kr1b1r/ppp2ppp/8/4nb2/3nP3/1B3PB1/PP4PP/RN3KNR b - - 2 13');
+    parseFen(board, START_FEN);
     
     console.log("Please chooce a side (white or black)");
     const playerColor = await getSideInput();
@@ -24,7 +25,7 @@ export default async function runCli() {
     while(true) {
         printBoard(board);
         printBoardVars(board);
-        printEval(board, moveGenerator, false);
+        printEval(board, moveGenerator);
         console.log();
     
         const status = getGameStatus(board, moveGenerator.generateMoves());

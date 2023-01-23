@@ -38,10 +38,11 @@ export function trimTranspositions(table: Map<number, SearchResult>, ply: number
     }
 }
 
-export function getPV(table: Map<number, SearchResult>, board: IBoard): Move[] {
+export function getPV(table: Map<number, SearchResult>, board: IBoard, maxDepth: number): Move[] {
     const pv: Move[] = [];
     let posKey = board.posKey;
-    while (table.has(posKey)) {
+    let depth = 0;
+    while (depth++ < maxDepth && table.has(posKey)) {
         const move = table.get(posKey)!.move;
         if (move.equals(new Move(Square.none, Square.none))) break;
         pv.push(move);
@@ -50,7 +51,8 @@ export function getPV(table: Map<number, SearchResult>, board: IBoard): Move[] {
     }
     const pvCopy: Move[] = [...pv];
     while (pvCopy.length > 0) {
-        board.undoMove(pvCopy.pop()!);
+        const move = pvCopy.pop()!;
+        board.undoMove(move);
     }
     return pv;
 }
