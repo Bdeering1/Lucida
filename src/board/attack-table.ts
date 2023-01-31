@@ -1,12 +1,13 @@
-import { AttackValMultiplier, Color, Piece, Square } from "../shared/enums";
-import { CaptureDir, GetOtherSide, GetSq64, IsBishopQueen, IsKing, IsKnight, IsPawn, IsRookQueen, IsSliding, Kings, PawnCaptureDir, PieceAttackVal, PieceColor, PieceDir, sqOffboard } from "../shared/utils";
+import { AttackValMultiplier, Color, File, FileStatus, Piece, Square } from "../shared/enums";
+import { CaptureDir, GetFile, GetOtherSide, GetRank, GetSq64, IsBishopQueen, IsKing, IsKnight, IsPawn, IsRookQueen, IsSliding, Kings, PawnCaptureDir, PieceAttackVal, PieceColor, PieceDir, RankToBits, RankToBitsInverse, sqOffboard } from "../shared/utils";
+import { INNER_BOARD_SQ_NUM, NUM_FILE_TYPES } from "../shared/constants";
 import { IBoard } from "./iboard";
-import { INNER_BOARD_SQ_NUM } from "../shared/constants";
 import { getColorString } from "../cli/printing";
 
 export interface IAttackTable {
     getAttacks(sq: Square, color: Color): number;
     getCoverage(color: Color): number;
+    isOpen(file: File, color: Color): FileStatus;
     inCheck(color: Color): boolean;
     /**
      * Updates table when sliding attacks are revealed by moving away from a square
@@ -23,6 +24,8 @@ export default class AttackTable implements IAttackTable {
 
     private whiteAttacks: number[];
     private blackAttacks: number[];
+    private whitePawnFiles: number[];
+    private blackPawnFiles: number[];
 
     public attackSums: number[];
 
@@ -30,6 +33,8 @@ export default class AttackTable implements IAttackTable {
         this.board = board;
         this.whiteAttacks = new Array(INNER_BOARD_SQ_NUM).fill(0);
         this.blackAttacks = new Array(INNER_BOARD_SQ_NUM).fill(0);
+        this.whitePawnFiles = new Array(NUM_FILE_TYPES).fill(0);
+        this.blackPawnFiles = new Array(NUM_FILE_TYPES).fill(0);
 
         this.attackSums = [0, 0];
     }
@@ -40,6 +45,19 @@ export default class AttackTable implements IAttackTable {
 
     public getCoverage(color: Color) {
         return this.attackSums[color];
+    }
+
+    public isOpen(file: File, color: Color): FileStatus {
+        let fileStatus = FileStatus.closed;
+        if (color === Color.white) {
+            if (this.whitePawnFiles[file] === 0) fileStatus += FileStatus.thisOpen;
+            if (this.blackPawnFiles[file] === 0) fileStatus += FileStatus.otherOpen;
+        }
+        else {
+            if (this.whitePawnFiles[file] === 0) fileStatus += FileStatus.otherOpen;
+            if (this.blackPawnFiles[file] === 0) fileStatus += FileStatus.thisOpen;
+        }
+        return fileStatus;
     }
 
     public inCheck(color: Color): boolean {
@@ -68,6 +86,9 @@ export default class AttackTable implements IAttackTable {
             for (const dir of CaptureDir[piece]) {
                 if (sqOffboard(sq + dir)) continue;
                 this.updateAttack(piece, sq + dir, AttackValMultiplier.remove);
+            }
+            if (IsPawn[piece]) {
+                (piece === Piece.whitePawn ? this.whitePawnFiles : this.blackPawnFiles)[GetFile[sq]] &= RankToBitsInverse[GetRank[sq]];
             }
         }
 
@@ -100,6 +121,9 @@ export default class AttackTable implements IAttackTable {
             for (const dir of CaptureDir[piece]) {
                 if (sqOffboard(sq + dir)) continue;
                 this.updateAttack(piece, sq + dir, AttackValMultiplier.add);
+            }
+            if (IsPawn[piece]) {
+                (piece === Piece.whitePawn ? this.whitePawnFiles : this.blackPawnFiles)[GetFile[sq]] |= RankToBits[GetRank[sq]];
             }
         }
 
@@ -219,6 +243,10 @@ export class DummyAttackTable implements IAttackTable {
 
     public getCoverage(color: Color): number {
         return 0;
+    }
+
+    public isOpen(file: File, color: Color): FileStatus {
+        return FileStatus.closed;
     }
 
     public inCheck(color: Color): boolean {

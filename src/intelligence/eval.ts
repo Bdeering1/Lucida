@@ -1,16 +1,17 @@
 /* eslint-disable no-magic-numbers */
 
 import { Color, Piece } from "../shared/enums";
-import { GetSq120, IsQueen, PieceColor, SideMultiplier } from "../shared/utils";
+import { GetFile, GetSq120, IsQueen, PieceColor, SideMultiplier } from "../shared/utils";
+import { IAttackTable } from "../board/attack-table";
 import { IBoard } from "../board/iboard";
 import { INNER_BOARD_SQ_NUM } from "../shared/constants";
 import Move from "../game/move";
 import MoveGenerator from "../game/move-generator";
 import PieceSquareTables from "./pst";
-import { IAttackTable } from "../board/attack-table";
 
 const ENDGAME_MATERIAL_WEIGHT = 1.5;
 const PST_WEIGHT = 2;
+const ROOKS_SCORE_WEIGHT = 7;
 
 const PAWN_PHASE = 0;
 const KNIGHT_PHASE = 1;
@@ -45,6 +46,7 @@ export default class Eval {
         
         let score = this.getTaperedScore(middlegame, endgame, phase);
         score += this.getCoverageScore(board.attackTable);
+        score += this.getRooksScore(board) * ROOKS_SCORE_WEIGHT;
         if (this.mobilityWeight !== 0) score += this.getMobilityScore(moveGenerator) * this.mobilityWeight;
         
         return score * SideMultiplier[board.sideToMove];
@@ -62,7 +64,18 @@ export default class Eval {
     }
 
     static getCoverageScore(attackTable: IAttackTable) {
-        return ((attackTable.getCoverage(Color.white) - attackTable.getCoverage(Color.black)) / 2) | 0;
+        return ((attackTable.getCoverage(Color.white) - attackTable.getCoverage(Color.black)) / 4) | 0;
+    }
+
+    static getRooksScore(board: IBoard) {
+        let score = 0;
+        for (const sq of board.getSquares(Piece.whiteRook)) {
+            score += board.attackTable.isOpen(GetFile[sq], Color.white);
+        }
+        for (const sq of board.getSquares(Piece.blackRook)) {
+            score += board.attackTable.isOpen(GetFile[sq], Color.black);
+        }
+        return score;
     }
 
     static getPSTScore(board: IBoard, table: number[][]): number {

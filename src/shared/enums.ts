@@ -32,7 +32,7 @@ export const enum File {
     g,
     h
 }
-export enum Rank {
+export const enum Rank {
     none,
     one,
     two,
@@ -68,6 +68,13 @@ export const enum MoveStatus{
 export const enum AttackValMultiplier {
     remove = -1,
     add = 1
+}
+
+export const enum FileStatus {
+    closed,
+    otherOpen,
+    thisOpen,
+    open
 }
 
 export const enum InputOption {

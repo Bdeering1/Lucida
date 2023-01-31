@@ -1,13 +1,12 @@
+import { Color, InputOption } from "../shared/enums";
+import { getMoveInput, getSideInput, pauseForInput } from "./input";
+import { printBoard, printBoardVars, printEval, printMoves } from "./printing";
 import Board from "../board/board";
-import { parseFen } from "../board/board-setup";
-import { getGameStatus } from "../game/game-state";
 import Move from "../game/move";
 import MoveGenerator from "../game/move-generator";
 import Search from "../intelligence/search";
-import { START_FEN } from "../shared/constants";
-import { InputOption, Color } from "../shared/enums";
-import { getSideInput, getMoveInput, pauseForInput } from "./input";
-import { printBoard, printBoardVars, printEval, printMoves } from "./printing";
+import { getGameStatus } from "../game/game-state";
+import { parseFen } from "../board/board-setup";
 
 export default async function runCli() {
     const board = new Board();
@@ -15,9 +14,9 @@ export default async function runCli() {
     const search = new Search(board, moveGenerator);
     const moveList: Move[] = [];
     
-    //parseFen(board, `r2qk2r/ppp2p1p/2n5/3pP1p1/3P1p2/B1PB1RnP/P1P3P1/1R1Q2K1 b kq - 3 13`);
+    parseFen(board, `r2qk2r/ppp2p1p/2n5/3pP1p1/3P1p2/B1PB1RnP/P1P3P1/1R1Q2K1 b kq - 3 13`);
     //parseFen(board, '2kr1b1r/ppp2ppp/8/4nb2/3nP3/1B3PB1/PP4PP/RN3KNR b - - 2 13');
-    parseFen(board, START_FEN);
+    //parseFen(board, START_FEN);
     
     console.log("Please chooce a side (white or black)");
     const playerColor = await getSideInput();
@@ -25,7 +24,7 @@ export default async function runCli() {
     while(true) {
         printBoard(board);
         printBoardVars(board);
-        printEval(board, moveGenerator);
+        printEval(board, moveGenerator, true);
         console.log();
     
         const status = getGameStatus(board, moveGenerator.generateMoves());

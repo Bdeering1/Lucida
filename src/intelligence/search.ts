@@ -1,13 +1,13 @@
 import Eval, { MAX_PHASE } from './eval';
+import { MAX_DEPTH, MS_PER_SECOND } from '../shared/constants';
 import { PieceVal, SideMultiplier } from '../shared/utils';
+import SearchResult, { getPV, trimTranspositions } from './search-result';
 import { getLineString, printMoves } from '../cli/printing';
 import { IBoard } from '../board/iboard';
-import { MAX_DEPTH, MS_PER_SECOND } from '../shared/constants';
 import Move from '../game/move';
 import MoveGenerator from '../game/move-generator';
 import { Piece } from '../shared/enums';
 import PieceSquareTables from './pst';
-import SearchResult, { getPV, trimTranspositions } from './search-result';
 import { getGameStatus } from '../game/game-state';
 
 const LAST_DEPTH_CUTOFF = 2.5 * MS_PER_SECOND;
@@ -55,7 +55,7 @@ export default class Search {
      * Margin used to account for the reduced depth of null move search (in centipawns)
      * @description higher values lead to slower but more accurate search
      */
-    private nullMoveMargin = 120;
+    private nullMoveMargin = 0;
     /**
      * Depth reduction for null move search
      * @description higher values lead to faster but less accurate search
@@ -68,6 +68,7 @@ export default class Search {
 
     private nodes = 0;
     private quiesceNodes = 0;
+    private nullMoveCutoffs = 0;
     private deltaPruned = 0;
     private transpositions = 0;
     private scores: number[] = [];
@@ -88,6 +89,7 @@ export default class Search {
         const depthCutoff = this.getDepthCutoff();
         this.nodes = 0;
         this.quiesceNodes = 0;
+        this.nullMoveCutoffs = 0;
         
         if (Eval.getGamePhase(this.board) / MAX_PHASE >= 0.95) {
             this.deltaPruning = false;
@@ -117,9 +119,8 @@ export default class Search {
         const timePerNode = timeElapsed / (this.nodes + this.quiesceNodes);
 
         if (verbose) {
-            console.log(`depth: ${this.effectiveDepth} ${this.effectiveDepth > this.depthLimit ? `(+${this.effectiveDepth - this.depthLimit})` : ''}`);
-            console.log(`time: ${(timeElapsed / MS_PER_SECOND).toFixed(2)}s (${timePerNode.toFixed(2)}ms per node)`);
-            console.log(`primary: ${this.nodes} quiescence search: ${this.quiesceNodes} delta pruned: ${this.deltaPruned}`);
+            console.log(`\ntime: ${(timeElapsed / MS_PER_SECOND).toFixed(2)}s (${timePerNode.toFixed(2)}ms per node)`);
+            console.log(`primary: ${this.nodes} quiescence search: ${this.quiesceNodes} delta pruned: ${this.deltaPruned} null move cutoffs: ${this.nullMoveCutoffs}`);
             console.log(`transpositions: ${this.transpositions} table size ${this.transpositionTable.size}`);
             printMoves([...this.moveManager.getCurrentMoves()], this.scores, SideMultiplier[this.board.sideToMove]);
 
@@ -127,7 +128,7 @@ export default class Search {
             console.log(`Best line: ${getLineString(this.board, moves)}`);
         }
         
-        let move = getPV(this.transpositionTable, this.board, 1)[0];
+        const move = getPV(this.transpositionTable, this.board, 1)[0];
         return [move, best];
     }
 
@@ -138,16 +139,15 @@ export default class Search {
         const status = getGameStatus(this.board, this.moveManager.generateMoves());
         if (status.complete === true) return [-(PieceVal[Piece.whiteKing] - depth), false];
         
-        if (this.nullMovePruning) {
-            let passScore = -Infinity;
-            if (!this.board.attackTable.inCheck(this.board.sideToMove)) {
-                this.board.makeMove(Move.noMove());
-                [passScore,] = this.negaMax(depth + 1 + this.nullMoveDepthReduction, -beta, -alpha);
-                passScore = -passScore;
-                this.board.undoMove(Move.noMove());
-            }
-            if (passScore >= beta + this.nullMoveMargin) return [beta, true];
-            if (passScore > alpha + this.nullMoveMargin) alpha = passScore;
+        let passScore = -Infinity;
+        if (this.nullMovePruning && !this.board.attackTable.inCheck(this.board.sideToMove)) {
+
+            this.board.makeMove(Move.noMove());
+            [passScore,] = this.negaMax(depth + 1 + this.nullMoveDepthReduction, -beta, -alpha);
+            passScore = -passScore;
+            this.board.undoMove(Move.noMove());
+
+            if (passScore >= beta + this.nullMoveMargin) { this.nullMoveCutoffs++; return [beta, true]; }
         }
 
         let pvMove: Move | undefined;
@@ -177,8 +177,9 @@ export default class Search {
                 pvMove = move;
             }
         }
-        
+
         if (pvMove) this.transpositionTable.get(this.board.posKey)!.move = pvMove;
+
         return [alpha, false];
     }
 

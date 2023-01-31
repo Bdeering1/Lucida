@@ -14,16 +14,16 @@ import { Rank } from "../shared/enums";
  * 5 for being on files d or e and ranks 4 or greater
  * 2 for being on files c or f and ranks 4 or greater
  * -5 for being on the 2nd rank
- * -15 for being on an outside file
+ * -10 for being on an outside file
  */
 const MGPawnTable64 = [
       0,   0,   0,   0,   0,   0,   0,   0,
-     20,  30,  32,  35,  35,  32,  30,  20,
-     -5,  10,  12,  15,  15,  12,  10,  -5,
-    -10,   5,   7,  10,  10,   7,   5, -10,
-    -15,   0,   2,   5,   5,   2,   0, -15,
-    -15,   0,   0,   0,   0,   0,   0, -15,
-    -20,  -5,  -5, -15, -15,  15,  15, -20,
+     25,  30,  32,  35,  35,  32,  30,  25,
+      0,  10,  12,  15,  15,  12,  10,   0,
+     -5,   5,   7,  10,  10,   7,   5,  -5,
+    -10,   0,   2,   5,   5,   2,   0, -10,
+    -10,   0,   0,   0,   0,   0,   0, -10,
+    -15,  -5,  -5, -15, -15,  15,  15, -15,
       0,   0,   0,   0,   0,   0,   0,   0,
 ];
 /**

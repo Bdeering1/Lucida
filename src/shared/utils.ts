@@ -51,6 +51,9 @@ export const EnPasRank = [ Rank.four, Rank.five ];
 
 export const SideMultiplier = [ 1, -1, 0 ];
 
+export const RankToBits = [ 0, 1, 2, 4, 8, 16, 32, 64, 128 ];
+export const RankToBitsInverse = [ 255, 254, 253, 251, 247, 239, 223, 191, 127 ];
+
 export const GetFile = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
