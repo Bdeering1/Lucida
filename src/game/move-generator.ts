@@ -5,7 +5,7 @@ import { MAX_GAME_MOVES, MAX_POSITION_MOVES } from "../shared/constants";
 import Eval from "../intelligence/eval";
 import { IBoard } from "../board/iboard";
 import Move from "./move";
-import SearchResult from "../intelligence/search-result";
+import TranspositionTable, { SearchResult } from "../intelligence/transposition-table";
 
 export default class MoveGenerator {
     private board: IBoard;
@@ -41,7 +41,7 @@ export default class MoveGenerator {
     /**
      * Hash map used to store previously evaluated positions
      */
-    public transpositionTable: Map<number, SearchResult>;
+    public transpositionTable: TranspositionTable;
     /**
      * Principal variation move if any
      */
@@ -58,7 +58,7 @@ export default class MoveGenerator {
             this.numMoves[i] = 0;
         }
         this.movePrecedences = new Array(MAX_POSITION_MOVES);
-        this.transpositionTable = new Map();
+        this.transpositionTable = new TranspositionTable();
     }
 
     public * getCurrentMoves(): IterableIterator<Move> {

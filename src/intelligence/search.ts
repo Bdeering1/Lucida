@@ -1,7 +1,8 @@
+/* eslint-disable no-magic-numbers */
 import Eval, { MAX_PHASE } from './eval';
 import { MAX_DEPTH, MS_PER_SECOND } from '../shared/constants';
 import { PieceVal, SideMultiplier } from '../shared/utils';
-import SearchResult, { getPV, trimTranspositions } from './search-result';
+import TranspositionTable, { SearchResult } from './transposition-table';
 import { getLineString, printMoves } from '../cli/printing';
 import { IBoard } from '../board/iboard';
 import Move from '../game/move';
@@ -64,7 +65,7 @@ export default class Search {
     /**
      * Hash map used to store previously evaluated positions
      */
-    private transpositionTable: Map<number, SearchResult> = new Map();
+    private transpositionTable: TranspositionTable;
 
     private nodes = 0;
     private quiesceNodes = 0;
@@ -85,7 +86,7 @@ export default class Search {
     }
 
     public getBestMove(verbose = false, lastDepthCutoff = LAST_DEPTH_CUTOFF): [Move, number] {
-        trimTranspositions(this.transpositionTable, this.board.ply);
+        this.transpositionTable.trim(this.board.ply);
         const depthCutoff = this.getDepthCutoff();
         this.nodes = 0;
         this.quiesceNodes = 0;
@@ -110,7 +111,7 @@ export default class Search {
             best *= SideMultiplier[this.board.sideToMove];
             
             if (verbose) {
-                const moves = getPV(this.transpositionTable, this.board, this.effectiveDepth);
+                const moves = this.transpositionTable.getPV(this.board, this.effectiveDepth);
                 console.log(`depth: ${this.effectiveDepth} (${((Date.now() - startTime) / 1000).toFixed(2)}s) score: ${best} Best line:${getLineString(this.board, moves, this.effectiveDepth)}`);
             }
         }
@@ -124,11 +125,11 @@ export default class Search {
             console.log(`transpositions: ${this.transpositions} table size ${this.transpositionTable.size}`);
             printMoves([...this.moveManager.getCurrentMoves()], this.scores, SideMultiplier[this.board.sideToMove]);
 
-            const moves = getPV(this.transpositionTable, this.board, this.effectiveDepth);
+            const moves = this.transpositionTable.getPV(this.board, this.effectiveDepth);
             console.log(`Best line: ${getLineString(this.board, moves)}`);
         }
         
-        const move = getPV(this.transpositionTable, this.board, 1)[0];
+        const move = this.transpositionTable.getPV(this.board, 1)[0];
         return [move, best];
     }
 

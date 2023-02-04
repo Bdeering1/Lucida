@@ -17,9 +17,10 @@ export default function runUci(): Promise<void> {
         const sqEx = /[a-h][1-9]/g;
         const promotionEx = /[qrbn]$/i;
 
+        let isDebug = false;
         let isNewGame = false;
         let moveList: Move[] = [];
-        let gameStartPos = START_FEN;
+        let gameStartPos = "";
 
         rl.on('line', (line: string) => {
             const tokens = line.trim().split(" ");
@@ -32,25 +33,28 @@ export default function runUci(): Promise<void> {
                     console.log("uciok");
                     break;
                 case "debug":
-                    // set debug mode (on | off)
+                    isDebug = tokens[1] === "on";
+                    if (isDebug) console.log(`info string received debug command (${tokens.length - 1} args)`);
                     break;
                 case "setoption":
+                    if (isDebug) console.log(`info string received setoption command (${tokens.length - 1} args)`);
                     // set options
                     break;
                 case "isready":
                     console.log("readyok");
                     break;
-                case "ucinewgame":
-                    // this command is not always supported
-                    // next position command should call parseFen
+                case "ucinewgame": // note: this command is not always supported
+                    if (isDebug) console.log("info string received ucinewgame command");
                     isNewGame = true;
                     moveList = [];
-                    // transposition table should be cleared
+                    moveGenerator.transpositionTable.clear();
                     break;
                 case "position":
                 {
+                    if (isDebug) console.log(`info string received position command (${tokens.length - 1} args)`);
                     const position = tokens[1] === "startpos" ? START_FEN : tokens[1];
                     if (isNewGame || position !== gameStartPos) {
+                        if (isDebug) console.log(`info string parsing new position: '${position}'`);
                         parseFen(board, position);
                         gameStartPos = position;
                         isNewGame = false;
@@ -66,6 +70,7 @@ export default function runUci(): Promise<void> {
                         if (promoteToken) move.promotion = pieceFromString(promoteToken[0]);
 
                         if (moveList.length === 0 || !move.equals(moveList[moveList.length - 1])) {
+                            if (isDebug) console.log(`info string made move: ${move}`);
                             board.makeMove(move);
                             moveList.push(move);
                         }
@@ -74,8 +79,9 @@ export default function runUci(): Promise<void> {
                 }
                 case "go":
                 {
+                    if (isDebug) console.log(`info string received go command (${tokens.length - 1} args)`);
                     // parse go command
-                    const [move, score] = search.getBestMove(false);
+                    const [move, score] = search.getBestMove(isDebug);
                     console.log(`bestmove ${move}`);
                     break;
                 }
@@ -83,6 +89,7 @@ export default function runUci(): Promise<void> {
                     rl.close();
                     break;
                 default:
+                    console.log(`info string received unknown command: '${tokens[0]}'`);
                     break;
             }
         });
