@@ -1,8 +1,8 @@
 import { Color, InputOption } from '../shared/enums';
-import { getFileFromChar, getRankFromChar, getSquare } from '../shared/utils';
 import { stdin as input, stdout as output } from 'node:process';
 import Move from '../game/move';
 import { createInterface } from 'readline';
+import { sqFromString } from '../shared/utils';
 
 export function getSideInput(): Promise<Color> {
     return new Promise((resolve, reject) => {
@@ -40,7 +40,7 @@ export function getSideInput(): Promise<Color> {
 }
 
 export function getMoveInput(moves: Move[]) {
-    const moveEx = /[a-h][1-9]/g;
+    const sqEx = /[a-h][1-9]/g;
 
     return new Promise<Move | InputOption>((resolve, reject) => {
         let userMove: Move | InputOption;
@@ -60,14 +60,14 @@ export function getMoveInput(moves: Move[]) {
                 return;
             }
 
-            const tokens = line.match(moveEx) || [];
-            if (tokens.length !== 2) {
+            const sqTokens = line.match(sqEx) || [];
+            if (sqTokens.length !== 2) {
                 console.log(`Invalid input`);
                 rl.prompt();
                 return;
             }
 
-            userMove = new Move(sqFromString(tokens[0]), sqFromString(tokens[1]));
+            userMove = new Move(sqFromString(sqTokens[0]), sqFromString(sqTokens[1]));
             let valid = false;
             for (const move of moves) {
                 if (userMove.equals(move)) {
@@ -98,8 +98,4 @@ export function pauseForInput() {
             resolve();
         });
     });
-}
-
-function sqFromString(sq: string) {
-    return getSquare(getFileFromChar(sq[0]), getRankFromChar(sq[1]));
 }

@@ -1,5 +1,6 @@
 /* eslint-disable no-magic-numbers, indent */
 import { Color, Piece, Rank, Square } from './enums';
+import { PIECE_CHAR } from './constants';
 
 
 /* --- Maps --- */
@@ -144,4 +145,15 @@ export function generateHash32(seed: number) {
     return ~~((seed + 37) * 3575866506 + seed % 2);
     /* return Math.floor(Math.random() * 255 + 1) << 24 | Math.floor(Math.random() * 255 + 1) << 16
     | Math.floor(Math.random() * 255 + 1) << 8 | Math.floor(Math.random() * 255 + 1); */
+}
+
+export function sqFromString(sq: string) {
+    return getSquare(getFileFromChar(sq[0]), getRankFromChar(sq[1]));
+}
+
+export function pieceFromString(piece: string): Piece {
+    for (let p = 0; p < PIECE_CHAR.length; p++) {
+        if (piece === PIECE_CHAR[p]) return p;
+    }
+    return Piece.none;
 }

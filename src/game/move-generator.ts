@@ -1,10 +1,10 @@
-import { Bishops, GetOtherSide, GetRank, IsBishopQueen, IsKing, IsKnight, IsPawn, IsRookQueen, Kings, Knights, NonSlidingPieces, PawnCaptureDir, Pawns, PieceColor, PieceDir, Queens, Rooks, SlidingPieces, StartingRank, sqOffboard } from "../shared/utils";
+/* eslint-disable indent */
+import { Bishops, GetOtherSide, GetRank, Kings, Knights, NonSlidingPieces, PawnCaptureDir, Pawns, PieceColor, PieceDir, Queens, Rooks, SlidingPieces, StartingRank, sqOffboard } from "../shared/utils";
 import { Color, MoveStatus, Piece, Square } from "../shared/enums";
 import { MAX_GAME_MOVES, MAX_POSITION_MOVES } from "../shared/constants";
 import Eval from "../intelligence/eval";
 import { IBoard } from "../board/iboard";
 import Move from "./move";
-import { getColorString } from "../cli/printing";
 import SearchResult from "../intelligence/search-result";
 
 export default class MoveGenerator {

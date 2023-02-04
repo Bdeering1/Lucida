@@ -39,8 +39,8 @@ export default class Eval {
 
     static evaluate(board: IBoard, moveGenerator: MoveGenerator): number {        
         const phase = this.getGamePhase(board);
-        let middlegame = this.getMaterialScore(board)
-        let endgame = this.getMaterialScore(board, ENDGAME_MATERIAL_WEIGHT)
+        let middlegame = this.getMaterialScore(board);
+        let endgame = this.getMaterialScore(board, ENDGAME_MATERIAL_WEIGHT);
         middlegame += this.getPSTScore(board, PieceSquareTables.middlegame) * PST_WEIGHT;
         endgame += this.getPSTScore(board, PieceSquareTables.endgame) * PST_WEIGHT;
         

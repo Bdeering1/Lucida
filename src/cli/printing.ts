@@ -3,11 +3,11 @@ import { BOARD_SQ_NUM, FILE_CHAR, INNER_BOARD_SQ_NUM, PIECE_CHAR } from "../shar
 import { Color, File, Square } from "../shared/enums";
 import { GetFile, GetRank, GetSq120, SideMultiplier, generateHash32 } from "../shared/utils";
 import Eval from "../intelligence/eval";
+import { IAttackTable } from "../board/attack-table";
 import { IBoard } from "../board/iboard";
 import Move from "../game/move";
 import MoveGenerator from "../game/move-generator";
 import PieceSquareTables from "../intelligence/pst";
-import { IAttackTable } from "../board/attack-table";
 
 export function printBoard(board: IBoard) {
     console.log("\n  a b c d e f g h");
