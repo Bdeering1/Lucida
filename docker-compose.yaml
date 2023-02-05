@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  lucida:
+    build:
+      context: .
+
+    container_name: lucida
+    image: lucida:latest
+
+    stdin_open: true
+    tty: true
+
+# docker compose up -d
+# docker attach app

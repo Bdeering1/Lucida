@@ -66,7 +66,11 @@
         "rest-spread-spacing": "warn",
         "require-await": "warn",
         "sort-imports": "warn",
-        "space-before-function-paren": ["warn", "never"],
+        "space-before-function-paren": ["warn", {
+            "anonymous": "never",
+            "named": "never",
+            "asyncArrow": "always"
+        }],
         "switch-colon-spacing": "warn",
         "wrap-iife": "error",
         "yoda": "warn",

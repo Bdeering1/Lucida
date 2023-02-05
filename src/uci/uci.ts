@@ -7,6 +7,7 @@ import { START_FEN } from "../shared/constants";
 import Search from "../intelligence/search";
 import { createInterface } from 'readline';
 import { parseFen } from "../board/board-setup";
+import runCli from '../cli/cli-game';
 
 export default function runUci(): Promise<void> {
     return new Promise((resolve, reject) => {
@@ -22,10 +23,14 @@ export default function runUci(): Promise<void> {
         let moveList: Move[] = [];
         let gameStartPos = "";
 
-        rl.on('line', (line: string) => {
+        rl.on('line', async (line: string) => {
             const tokens = line.trim().split(" ");
 
             switch(tokens[0]) {
+                case "cli":
+                    await runCli();
+                    rl.close();
+                    break;
                 case "uci":
                     console.log("id name Lucida");
                     console.log("id author Bryn Deering");
@@ -61,20 +66,20 @@ export default function runUci(): Promise<void> {
                     }
 
                     if (tokens.length === 2) break;
-                    for (const moveStr of tokens.slice(2)) {
+                    tokens.slice(2).forEach((moveStr, idx) => {
                         const sqTokens = moveStr.match(sqEx);
-                        if (!sqTokens) break;
+                        if (!sqTokens) return;
                         const promoteToken = moveStr.match(promotionEx);
 
                         const move = new Move(sqFromString(sqTokens[0]), sqFromString(sqTokens[1]));
                         if (promoteToken) move.promotion = pieceFromString(promoteToken[0]);
 
-                        if (moveList.length === 0 || !move.equals(moveList[moveList.length - 1])) {
+                        if (moveList.length === 0 || !move.equals(moveList[idx])) {
                             if (isDebug) console.log(`info string made move: ${move}`);
                             board.makeMove(move);
                             moveList.push(move);
                         }
-                    }
+                    });
                     break;
                 }
                 case "go":
@@ -85,6 +90,13 @@ export default function runUci(): Promise<void> {
                     console.log(`bestmove ${move}`);
                     break;
                 }
+                case "ponderhit":
+                    // use has played expected move, transition to normal search
+                    break;
+                case "stop":
+                    // stop calculating as soon as possible
+                    // send the 'bestmove' and possibly the 'ponder' token
+                    break;
                 case "quit":
                     rl.close();
                     break;

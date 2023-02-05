@@ -14,8 +14,6 @@
     "build": "tsc --build --force",
     "clean": "tsc --build --clean",
     "start": "tsc --build && node --es-module-specifier-resolution=node .",
-    "ucidev": "tsc -build && node --es-module-specifier-resolution=node . uci",
-    "uci": "node --es-module-specifier-resolution=node . uci",
     "test": "jest"
   },
   "repository": {
