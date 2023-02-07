@@ -12,4 +12,4 @@ services:
     tty: true
 
 # docker compose up -d
-# docker attach app
+# docker attach lucida

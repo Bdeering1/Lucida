@@ -110,10 +110,8 @@ export default class Search {
             [best,] = this.negaMax(0, -Infinity, Infinity);
             best *= SideMultiplier[this.board.sideToMove];
             
-            if (verbose) {
-                const moves = this.transpositionTable.getPV(this.board, this.effectiveDepth);
-                console.log(`depth: ${this.effectiveDepth} (${((Date.now() - startTime) / 1000).toFixed(2)}s) score: ${best} Best line:${getLineString(this.board, moves, this.effectiveDepth)}`);
-            }
+            const moves = this.transpositionTable.getPV(this.board, this.effectiveDepth);
+            console.log(`info depth: ${this.effectiveDepth} time ${Date.now() - startTime} score cp ${best} pv ${moves.map(m => m.toString()).join(' ')}`);
         }
 
         const timeElapsed = Date.now() - startTime;

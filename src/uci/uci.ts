@@ -74,7 +74,7 @@ export default function runUci(): Promise<void> {
                         const move = new Move(sqFromString(sqTokens[0]), sqFromString(sqTokens[1]));
                         if (promoteToken) move.promotion = pieceFromString(promoteToken[0]);
 
-                        if (moveList.length === 0 || !move.equals(moveList[idx])) {
+                        if (moveList.length < idx + 1 || !move.equals(moveList[idx])) {
                             if (isDebug) console.log(`info string made move: ${move}`);
                             board.makeMove(move);
                             moveList.push(move);
@@ -85,8 +85,27 @@ export default function runUci(): Promise<void> {
                 case "go":
                 {
                     if (isDebug) console.log(`info string received go command (${tokens.length - 1} args)`);
-                    // parse go command
-                    const [move, score] = search.getBestMove(isDebug);
+                    let move: Move;
+                    let subCommand = tokens.length > 1 ? tokens[1] : "";
+                    switch(tokens[1]) {
+                        case "depth":
+                            [move,] = search.getBestMove(isDebug, parseInt(tokens[2]));
+                            break;
+                        case "searchmoves":
+                        case "ponder":
+                        case "wtime":
+                        case "btime":
+                        case "winc":
+                        case "binc":
+                        case "movestogo":
+                        case "nodes":
+                        case "mate":
+                        case "movetime":
+                        case "infinite":
+                        default:
+                            [move,] = search.getBestMove(isDebug);
+                            break;
+                    }
                     console.log(`bestmove ${move}`);
                     break;
                 }

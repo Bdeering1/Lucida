@@ -21,7 +21,6 @@ COPY package.json pnpm-lock.yaml ./
 RUN npm install pnpm -g
 RUN pnpm install --prod --frozen-lockfile
 
-COPY . .
 COPY --from=builder /app/build ./build
 
 CMD ["node", "--es-module-specifier-resolution=node", "."]
