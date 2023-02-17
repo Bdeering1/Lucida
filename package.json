@@ -5,7 +5,6 @@
   "description": "NodeJS chess engine built from the ground up - currently under development",
   "main": "./build/index.js",
   "directories": {
-    "doc": "docs",
     "test": "tests"
   },
   "scripts": {
@@ -21,7 +20,7 @@
     "url": "git+https://github.com/Bdeering1/Lucida.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Bryn Deering",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Bdeering1/Lucida/issues"
@@ -32,7 +31,7 @@
     "@types/node": "18.0.3",
     "@typescript-eslint/eslint-plugin": "^5.30.5",
     "@typescript-eslint/parser": "^5.30.5",
-    "eslint": "^8.19.0",
+    "eslint": "^8.34.0",
     "eslint-config-esnext": "^4.1.0",
     "eslint-config-node": "^4.1.0",
     "jest": "^28.1.2",
