@@ -28,8 +28,8 @@ export default function runUci(): Promise<void> {
 
             switch(tokens[0]) {
                 case "cli":
-                    await runCli();
                     rl.close();
+                    await runCli();
                     break;
                 case "uci":
                     console.log("id name Lucida");

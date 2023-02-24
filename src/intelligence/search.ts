@@ -11,7 +11,7 @@ import { Piece } from '../shared/enums';
 import PieceSquareTables from './pst';
 import { getGameStatus } from '../game/game-state';
 
-const LAST_DEPTH_CUTOFF = 2.5 * MS_PER_SECOND;
+const LAST_DEPTH_CUTOFF = 3 * MS_PER_SECOND;
 
 export default class Search {
     private board: IBoard;
@@ -37,7 +37,7 @@ export default class Search {
      * Margin used for delta pruning
      * @description if a capture does not raise the static eval to within this margin, it is not searched further
      */
-    private deltaMargin = 350;
+    private deltaMargin = 330;
     /**
      * Additional margin for beta cutoff (in centipawns)
      * @desription higher values lead faster but less accurate search (greatly decreases accuracy)
@@ -105,8 +105,8 @@ export default class Search {
         while (this.effectiveDepth < depthCutoff && Date.now() - startTime < lastDepthCutoff) {
             this.scores = [];
             this.effectiveDepth++;
-            if (this.effectiveDepth < this.zeroMarginBetaDepth) this.effectiveBetaMargin -= 10;
-            else this.effectiveBetaMargin = 0;
+            this.effectiveBetaMargin -= 10;
+            if (this.effectiveBetaMargin < 0 || this.effectiveDepth < this.zeroMarginBetaDepth) this.effectiveBetaMargin = 0;
             [best,] = this.negaMax(0, -Infinity, Infinity);
             best *= SideMultiplier[this.board.sideToMove];
             

@@ -11,5 +11,5 @@ services:
     stdin_open: true
     tty: true
 
-# docker compose up -d
+# docker compose up -d --build
 # docker attach lucida
