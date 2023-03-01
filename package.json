@@ -7,12 +7,20 @@
   "directories": {
     "test": "tests"
   },
+  "sideEffects": [
+    "./src/board/*",
+    "./src/cli/*",
+    "./src/uci/*",
+    "./src/intelligence/search.ts",
+    "./src/intelligence/transposition-table.ts"
+  ],
   "scripts": {
     "precommit": "eslint .",
-    "dev": "tsc -watch",
-    "build": "tsc --build --force",
-    "clean": "tsc --build --clean",
-    "start": "tsc --build && node --es-module-specifier-resolution=node .",
+    "build": "tsc -noEmit && esbuild $(esbuild-config)",
+    "build-ts": "npm run clean && tsc --build --force",
+    "clean": "rm -rf ./build",
+    "dev": "esbuild $(esbuild-config) && npm start",
+    "start": "node --es-module-specifier-resolution=node .",
     "test": "jest"
   },
   "repository": {
@@ -31,6 +39,8 @@
     "@types/node": "18.0.3",
     "@typescript-eslint/eslint-plugin": "^5.30.5",
     "@typescript-eslint/parser": "^5.30.5",
+    "esbuild": "^0.17.10",
+    "esbuild-config": "^1.0.1",
     "eslint": "^8.34.0",
     "eslint-config-esnext": "^4.1.0",
     "eslint-config-node": "^4.1.0",

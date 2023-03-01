@@ -1,0 +1,11 @@
+{
+    "entry": "./src/index.ts",
+    "outfile": "./build/index.js",
+    "bundle": true,
+    "minify": true,
+    "sourcemap": true,
+    "format": "esm",
+    "platform": "node",
+    "target": "esnext",
+    "analyze": true
+  }
