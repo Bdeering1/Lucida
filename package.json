@@ -21,7 +21,9 @@
     "clean": "rm -rf ./build",
     "dev": "esbuild $(esbuild-config) && npm start",
     "start": "node --es-module-specifier-resolution=node .",
-    "test": "jest"
+    "test": "jest",
+    "profile": "esbuild $(esbuild-config) && node --es-module-specifier-resolution=node --prof .",
+    "postprofile": "node --prof-process isolate-0x*.log > perf/profile-$(date +\"%Y-%m-%d-%H-%M\").log && rm isolate-0x*.log"
   },
   "repository": {
     "type": "git",

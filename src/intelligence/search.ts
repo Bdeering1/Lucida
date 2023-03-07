@@ -21,6 +21,7 @@ export default class Search {
      * Maximum depth of primary search tree
      */
     private depthLimit: number;
+    private minDepth = 3;
     /**
      * Actual depth of primary search tree, used during iterative deepening
      */
@@ -102,7 +103,7 @@ export default class Search {
         this.effectiveBetaMargin = this.betaMargin;
         this.effectiveDepth = 0;
         let best = 0;
-        while (this.effectiveDepth < depthCutoff && Date.now() - startTime < lastDepthCutoff) {
+        while ((this.effectiveDepth < depthCutoff && Date.now() - startTime < lastDepthCutoff) || this.effectiveDepth < this.minDepth) {
             this.scores = [];
             this.effectiveDepth++;
             this.effectiveBetaMargin -= 10;

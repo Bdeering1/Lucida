@@ -3,6 +3,7 @@ build/
 
 # Test Related Files
 coverage/
+perf/
 
 # Dependencies
 node_modules/

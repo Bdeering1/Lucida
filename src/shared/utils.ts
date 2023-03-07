@@ -20,13 +20,13 @@ export const IsRookQueen = [ false, false, false, false, true, true, false, fals
 export const IsBishopQueen = [ false, false, false, true, false, true, false, false, false, true, false, true, false ];
 export const IsSliding = [ false, false, false, true, true, true, false, false, false, true, true, true, false ];
 
-export const PawnDir = [ 10, -10 ];
-export const KnightDir = [ -8, -19, -21, -12, 8, 19, 21, 12 ];
-export const BishopDir = [ -9, -11, 11, 9 ];
-export const RookDir = [ -1, -10, 1, 10 ];
-export const KingDir = [ -1, -10, 1, 10, -9, -11, 11, 9 ];
+export const PawnDir = new Int8Array([ 10, -10 ]);
+export const KnightDir = new Int8Array([ -8, -19, -21, -12, 8, 19, 21, 12 ]);
+export const BishopDir = new Int8Array([ -9, -11, 11, 9 ]);
+export const RookDir = new Int8Array([ -1, -10, 1, 10 ]);
+export const KingDir = new Int8Array([ -1, -10, 1, 10, -9, -11, 11, 9 ]);
 export const PawnCaptureDir = [[ 9, 11 ], [ -9, -11 ]];
-export const PieceDir = [ [], PawnDir, KnightDir, BishopDir, RookDir, KingDir, KingDir, PawnDir, KnightDir, BishopDir, RookDir, KingDir, KingDir ];
+export const PieceDir = [ new Int8Array(), PawnDir, KnightDir, BishopDir, RookDir, KingDir, KingDir, PawnDir, KnightDir, BishopDir, RookDir, KingDir, KingDir ];
 export const CaptureDir = [ [], PawnCaptureDir[Color.white], KnightDir, BishopDir, RookDir, KingDir, KingDir, PawnCaptureDir[Color.black], KnightDir, BishopDir, RookDir, KingDir, KingDir ];
 export const NonSlidingPieces = [ [Piece.whiteKnight, Piece.whiteKing],
                                   [Piece.blackKnight, Piece.blackKing] ];
