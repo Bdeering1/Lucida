@@ -16,9 +16,9 @@ export default async function runCli() {
     const moveList: Move[] = [];
     
     //parseFen(board, `r2qk2r/ppp2p1p/2n5/3pP1p1/3P1p2/B1PB1RnP/P1P3P1/1R1Q2K1 b kq - 3 13`);
-    //parseFen(board, '2kr1b1r/ppp2ppp/8/4nb2/3nP3/1B3PB1/PP4PP/RN3KNR b - - 2 13');
+    parseFen(board, '2kr1b1r/ppp2ppp/8/4nb2/3nP3/1B3PB1/PP4PP/RN3KNR b - - 2 13');
     //parseFen(board, 'r5k1/pp4r1/2p1bR2/8/4p3/4Q3/1PP5/2K5 w - - 0 32'); // breaks board representation
-    parseFen(board, 'r2q1rk1/pp3ppp/2p2n2/2b1p3/3nP1b1/2NBB3/PPPQNPPP/2KR3R b - - 7 10'); // takes 0.25s on depth 1
+    //parseFen(board, 'r2q1rk1/pp3ppp/2p2n2/2b1p3/3nP1b1/2NBB3/PPPQNPPP/2KR3R b - - 7 10'); // takes 0.25s on depth 1
     //parseFen(board, START_FEN);
     
     console.log("Please chooce a side (white or black)");

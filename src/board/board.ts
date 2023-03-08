@@ -6,13 +6,13 @@ import { IBoard } from "./iboard";
 import Move from "../game/move";
 
 export default class Board implements IBoard {
-    public attackTable: IAttackTable;
+    public attackTable!: IAttackTable;
     
     public sideToMove = Color.none;
     public ply = 0;
     public enPas = Square.none;
     public fiftyMoveCounter = 0;
-    public material: number[];
+    public material!: number[];
     public posKey = 0;
     public repeats = new Map();
     
@@ -24,18 +24,18 @@ export default class Board implements IBoard {
      * @private
      * Stores the piece on each square of the board
      */
-    private pieces: Piece[];
+    private pieces!: Int32Array;
     /**
      * @private
      * Stores the square each piece is on indexed by piece type
      * @description only the first pieceQuantities[piece] squares are valid for each piece
      */
-    private pieceSquares: Square[][];
+    private pieceSquares!: Int32Array[];
     /**
      * @private
      * Number of each type of piece on the board
      */
-    private pieceQuantities: number[];
+    private pieceQuantities!: Int32Array;
     /**
      * @private
      * Bitwise representation of the current castle permissions
@@ -46,24 +46,10 @@ export default class Board implements IBoard {
      * Stores the state of the board after each move, enables undo operation
      */
     // eslint-disable-next-line no-use-before-define
-    private history: Board[];
+    private history!: Board[];
 
     constructor() {
-        this.attackTable = new AttackTable(this);
-
-        this.material = [0, 0];
-
-        this.pieces = new Array(BOARD_SQ_NUM).fill(Piece.none);
-        this.pieceSquares = new Array(NUM_PIECE_TYPES);
-        this.pieceQuantities = new Array(NUM_PIECE_TYPES);
-
-        const emptySqArray = new Array(MAX_NUM_PER_PIECE).fill(Square.none);
-        for (let i = 0; i < NUM_PIECE_TYPES; i++) {
-            this.pieceSquares[i] = [...emptySqArray];
-        }
-        this.pieceQuantities.fill(0);
-
-        this.history = new Array(MAX_GAME_MOVES);
+        this.reset();
 
         Board.castleKeys = new Array(NUM_CASTLE_COMBINATIONS);
         Board.pieceKeys = new Array(NUM_PIECE_TYPES).fill(new Array(BOARD_SQ_NUM));
@@ -239,6 +225,23 @@ export default class Board implements IBoard {
         }
     }
 
+    public reset(): void {
+        this.attackTable = new AttackTable(this);
+
+        this.material = [0, 0];
+
+        this.pieces = new Int32Array(new ArrayBuffer(BOARD_SQ_NUM * Int32Array.BYTES_PER_ELEMENT)).fill(Piece.none);
+        this.pieceSquares = new Array(NUM_PIECE_TYPES);
+        this.pieceQuantities = new Int32Array(new ArrayBuffer(NUM_PIECE_TYPES * Int32Array.BYTES_PER_ELEMENT));
+
+        const emptySqArray = new Array(MAX_NUM_PER_PIECE).fill(Square.none);
+        for (let i = 0; i < NUM_PIECE_TYPES; i++) {
+            this.pieceSquares[i] = new Int32Array([...emptySqArray]);
+        }
+        this.pieceQuantities.fill(0);
+
+        this.history = new Array(MAX_GAME_MOVES);
+    }
     public clone(deep = false): Board {
         const copy = deep ? Object.create(this) : {} as Board; // deep copy retains methods
         copy.sideToMove = this.sideToMove;
@@ -252,9 +255,9 @@ export default class Board implements IBoard {
         copy.pieces = [...this.pieces];
         copy.pieceSquares = new Array(NUM_PIECE_TYPES);
         for (let piece = 0; piece < NUM_PIECE_TYPES; piece++) {
-            copy.pieceSquares[piece] = [...this.pieceSquares[piece]];
+            copy.pieceSquares[piece] = new Int32Array([...this.pieceSquares[piece]]);
         }
-        copy.pieceQuantities = [...this.pieceQuantities];
+        copy.pieceQuantities = new Int32Array([...this.pieceQuantities]);
         
         return copy;
     }

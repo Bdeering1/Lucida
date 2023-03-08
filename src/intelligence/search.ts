@@ -86,8 +86,9 @@ export default class Search {
         PieceSquareTables.init();
     }
 
-    public getBestMove(verbose = false, lastDepthCutoff = LAST_DEPTH_CUTOFF): [Move, number] {
+    public getBestMove(verbose = false, lastDepthCutoff = LAST_DEPTH_CUTOFF, depth = this.depthLimit): [Move, number] {
         this.transpositionTable.trim(this.board.ply);
+        this.depthLimit = depth;
         const depthCutoff = this.getDepthCutoff();
         this.nodes = 0;
         this.quiesceNodes = 0;

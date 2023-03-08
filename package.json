@@ -18,12 +18,12 @@
     "precommit": "eslint .",
     "build": "tsc -noEmit && esbuild $(esbuild-config)",
     "build-ts": "npm run clean && tsc --build --force",
-    "clean": "rm -rf ./build",
+    "clean": "rm -rf ./build isolate-0x*.log",
     "dev": "esbuild $(esbuild-config) && npm start",
     "start": "node --es-module-specifier-resolution=node .",
     "test": "jest",
-    "profile": "esbuild $(esbuild-config) && node --es-module-specifier-resolution=node --prof .",
-    "postprofile": "node --prof-process isolate-0x*.log > perf/profile-$(date +\"%Y-%m-%d-%H-%M\").log && rm isolate-0x*.log"
+    "benchmark": "esbuild $(esbuild-config) && node --es-module-specifier-resolution=node --prof . bmk",
+    "postbenchmark": "node --prof-process isolate-0x*.log > perf/profile-$(date +\"%Y-%m-%d-%H-%M\").log && rm isolate-0x*.log"
   },
   "repository": {
     "type": "git",

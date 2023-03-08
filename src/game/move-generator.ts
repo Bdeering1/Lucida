@@ -61,6 +61,17 @@ export default class MoveGenerator {
         this.transpositionTable = new TranspositionTable();
     }
 
+    public reset(): void {
+        this.moveList = new Array(MAX_GAME_MOVES);
+        this.numMoves = new Array(MAX_GAME_MOVES);
+        this.movePrecedences = new Array(MAX_POSITION_MOVES);
+        for (let i = 0; i < MAX_GAME_MOVES; i++) {
+            this.moveList[i] = new Array(MAX_POSITION_MOVES);
+            this.numMoves[i] = 0;
+        }
+        this.transpositionTable.clear();
+    }
+
     public * getCurrentMoves(): IterableIterator<Move> {
         for (let i = 0; i < this.numMoves[this.board.ply]; i++) {
             yield this.moveList[this.board.ply][i];

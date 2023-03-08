@@ -39,7 +39,7 @@ export interface IBoard {
 
 
     get hasPawns(): boolean;
-    get quantities(): number[];
+    get quantities(): Int32Array;
     get hasCastleMoves(): boolean;
 
     get whiteKingCastle(): boolean;
@@ -84,6 +84,10 @@ export interface IBoard {
      */
     getSquares(piece: Piece): IterableIterator<Square>;
 
+    /**
+     * 
+     */
+    reset(): void;
     /**
      * Create an identical copy of this instance
      * @todo this may be an implementation detail

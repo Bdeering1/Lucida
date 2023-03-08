@@ -69,7 +69,6 @@
         "rest-spread-spacing": "warn",
         "require-await": "warn",
         "semi": ["warn", "always"],
-        "sort-imports": "warn",
         "space-before-function-paren": ["warn", {
             "anonymous": "never",
             "named": "never",

@@ -7,6 +7,8 @@ export function resetBoard(): void {
 }
 
 export function parseFen(board: IBoard, fen: string): void {
+    board.reset();
+
     const tokens = fen.split(' ');
     if (tokens.length > 6) return; // invalid FEN
     const [ pieces, side, castling, enPas, fiftyMove, ply ] = tokens;
