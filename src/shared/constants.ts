@@ -12,6 +12,7 @@ export const CASTLE_LEFT = -2;
 export const CASTLE_RIGHT = 2;
 export const INSUFFICENT_MATERIAL = 50325;
 export const MS_PER_SECOND = 1000;
+export const INT32_BYTES = Int32Array.BYTES_PER_ELEMENT;
 
 /* --- Strings ---  */
 export const START_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";

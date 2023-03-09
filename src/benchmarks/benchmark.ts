@@ -2,13 +2,13 @@
 import Board from "../board/board";
 import { IBoard } from "../board/iboard";
 import MoveGenerator from "../game/move-generator";
-import { START_FEN } from "../shared/constants";
+import { MS_PER_SECOND, START_FEN } from "../shared/constants";
 import Search from "../intelligence/search";
 import { parseFen } from "../board/board-setup";
 import { pauseForInput } from "../cli/input";
 
 const DEPTH_LIMIT = 5;
-const LAST_DEPTH_CUTOFF = 5000;
+const LAST_DEPTH_CUTOFF = 5 * MS_PER_SECOND;
 const ITER_PER_POS = 3;
 
 const TEST_POSITIONS = [
@@ -36,13 +36,16 @@ export default async function runBenchmarks(): Promise<void> {
             if (time < bestTime) bestTime = time;
         }
         positionTimes.push(bestTime);
+        // for (const [key,value] of Object.entries(process.memoryUsage())){
+        //     console.log(`Memory usage by ${key}, ${value / 1000000}MB`);
+        // }
     }
     avgTime = totalTime / (TEST_POSITIONS.length * ITER_PER_POS);
 
     console.log('\n\n\n');
     for (let i = 0; i < positionTimes.length; i++) {
         console.log(`Test --- ${TEST_POSITIONS[i]}`);
-        console.log(`Avg: ${Math.round(positionTimes[i] / ITER_PER_POS)}ms Total: ${positionTimes[i]}ms`);
+        console.log(`Best: ${Math.round(positionTimes[i])}ms`);
     }
     console.log('\nAggregate results');
     console.log(`Average time: ${Math.round(avgTime)}ms`);

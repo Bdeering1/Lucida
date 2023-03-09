@@ -1,5 +1,5 @@
 import AttackTable, { DummyAttackTable, IAttackTable } from "./attack-table";
-import { BOARD_SQ_NUM, CASTLE_LEFT, CASTLE_RIGHT, MAX_GAME_MOVES, MAX_NUM_PER_PIECE, NUM_CASTLE_COMBINATIONS, NUM_PIECE_TYPES } from "../shared/constants";
+import { BOARD_SQ_NUM, CASTLE_LEFT, CASTLE_RIGHT, INT32_BYTES, MAX_GAME_MOVES, MAX_NUM_PER_PIECE, NUM_CASTLE_COMBINATIONS, NUM_PIECE_TYPES } from "../shared/constants";
 import { CastleBit, Color, Piece, Square } from "../shared/enums";
 import { CastleLeftRook, CastlePerm, CastleRightRook, EnPasRank, GetOtherSide, GetRank, IsKing, IsPawn, LeftRook, PawnDir, Pawns, PieceColor, PieceVal, RightRook, Rooks, StartingRank, generateHash32 } from "../shared/utils";
 import { IBoard } from "./iboard";
@@ -16,8 +16,8 @@ export default class Board implements IBoard {
     public posKey = 0;
     public repeats = new Map();
     
-    private static pieceKeys: number[][];
-    private static castleKeys: number[];
+    private static pieceKeys: Int32Array[];
+    private static castleKeys: Int32Array;
     private static sideKey: number;
     
     /**
@@ -51,8 +51,8 @@ export default class Board implements IBoard {
     constructor() {
         this.reset();
 
-        Board.castleKeys = new Array(NUM_CASTLE_COMBINATIONS);
-        Board.pieceKeys = new Array(NUM_PIECE_TYPES).fill(new Array(BOARD_SQ_NUM));
+        Board.castleKeys = new Int32Array(new ArrayBuffer(NUM_CASTLE_COMBINATIONS * INT32_BYTES));
+        Board.pieceKeys = new Array(NUM_PIECE_TYPES).fill(new Int32Array(new ArrayBuffer(BOARD_SQ_NUM * INT32_BYTES)));
 
         let seed = 0;
         Board.sideKey = generateHash32(seed++);
@@ -230,9 +230,9 @@ export default class Board implements IBoard {
 
         this.material = [0, 0];
 
-        this.pieces = new Int32Array(new ArrayBuffer(BOARD_SQ_NUM * Int32Array.BYTES_PER_ELEMENT)).fill(Piece.none);
+        this.pieces = new Int32Array(new ArrayBuffer(BOARD_SQ_NUM * INT32_BYTES)).fill(Piece.none);
         this.pieceSquares = new Array(NUM_PIECE_TYPES);
-        this.pieceQuantities = new Int32Array(new ArrayBuffer(NUM_PIECE_TYPES * Int32Array.BYTES_PER_ELEMENT));
+        this.pieceQuantities = new Int32Array(new ArrayBuffer(NUM_PIECE_TYPES * INT32_BYTES));
 
         const emptySqArray = new Array(MAX_NUM_PER_PIECE).fill(Square.none);
         for (let i = 0; i < NUM_PIECE_TYPES; i++) {
