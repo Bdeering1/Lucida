@@ -1,6 +1,6 @@
 /* eslint-disable no-magic-numbers */
 
-import { Color, Piece } from "../shared/enums";
+import { Color, Piece, File } from "../shared/enums";
 import { GetFile, GetSq120, IsQueen, PieceColor, SideMultiplier } from "../shared/utils";
 import { IAttackTable } from "../board/attack-table";
 import { IBoard } from "../board/iboard";
@@ -9,15 +9,16 @@ import Move from "../game/move";
 import MoveGenerator from "../game/move-generator";
 import PieceSquareTables from "./pst";
 
-const ENDGAME_MATERIAL_WEIGHT = 1.5;
-const PST_WEIGHT = 2;
-const ROOKS_SCORE_WEIGHT = 7;
+const ENDGAME_MATERIAL_WEIGHT = 2.5;
+const PST_WEIGHT = 1.5;
+const ROOKS_SCORE_WEIGHT = 5;
+const KINGS_SCORE_WEIGHT = 4;
 
-const PAWN_PHASE = 0;
-const KNIGHT_PHASE = 1;
-const BISHOP_PHASE = 1;
-const ROOK_PHASE = 2;
-const QUEEN_PHASE = 4;
+const PAWN_PHASE = 1;
+const KNIGHT_PHASE = 4;
+const BISHOP_PHASE = 4;
+const ROOK_PHASE = 8;
+const QUEEN_PHASE = 16;
 export const MAX_PHASE = 256;
 
 export default class Eval {
@@ -42,6 +43,7 @@ export default class Eval {
         let middlegame = this.getMaterialScore(board);
         let endgame = this.getMaterialScore(board, ENDGAME_MATERIAL_WEIGHT);
         middlegame += this.getPSTScore(board, PieceSquareTables.middlegame) * PST_WEIGHT;
+        middlegame += this.getKingsScore(board) * KINGS_SCORE_WEIGHT;
         endgame += this.getPSTScore(board, PieceSquareTables.endgame) * PST_WEIGHT;
         
         let score = this.getTaperedScore(middlegame, endgame, phase);
@@ -73,8 +75,23 @@ export default class Eval {
             score += board.attackTable.isOpen(GetFile[sq], Color.white);
         }
         for (const sq of board.getSquares(Piece.blackRook)) {
-            score += board.attackTable.isOpen(GetFile[sq], Color.black);
+            score -= board.attackTable.isOpen(GetFile[sq], Color.black);
         }
+        return score;
+    }
+
+    static getKingsScore(board: IBoard) {
+        let score = 0;
+        const whiteKingFile = GetFile[board.getSquares(Piece.whiteKing).next().value];
+        score -= board.attackTable.isOpen(whiteKingFile, Color.white);
+        if (whiteKingFile !== File.a) score -= board.attackTable.isOpen(whiteKingFile - 1, Color.white);
+        if (whiteKingFile !== File.h) score -= board.attackTable.isOpen(whiteKingFile + 1, Color.white);
+
+        const blackKingFile = GetFile[board.getSquares(Piece.blackKing).next().value];
+        score += board.attackTable.isOpen(blackKingFile, Color.black);
+        if (blackKingFile !== File.a) score += board.attackTable.isOpen(blackKingFile - 1, Color.black);
+        if (blackKingFile !== File.h) score += board.attackTable.isOpen(blackKingFile + 1, Color.black);
+
         return score;
     }
 

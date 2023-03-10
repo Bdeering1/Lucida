@@ -103,6 +103,7 @@ export function printEval(board: IBoard, moveManager: MoveGenerator, verbose = f
         console.log(`Mobility score: ${Eval.getMobilityScore(moveManager)} Weight: ${Eval.mobilityWeight}`);
         console.log(`Coverage score: ${Eval.getCoverageScore(board.attackTable)}`);
         console.log(`PST scores: MG: ${Eval.getPSTScore(board, PieceSquareTables.middlegame)} EG: ${Eval.getPSTScore(board, PieceSquareTables.endgame)} Phase: ${Eval.getGamePhase(board)}`);
+        console.log(`Rooks score: ${Eval.getRooksScore(board)} Kings score: ${Eval.getKingsScore(board)}`);
     }
 }
 

@@ -7,7 +7,7 @@ import { getLineString, printMoves } from '../cli/printing';
 import { IBoard } from '../board/iboard';
 import Move from '../game/move';
 import MoveGenerator from '../game/move-generator';
-import { Piece } from '../shared/enums';
+import { Color, Piece } from '../shared/enums';
 import PieceSquareTables from './pst';
 import { getGameStatus } from '../game/game-state';
 
@@ -75,7 +75,7 @@ export default class Search {
     private transpositions = 0;
     private scores: number[] = [];
 
-    constructor(board: IBoard, moveGenerator: MoveGenerator, depth = 6, quiesceDepth = 15) {
+    constructor(board: IBoard, moveGenerator: MoveGenerator, depth = 12, quiesceDepth = 15) {
         this.board = board;
         this.moveManager = moveGenerator;
         this.depthLimit = depth;
@@ -138,7 +138,10 @@ export default class Search {
         if (depth >= this.effectiveDepth) return [this.quiesce(0, alpha, beta)[0], false];
 
         const status = getGameStatus(this.board, this.moveManager.generateMoves());
-        if (status.complete === true) return [-(PieceVal[Piece.whiteKing] - depth), false];
+        if (status.complete === true) {
+            if (status.winner === Color.none) return [0, false];
+            return [-(PieceVal[Piece.whiteKing] - depth), false];
+        }
         
         let passScore = -Infinity;
         if (this.nullMovePruning && !this.board.attackTable.inCheck(this.board.sideToMove)) {

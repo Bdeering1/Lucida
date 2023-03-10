@@ -52,7 +52,7 @@ export default class Board implements IBoard {
         this.reset();
 
         Board.castleKeys = new Int32Array(new ArrayBuffer(NUM_CASTLE_COMBINATIONS * INT32_BYTES));
-        Board.pieceKeys = new Array(NUM_PIECE_TYPES).fill(new Int32Array(new ArrayBuffer(BOARD_SQ_NUM * INT32_BYTES)));
+        Board.pieceKeys = new Array(NUM_PIECE_TYPES);
 
         let seed = 0;
         Board.sideKey = generateHash32(seed++);
@@ -60,6 +60,7 @@ export default class Board implements IBoard {
             Board.castleKeys[i] = generateHash32(seed++);
         }
         for (let piece = Piece.none; piece < NUM_PIECE_TYPES; piece++) {
+            Board.pieceKeys[piece] = new Int32Array(new ArrayBuffer(BOARD_SQ_NUM * INT32_BYTES));
             for (let sq = 0; sq < BOARD_SQ_NUM; sq++) {
                 Board.pieceKeys[piece][sq] = generateHash32(seed++);
             }
