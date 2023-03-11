@@ -1,5 +1,5 @@
 import { AttackValMultiplier, Color, File, FileStatus, Piece, Square } from "../shared/enums";
-import { CaptureDir, GetFile, GetOtherSide, GetRank, GetSq64, IsBishopQueen, IsKing, IsKnight, IsPawn, IsRookQueen, IsSliding, Kings, PawnCaptureDir, PieceAttackVal, PieceColor, PieceDir, RankToBits, RankToBitsInverse, sqOffboard } from "../shared/utils";
+import { CaptureDir, CoverageMultiplier, GetFile, GetOtherSide, GetRank, GetSq64, IsBishopQueen, IsKing, IsKnight, IsPawn, IsRookQueen, IsSliding, Kings, PawnCaptureDir, PieceAttackVal, PieceColor, PieceDir, RankToBits, RankToBitsInverse, sqOffboard } from "../shared/utils";
 import { INNER_BOARD_SQ_NUM, NUM_FILE_TYPES } from "../shared/constants";
 import { IBoard } from "./iboard";
 import { getColorString } from "../cli/printing";
@@ -169,12 +169,12 @@ export default class AttackTable implements IAttackTable {
     private updateAttack(piece: Piece, sq: Square, multiplier: AttackValMultiplier) {
         const color = PieceColor[piece];
         if (color === Color.white) {
-            this.whiteAttacks[GetSq64[sq]] += PieceAttackVal[piece] * multiplier;
-            this.attackSums[Color.white] += PieceAttackVal[piece] * multiplier;
+            this.whiteAttacks[GetSq64[sq]] += PieceAttackVal[piece] * CoverageMultiplier[sq] * multiplier;
+            this.attackSums[Color.white] += PieceAttackVal[piece] * CoverageMultiplier[sq] * multiplier;
         }
         else {
-            this.blackAttacks[GetSq64[sq]] += PieceAttackVal[piece] * multiplier;
-            this.attackSums[Color.black] += PieceAttackVal[piece] * multiplier;
+            this.blackAttacks[GetSq64[sq]] += PieceAttackVal[piece] * CoverageMultiplier[sq] * multiplier;
+            this.attackSums[Color.black] += PieceAttackVal[piece] * CoverageMultiplier[sq] * multiplier;
         }
     }
 }

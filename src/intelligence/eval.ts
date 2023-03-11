@@ -51,6 +51,9 @@ export default class Eval {
         score += this.getRooksScore(board) * ROOKS_SCORE_WEIGHT;
         if (this.mobilityWeight !== 0) score += this.getMobilityScore(moveGenerator) * this.mobilityWeight;
         
+        if (board.sideToMove === Color.white) score += 5;
+        else score -= 5;
+
         return score * SideMultiplier[board.sideToMove];
     }
 
