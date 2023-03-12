@@ -197,9 +197,7 @@ export default class Search {
         if (standPat > alpha) alpha = standPat;
 
         this.moveManager.generateMoves();
-        for (const move of this.moveManager.getCurrentMoves()) {
-            if (move.capture === Piece.none) continue;
-            
+        for (const move of this.moveManager.getCaptureMoves()) {
             this.board.makeMove(move);
             let truncated = false;
             let score, res;

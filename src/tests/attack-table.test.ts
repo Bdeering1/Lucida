@@ -28,6 +28,6 @@ describe('attack-table', () => {
         ['3Q4/8/kB6/8/2K5/2PRP3/2NQN3/3R4 w - - 0 1', GetSq64[Square.d4], 10],
     ])('correctly tracks where attacks are coming from for a given square', (fen, sq64, attackers) => {
         parseFen(board, fen);
-        expect([...(board.attackTable as AttackTable).whitePieceAttacks[sq64].getSmallestAttacker(sq64)].length).toBe(attackers);
+        expect([...(board.attackTable as AttackTable).whiteSquareAttacks[sq64].getSmallestAttacker(sq64)].length).toBe(attackers);
     });
 });

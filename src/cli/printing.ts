@@ -57,7 +57,7 @@ export function printAttackTable(table: IAttackTable, color: Color) {
             lines.push(line);
             line = `${GetRank[GetSq120[sq]]} `;
         }
-        line += `${table.getAttacks(GetSq120[sq], color)} `.padStart(3);
+        line += `${table.isAttacked(GetSq120[sq], color)} `.padStart(3);
     }
     lines.push(line);
 

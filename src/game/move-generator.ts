@@ -35,7 +35,7 @@ export default class MoveGenerator {
      */
     private inCheck = false;
     /**
-     * Whether or not moves should be added to the move list for later use
+     * Whether or not moves should be added to the move list for later use (false when evaluating mobility)
      */
     private addToList = true;
     /**
@@ -78,9 +78,17 @@ export default class MoveGenerator {
         }
     }
 
+    public * getCaptureMoves(): IterableIterator<Move> {
+        for (let i = 0; i < this.numMoves[this.board.ply]; i++) {
+            const move = this.moveList[this.board.ply][i];
+            if (move.capture === Piece.none) continue;
+            if (this.inCheck) yield move;
+            if (this.board.attackTable.staticExchangeEval(move.to, this.sideToMove) > 0) yield move;
+        }
+    }
+
     /**
      * Generate all possible moves for the current position
-     * @todo check for PV moves when sorting
      */
     public generateMoves(sideToMove = this.board.sideToMove, addToList = true): number | MoveStatus {
         if (sideToMove === Color.none) return 0;
@@ -90,10 +98,7 @@ export default class MoveGenerator {
         this.addToList = addToList;
         this.sideToMove = sideToMove;
         const ply = this.board.ply;
-        const opposingSide = GetOtherSide[sideToMove];
-
-        const kingSq = this.board.getSquares(Kings[sideToMove]).next().value;
-        this.inCheck = this.board.attackTable.getAttacks(kingSq, opposingSide) !== 0;
+        this.inCheck = this.board.attackTable.inCheck(sideToMove);
 
         this.generateSlidingMoves();
         this.generateNonSlidingMoves();
@@ -101,8 +106,7 @@ export default class MoveGenerator {
         if (!this.inCheck) this.generateCastleMoves();
 
         if (addToList) this.numMoves[ply] = this.moveCount;
-        const kingAttacked = this.board.attackTable.getAttacks(this.board.getSquares(Kings[sideToMove]).next().value, opposingSide);
-        if (this.moveCount === 0 && kingAttacked) return MoveStatus.checkmate;
+        if (this.moveCount === 0 && this.inCheck) return MoveStatus.checkmate;
         
         return this.moveCount;
     }
@@ -188,27 +192,27 @@ export default class MoveGenerator {
         if (this.board.hasCastleMoves) {
             if (this.sideToMove === Color.white) {
                 if (this.board.whiteKingCastle
-                    && this.board.getPiece(Square.f1) === Piece.none && !this.board.attackTable.getAttacks(Square.f1, Color.black)
-                    && this.board.getPiece(Square.g1) === Piece.none && !this.board.attackTable.getAttacks(Square.g1, Color.black)) {
+                    && this.board.getPiece(Square.f1) === Piece.none && !this.board.attackTable.isAttacked(Square.f1, Color.black)
+                    && this.board.getPiece(Square.g1) === Piece.none && !this.board.attackTable.isAttacked(Square.g1, Color.black)) {
                     this.addMove(new Move(Square.e1, Square.g1));
                 }
                 if (this.board.whiteQueenCastle
-                    && this.board.getPiece(Square.b1) === Piece.none && !this.board.attackTable.getAttacks(Square.b1, Color.black)
-                    && this.board.getPiece(Square.c1) === Piece.none && !this.board.attackTable.getAttacks(Square.c1, Color.black)
-                    && this.board.getPiece(Square.d1) === Piece.none && !this.board.attackTable.getAttacks(Square.d1, Color.black)) {
+                    && this.board.getPiece(Square.b1) === Piece.none && !this.board.attackTable.isAttacked(Square.b1, Color.black)
+                    && this.board.getPiece(Square.c1) === Piece.none && !this.board.attackTable.isAttacked(Square.c1, Color.black)
+                    && this.board.getPiece(Square.d1) === Piece.none && !this.board.attackTable.isAttacked(Square.d1, Color.black)) {
                     this.addMove(new Move(Square.e1, Square.c1));
                 }
             }
             else {
                 if (this.board.blackKingCastle
-                    && this.board.getPiece(Square.f8) === Piece.none && !this.board.attackTable.getAttacks(Square.f8, Color.white)
-                    && this.board.getPiece(Square.g8) === Piece.none && !this.board.attackTable.getAttacks(Square.g8, Color.white)) {
+                    && this.board.getPiece(Square.f8) === Piece.none && !this.board.attackTable.isAttacked(Square.f8, Color.white)
+                    && this.board.getPiece(Square.g8) === Piece.none && !this.board.attackTable.isAttacked(Square.g8, Color.white)) {
                     this.addMove(new Move(Square.e8, Square.g8));
                 }
                 if (this.board.blackQueenCastle
-                    && this.board.getPiece(Square.b8) === Piece.none && !this.board.attackTable.getAttacks(Square.b8, Color.white)
-                    && this.board.getPiece(Square.c8) === Piece.none && !this.board.attackTable.getAttacks(Square.c8, Color.white)
-                    && this.board.getPiece(Square.d8) === Piece.none && !this.board.attackTable.getAttacks(Square.d8, Color.white)) {
+                    && this.board.getPiece(Square.b8) === Piece.none && !this.board.attackTable.isAttacked(Square.b8, Color.white)
+                    && this.board.getPiece(Square.c8) === Piece.none && !this.board.attackTable.isAttacked(Square.c8, Color.white)
+                    && this.board.getPiece(Square.d8) === Piece.none && !this.board.attackTable.isAttacked(Square.d8, Color.white)) {
                     this.addMove(new Move(Square.e8, Square.c8));
                 }
             }

@@ -1,15 +1,16 @@
 import { AttackValMultiplier, Color, File, FileStatus, Piece, Square } from "../shared/enums";
-import { CaptureDir, GetFile, GetOtherSide, GetRank, GetSq64, IsBishopQueen, IsKing, IsKnight, IsPawn, IsRookQueen, IsSliding, Kings, PawnCaptureDir, PieceAttackVal, PieceColor, PieceDir, RankToBits, RankToBitsInverse, sqOffboard } from "../shared/utils";
+import { CaptureDir, GetFile, GetOtherSide, GetRank, GetSq64, IsBishopQueen, IsKing, IsKnight, IsPawn, IsRookQueen, IsSliding, Kings, PawnCaptureDir, PieceAttackVal, PieceColor, PieceDir, PieceVal, RankToBits, RankToBitsInverse, sqOffboard } from "../shared/utils";
 import { INNER_BOARD_SQ_NUM, NUM_FILE_TYPES } from "../shared/constants";
 import { IBoard } from "./iboard";
-import { getColorString } from "../cli/printing";
+import { getColorString, printBoard } from "../cli/printing";
 import SquareAttacks from "./square-attacks";
 
 export interface IAttackTable {
-    getAttacks(sq: Square, color: Color): number;
+    isAttacked(sq: Square, color: Color): boolean;
     getCoverage(color: Color): number;
     isOpen(file: File, color: Color): FileStatus;
     inCheck(color: Color): boolean;
+    staticExchangeEval(sq: Square, color: Color): number;
     /**
      * Updates table when sliding attacks are revealed by moving away from a square
      */
@@ -23,37 +24,33 @@ export interface IAttackTable {
 export default class AttackTable implements IAttackTable {
     private board: IBoard;
 
-    private whiteAttacks: number[];
-    private blackAttacks: number[];
-    public whitePieceAttacks: SquareAttacks[];
-    public blackPieceAttacks: SquareAttacks[];
+    public whiteSquareAttacks: SquareAttacks[];
+    public blackSquareAttacks: SquareAttacks[];
     private whitePawnFiles: number[];
     private blackPawnFiles: number[];
 
-    private attackSums: number[];
+    private coverage: number[];
 
     constructor(board: IBoard) {
         this.board = board;
-        this.whiteAttacks = new Array(INNER_BOARD_SQ_NUM).fill(0);
-        this.blackAttacks = new Array(INNER_BOARD_SQ_NUM).fill(0);
-        this.whitePieceAttacks = new Array(INNER_BOARD_SQ_NUM);
-        this.blackPieceAttacks = new Array(INNER_BOARD_SQ_NUM);
+        this.whiteSquareAttacks = new Array(INNER_BOARD_SQ_NUM);
+        this.blackSquareAttacks = new Array(INNER_BOARD_SQ_NUM);
         for (let sq = 0; sq < INNER_BOARD_SQ_NUM; sq++) {
-            this.whitePieceAttacks[sq] = new SquareAttacks(sq);
-            this.blackPieceAttacks[sq] = new SquareAttacks(sq);
+            this.whiteSquareAttacks[sq] = new SquareAttacks(sq);
+            this.blackSquareAttacks[sq] = new SquareAttacks(sq);
         }
         this.whitePawnFiles = new Array(NUM_FILE_TYPES).fill(0);
         this.blackPawnFiles = new Array(NUM_FILE_TYPES).fill(0);
 
-        this.attackSums = [0, 0];
+        this.coverage = [0, 0];
     }
 
-    public getAttacks(sq: Square, color: Color): number {
-        return (color === Color.white ? this.whiteAttacks : this.blackAttacks)[GetSq64[sq]];
+    public isAttacked(sq: Square, color: Color): boolean {
+        return (color === Color.white ? this.whiteSquareAttacks : this.blackSquareAttacks)[GetSq64[sq]].isAttacked();
     }
 
     public getCoverage(color: Color) {
-        return this.attackSums[color];
+        return this.coverage[color];
     }
     
     public isOpen(file: File, color: Color): FileStatus {
@@ -71,8 +68,39 @@ export default class AttackTable implements IAttackTable {
 
     public inCheck(color: Color): boolean {
         const kingSq = this.board.getSquares(Kings[color]).next().value;
-        if (kingSq === undefined) throw new Error(`${getColorString(color)} king not found`);
-        return this.board.attackTable.getAttacks(kingSq, GetOtherSide[color]) !== 0;
+        if (kingSq === undefined) {
+            printBoard(this.board);
+            console.log(this.board.posKey);
+            throw new Error(`${getColorString(color)} king not found`);
+        }
+        return this.isAttacked(kingSq, GetOtherSide[color]);
+    }
+
+    public staticExchangeEval(sq: Square, color: Color): number {
+        let score = 0;
+        const piece = this.board.getPiece(sq);
+        if (piece === Piece.none) return 0;
+        const side = PieceColor[piece];
+        if (side !== color) return 0;
+
+        const sq64 = GetSq64[sq];
+        const whiteAttackers = this.whiteSquareAttacks[sq64].getSmallestAttacker(sq64);
+        const blackAttackers = this.blackSquareAttacks[sq64].getSmallestAttacker(sq64);
+        let nextAttacker = color === Color.white ? whiteAttackers.next() : blackAttackers.next();
+        score += PieceVal[piece];
+        while (true) {
+            if (nextAttacker.done) return score;
+            let attacker = nextAttacker.value;
+            score -= PieceVal[attacker];
+            color = GetOtherSide[color];
+            nextAttacker = color === Color.white ? whiteAttackers.next() : blackAttackers.next();
+
+            if (nextAttacker.done) return score;
+            attacker = nextAttacker.value;
+            score += PieceVal[attacker];
+            color = GetOtherSide[color];
+            nextAttacker = color === Color.white ? whiteAttackers.next() : blackAttackers.next();
+        }
     }
 
     public updateFrom(piece: Piece, sq: Square): void {
@@ -178,14 +206,12 @@ export default class AttackTable implements IAttackTable {
     private updateAttack(piece: Piece, from: Square, to: Square, multiplier: AttackValMultiplier) {
         const color = PieceColor[piece];
         if (color === Color.white) {
-            this.whiteAttacks[GetSq64[to]] += PieceAttackVal[piece] * multiplier;
-            this.whitePieceAttacks[GetSq64[to]].update(piece, GetSq64[from], GetSq64[to], multiplier);
-            this.attackSums[Color.white] += PieceAttackVal[piece] * multiplier;
+            this.whiteSquareAttacks[GetSq64[to]].update(piece, GetSq64[from], GetSq64[to], multiplier);
+            this.coverage[Color.white] += PieceAttackVal[piece] * multiplier;
         }
         else {
-            this.blackAttacks[GetSq64[to]] += PieceAttackVal[piece] * multiplier;
-            this.blackPieceAttacks[GetSq64[to]].update(piece, GetSq64[from], GetSq64[to], multiplier);
-            this.attackSums[Color.black] += PieceAttackVal[piece] * multiplier;
+            this.blackSquareAttacks[GetSq64[to]].update(piece, GetSq64[from], GetSq64[to], multiplier);
+            this.coverage[Color.black] += PieceAttackVal[piece] * multiplier;
         }
     }
 }
@@ -197,15 +223,15 @@ export class DummyAttackTable implements IAttackTable {
         this.board = board;
     }
 
-    public getAttacks(sq: Square, color: Color): number {
+    public isAttacked(sq: Square, color: Color): boolean {
         const defSide = GetOtherSide[color];
-        if (color === Color.none) return 0;
+        if (color === Color.none) return false;
 
         //Pawns
         for (const captureDir of PawnCaptureDir[defSide]) {
             const piece = this.board.getPiece(sq + captureDir);
             if (PieceColor[piece] === color && IsPawn[piece]) {
-                return 1;
+                return true;
             }
         }
 
@@ -213,12 +239,12 @@ export class DummyAttackTable implements IAttackTable {
         for (const dir of PieceDir[Piece.whiteKing]) {
             if (sqOffboard(sq + dir)) continue;
             const piece = this.board.getPiece(sq + dir);
-            if (PieceColor[piece] === color && IsKing[piece]) return 1;
+            if (PieceColor[piece] === color && IsKing[piece]) return true;
         }
         for (const dir of PieceDir[Piece.whiteKnight]) {
             if (sqOffboard(sq + dir)) continue;
             const piece = this.board.getPiece(sq + dir);
-            if (PieceColor[piece] === color && IsKnight[piece]) return 1;
+            if (PieceColor[piece] === color && IsKnight[piece]) return true;
         }
 
         // Bishops, Rooks, and Queens
@@ -229,7 +255,7 @@ export class DummyAttackTable implements IAttackTable {
                 const colorAtSq = PieceColor[piece];
                 if (sqOffboard(sq + totalMove) || colorAtSq === defSide) break;
                 if (colorAtSq === color) {
-                    if (IsBishopQueen[piece]) return 1;
+                    if (IsBishopQueen[piece]) return true;
                     break;
                 }
                 totalMove += dir;
@@ -242,14 +268,14 @@ export class DummyAttackTable implements IAttackTable {
                 const colorAtSq = PieceColor[piece];
                 if (sqOffboard(sq + totalMove) || colorAtSq === defSide) break;
                 if (colorAtSq === color) {
-                    if (IsRookQueen[piece]) return 1;
+                    if (IsRookQueen[piece]) return true;
                     break;
                 }
                 totalMove += dir;
             }
         }
 
-        return 0;
+        return false;
     }
 
     public getCoverage(color: Color): number {
@@ -262,10 +288,17 @@ export class DummyAttackTable implements IAttackTable {
 
     public inCheck(color: Color): boolean {
         const kingSq = this.board.getSquares(Kings[color]).next().value;
-        if (kingSq === undefined) throw new Error(`${getColorString(color)} king not found`);
-        return this.board.attackTable.getAttacks(kingSq, GetOtherSide[color]) !== 0;
+        if (kingSq === undefined) {
+            printBoard(this.board);
+            console.log(this.board.posKey);
+            throw new Error(`${getColorString(color)} king not found`);
+        }
+        return this.isAttacked(kingSq, GetOtherSide[color]);
     }
 
+    public staticExchangeEval(sq: Square, color: Color): number {
+        return 0;   
+    }
     public updateFrom(piece: Piece, sq: Square): void {}
     public updateTo(piece: Piece, sq: Square): void {}
 }
