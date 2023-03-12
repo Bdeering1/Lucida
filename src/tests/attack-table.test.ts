@@ -1,8 +1,11 @@
+/* eslint-disable no-magic-numbers */
 import Board from "../board/board";
 import { IBoard } from "../board/iboard";
 import { Piece, Square } from "../shared/enums";
 import { parseFen } from "../board/board-setup";
-import { PieceAttackVal, PieceColor } from "../shared/utils";
+import AttackTable from "../board/attack-table";
+import { START_FEN } from "../shared/constants";
+import { GetSq64 } from "../shared/utils";
 
 describe('attack-table', () => {
     let board: IBoard;
@@ -18,5 +21,13 @@ describe('attack-table', () => {
     ])('takes batteres into account when generating attack counts', (fen, piece, sq, attackers) => {
         // parseFen(board, fen);
         // expect(board.attackTable.getAttacks(sq, PieceColor[piece])).toBe(attackers * PieceAttackVal[piece]);
+    });
+
+    it.each([
+        [START_FEN, GetSq64[Square.e2], 4],
+        ['3Q4/8/kB6/8/2K5/2PRP3/2NQN3/3R4 w - - 0 1', GetSq64[Square.d4], 10],
+    ])('correctly tracks where attacks are coming from for a given square', (fen, sq64, attackers) => {
+        parseFen(board, fen);
+        expect([...(board.attackTable as AttackTable).whitePieceAttacks[sq64].getSmallestAttacker(sq64)].length).toBe(attackers);
     });
 });

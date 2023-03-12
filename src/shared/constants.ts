@@ -1,7 +1,6 @@
 /* --- Constants --- */
 export const BOARD_SQ_NUM = 120;
 export const INNER_BOARD_SQ_NUM = 64;
-export const SQ64_SIZE_BYTES = 6;
 export const NUM_FILE_TYPES = 9;
 export const NUM_CASTLE_COMBINATIONS = 16;
 export const MAX_GAME_MOVES = 2048; /*(half moves)*/

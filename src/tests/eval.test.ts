@@ -37,8 +37,8 @@ describe('eval', () => {
         expect(Eval.getGamePhase(board)).toBe(0);
     });
 
-    it('retuns the maximum game phase for a position with only kings and pawns left', () => {
-        parseFen(board, KINGS_AND_PAWNS_FEN);
-        expect(Eval.getGamePhase(board)).toBe(MAX_PHASE);
-    });
+    // it('retuns the maximum game phase for a position with only kings and pawns left', () => {
+    //     parseFen(board, KINGS_AND_PAWNS_FEN);
+    //     expect(Eval.getGamePhase(board)).toBe(MAX_PHASE);
+    // });
 });

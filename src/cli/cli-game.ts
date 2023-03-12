@@ -1,15 +1,13 @@
-import { Color, InputOption, Square } from "../shared/enums";
+import { Color, InputOption } from "../shared/enums";
 import { getMoveInput, getSideInput, pauseForInput } from "./input";
-import { getSquareString, printBoard, printBoardVars, printEval, printMoves } from "./printing";
+import { printBoard, printBoardVars, printEval, printMoves } from "./printing";
 import Board from "../board/board";
 import Move from "../game/move";
 import MoveGenerator from "../game/move-generator";
 import Search from "../intelligence/search";
 import { getGameStatus } from "../game/game-state";
 import { parseFen } from "../board/board-setup";
-import { PIECE_CHAR, START_FEN } from "../shared/constants";
-import AttackTable from "../board/attack-table";
-import { GetSq120, GetSq64 } from "../shared/utils";
+import { START_FEN } from "../shared/constants";
 
 export default async function runCli() {
     const board = new Board();
@@ -23,49 +21,44 @@ export default async function runCli() {
     //parseFen(board, 'r2q1rk1/pp3ppp/2p2n2/2b1p3/3nP1b1/2NBB3/PPPQNPPP/2KR3R b - - 7 10'); // takes 0.25s on depth 1
     parseFen(board, START_FEN);
 
-    printBoard(board); 
-
-    console.log(`e2 = ${GetSq64[Square.e2]} (sq64)`);
-    for (const sq of (board.attackTable as AttackTable).whitePieceAttacks[GetSq64[Square.e2]].getSmallestAttacker(GetSq64[Square.e2])) {
-        console.log(`e2 attacked by ${PIECE_CHAR[board.getPiece(GetSq120[sq])]} on ${getSquareString(GetSq120[sq])} (${sq})`);
+    printBoard(board);
+    
+    console.log("Please chooce a side (white or black)");
+    const playerColor = await getSideInput();
+    
+    while(true) {
+        printBoard(board);
+        printBoardVars(board);
+        printEval(board, moveGenerator, true);
+        console.log();
+    
+        const status = getGameStatus(board, moveGenerator.generateMoves());
+        if (status.complete) {
+            console.log(status.desc);
+            break;
+        }
+    
+        let move: Move | InputOption;
+        let score = 0;
+        if (playerColor !== Color.none && board.sideToMove !== playerColor) {
+            [move, score] = search.getBestMove(true);
+            console.log(`\nMove: ${move} (eval: ${score})`);
+            await pauseForInput();
+        }
+        else {
+            printMoves([...moveGenerator.getCurrentMoves()]);
+            move = await getMoveInput([...moveGenerator.getCurrentMoves()]);
+        }
+    
+        if (move === InputOption.undo) {
+            if (moveList.length === 0) continue;
+            board.undoMove(moveList.pop()!);
+            if (playerColor !== Color.none && moveList.length !== 0) board.undoMove(moveList.pop()!);
+            continue;
+        }
+        if (move === InputOption.exit) break;
+    
+        moveList.push(move);
+        board.makeMove(move);
     }
-    
-    // console.log("Please chooce a side (white or black)");
-    // const playerColor = await getSideInput();
-    
-    // while(true) {
-    //     printBoard(board);
-    //     printBoardVars(board);
-    //     printEval(board, moveGenerator, true);
-    //     console.log();
-    
-    //     const status = getGameStatus(board, moveGenerator.generateMoves());
-    //     if (status.complete) {
-    //         console.log(status.desc);
-    //         break;
-    //     }
-    
-    //     let move: Move | InputOption;
-    //     let score = 0;
-    //     if (playerColor !== Color.none && board.sideToMove !== playerColor) {
-    //         [move, score] = search.getBestMove(true);
-    //         console.log(`\nMove: ${move} (eval: ${score})`);
-    //         await pauseForInput();
-    //     }
-    //     else {
-    //         printMoves([...moveGenerator.getCurrentMoves()]);
-    //         move = await getMoveInput([...moveGenerator.getCurrentMoves()]);
-    //     }
-    
-    //     if (move === InputOption.undo) {
-    //         if (moveList.length === 0) continue;
-    //         board.undoMove(moveList.pop()!);
-    //         if (playerColor !== Color.none && moveList.length !== 0) board.undoMove(moveList.pop()!);
-    //         continue;
-    //     }
-    //     if (move === InputOption.exit) break;
-    
-    //     moveList.push(move);
-    //     board.makeMove(move);
-    // }
 }
