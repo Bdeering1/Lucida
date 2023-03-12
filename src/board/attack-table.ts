@@ -1,8 +1,9 @@
 import { AttackValMultiplier, Color, File, FileStatus, Piece, Square } from "../shared/enums";
-import { CaptureDir, CoverageMultiplier, GetFile, GetOtherSide, GetRank, GetSq64, IsBishopQueen, IsKing, IsKnight, IsPawn, IsRookQueen, IsSliding, Kings, PawnCaptureDir, PieceAttackVal, PieceColor, PieceDir, RankToBits, RankToBitsInverse, sqOffboard } from "../shared/utils";
+import { CaptureDir, GetFile, GetOtherSide, GetRank, GetSq64, IsBishopQueen, IsKing, IsKnight, IsPawn, IsRookQueen, IsSliding, Kings, PawnCaptureDir, PieceAttackVal, PieceColor, PieceDir, RankToBits, RankToBitsInverse, sqOffboard } from "../shared/utils";
 import { INNER_BOARD_SQ_NUM, NUM_FILE_TYPES } from "../shared/constants";
 import { IBoard } from "./iboard";
 import { getColorString } from "../cli/printing";
+import SquareAttacks from "./square-attacks";
 
 export interface IAttackTable {
     getAttacks(sq: Square, color: Color): number;
@@ -24,15 +25,23 @@ export default class AttackTable implements IAttackTable {
 
     private whiteAttacks: number[];
     private blackAttacks: number[];
+    public whitePieceAttacks: SquareAttacks[];
+    public blackPieceAttacks: SquareAttacks[];
     private whitePawnFiles: number[];
     private blackPawnFiles: number[];
 
-    public attackSums: number[];
+    private attackSums: number[];
 
     constructor(board: IBoard) {
         this.board = board;
         this.whiteAttacks = new Array(INNER_BOARD_SQ_NUM).fill(0);
         this.blackAttacks = new Array(INNER_BOARD_SQ_NUM).fill(0);
+        this.whitePieceAttacks = new Array(INNER_BOARD_SQ_NUM);
+        this.blackPieceAttacks = new Array(INNER_BOARD_SQ_NUM);
+        for (let sq = 0; sq < INNER_BOARD_SQ_NUM; sq++) {
+            this.whitePieceAttacks[sq] = new SquareAttacks(sq);
+            this.blackPieceAttacks[sq] = new SquareAttacks(sq);
+        }
         this.whitePawnFiles = new Array(NUM_FILE_TYPES).fill(0);
         this.blackPawnFiles = new Array(NUM_FILE_TYPES).fill(0);
 
@@ -46,7 +55,7 @@ export default class AttackTable implements IAttackTable {
     public getCoverage(color: Color) {
         return this.attackSums[color];
     }
-
+    
     public isOpen(file: File, color: Color): FileStatus {
         let fileStatus = FileStatus.closed;
         if (color === Color.white) {
@@ -85,7 +94,7 @@ export default class AttackTable implements IAttackTable {
         else { // non-sliding pieces
             for (const dir of CaptureDir[piece]) {
                 if (sqOffboard(sq + dir)) continue;
-                this.updateAttack(piece, sq + dir, AttackValMultiplier.remove);
+                this.updateAttack(piece, sq, sq + dir, AttackValMultiplier.remove);
             }
             if (IsPawn[piece]) {
                 (piece === Piece.whitePawn ? this.whitePawnFiles : this.blackPawnFiles)[GetFile[sq]] &= RankToBitsInverse[GetRank[sq]];
@@ -120,7 +129,7 @@ export default class AttackTable implements IAttackTable {
         else { // non-sliding pieces
             for (const dir of CaptureDir[piece]) {
                 if (sqOffboard(sq + dir)) continue;
-                this.updateAttack(piece, sq + dir, AttackValMultiplier.add);
+                this.updateAttack(piece, sq, sq + dir, AttackValMultiplier.add);
             }
             if (IsPawn[piece]) {
                 (piece === Piece.whitePawn ? this.whitePawnFiles : this.blackPawnFiles)[GetFile[sq]] |= RankToBits[GetRank[sq]];
@@ -159,22 +168,24 @@ export default class AttackTable implements IAttackTable {
         let totalMove = dir;
         while (true) {
             if (sqOffboard(sq + totalMove)) break;
-            this.updateAttack(originalPiece, sq + totalMove, multiplier);
+            this.updateAttack(originalPiece, sq, sq + totalMove, multiplier);
             const piece = this.board.getPiece(sq + totalMove);
             if (piece !== Piece.none && !(PieceColor[piece] === PieceColor[originalPiece] && isTargetPiece[piece])) break;
             totalMove += dir;
         }
     }
 
-    private updateAttack(piece: Piece, sq: Square, multiplier: AttackValMultiplier) {
+    private updateAttack(piece: Piece, from: Square, to: Square, multiplier: AttackValMultiplier) {
         const color = PieceColor[piece];
         if (color === Color.white) {
-            this.whiteAttacks[GetSq64[sq]] += PieceAttackVal[piece] * CoverageMultiplier[sq] * multiplier;
-            this.attackSums[Color.white] += PieceAttackVal[piece] * CoverageMultiplier[sq] * multiplier;
+            this.whiteAttacks[GetSq64[to]] += PieceAttackVal[piece] * multiplier;
+            this.whitePieceAttacks[GetSq64[to]].update(piece, GetSq64[from], GetSq64[to], multiplier);
+            this.attackSums[Color.white] += PieceAttackVal[piece] * multiplier;
         }
         else {
-            this.blackAttacks[GetSq64[sq]] += PieceAttackVal[piece] * CoverageMultiplier[sq] * multiplier;
-            this.attackSums[Color.black] += PieceAttackVal[piece] * CoverageMultiplier[sq] * multiplier;
+            this.blackAttacks[GetSq64[to]] += PieceAttackVal[piece] * multiplier;
+            this.blackPieceAttacks[GetSq64[to]].update(piece, GetSq64[from], GetSq64[to], multiplier);
+            this.attackSums[Color.black] += PieceAttackVal[piece] * multiplier;
         }
     }
 }
