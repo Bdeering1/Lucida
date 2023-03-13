@@ -1,6 +1,4 @@
-## Lucida
-
-![lucida-logox600](https://user-images.githubusercontent.com/55864293/224819811-9bbe19d8-32f3-447b-9d0b-f5009cc21443.gif)
+![lucida-landscape](https://user-images.githubusercontent.com/55864293/224822297-a62f456c-57b5-4c61-8ea4-327b4eb58e25.gif)
 
 *NodeJS chess engine developed using typescript*
 
