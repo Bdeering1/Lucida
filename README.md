@@ -1,4 +1,4 @@
-![lucida-landscape](https://user-images.githubusercontent.com/55864293/224822297-a62f456c-57b5-4c61-8ea4-327b4eb58e25.gif)
+![lucida-wide](https://user-images.githubusercontent.com/55864293/224823456-b7999225-9a99-4934-9f29-7cf8e53f1234.gif)
 
 *NodeJS chess engine developed using typescript*
 
