@@ -15,9 +15,12 @@ Lucida uses an [10x12 board](https://www.chessprogramming.org/10x12_Board) suppl
 ### Search
 Lucida performs a depth-first search using [negamax](https://www.chessprogramming.org/Negamax) with [alpha beta pruning](https://www.chessprogramming.org/Alpha-Beta), which is extended by a [quiescence search](https://www.chessprogramming.org/Quiescence_Search) (with [delta](https://www.chessprogramming.org/Delta_Pruning) and [SEE](https://www.chessprogramming.org/Static_Exchange_Evaluation) pruning) to improve search accuracy. The search is first performed at a low depth and then repeated with increasing depth until a maximum time or depth is reached (see [iterative deepening](https://www.chessprogramming.org/Iterative_Deepening)).
 
-
-
 This strategy is effective because each search adds to the [transposition table](https://www.chessprogramming.org/Transposition_Table) (which allows previously evaluated scores to be re-used), and improves move ordering for future searches by keeping track of [PV nodes](https://www.chessprogramming.org/Node_Types#PV-Nodes). Effective move ordering improves the efficacy of pruning since better lines will be searched first. Moves are also ordered using promotion, capture, and piece-square table scores (see below).
 
 ### Evaluation
 Lucida's evaluation consists of the material score, [mobility score](https://www.chessprogramming.org/Mobility), and [piece-square tables](https://www.chessprogramming.org/Piece-Square_Tables) for both the opening and endgame. The scores from these two tables are interpolated between to get the score for a given position (see [tapered eval](https://www.chessprogramming.org/Tapered_Eval)). There are also piece specific components to the evaluation - ie. rooks prefer open files, kings prefers having a pawn shield.
+
+
+
+### Strength
+The current iteration of Lucida beats Komodo 17 (2100 rating) given ~5-10 seconds per move (on 2.8 GHz Quad-Core Intel Core i7).
