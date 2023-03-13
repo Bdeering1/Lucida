@@ -1,5 +1,8 @@
-## Lucida  
-NodeJS chess engine, currently under development.
+## Lucida
+
+![lucida-logox600](https://user-images.githubusercontent.com/55864293/224819811-9bbe19d8-32f3-447b-9d0b-f5009cc21443.gif)
+
+*NodeJS chess engine developed using typescript*
 
 ### Features
 <!-- The core aspects of any chess engine are the move search, evaluation, and board representation. -->
