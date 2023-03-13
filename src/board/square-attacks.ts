@@ -29,6 +29,18 @@ export default class SquareAttacks  {
         return this.sum !== 0;
     }
 
+    public isAttackedBy(piece: Piece): boolean {
+        const dWord = BUCKET_DWORD_PIECE[piece];
+        const bucketOffset = BUCKET_OFFSET_PIECE[piece];
+        const bucketSize = BUCKET_SIZE_PIECE[piece];
+        for (let i = 0; i < bucketSize; i++) {
+            if (((this.value[dWord] >> (bucketOffset + i * SQ64_SIZE_BITS)) & BIT_MASK_6) !== 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public update(piece: Piece, from64: Square, to64: Square, multiplier: number) {
         const dWord = BUCKET_DWORD_PIECE[piece];
         const bucketOffset = BUCKET_OFFSET_PIECE[piece];

@@ -1,7 +1,7 @@
 /* eslint-disable no-magic-numbers */
 import Eval, { MAX_PHASE } from './eval';
 import { MAX_DEPTH, MS_PER_SECOND } from '../shared/constants';
-import { PieceVal, SideMultiplier } from '../shared/utils';
+import { clamp, PieceVal, SideMultiplier } from '../shared/utils';
 import TranspositionTable, { SearchResult } from './transposition-table';
 import { getLineString, printMoves } from '../cli/printing';
 import { IBoard } from '../board/iboard';
@@ -11,7 +11,8 @@ import { Color, Piece } from '../shared/enums';
 import PieceSquareTables from './pst';
 import { getGameStatus } from '../game/game-state';
 
-const LAST_DEPTH_CUTOFF = 3 * MS_PER_SECOND;
+const LAST_DEPTH_CUTOFF = 3.5 * MS_PER_SECOND;
+const MIN_MOVE_CUTOFF = 5;
 
 export default class Search {
     private board: IBoard;
@@ -137,7 +138,8 @@ export default class Search {
         this.nodes++;
         if (depth >= this.effectiveDepth) return [this.quiesce(0, alpha, beta)[0], false];
 
-        const status = getGameStatus(this.board, this.moveManager.generateMoves());
+        const numMoves = this.moveManager.generateMoves();
+        const status = getGameStatus(this.board, numMoves);
         if (status.complete === true) {
             if (status.winner === Color.none) return [0, false];
             return [-(PieceVal[Piece.whiteKing] - depth), false];
@@ -155,7 +157,8 @@ export default class Search {
         }
 
         let pvMove: Move | undefined;
-        for (const move of this.moveManager.getCurrentMoves()) {
+        const cutoff = clamp(32 - depth * 4, MIN_MOVE_CUTOFF, numMoves);
+        for (const move of this.moveManager.getCurrentMoves(cutoff)) {
             this.board.makeMove(move);
             let truncated = false;
             let score, res;

@@ -72,8 +72,8 @@ export default class MoveGenerator {
         this.transpositionTable.clear();
     }
 
-    public * getCurrentMoves(): IterableIterator<Move> {
-        for (let i = 0; i < this.numMoves[this.board.ply]; i++) {
+    public * getCurrentMoves(cutoff = this.numMoves[this.board.ply]): IterableIterator<Move> {
+        for (let i = 0; i < cutoff; i++) {
             yield this.moveList[this.board.ply][i];
         }
     }
@@ -83,7 +83,7 @@ export default class MoveGenerator {
             const move = this.moveList[this.board.ply][i];
             if (move.capture === Piece.none) continue;
             if (this.inCheck) yield move;
-            if (this.board.attackTable.staticExchangeEval(move.to, this.sideToMove) > 0) yield move;
+            if (this.board.attackTable.staticExchangeEval(move.to, this.sideToMove) >= 0) yield move;
         }
     }
 

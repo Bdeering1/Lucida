@@ -1,8 +1,8 @@
 /* eslint-disable no-magic-numbers */
 
 import { Color, Piece, File } from "../shared/enums";
-import { GetFile, GetSq120, IsQueen, PieceColor, SideMultiplier } from "../shared/utils";
-import { IAttackTable } from "../board/attack-table";
+import { GetFile, GetSq120, GetSq64, IsQueen, PawnDir, PieceColor, SideMultiplier } from "../shared/utils";
+import AttackTable, { IAttackTable } from "../board/attack-table";
 import { IBoard } from "../board/iboard";
 import { INNER_BOARD_SQ_NUM } from "../shared/constants";
 import Move from "../game/move";
@@ -11,8 +11,9 @@ import PieceSquareTables from "./pst";
 
 const ENDGAME_MATERIAL_WEIGHT = 2.5;
 const PST_WEIGHT = 1.5;
+const COVERAGE_WEIGHT = 1;
 const ROOKS_SCORE_WEIGHT = 5;
-const KINGS_SCORE_WEIGHT = 4;
+const KINGS_SCORE_WEIGHT = 2;
 
 const PAWN_PHASE = 1;
 const KNIGHT_PHASE = 4;
@@ -47,7 +48,8 @@ export default class Eval {
         endgame += this.getPSTScore(board, PieceSquareTables.endgame) * PST_WEIGHT;
         
         let score = this.getTaperedScore(middlegame, endgame, phase);
-        score += this.getCoverageScore(board.attackTable);
+        score += this.getCoverageScore(board.attackTable) * COVERAGE_WEIGHT;
+        //score += this.getPawnScore(board);
         score += this.getRooksScore(board) * ROOKS_SCORE_WEIGHT;
         if (this.mobilityWeight !== 0) score += this.getMobilityScore(moveGenerator) * this.mobilityWeight;
         
@@ -72,13 +74,26 @@ export default class Eval {
         return ((attackTable.getCoverage(Color.white) - attackTable.getCoverage(Color.black)) / 4) | 0;
     }
 
+    static getPawnScore(board: IBoard) { // this info could be stored in the attack table
+        let score = 0;
+        for (const sq of board.getSquares(Piece.whitePawn)) {
+            if (board.getPiece(sq + PawnDir[Piece.whitePawn]) === Piece.none) score++;
+        }
+        for (const sq of board.getSquares(Piece.blackPawn)) {
+            if (board.getPiece(sq + PawnDir[Piece.blackPawn]) === Piece.none) score--;
+        }
+        return score;
+    }
+
     static getRooksScore(board: IBoard) {
         let score = 0;
         for (const sq of board.getSquares(Piece.whiteRook)) {
             score += board.attackTable.isOpen(GetFile[sq], Color.white);
+            //if ((board.attackTable as AttackTable).whiteSquareAttacks[GetSq64[sq]].isAttackedBy(Piece.whiteRook)) score++;
         }
         for (const sq of board.getSquares(Piece.blackRook)) {
             score -= board.attackTable.isOpen(GetFile[sq], Color.black);
+            //if ((board.attackTable as AttackTable).blackSquareAttacks[GetSq64[sq]].isAttackedBy(Piece.blackRook)) score--;
         }
         return score;
     }

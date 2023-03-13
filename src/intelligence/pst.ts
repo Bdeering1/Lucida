@@ -77,54 +77,56 @@ const EGKnightTable64 = [
 ];
 
 /**
- * 10 for being on an 8 long diagonal
- * 5 for being on a 7 long diagonal
- * 2 for being on a 6 long diagonal
- * -5 for being on an edge
+ * 9 for being on an 8 long diagonal
+ * 6 for being on a 7 long diagonal
+ * 4 for being on a 6 long diagonal
+ * 4 for being on the 2nd rank
+ * -2 for being in the center 4 squares of rank 3
+ * -2 for being on the edge of the board
+ * -15 for being in a corner
  */
 const MGBishopTable64 = [
-      0,   0,  -3,  -5,  -5,  -3,   0,   0,
-      0,  10,   5,   2,   2,   5,  10,   0,
-     -3,   5,  10,   7,   7,  10,   5,  -3,
-     -5,   2,   7,  15,  15,   7,   2,  -5,
-     -5,   2,   7,  15,  15,   7,   2,  -5,
-     -3,   5,  10,   7,   7,  10,   5,  -3,
-      0,  10,   5,   2,   2,   5,  10,   0,
-      0,   0,  -3,  -5,  -5,  -3,   0,   0,
+    -8,  1,  -1,  -5,  -5,  -1,   1,  -8,
+     6,  9,   6,   4,   4,   6,   9,   6,
+     2,  6,   9,  10,  10,   9,   6,   2,
+    -2,  4,  10,  15,  15,  10,   4,  -2,
+    -2,  4,  10,  15,  15,  10,   4,  -2,
+     2,  6,   7,   8,   8,   7,   5,   2,
+     8, 13,  10,   8,   8,  10,  13,   8,
+    -8,  6,   2,  -2,  -2,   2,   6,  -8,
 ];
 /**
- * 10 for being on an 8 long diagonal
+ * 9 for being on an 8 long diagonal
  * 5 for being on a 7 long diagonal
  * 2 for being on a 6 long diagonal
  * -5 for being on an edge
  */
 const EGBishopTable64 = [
-    0,   0,  -3,  -5,  -5,  -3,   0,   0,
-    0,  10,   5,   2,   2,   5,  10,   0,
-   -3,   5,  10,   7,   7,  10,   5,  -3,
-   -5,   2,   7,  15,  15,   7,   2,  -5,
-   -5,   2,   7,  15,  15,   7,   2,  -5,
-   -3,   5,  10,   7,   7,  10,   5,  -3,
-    0,  10,   5,   2,   2,   5,  10,   0,
-    0,   0,  -3,  -5,  -5,  -3,   0,   0,
+   -8,  1,  -1,  -5,  -5,  -1,   1,  -8,
+    6,  9,   6,   4,   4,   6,   9,   6,
+    2,  6,   9,  10,  10,   9,   6,   2,
+   -2,  4,  10,  15,  15,  10,   4,  -2,
+   -2,  4,  10,  15,  15,  10,   4,  -2,
+    2,  6,   9,  10,  10,   9,   6,   2,
+    4,  9,   6,   4,   4,   6,   9,   4,
+   -8,  6,   2,  -2,  -2,   2,   6,  -8,
 ];
 
 /**
  * 15 for being on the 7th rank
  * 5 for being on the 8th rank
- * 5 for being on files d or e
- * 10 for being on d1 or e1
- * 5 for being on c1, d2, e2, or f1
+ * 7 for being on files d or e
+ * 5 for being on files c or f
  */
 const MGRookTable64 = [
-      5,   5,   5,  10,  10,   5,   5,   5,
-     15,  15,  15,  20,  20,  15,  15,  15,
-      0,   0,   0,   5,   5,   0,   0,   0,
-      0,   0,   0,   5,   5,   0,   0,   0,
-      0,   0,   0,   5,   5,   0,   0,   0,
-      0,   0,   0,   5,   5,   0,   0,   0,
-      0,   0,   0,  10,  10,   0,   0,   0,
-      0,   0,   5,  15,  15,   5,   0,   0,
+      5,   5,  10,  12,  12,  10,   5,   5,
+     15,  15,  20,  22,  22,  20,  15,  15,
+      0,   0,   5,   7,   7,   5,   0,   0,
+      0,   0,   5,   7,   7,   5,   0,   0,
+      0,   0,   5,   7,   7,   5,   0,   0,
+      0,   0,   5,   7,   7,   5,   0,   0,
+      0,   0,   5,   7,   7,   5,   0,   0,
+      0,   0,   5,   7,   7,   5,   0,   0,
 ];
 /**
  * 5 for being on the 7th or 8th rank
@@ -143,19 +145,20 @@ const EGRookTable64 = [
 
 /**
  * 5 for being on ranks 6, 7, or 8 and on the right half of the board
- * 5 for being on rank 2
+ * 2 for being on rank 2
  * 2 for being on ranks 6, 7, or 8
- * -10 for being on ranks 3, 4, or 5
- */
+ * -2 for being on an edge
+ * -7 for being on ranks 3, 4, or 5
+*/
 const MGQueenTable64 = [
-      2,   2,   2,   2,   7,   7,   7,   7,
-      2,   2,   2,   2,   7,   7,   7,   7,
-      2,   2,   2,   2,   7,   7,   7,   7,
-    -15, -15, -15, -15, -15, -15, -15, -15,
-    -15, -15, -15, -15, -15, -15, -15, -15,
-    -15, -15, -15, -15, -15, -15, -15, -15,
-      5,   5,   5,   5,   5,   5,   5,   5,
-      0,   0,   0,   0,   0,   0,   0,   0,
+     -2,   0,   0,   0,   5,   5,   5,   3,
+      0,   2,   2,   2,   7,   7,   7,   5,
+      0,   2,   2,   2,   7,   7,   7,   5,
+     -9,  -7,  -7,  -7,  -7,  -7,  -7,  -9,
+     -9,  -7,  -7,  -7,  -7,  -7,  -7,  -9,
+     -9,  -7,  -7,  -7,  -7,  -7,  -7,  -9,
+      0,   2,   2,   2,   2,   2,   2,   0,
+     -4,  -2,  -2,  -2,  -2,  -2,  -2,  -4,
 ];
 /**
  * 5 for being on the upper half of the board

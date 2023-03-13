@@ -172,3 +172,7 @@ export function pieceFromString(piece: string): Piece {
     }
     return Piece.none;
 }
+
+export function clamp(number: number, min: number, max: number): number {
+    return Math.min(Math.max(min, number), max);
+}
