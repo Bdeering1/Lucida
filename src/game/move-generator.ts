@@ -225,20 +225,22 @@ export default class MoveGenerator {
     private addIfLegal(move: Move): boolean {
         this.board.makeMove(move);
         if (!this.board.attackTable.inCheck(this.sideToMove)) {
+            const candidate = this.transpositionTable.get(this.board.posKey)?.candidate
+                                || this.board.attackTable.inCheck(GetOtherSide[this.sideToMove]);
             this.board.undoMove(move);
-            this.addMove(move, this.board.ply);
+            this.addMove(move, candidate, this.board.ply);
             return true;
         }
         this.board.undoMove(move);
         return false;
     }
 
-    private addMove(move: Move, ply = this.board.ply): void {
-        if (this.addToList) this.insertMove(move, ply);
+    private addMove(move: Move, candidate = true, ply = this.board.ply): void {
+        if (this.addToList) this.insertMove(move, candidate, ply);
         this.moveCount++;
     }
 
-    private insertMove(move: Move, ply: number): void {
+    private insertMove(move: Move, candidate: boolean, ply: number): void {
         if (this.moveCount === 0) {
             this.moveList[ply][0] = move;
             this.movePrecedences[0] = Eval.getMovePrecedence(this.board, move);
@@ -247,7 +249,10 @@ export default class MoveGenerator {
         
         let precedence;
         if (this.pvMove && move.equals(this.pvMove)) precedence = Infinity;
-        else precedence = Eval.getMovePrecedence(this.board, move);
+        else {
+            precedence = Eval.getMovePrecedence(this.board, move);
+            if (candidate) precedence += 1000;
+        }
         
         let idx = this.moveCount - 1;
         while (idx >= 0 && precedence > this.movePrecedences[idx]) {

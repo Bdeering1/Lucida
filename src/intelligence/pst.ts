@@ -8,22 +8,25 @@ import { Rank } from "../shared/enums";
 
 /**
  * 30 for being on the 7th rank
- * 20 for being on f2 or g2
  * 10 for being on the 6th rank
+ * 7 for being on files d or e and ranks 4 or greater
+ * 5 for being on f2 or g2
  * 5 for being on the 5th rank
- * 5 for being on files d or e and ranks 4 or greater
  * 2 for being on files c or f and ranks 4 or greater
+ * 3 for being on c3 or g3
+ * 2 for being on c4, 1 for being on d4
  * -5 for being on the 2nd rank
+ * -10 for being on c2, d2, or e2
  * -10 for being on an outside file
  */
 const MGPawnTable64 = [
       0,   0,   0,   0,   0,   0,   0,   0,
-     25,  30,  32,  35,  35,  32,  30,  25,
-      0,  10,  12,  15,  15,  12,  10,   0,
-     -5,   5,   7,  10,  10,   7,   5,  -5,
-    -10,   0,   2,   5,   5,   2,   0, -10,
-    -10,   0,   0,   0,   0,   0,   0, -10,
-    -15,  -5,  -5, -15, -15,  -5,  -5, -15,
+     25,  30,  32,  37,  37,  32,  30,  25,
+      0,  10,  12,  17,  17,  12,  10,   0,
+     -5,   5,   7,  12,  12,   7,   5,  -5,
+    -10,   0,   5,   5,   5,   2,   0, -10,
+    -10,   3,   2,   0,   0,   0,   3, -10,
+    -15,  -5, -14, -15, -15,   0,   0, -15,
       0,   0,   0,   0,   0,   0,   0,   0,
 ];
 /**
@@ -47,18 +50,24 @@ const EGPawnTable64 = [
  * 10 for being on the 6th rank
  * 5 for being on the 5th, or 7th rank
  * 5 for being in the center 16 squares
- * -5 for being 1 square from an edge
+ * 4 for being on d2 or e2
+ * 2 for being on the 4th rank
+ * -1 for being on c3
+ * -2 for being on g1
+ * -3 for being 1 square from an edge
  * -10 for being on an edge
+ * 
+ * bumped up center towards king side
  */
 const MGKnightTable64 = [
-    -20, -15, -10, -10, -10, -10, -15, -20,
-    -10,  -5,   0,   0,   0,   0,  -5, -10,
-      0,   5,  15,  15,  15,  15,   5,   0,
-     -5,   0,  10,  10,  10,  10,   0,  -5,
-    -10,  -5,   5,   5,   5,   5,  -5, -10,
-    -10,  -5,   5,   5,   5,   5,  -5, -10,
-    -15, -10,  -5,  -5,  -5,  -5, -10, -15,
-    -20, -15, -10, -10, -10, -10, -15, -20,
+    -20, -13, -10, -10, -10, -10, -13, -20,
+     -8,  -3,   2,   2,   2,   2,  -3,  -8,
+      0,   7,  15,  15,  16,  16,   7,   0,
+     -5,   2,  10,  10,  11,  11,   2,  -5,
+     -8,  -1,   7,   7,   7,   7,  -1,  -8,
+    -10,  -3,   4,   5,   5,   5,  -3, -10,
+    -13,  -8,  -3,   1,   1,  -3,  -8, -13,
+    -20, -13, -10, -10, -10, -10, -15, -20,
 ];
 /**
  * 5 for being in the center 16 squares
@@ -77,39 +86,43 @@ const EGKnightTable64 = [
 ];
 
 /**
- * 9 for being on an 8 long diagonal
- * 6 for being on a 7 long diagonal
+ * 8 for being on an 8 long diagonal
+ * 7 for being in position which pins a knight to the queen/king (a4, b5, g5, h4)
+ * 5 for being on the 2nd rank
+ * 5 for being on a 7 long diagonal
  * 4 for being on a 6 long diagonal
- * 4 for being on the 2nd rank
+ * 2 for being fianchettoed
  * -2 for being in the center 4 squares of rank 3
+ * -2 for being on a vertical edge of the board
+ * -5 for being on a horizontal edge of the board
+ * -6 for being in a corner
+ */
+const MGBishopTable64 = [
+    -5,  0,  -1,  -5,  -5,  -1,   0,  -5,
+     3,  8,   5,   4,   4,   5,   8,   3,
+     2,  5,   8,   9,   9,   8,   5,   2,
+    -2, 11,   9,  13,  13,   9,  11,  -2,
+     5,  4,   9,  13,  13,   9,   4,   5,
+     2,  5,   6,   7,   7,   6,   5,   2,
+     8, 15,  10,   9,   9,  10,  15,   8,
+    -5,  0,  -1,  -5,  -5,  -1,   0,  -5,
+];
+/**
+ * 8 for being on an 8 long diagonal
+ * 5 for being on a 7 long diagonal
+ * 4 for being on a 6 long diagonal
  * -2 for being on the edge of the board
  * -15 for being in a corner
  */
-const MGBishopTable64 = [
-    -8,  1,  -1,  -5,  -5,  -1,   1,  -8,
-     6,  9,   6,   4,   4,   6,   9,   6,
-     2,  6,   9,  10,  10,   9,   6,   2,
-    -2,  4,  10,  15,  15,  10,   4,  -2,
-    -2,  4,  10,  15,  15,  10,   4,  -2,
-     2,  6,   7,   8,   8,   7,   5,   2,
-     8, 13,  10,   8,   8,  10,  13,   8,
-    -8,  6,   2,  -2,  -2,   2,   6,  -8,
-];
-/**
- * 9 for being on an 8 long diagonal
- * 5 for being on a 7 long diagonal
- * 2 for being on a 6 long diagonal
- * -5 for being on an edge
- */
 const EGBishopTable64 = [
-   -8,  1,  -1,  -5,  -5,  -1,   1,  -8,
-    6,  9,   6,   4,   4,   6,   9,   6,
-    2,  6,   9,  10,  10,   9,   6,   2,
-   -2,  4,  10,  15,  15,  10,   4,  -2,
-   -2,  4,  10,  15,  15,  10,   4,  -2,
-    2,  6,   9,  10,  10,   9,   6,   2,
-    4,  9,   6,   4,   4,   6,   9,   4,
-   -8,  6,   2,  -2,  -2,   2,   6,  -8,
+   -8,  3,  -1,  -5,  -5,  -1,   3,  -8,
+    5,  9,   5,   4,   4,   5,   9,   5,
+    2,  5,   9,   9,   9,   9,   5,   2,
+   -2,  4,   9,  14,  14,   9,   4,  -2,
+   -2,  4,   9,  14,  14,   9,   4,  -2,
+    2,  5,   9,   9,   9,   9,   5,   2,
+    3,  9,   5,   4,   4,   5,   9,   3,
+   -8,  3,   2,  -2,  -2,   2,   3,  -8,
 ];
 
 /**
@@ -130,17 +143,17 @@ const MGRookTable64 = [
 ];
 /**
  * 5 for being on the 7th or 8th rank
- * -2 for being in a corner
+ * -5 for being in a corner
  */
 const EGRookTable64 = [
-     3,   5,   5,   5,   5,   5,   5,   3,
+     0,   5,   5,   5,   5,   5,   5,   0,
      5,   5,   5,   5,   5,   5,   5,   5,
      0,   0,   0,   0,   0,   0,   0,   0,
      0,   0,   0,   0,   0,   0,   0,   0,
      0,   0,   0,   0,   0,   0,   0,   0,
      0,   0,   0,   0,   0,   0,   0,   0,
      0,   0,   0,   0,   0,   0,   0,   0,
-    -2,   0,   0,   0,   0,   0,   0,  -2,
+    -5,   0,   0,   0,   0,   0,   0,  -5,
 ];
 
 /**

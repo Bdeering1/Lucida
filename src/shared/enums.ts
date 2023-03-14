@@ -82,6 +82,12 @@ export const enum InputOption {
     undo
 }
 
+export const enum Verbosity {
+    silent,
+    normal,
+    debug
+}
+
 /**
  * Represents a square on the 120 sized board
  * 

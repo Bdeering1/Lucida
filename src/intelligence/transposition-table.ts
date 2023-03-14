@@ -60,12 +60,14 @@ export class SearchResult {
     private _score: number;
     private _depth: number;
     private _ply: number;
+    private _candidate: boolean;
     private _move: Move;
 
     constructor(score: number, depth: number, ply: number) {
         this._score = score;
         this._depth = depth;
         this._ply = ply;
+        this._candidate = false;
         this._move = new Move(Square.none, Square.none);
     }
 
@@ -77,6 +79,12 @@ export class SearchResult {
     }
     public get ply(): number {
         return this._ply;
+    }
+    public get candidate(): boolean {
+        return this._candidate;
+    }
+    public set candidate(candidate: boolean) {
+        this._candidate = candidate;
     }
     public get move(): Move {
         return this._move;

@@ -8,6 +8,7 @@ import Search from "../intelligence/search";
 import { createInterface } from 'readline';
 import { parseFen } from "../board/board-setup";
 import runCli from '../cli/cli-game';
+import { Verbosity } from '../shared/enums';
 
 export default function runUci(): Promise<void> {
     return new Promise((resolve, reject) => {
@@ -84,12 +85,13 @@ export default function runUci(): Promise<void> {
                 }
                 case "go":
                 {
+                    const verbosity = isDebug ? Verbosity.debug : Verbosity.normal;
                     if (isDebug) console.log(`info string received go command (${tokens.length - 1} args)`);
                     let move: Move;
                     let subCommand = tokens.length > 1 ? tokens[1] : "";
                     switch(tokens[1]) {
                         case "depth":
-                            [move,] = search.getBestMove(isDebug, parseInt(tokens[2]));
+                            [move,] = search.getBestMove(verbosity, parseInt(tokens[2]));
                             break;
                         case "searchmoves":
                         case "ponder":
@@ -103,7 +105,7 @@ export default function runUci(): Promise<void> {
                         case "movetime":
                         case "infinite":
                         default:
-                            [move,] = search.getBestMove(isDebug);
+                            [move,] = search.getBestMove(verbosity);
                             break;
                     }
                     console.log(`bestmove ${move}`);

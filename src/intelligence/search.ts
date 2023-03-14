@@ -7,12 +7,12 @@ import { getLineString, printMoves } from '../cli/printing';
 import { IBoard } from '../board/iboard';
 import Move from '../game/move';
 import MoveGenerator from '../game/move-generator';
-import { Color, Piece } from '../shared/enums';
+import { Color, Piece, Verbosity } from '../shared/enums';
 import PieceSquareTables from './pst';
 import { getGameStatus } from '../game/game-state';
 
-const LAST_DEPTH_CUTOFF = 3.5 * MS_PER_SECOND;
-const MIN_MOVE_CUTOFF = 5;
+const LAST_DEPTH_CUTOFF = 4 * MS_PER_SECOND;
+const MIN_MOVE_CUTOFF = 3;
 
 export default class Search {
     private board: IBoard;
@@ -37,19 +37,9 @@ export default class Search {
     private deltaPruning = true;
     /**
      * Margin used for delta pruning
-     * @description if a capture does not raise the static eval to within this margin, it is not searched further
+     * @description if a capture does not raise the static eval to within this margin of the best line, it is not searched further
      */
     private deltaMargin = 330;
-    /**
-     * Additional margin for beta cutoff (in centipawns)
-     * @desription higher values lead faster but less accurate search (greatly decreases accuracy)
-     */
-    private betaMargin = 40;
-    private effectiveBetaMargin = 0;
-    /**
-     * Depth at which effective beta margin must be zero
-     */
-    private zeroMarginBetaDepth = 5;
     /**
      * Whether or not to use null move pruning
      */
@@ -68,6 +58,7 @@ export default class Search {
      * Hash map used to store previously evaluated positions
      */
     private transpositionTable: TranspositionTable;
+    private warmup: boolean;
 
     private nodes = 0;
     private quiesceNodes = 0;
@@ -76,18 +67,19 @@ export default class Search {
     private transpositions = 0;
     private scores: number[] = [];
 
-    constructor(board: IBoard, moveGenerator: MoveGenerator, depth = 12, quiesceDepth = 15) {
+    constructor(board: IBoard, moveGenerator: MoveGenerator, warmup = false, depth = 12, quiesceDepth = 15) {
         this.board = board;
         this.moveManager = moveGenerator;
         this.depthLimit = depth;
         this.effectiveDepth = depth;
         this.quiesceDepth = quiesceDepth;
         this.transpositionTable = moveGenerator.transpositionTable;
+        this.warmup = warmup;
         
         PieceSquareTables.init();
     }
 
-    public getBestMove(verbose = false, lastDepthCutoff = LAST_DEPTH_CUTOFF, depth = this.depthLimit): [Move, number] {
+    public getBestMove(verbose = Verbosity.normal, lastDepthCutoff = LAST_DEPTH_CUTOFF, depth = this.depthLimit): [Move, number] {
         this.transpositionTable.trim(this.board.ply);
         this.depthLimit = depth;
         const depthCutoff = this.getDepthCutoff();
@@ -102,25 +94,22 @@ export default class Search {
         
         const startTime = Date.now();
         
-        this.effectiveBetaMargin = this.betaMargin;
         this.effectiveDepth = 0;
         let best = 0;
         while ((this.effectiveDepth < depthCutoff && Date.now() - startTime < lastDepthCutoff) || this.effectiveDepth < this.minDepth) {
             this.scores = [];
             this.effectiveDepth++;
-            this.effectiveBetaMargin -= 10;
-            if (this.effectiveBetaMargin < 0 || this.effectiveDepth < this.zeroMarginBetaDepth) this.effectiveBetaMargin = 0;
             [best,] = this.negaMax(0, -Infinity, Infinity);
             best *= SideMultiplier[this.board.sideToMove];
             
             const moves = this.transpositionTable.getPV(this.board, this.effectiveDepth);
-            console.log(`info depth: ${this.effectiveDepth} time ${Date.now() - startTime} score cp ${best} pv ${moves.map(m => m.toString()).join(' ')}`);
+            if (verbose) console.log(`info depth: ${this.effectiveDepth} time ${Date.now() - startTime} score cp ${best} pv ${moves.map(m => m.toString()).join(' ')}`);
         }
 
         const timeElapsed = Date.now() - startTime;
         const timePerNode = timeElapsed / (this.nodes + this.quiesceNodes);
 
-        if (verbose) {
+        if (verbose === Verbosity.debug) {
             console.log(`\ntime: ${(timeElapsed / MS_PER_SECOND).toFixed(2)}s (${timePerNode.toFixed(2)}ms per node)`);
             console.log(`primary: ${this.nodes} quiescence search: ${this.quiesceNodes} delta pruned: ${this.deltaPruned} null move cutoffs: ${this.nullMoveCutoffs}`);
             console.log(`transpositions: ${this.transpositions} table size ${this.transpositionTable.size}`);
@@ -130,6 +119,7 @@ export default class Search {
             console.log(`Best line: ${getLineString(this.board, moves)}`);
         }
         
+        this.warmup = false;
         const move = this.transpositionTable.getPV(this.board, 1)[0];
         return [move, best];
     }
@@ -138,8 +128,8 @@ export default class Search {
         this.nodes++;
         if (depth >= this.effectiveDepth) return [this.quiesce(0, alpha, beta)[0], false];
 
-        const numMoves = this.moveManager.generateMoves();
-        const status = getGameStatus(this.board, numMoves);
+        const totalMoves = this.moveManager.generateMoves();
+        const status = getGameStatus(this.board, totalMoves);
         if (status.complete === true) {
             if (status.winner === Color.none) return [0, false];
             return [-(PieceVal[Piece.whiteKing] - depth), false];
@@ -157,7 +147,7 @@ export default class Search {
         }
 
         let pvMove: Move | undefined;
-        const cutoff = clamp(32 - depth * 4, MIN_MOVE_CUTOFF, numMoves);
+        const cutoff = this.getMoveNumCutoff(totalMoves, depth);
         for (const move of this.moveManager.getCurrentMoves(cutoff)) {
             this.board.makeMove(move);
             let truncated = false;
@@ -174,14 +164,16 @@ export default class Search {
             
             if (depth === 0) this.scores.push(score);
             
-            if (score >= beta - this.effectiveBetaMargin) return [beta, true];
+            if (score >= beta) return [beta, true];
             if (!truncated && depth < (this.transpositionTable.get(this.board.posKey)?.depth || MAX_DEPTH)) {
+                if (this.warmup) score -= 10;
                 this.transpositionTable.set(this.board.posKey, new SearchResult(score, depth, this.board.ply));
             }
 
             if (score > alpha) {
                 alpha = score;
                 pvMove = move;
+                this.transpositionTable.get(this.board.posKey)!.candidate = true;
             }
         }
 
@@ -235,5 +227,11 @@ export default class Search {
         if (phaseRatio > 0.95) depth++;
 
         return depth;
+    }
+
+    private getMoveNumCutoff(totalMoves: number, depth: number): number {
+        if (this.warmup) return clamp(6 - depth, 4, totalMoves);
+        if (depth <= 1) return totalMoves;
+        return clamp(30 - depth * 6, MIN_MOVE_CUTOFF, totalMoves);
     }
 }
