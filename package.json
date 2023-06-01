@@ -22,8 +22,8 @@
     "dev": "esbuild $(esbuild-config) && npm start",
     "start": "node --es-module-specifier-resolution=node .",
     "test": "jest",
-    "benchmark": "node --es-module-specifier-resolution=node --prof . bmk",
-    "postbenchmark": "node --prof-process isolate-0x*.log > perf/profile-$(date +\"%Y-%m-%d-%H-%M\").log && rm isolate-0x*.log"
+    "profile": "node --es-module-specifier-resolution=node --prof . bmk",
+    "postprofile": "node --prof-process isolate-0x*.log > perf/profile-$(date +\"%Y-%m-%d-%H-%M\").log && rm isolate-0x*.log"
   },
   "repository": {
     "type": "git",
