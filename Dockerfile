@@ -2,9 +2,9 @@ FROM node:18-bullseye-slim AS builder
 
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
-RUN npm install pnpm@9 -g
+RUN npm install pnpm -g
 RUN pnpm install --dev --frozen-lockfile
 
 COPY . .
@@ -18,7 +18,7 @@ WORKDIR /app
 
 COPY package.json pnpm-lock.yaml ./
 
-RUN npm install pnpm@9 -g
+RUN npm install pnpm -g
 RUN pnpm install --prod --frozen-lockfile
 
 COPY --from=builder /app/build ./build
