@@ -7,7 +7,7 @@ import { IBoard } from "../board/iboard";
 import MoveGenerator from "../game/move-generator";
 import { START_FEN } from "../shared/constants";
 import { parseFen } from "../board/board-setup";
-import PieceSquareTables from "../intelligence/pst";
+import PieceSquareTables from "../core/pst";
 
 describe('move-manager', () => {
     let board: IBoard;

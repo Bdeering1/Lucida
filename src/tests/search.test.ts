@@ -2,7 +2,7 @@ import { CAPTURE_FEN, MATE_IN_ONE_FEN, STALEMATE_IN_ONE_FEN } from "./test-const
 import { Piece, Square } from "../shared/enums";
 import Board from "../board/board";
 import { IBoard } from "../board/iboard";
-import Search from "../intelligence/search";
+import Search from "../core/search";
 import Move from "../game/move";
 import MoveGenerator from "../game/move-generator";
 import { parseFen } from "../board/board-setup";

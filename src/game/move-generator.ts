@@ -2,10 +2,10 @@
 import { Bishops, GetOtherSide, GetRank, Kings, Knights, NonSlidingPieces, PawnCaptureDir, Pawns, PieceColor, PieceDir, Queens, Rooks, SlidingPieces, StartingRank, sqOffboard } from "../shared/utils";
 import { Color, MoveStatus, Piece, Square } from "../shared/enums";
 import { MAX_GAME_MOVES, MAX_POSITION_MOVES } from "../shared/constants";
-import Eval from "../intelligence/eval";
+import Eval from "../core/eval";
 import { IBoard } from "../board/iboard";
 import Move from "./move";
-import TranspositionTable, { SearchResult } from "../intelligence/transposition-table";
+import TranspositionTable  from "../core/transposition-table";
 
 export default class MoveGenerator {
     private board: IBoard;

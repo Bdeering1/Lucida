@@ -1,6 +1,6 @@
 /* eslint-disable no-magic-numbers */
 import { CARO_KANN_FEN, DOUBLE_EN_PAS_FEN, KINGS_AND_PAWNS_FEN } from "./test-constants";
-import Eval, { MAX_PHASE } from "../intelligence/eval";
+import Eval, { MAX_PHASE } from "../core/eval";
 import Board from "../board/board";
 import { IBoard } from "../board/iboard";
 import MoveGenerator from "../game/move-generator";

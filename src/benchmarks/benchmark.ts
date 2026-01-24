@@ -3,7 +3,7 @@ import Board from "../board/board";
 import { IBoard } from "../board/iboard";
 import MoveGenerator from "../game/move-generator";
 import { MS_PER_SECOND, START_FEN } from "../shared/constants";
-import Search from "../intelligence/search";
+import Search from "../core/search";
 import { parseFen } from "../board/board-setup";
 import { pauseForInput } from "../cli/input";
 import { Verbosity } from "../shared/enums";

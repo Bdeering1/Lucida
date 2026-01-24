@@ -4,7 +4,7 @@ import { printBoard, printBoardVars, printEval, printMoves } from "./printing";
 import Board from "../board/board";
 import Move from "../game/move";
 import MoveGenerator from "../game/move-generator";
-import Search from "../intelligence/search";
+import Search from "../core/search";
 import { getGameStatus } from "../game/game-state";
 import { parseFen } from "../board/board-setup";
 import { MS_PER_SECOND, START_FEN } from "../shared/constants";

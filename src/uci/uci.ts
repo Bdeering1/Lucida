@@ -4,7 +4,7 @@ import Board from "../board/board";
 import Move from '../game/move';
 import MoveGenerator from "../game/move-generator";
 import { START_FEN } from "../shared/constants";
-import Search from "../intelligence/search";
+import Search from "../core/search";
 import { createInterface } from 'readline';
 import { parseFen } from "../board/board-setup";
 import runCli from '../cli/cli-game';

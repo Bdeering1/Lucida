@@ -5,7 +5,7 @@ import MoveGenerator from "../game/move-generator";
 import { Square } from "../shared/enums";
 import { getGameStatus } from "../game/game-state";
 import { parseFen } from "../board/board-setup";
-import PieceSquareTables from "../intelligence/pst";
+import PieceSquareTables from "../core/pst";
 
 describe('game-state', () => {
     let board: IBoard;
