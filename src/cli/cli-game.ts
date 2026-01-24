@@ -28,7 +28,7 @@ export default async function runCli() {
     
     console.log("Please chooce a side (white or black)");
     const playerColor = await getSideInput();
-    
+
     while(true) {
         printBoard(board);
         printBoardVars(board);

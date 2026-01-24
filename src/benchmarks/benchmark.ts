@@ -6,6 +6,7 @@ import { MS_PER_SECOND, START_FEN } from "../shared/constants";
 import Search from "../intelligence/search";
 import { parseFen } from "../board/board-setup";
 import { pauseForInput } from "../cli/input";
+import { Verbosity } from "../shared/enums";
 
 const DEPTH_LIMIT = 5;
 const LAST_DEPTH_CUTOFF = 5 * MS_PER_SECOND;
@@ -19,6 +20,8 @@ const TEST_POSITIONS = [
 ];
 
 export default async function runBenchmarks(): Promise<void> {
+    console.log("Running benchmarks...");
+
     const board = new Board();
     const moveGenerator = new MoveGenerator(board);
     const search = new Search(board, moveGenerator);
@@ -58,7 +61,7 @@ function testPosition(board: IBoard, search: Search, fen: string): number {
     parseFen(board, fen);
 
     const startTime = Date.now();
-    search.getBestMove(false, LAST_DEPTH_CUTOFF, DEPTH_LIMIT);
+    search.getBestMove(Verbosity.silent, LAST_DEPTH_CUTOFF, DEPTH_LIMIT);
     const endTime = Date.now();
     return endTime - startTime;
 }

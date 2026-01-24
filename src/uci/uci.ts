@@ -11,6 +11,8 @@ import runCli from '../cli/cli-game';
 import { Verbosity } from '../shared/enums';
 
 export default function runUci(): Promise<void> {
+    console.log("Engine started. Default is UCI, type 'cli' for a textual interface.")
+
     return new Promise((resolve, reject) => {
         const board = new Board();
         const moveGenerator = new MoveGenerator(board);
@@ -40,7 +42,7 @@ export default function runUci(): Promise<void> {
                     break;
                 case "debug":
                     isDebug = tokens[1] === "on";
-                    if (isDebug) console.log(`info string received debug command (${tokens.length - 1} args)`);
+                    if (isDebug) console.log(`info string received debug command`);
                     break;
                 case "setoption":
                     if (isDebug) console.log(`info string received setoption command (${tokens.length - 1} args)`);

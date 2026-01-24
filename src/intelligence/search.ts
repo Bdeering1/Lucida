@@ -11,7 +11,7 @@ import { Color, Piece, Verbosity } from '../shared/enums';
 import PieceSquareTables from './pst';
 import { getGameStatus } from '../game/game-state';
 
-const LAST_DEPTH_CUTOFF = 4 * MS_PER_SECOND;
+const MIN_SEARCH_TIME = 4 * MS_PER_SECOND;
 const MIN_MOVE_CUTOFF = 3;
 
 export default class Search {
@@ -79,7 +79,7 @@ export default class Search {
         PieceSquareTables.init();
     }
 
-    public getBestMove(verbose = Verbosity.normal, lastDepthCutoff = LAST_DEPTH_CUTOFF, depth = this.depthLimit): [Move, number] {
+    public getBestMove(verbose = Verbosity.normal, minSearchTime = MIN_SEARCH_TIME, depth = this.depthLimit): [Move, number] {
         this.transpositionTable.trim(this.board.ply);
         this.depthLimit = depth;
         const depthCutoff = this.getDepthCutoff();
@@ -96,7 +96,7 @@ export default class Search {
         
         this.effectiveDepth = 0;
         let best = 0;
-        while ((this.effectiveDepth < depthCutoff && Date.now() - startTime < lastDepthCutoff) || this.effectiveDepth < this.minDepth) {
+        while ((this.effectiveDepth < depthCutoff && Date.now() - startTime < minSearchTime) || this.effectiveDepth < this.minDepth) {
             this.scores = [];
             this.effectiveDepth++;
             [best,] = this.negaMax(0, -Infinity, Infinity);

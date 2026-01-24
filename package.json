@@ -2,7 +2,7 @@
   "name": "lucida",
   "type": "module",
   "version": "1.0.0",
-  "description": "NodeJS chess engine built from the ground up - currently under development",
+  "description": "NodeJS chess engine developed from the ground up using typescript",
   "main": "./build/index.js",
   "directories": {
     "test": "tests"

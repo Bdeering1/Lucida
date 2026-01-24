@@ -6,7 +6,7 @@ import { sqFromString } from '../shared/utils';
 
 export function getSideInput(): Promise<Color> {
     return new Promise((resolve, reject) => {
-        let side = Color.none;
+        let userInput = Color.none;
         const rl = createInterface({ input, output });
         rl.setPrompt('> ');
         rl.prompt();
@@ -14,17 +14,17 @@ export function getSideInput(): Promise<Color> {
         rl.on('line', (line: string) => {
             line = line.trim().toLowerCase();
             if (line === 'w' || line === 'white') {
-                side = Color.white;
+                userInput = Color.white;
                 rl.close();
                 return;
             }
             if (line === 'b' || line === 'black') {
-                side = Color.black;
+                userInput = Color.black;
                 rl.close();
                 return;
             }
             if (line === 'both') {
-                side = Color.none;
+                userInput = Color.none;
                 rl.close();
                 return;
             }
@@ -34,12 +34,12 @@ export function getSideInput(): Promise<Color> {
         });
 
         rl.on('close', () => {
-            resolve(side);
+            resolve(userInput);
         });
     });
 }
 
-export function getMoveInput(moves: Move[]) {
+export function getMoveInput(moves: Move[]): Promise<Move | InputOption> {
     const sqEx = /[a-h][1-9]/g;
 
     return new Promise<Move | InputOption>((resolve, reject) => {
@@ -93,7 +93,7 @@ export function getMoveInput(moves: Move[]) {
 export function pauseForInput() {
     return new Promise<void>((resolve, reject) => {
         const rl = createInterface({ input, output });
-        rl.question("", _ => {
+        rl.question("(enter to continue)", _ => {
             rl.close();
             resolve();
         });
