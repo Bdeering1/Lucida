@@ -22,3 +22,15 @@ Lucida's evaluation consists of the material score, [mobility score](https://www
 
 ### Strength
 The current iteration of Lucida beats Komodo 17 (2100 rating) given ~5-10 seconds per move (on 2.8 GHz Quad-Core Intel Core i7).
+
+## Usage
+**Local Build**
+```sh
+pnpm install && npm run build && npm start
+```
+
+**Docker**
+```sh
+docker compose up -d --build
+docker attach lucida
+```
